@@ -17,11 +17,10 @@
 
 #include <math.h>
 
+#include "synth.hpp" // will remove/rework this eventually
 
-
-#include "synth.hpp"
 #include "dac.h"
-#include "hardware.cpp"
+#include "hardware.h"
 
 #define SONG_LENGTH 384
 #define HAT 20000 

@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef DAC_H_
 #define DAC_H_
 

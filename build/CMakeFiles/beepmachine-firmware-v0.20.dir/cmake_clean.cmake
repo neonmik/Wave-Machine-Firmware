@@ -86,6 +86,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj"
   "CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj.d"
+  "CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj"
+  "CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj"
   "CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj"

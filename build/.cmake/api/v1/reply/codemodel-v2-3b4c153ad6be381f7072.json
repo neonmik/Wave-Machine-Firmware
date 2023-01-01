@@ -1043,7 +1043,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ELF2UF2Build::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ELF2UF2Build-Debug-177516b3cbf69702359f.json",
+					"jsonFile" : "target-ELF2UF2Build-Debug-d9b0b29f6ad578d38dc1.json",
 					"name" : "ELF2UF2Build",
 					"projectIndex" : 0
 				},
@@ -1057,7 +1057,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "beepmachine-firmware-v0.20::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-beepmachine-firmware-v0.20-Debug-695fb63cd3d9befa5969.json",
+					"jsonFile" : "target-beepmachine-firmware-v0.20-Debug-a35ca350c8e2286faffe.json",
 					"name" : "beepmachine-firmware-v0.20",
 					"projectIndex" : 0
 				},

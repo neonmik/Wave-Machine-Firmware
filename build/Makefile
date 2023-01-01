@@ -1220,6 +1220,30 @@ dac.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s
 .PHONY : dac.cpp.s
 
+hardware.obj: hardware.cpp.obj
+.PHONY : hardware.obj
+
+# target to build an object file
+hardware.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj
+.PHONY : hardware.cpp.obj
+
+hardware.i: hardware.cpp.i
+.PHONY : hardware.i
+
+# target to preprocess a source file
+hardware.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.i
+.PHONY : hardware.cpp.i
+
+hardware.s: hardware.cpp.s
+.PHONY : hardware.s
+
+# target to generate assembly for a file
+hardware.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.s
+.PHONY : hardware.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -1409,6 +1433,9 @@ help:
 	@echo "... dac.obj"
 	@echo "... dac.i"
 	@echo "... dac.s"
+	@echo "... hardware.obj"
+	@echo "... hardware.i"
+	@echo "... hardware.s"
 	@echo "... main.obj"
 	@echo "... main.i"
 	@echo "... main.s"

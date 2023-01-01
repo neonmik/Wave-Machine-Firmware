@@ -149,6 +149,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c" "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d"
   "/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp" "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj.d"
   "/Users/nickallott/pico/Beep-Machine-Firmware/dac.cpp" "CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj.d"
+  "/Users/nickallott/pico/Beep-Machine-Firmware/hardware.cpp" "CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj.d"
   "/Users/nickallott/pico/Beep-Machine-Firmware/main.cpp" "CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj.d"
   "/Users/nickallott/pico/Beep-Machine-Firmware/synth.cpp" "CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj.d"
   )

@@ -1,16 +1,4 @@
-#define MUX_SEL_A       12
-#define MUX_SEL_B       13
-#define MUX_SEL_C       14
-#define MUX_SEL_D       15
-#define MUX_OUT_0       16
-#define MUX_OUT_1       17
-
-#define MAX_KEYS        27
-#define PAGE_KEY        27
-#define LFO_KEY         28
-#define ARP_KEY         29
-#define PRESET_KEY      30
-
+#include "hardware.h"
 
 uint32_t keys_history[] = {
     0xFFFFFFFF,
@@ -26,41 +14,17 @@ uint32_t keys      =    0xFFFFFFFF;
 uint32_t keys_last =    0xFFFFFFFF;
 uint8_t num_keys_down;
 
-#define SR_DATA_WIDTH   8
-#define SR_DATA         18
-#define SR_CLK          19
-#define SR_LATCH        20
+
 uint8_t leds = 0xFF;
 
 #define UP              1
 #define DOWN            0
-
-const int PICO_LED_PIN = PICO_DEFAULT_LED_PIN;
-
-#define LED_LFO_PIN     21
-#define LED_ARP_PIN     22
-#define LEDR_PIN        6
-#define LEDG_PIN        7
-#define LEDB_PIN        8
-
-#define LED_KNOB1       0
-#define LED_KNOB2       1
-#define LED_KNOB3       2
-#define LED_KNOB4       3
-#define LED_PAGE1       4
-#define LED_PAGE2       5
-#define LED_PAGE3       6
 
 bool led_state[22];
 
 bool rgb_state          = 0;
 uint16_t rgb_colour[3]  = {65535, 0 ,0};
 
-
-#define ADC_DIN         3
-#define ADC_DOUT        4
-#define ADC_CLK         2
-#define ADC_CS          5
 
 uint32_t software_index = 0;
 uint32_t hardware_index = 2;
@@ -592,102 +556,6 @@ void knobs_update (void) {
   poll++;
   poll &= 0x3;
 }
-
-// ----------------------
-//          DAC
-// ----------------------
-
-// void dac_init (void) {
-//   // init SPI channel
-//   spi_init(DAC_SPI, 20000000); 
-//   spi_set_format(DAC_SPI, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST); // New SPI setup
-
-//   // set DAC pins
-//   gpio_set_function(DAC_DATA, GPIO_FUNC_SPI);
-//   gpio_set_function(DAC_CLK, GPIO_FUNC_SPI);
-//   gpio_set_function(DAC_CS, GPIO_FUNC_SPI); // New CS setup - replaces next 3 lines
- 
-// }
-
-// void fill_buffer(uint16_t* buf, uint pin)
-// {
-// 	// static volatile float x=0, y=0; // variables only visable in here, but important priority for memory?
-// 	// const float pi2 = 6.27319; // pi squared...
-// 	// const float dx = pi2 * wave_frequency/fs; // setup counter/index length pi2 * frequency of desired wave
-
-//   uint16_t s = 0;
-  
-// 	// gpio_put(pin, 1); // pin output to test speed of loop
-// 	for(int i =0; i<BUF_SAMPLES; i++) { // Number of samples loop = 256...
-// 		// buf[i] = ((unsigned) cb()) | (0b0111<<12);
-//     s = play_buf[i];
-// 		buf[i] = (s) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC... Why is the buffer an array? 
-//     play_buf[i] = 0;
-//     // hardware_index++;
-// 		// hardware_index &= 0xf;
-// 		// x+= dx; // update the counter/index
-// 		// if(x > pi2) x-= pi2; // check the counter/index for overflow
-
-// 		// y = (sin(x)+1.0)*TOP/2.0; // calculate sample according to the index (sin(index)+1.0)* maxbits[4095]/2.0
-
-// 	}
-//   fill_buf = true;
-// 	// gpio_put(pin, 0); // pin output to test speed of loop
-// }
-// void dma_handler()
-// {
-// 	if(dma_hw->intr & (1u<<dma_chan_a)) { // channel a complete?
-// 		dma_hw->ints0=1u<<dma_chan_a; // clear the interrupt request
-// 		fill_buffer((uint16_t*) buf_a, LED_LFO_PIN); // buf a transferred, so refill it
-// 	}
-// 	if(dma_hw->intr & (1u<<dma_chan_b)) { // channel b complete?
-// 		dma_hw->ints0=1u<<dma_chan_b; // clear the interrupt request
-// 		fill_buffer((uint16_t*) buf_b, LED_ARP_PIN); // buf b transferred, so refill it
-// 	}
-
-// }
-// void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
-//   dma_channel_config cfg = dma_channel_get_default_config(dma_chan);
-	
-//   channel_config_set_transfer_data_size(&cfg, DMA_SIZE_16);
-// 	channel_config_set_read_increment(&cfg, true);
-// 	channel_config_set_ring(&cfg, false, size_bits);
-// 	channel_config_set_dreq(&cfg, 0x3b); // timer pacing using Timer 0
-// 	channel_config_set_chain_to(&cfg, dma_chan_chain); // start chan b when chan a completed
-
-// 	dma_channel_configure(
-// 			dma_chan,             // Channel to be configured
-// 			&cfg,                 // The configuration we just created
-// 			&spi_get_hw(DAC_SPI)->dr, // write address
-// 			buf,                  // The initial read address
-// 			BUF_SAMPLES,          // Number of transfers
-// 			false                 // Start immediately?
-// 			);
-// }
-// void dma_init (void) {
-//   dma_chan_a = dma_claim_unused_channel(true);
-// 	dma_chan_b = dma_claim_unused_channel(true);
-// 	dma_channel(dma_chan_a, dma_chan_b, buf_a);
-// 	dma_channel(dma_chan_b, dma_chan_a, buf_b);
-// 	irq_set_exclusive_handler(DMA_IRQ_0,dma_handler);
-// 	dma_set_irq0_channel_mask_enabled((1<<dma_chan_a) | (1<<dma_chan_b), true);
-// 	irq_set_enabled(DMA_IRQ_0,true);
-
-// 	const int dma_timer = 0; // dma_claim_unused_timer(true); // panic upon failure
-// 	dma_timer_claim(dma_timer); // panic if fail
-// 	dma_timer_set_fraction(dma_timer, 1, sample_rate_div);
-
-//   dma_channel_start(dma_chan_a); // seems to start something
-// }
-
-
-
-
-
-// moveeeee thissss - just cause less errors at the minute due to my messy files, and inability to modularize
-
-#include "pagination.cpp"
-
 
 
 // ----------------------
