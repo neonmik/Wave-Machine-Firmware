@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cmake.statusbar.advanced": {
+			"debug": {
+				"visibility": "hidden"
+			},
+			"launch": {
+				"visibility": "hidden"
+			},
+			"build": {
+				"visibility": "default"
+			},
+			"buildTarget": {
+				"visibility": "default"
+			}
+		},
+		"cortex-debug.openocdPath": "openocd",
+		"files.associations": {
+			"stdlib.h": "c"
+		}
+	}
+}
