@@ -1,0 +1,3 @@
+/Users/nickallott/pico/Beep-Machine-Firmware/build/pioasm/CMakeFiles/pioasm.dir
+/Users/nickallott/pico/Beep-Machine-Firmware/build/pioasm/CMakeFiles/edit_cache.dir
+/Users/nickallott/pico/Beep-Machine-Firmware/build/pioasm/CMakeFiles/rebuild_cache.dir
