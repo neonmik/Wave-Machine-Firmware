@@ -171,7 +171,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=beepmachine-firmware-v0.20
+CMAKE_PROJECT_NAME:STATIC=beepmachine-firmware-v0.21
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/opt/homebrew/bin/arm-none-eabi-ranlib
@@ -303,6 +303,15 @@ beepmachine-firmware-v0.20_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 beepmachine-firmware-v0.20_SOURCE_DIR:STATIC=/Users/nickallott/pico/Beep-Machine-Firmware
+
+//Value Computed by CMake
+beepmachine-firmware-v0.21_BINARY_DIR:STATIC=/Users/nickallott/pico/Beep-Machine-Firmware/build
+
+//Value Computed by CMake
+beepmachine-firmware-v0.21_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+beepmachine-firmware-v0.21_SOURCE_DIR:STATIC=/Users/nickallott/pico/Beep-Machine-Firmware
 
 //Value Computed by CMake
 pico_sdk_BINARY_DIR:STATIC=/Users/nickallott/pico/Beep-Machine-Firmware/build/pico-sdk
@@ -487,7 +496,7 @@ PICO_BOOT_STAGE2_DIR:INTERNAL=/Users/nickallott/pico/pico-sdk/src/rp2_common/boo
 PICO_CMAKE_PRELOAD_PLATFORM_DIR:INTERNAL=/Users/nickallott/pico/pico-sdk/cmake/preload/platforms
 PICO_CMAKE_PRELOAD_PLATFORM_FILE:INTERNAL=/Users/nickallott/pico/pico-sdk/cmake/preload/platforms/rp2040.cmake
 PICO_COMPILER_ASM:INTERNAL=/opt/homebrew/bin/arm-none-eabi-gcc
-PICO_DOXYGEN_EXCLUDE_PATHS:INTERNAL= /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs
+PICO_DOXYGEN_EXCLUDE_PATHS:INTERNAL= /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs
 PICO_DOXYGEN_PATHS:INTERNAL= /Users/nickallott/pico/pico-sdk/src/common /Users/nickallott/pico/pico-sdk/lib/cyw43-driver/src /Users/nickallott/pico/pico-sdk/src/rp2_common /Users/nickallott/pico/pico-sdk/src/rp2040
 PICO_NO_HARDWARE:INTERNAL=0
 PICO_ON_DEVICE:INTERNAL=1

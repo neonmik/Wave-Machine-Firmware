@@ -69,61 +69,61 @@ include CMakeFiles/beepmachine-firmware-v0.20.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
-CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj: /Users/nickallott/pico/Beep-Machine-Firmware/main.cpp
-CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/main.cpp
+CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
+CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/main.cc
+CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/main.cc
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.i"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/main.cpp > CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.i
+CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.i"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/main.cc > CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.i
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.s"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/main.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.s
+CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.s"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/main.cc -o CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.s
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
-CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj: /Users/nickallott/pico/Beep-Machine-Firmware/synth.cpp
-CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/synth.cpp
+CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
+CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/synth.cc
+CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/synth.cc
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.i"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/synth.cpp > CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.i
+CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.i"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/synth.cc > CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.i
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.s"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/synth.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.s
+CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.s"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/synth.cc -o CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.s
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
-CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj: /Users/nickallott/pico/Beep-Machine-Firmware/dac.cpp
-CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/dac.cpp
+CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
+CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/dac.cc
+CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/dac.cc
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.i"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/dac.cpp > CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.i
+CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.i"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/dac.cc > CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.i
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/dac.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s
+CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.s"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/dac.cc -o CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.s
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
-CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj: /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp
-CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp
+CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
+CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc
+CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp > CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i
+CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.i"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc > CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.i
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s
+CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.s"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc -o CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.s
 
 CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c
@@ -788,10 +788,10 @@ CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 # Object files for target beepmachine-firmware-v0.20
 beepmachine__firmware__v0_20_OBJECTS = \
-"CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj" \
-"CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj" \
-"CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj" \
-"CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj" \
+"CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj" \
+"CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj" \
+"CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj" \
+"CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj" \
@@ -844,10 +844,10 @@ beepmachine__firmware__v0_20_OBJECTS = \
 # External object files for target beepmachine-firmware-v0.20
 beepmachine__firmware__v0_20_EXTERNAL_OBJECTS =
 
-beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj
-beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj
-beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj
-beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj
+beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/main.cc.obj
+beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cc.obj
+beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cc.obj
+beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cc.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj

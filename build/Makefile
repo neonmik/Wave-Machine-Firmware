@@ -117,17 +117,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named beepmachine-firmware-v0.20
+# Target rules for targets named beepmachine-firmware-v0.21
 
 # Build rule for target.
-beepmachine-firmware-v0.20: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 beepmachine-firmware-v0.20
-.PHONY : beepmachine-firmware-v0.20
+beepmachine-firmware-v0.21: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 beepmachine-firmware-v0.21
+.PHONY : beepmachine-firmware-v0.21
 
 # fast build rule for target.
-beepmachine-firmware-v0.20/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/build
-.PHONY : beepmachine-firmware-v0.20/fast
+beepmachine-firmware-v0.21/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/build
+.PHONY : beepmachine-firmware-v0.21/fast
 
 #=============================================================================
 # Target rules for targets named ELF2UF2Build
@@ -225,7 +225,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.obj: Users/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.i: Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.i
@@ -233,7 +233,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.i: Users/ni
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.s: Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.s
@@ -241,7 +241,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.s: Users/ni
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.obj: Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
@@ -249,7 +249,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.obj: Users/nickall
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.i: Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.i
@@ -257,7 +257,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.i: Users/nickallot
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.s: Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.s
@@ -265,7 +265,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.s: Users/nickallot
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.obj: Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
@@ -273,7 +273,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.obj: Users/nickallott/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.i: Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.i
@@ -281,7 +281,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.i: Users/nickallott/pi
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.s: Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.s
@@ -289,7 +289,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.s: Users/nickallott/pi
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.obj: Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj
@@ -297,7 +297,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.obj: Users/nickallott/pi
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.i: Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.i
@@ -305,7 +305,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.i: Users/nickallott/pico
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.s: Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.s
@@ -313,7 +313,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.s: Users/nickallott/pico
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_time/time.obj: Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj
@@ -321,7 +321,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_time/time.obj: Users/nickallott/p
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_time/time.i: Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.i
@@ -329,7 +329,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_time/time.i: Users/nickallott/pic
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_time/time.s: Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.s
@@ -337,7 +337,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_time/time.s: Users/nickallott/pic
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.obj: Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj
@@ -345,7 +345,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.obj: Users/ni
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.i: Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.i
@@ -353,7 +353,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.i: Users/nick
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.s: Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.s
@@ -361,7 +361,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.s: Users/nick
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.obj: Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj
@@ -369,7 +369,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.obj: Users/nickallo
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.i: Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.i
@@ -377,7 +377,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.i: Users/nickallott
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.s: Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.s
@@ -385,7 +385,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.s: Users/nickallott
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.obj: Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj
@@ -393,7 +393,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.obj: Users/nickallott/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.i: Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.i
@@ -401,7 +401,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.i: Users/nickallott/pi
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.s: Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.s
@@ -409,7 +409,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.s: Users/nickallott/pi
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.s
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.obj: Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj
@@ -417,7 +417,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.obj: Users/nickallott/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.i: Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.i
@@ -425,7 +425,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.i: Users/nickallott/pi
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.i
 
 Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.s: Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.s
@@ -433,7 +433,7 @@ Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.s: Users/nickallott/pi
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
@@ -441,7 +441,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.obj: Users/nickal
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.i
@@ -449,7 +449,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.i: Users/nickallo
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.s
@@ -457,7 +457,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.s: Users/nickallo
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
@@ -465,7 +465,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.obj: Users/ni
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.i
@@ -473,7 +473,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.i: Users/nick
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.s
@@ -481,7 +481,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.s: Users/nick
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
@@ -489,7 +489,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.obj: Users/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.i
@@ -497,7 +497,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.i: Users/ni
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.s
@@ -505,7 +505,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.s: Users/ni
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj
@@ -513,7 +513,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.obj: User
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
@@ -521,7 +521,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.obj: Users/nickal
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.i
@@ -529,7 +529,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.i: Users/nickallo
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.s
@@ -537,7 +537,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.s: Users/nickallo
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
@@ -545,7 +545,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.i
@@ -553,7 +553,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s
@@ -561,7 +561,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
@@ -569,7 +569,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.obj: Users/nickal
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.i
@@ -577,7 +577,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.i: Users/nickallo
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.s
@@ -585,7 +585,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.s: Users/nickallo
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj
@@ -593,7 +593,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.obj
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
@@ -601,7 +601,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.obj: Users/nickal
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.i
@@ -609,7 +609,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.i: Users/nickallo
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.s
@@ -617,7 +617,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.s: Users/nickallo
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
@@ -625,7 +625,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.obj: Users/nickal
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.i
@@ -633,7 +633,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.i: Users/nickallo
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.s
@@ -641,7 +641,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.s: Users/nickallo
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
@@ -649,7 +649,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.i
@@ -657,7 +657,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.s
@@ -665,7 +665,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
@@ -673,7 +673,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.obj: Users/ni
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.i
@@ -681,7 +681,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.i: Users/nick
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.s
@@ -689,7 +689,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.s: Users/nick
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
@@ -697,7 +697,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.i
@@ -705,7 +705,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.s
@@ -713,7 +713,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj
@@ -721,7 +721,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.i
@@ -729,7 +729,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.s
@@ -737,7 +737,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
@@ -745,7 +745,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.obj: Us
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.i
@@ -753,7 +753,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.i: User
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.s
@@ -761,7 +761,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.s: User
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
@@ -769,7 +769,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.i: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.i
@@ -777,7 +777,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.s: Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.s
@@ -785,7 +785,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
@@ -793,7 +793,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.obj: Us
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
@@ -801,7 +801,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.obj: Users/ni
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.i
@@ -809,7 +809,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.i: Users/nick
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.s
@@ -817,7 +817,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.s: Users/nick
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
@@ -825,7 +825,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.obj: Users/ni
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
@@ -833,7 +833,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.obj: User
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
@@ -841,7 +841,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.obj: U
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.i
@@ -849,7 +849,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.i: Use
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.s
@@ -857,7 +857,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.s: Use
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj
@@ -865,7 +865,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.obj: Users
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.i
@@ -873,7 +873,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.i: Users/n
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.s
@@ -881,7 +881,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.s: Users/n
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
@@ -889,7 +889,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.obj
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
@@ -897,7 +897,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.obj: Users/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
@@ -905,7 +905,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.obj: Use
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.i
@@ -913,7 +913,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.i: Users
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.s
@@ -921,7 +921,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.s: Users
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj
@@ -929,7 +929,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.obj: Users/n
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.i
@@ -937,7 +937,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.i: Users/nic
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.s
@@ -945,7 +945,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.s: Users/nic
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
@@ -953,7 +953,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.obj: 
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
@@ -961,7 +961,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeab
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj
@@ -969,7 +969,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.obj: Users
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.i
@@ -977,7 +977,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.i: Users/n
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.s
@@ -985,7 +985,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.s: Users/n
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
@@ -993,7 +993,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.obj: Us
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
@@ -1001,7 +1001,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.obj: Users/
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.i
@@ -1009,7 +1009,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.i: Users/ni
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.s
@@ -1017,7 +1017,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.s: Users/ni
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
@@ -1025,7 +1025,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.i
@@ -1033,7 +1033,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.s
@@ -1041,7 +1041,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
@@ -1049,7 +1049,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.obj: Users/ni
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.i
@@ -1057,7 +1057,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.i: Users/nick
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.s
@@ -1065,7 +1065,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.s: Users/nick
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
@@ -1073,7 +1073,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.obj
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.i
@@ -1081,7 +1081,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.i: 
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.s
@@ -1089,7 +1089,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.s: 
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
@@ -1097,7 +1097,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.obj: Users
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj
@@ -1105,7 +1105,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.obj:
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.i
@@ -1113,7 +1113,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.i: U
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.s
@@ -1121,7 +1121,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.s: U
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
@@ -1129,7 +1129,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.obj: Users/nickal
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.i
@@ -1137,7 +1137,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.i: Users/nickallo
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.s
@@ -1145,7 +1145,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.s: Users/nickallo
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
@@ -1153,7 +1153,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.obj: Us
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.i
@@ -1161,7 +1161,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.i: User
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.s
@@ -1169,7 +1169,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.s: User
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.s
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.obj: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
@@ -1177,7 +1177,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.obj: Users/nick
 
 # target to build an object file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.i: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.i
@@ -1185,7 +1185,7 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.i: Users/nickal
 
 # target to preprocess a source file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.i
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.i
 
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.s: Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
@@ -1193,104 +1193,104 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.s: Users/nickal
 
 # target to generate assembly for a file
 Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
 
-beep_machine.obj: beep_machine.cpp.obj
-.PHONY : beep_machine.obj
-
-# target to build an object file
-beep_machine.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj
-.PHONY : beep_machine.cpp.obj
-
-beep_machine.i: beep_machine.cpp.i
-.PHONY : beep_machine.i
-
-# target to preprocess a source file
-beep_machine.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i
-.PHONY : beep_machine.cpp.i
-
-beep_machine.s: beep_machine.cpp.s
-.PHONY : beep_machine.s
-
-# target to generate assembly for a file
-beep_machine.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s
-.PHONY : beep_machine.cpp.s
-
-dac.obj: dac.cpp.obj
+dac.obj: dac.cc.obj
 .PHONY : dac.obj
 
 # target to build an object file
-dac.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj
-.PHONY : dac.cpp.obj
+dac.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/dac.cc.obj
+.PHONY : dac.cc.obj
 
-dac.i: dac.cpp.i
+dac.i: dac.cc.i
 .PHONY : dac.i
 
 # target to preprocess a source file
-dac.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.i
-.PHONY : dac.cpp.i
+dac.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/dac.cc.i
+.PHONY : dac.cc.i
 
-dac.s: dac.cpp.s
+dac.s: dac.cc.s
 .PHONY : dac.s
 
 # target to generate assembly for a file
-dac.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s
-.PHONY : dac.cpp.s
+dac.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/dac.cc.s
+.PHONY : dac.cc.s
 
-main.obj: main.cpp.obj
+hardware.obj: hardware.cc.obj
+.PHONY : hardware.obj
+
+# target to build an object file
+hardware.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.obj
+.PHONY : hardware.cc.obj
+
+hardware.i: hardware.cc.i
+.PHONY : hardware.i
+
+# target to preprocess a source file
+hardware.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.i
+.PHONY : hardware.cc.i
+
+hardware.s: hardware.cc.s
+.PHONY : hardware.s
+
+# target to generate assembly for a file
+hardware.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.s
+.PHONY : hardware.cc.s
+
+main.obj: main.cc.obj
 .PHONY : main.obj
 
 # target to build an object file
-main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj
-.PHONY : main.cpp.obj
+main.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.obj
+.PHONY : main.cc.obj
 
-main.i: main.cpp.i
+main.i: main.cc.i
 .PHONY : main.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.i
-.PHONY : main.cpp.i
+main.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.i
+.PHONY : main.cc.i
 
-main.s: main.cpp.s
+main.s: main.cc.s
 .PHONY : main.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.s
-.PHONY : main.cpp.s
+main.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.s
+.PHONY : main.cc.s
 
-synth.obj: synth.cpp.obj
+synth.obj: synth.cc.obj
 .PHONY : synth.obj
 
 # target to build an object file
-synth.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj
-.PHONY : synth.cpp.obj
+synth.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/synth.cc.obj
+.PHONY : synth.cc.obj
 
-synth.i: synth.cpp.i
+synth.i: synth.cc.i
 .PHONY : synth.i
 
 # target to preprocess a source file
-synth.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.i
-.PHONY : synth.cpp.i
+synth.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/synth.cc.i
+.PHONY : synth.cc.i
 
-synth.s: synth.cpp.s
+synth.s: synth.cc.s
 .PHONY : synth.s
 
 # target to generate assembly for a file
-synth.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.s
-.PHONY : synth.cpp.s
+synth.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/synth.cc.s
+.PHONY : synth.cc.s
 
 # Help Target
 help:
@@ -1306,7 +1306,7 @@ help:
 	@echo "... bs2_default_padded_checksummed_asm"
 	@echo "... cyw43_driver_picow_cyw43_bus_pio_spi_pio_h"
 	@echo "... cyw43_firmware_package"
-	@echo "... beepmachine-firmware-v0.20"
+	@echo "... beepmachine-firmware-v0.21"
 	@echo "... bs2_default"
 	@echo "... Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.obj"
 	@echo "... Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.i"
@@ -1430,12 +1430,12 @@ help:
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.obj"
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.i"
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.s"
-	@echo "... beep_machine.obj"
-	@echo "... beep_machine.i"
-	@echo "... beep_machine.s"
 	@echo "... dac.obj"
 	@echo "... dac.i"
 	@echo "... dac.s"
+	@echo "... hardware.obj"
+	@echo "... hardware.i"
+	@echo "... hardware.s"
 	@echo "... main.obj"
 	@echo "... main.i"
 	@echo "... main.s"

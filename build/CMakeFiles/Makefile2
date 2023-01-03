@@ -63,7 +63,7 @@ CMAKE_BINARY_DIR = /Users/nickallott/pico/Beep-Machine-Firmware/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/beepmachine-firmware-v0.20.dir/all
+all: CMakeFiles/beepmachine-firmware-v0.21.dir/all
 all: CMakeFiles/ELF2UF2Build.dir/all
 all: pico-sdk/all
 .PHONY : all
@@ -73,7 +73,7 @@ preinstall: pico-sdk/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/beepmachine-firmware-v0.20.dir/clean
+clean: CMakeFiles/beepmachine-firmware-v0.21.dir/clean
 clean: CMakeFiles/ELF2UF2Build.dir/clean
 clean: pico-sdk/clean
 .PHONY : clean
@@ -1376,31 +1376,31 @@ pico-sdk/tools/clean:
 .PHONY : pico-sdk/tools/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/beepmachine-firmware-v0.20.dir
+# Target rules for target CMakeFiles/beepmachine-firmware-v0.21.dir
 
 # All Build rule for target.
-CMakeFiles/beepmachine-firmware-v0.20.dir/all: CMakeFiles/ELF2UF2Build.dir/all
-CMakeFiles/beepmachine-firmware-v0.20.dir/all: pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_padded_checksummed_asm.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69 "Built target beepmachine-firmware-v0.20"
-.PHONY : CMakeFiles/beepmachine-firmware-v0.20.dir/all
+CMakeFiles/beepmachine-firmware-v0.21.dir/all: CMakeFiles/ELF2UF2Build.dir/all
+CMakeFiles/beepmachine-firmware-v0.21.dir/all: pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_padded_checksummed_asm.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69 "Built target beepmachine-firmware-v0.21"
+.PHONY : CMakeFiles/beepmachine-firmware-v0.21.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/beepmachine-firmware-v0.20.dir/rule: cmake_check_build_system
+CMakeFiles/beepmachine-firmware-v0.21.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles 65
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/beepmachine-firmware-v0.20.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/beepmachine-firmware-v0.21.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles 0
-.PHONY : CMakeFiles/beepmachine-firmware-v0.20.dir/rule
+.PHONY : CMakeFiles/beepmachine-firmware-v0.21.dir/rule
 
 # Convenience name for target.
-beepmachine-firmware-v0.20: CMakeFiles/beepmachine-firmware-v0.20.dir/rule
-.PHONY : beepmachine-firmware-v0.20
+beepmachine-firmware-v0.21: CMakeFiles/beepmachine-firmware-v0.21.dir/rule
+.PHONY : beepmachine-firmware-v0.21
 
 # clean rule for target.
-CMakeFiles/beepmachine-firmware-v0.20.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/clean
-.PHONY : CMakeFiles/beepmachine-firmware-v0.20.dir/clean
+CMakeFiles/beepmachine-firmware-v0.21.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/clean
+.PHONY : CMakeFiles/beepmachine-firmware-v0.21.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/ELF2UF2Build.dir
