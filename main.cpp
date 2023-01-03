@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
@@ -15,14 +16,17 @@
 #include "hardware/spi.h"
 #include "hardware/dma.h"
 
-#include <math.h>
+#include <math.h> 
 
-#include "synth.hpp" // will remove/rework this eventually
-
+#include "synth.h" // will remove/rework this eventually
+#include "note_handling.cpp"
 #include "dac.h"
-#include "hardware.h"
+#include "beep_machine.h"
+
+
 
 #define SONG_LENGTH 384
+#define BPM 120
 #define HAT 20000 
 #define BASS 500
 #define SNARE 6000
@@ -65,11 +69,13 @@ const int16_t notes[5][SONG_LENGTH] = {
 void update_playback(void) {
   static uint16_t prev_beat = 1;
   static uint16_t beat = 0;
+  static uint16_t bpm_to_ms = 0;
 
   absolute_time_t at = get_absolute_time();
   uint64_t tick_ms = to_us_since_boot(at) / 1000;
 
-  beat = (tick_ms / 100) % SONG_LENGTH; // 100ms per beat
+  bpm_to_ms = 60,000/BPM;// 60,000ms / 120bpm = 500ms (1/4 note)... 
+  beat = (tick_ms / (bpm_to_ms/4)) % SONG_LENGTH; // beat = 500ms/4 = 125ms (1/16th note)
 
   if (beat == prev_beat) return;
   prev_beat = beat;
@@ -83,92 +89,94 @@ void update_playback(void) {
     }
   }
 }
+void song_init (void){
+    // melody
+  channels[0].waveforms   = Waveform::TRIANGLE | Waveform::SQUARE;
+  channels[0].attack_ms   = 16;
+  channels[0].decay_ms    = 168;
+  channels[0].sustain     = 0xafff;
+  channels[0].release_ms  = 168;
+  channels[0].volume      = 100;
+
+  // rhythm track
+  channels[1].waveforms   = Waveform::SINE | Waveform::SQUARE;
+  channels[1].attack_ms   = 38;
+  channels[1].decay_ms    = 300;
+  channels[1].sustain     = 0;
+  channels[1].release_ms  = 0;
+  channels[1].volume      = 120;
+
+  // drum track
+  channels[2].waveforms   = Waveform::NOISE;
+  channels[2].attack_ms   = 5;
+  channels[2].decay_ms    = 10;
+  channels[2].sustain     = 16000;
+  channels[2].release_ms  = 100;
+  channels[2].volume      = 180;
+
+  // hi-hat track
+  channels[3].waveforms   = Waveform::NOISE;
+  channels[3].attack_ms   = 5;
+  channels[3].decay_ms    = 5;
+  channels[3].sustain     = 8000;
+  channels[3].release_ms  = 40;
+  channels[3].volume      = 80;
+
+  // bass track
+  channels[4].waveforms   = Waveform::SQUARE;
+  channels[4].attack_ms   = 10;
+  channels[4].decay_ms    = 100;
+  channels[4].sustain     = 0;
+  channels[4].release_ms  = 500;
+  channels[4].volume      = 120;
+
+}
+
+void voices_init (void) {
+  for (int i = 0; i < CHANNEL_COUNT; i++) {
+    channels[i].waveforms   = Waveform::SAW;
+    channels[i].attack_ms   = 10;
+    channels[i].decay_ms    = 10;
+    channels[i].sustain     = 0xffff;
+    channels[i].release_ms  = 10;
+    channels[i].volume      = 10000;
+    channels[i].off();
+    channels[i].note        = 0;
+    channels[i].frequency   = 0;
+    channels[i].is_active   = 0;
+  }
+}
+void voices_set (int a, int d, int s, int r, int w) {
+  for (int i = 0; i < CHANNEL_COUNT; i++) {
+    channels[i].waveforms   = w;
+    channels[i].attack_ms   = a<<4;
+    channels[i].decay_ms    = d<<4;
+    channels[i].sustain     = s<<4;
+    channels[i].release_ms  = r<<4;
+  }
+}
 
  int main() {
-    uint8_t hardware_index;
-    hardware_init();
-    hardware_test(5);
+  
+  uint8_t hardware_index;
+  hardware_init();
 
-    dac_init();
-    // dma_init();
-    hardware_index = 0;
+  dac_init();
 
-    // melody
-    channels[0].waveforms   = Waveform::TRIANGLE | Waveform::SQUARE;
-    channels[0].attack_ms   = 16;
-    channels[0].decay_ms    = 168;
-    channels[0].sustain     = 0xafff;
-    channels[0].release_ms  = 168;
-    channels[0].volume      = 100;
+  voices_init();
 
-    // rhythm track
-    channels[1].waveforms   = Waveform::SINE | Waveform::SQUARE;
-    channels[1].attack_ms   = 38;
-    channels[1].decay_ms    = 300;
-    channels[1].sustain     = 0;
-    channels[1].release_ms  = 0;
-    channels[1].volume      = 120;
-
-    // drum track
-    channels[2].waveforms   = Waveform::NOISE;
-    channels[2].attack_ms   = 5;
-    channels[2].decay_ms    = 10;
-    channels[2].sustain     = 16000;
-    channels[2].release_ms  = 100;
-    channels[2].volume      = 180;
-
-    // hi-hat track
-    channels[3].waveforms   = Waveform::NOISE;
-    channels[3].attack_ms   = 5;
-    channels[3].decay_ms    = 5;
-    channels[3].sustain     = 8000;
-    channels[3].release_ms  = 40;
-    channels[3].volume      = 80;
-
-    // bass track
-    channels[4].waveforms   = Waveform::SQUARE;
-    channels[4].attack_ms   = 10;
-    channels[4].decay_ms    = 100;
-    channels[4].sustain     = 0;
-    channels[4].release_ms  = 500;
-    channels[4].volume      = 120;
-
-    while (true) {
-        hardware_task();
-        
-        hardware_index++;
-        hardware_index&=0x7F;
-        // if (hardware_index==0) print_page();
-        // update_playback();
-        // check tuning
-        // wave_frequency = 0;
-
-        // fun knob1 to frequency
-        // wave_frequency = (page_values[0][0]);
-
-        if (buffer_flag){
-
-            // static volatile float x=0, sig=0; // variables only visable in here, but important priority for memory?
-            // const float pi2 = 6.27319; // pi squared...
-            // const float dx = pi2 * wave_frequency/fs; // setup counter/index length pi2 * frequency of desired wave
-
-
-            for(int i =0; i<256; i++) {
-                play_buf[i] = (uint16_t) get_audio_frame();
-                update_playback();
-                
-                // play_buf[i] = (uint16_t) sig;
-                // x += dx; // update the counter/index
-                // if(x > pi2) x-= pi2; // check the counter/index for overflow
-                // 
-                // sig = (sin(x)+1.0)*TOP/2.0;
-
-            }
-            buffer_flag = 0;
-
-        }
-        
+  while (true) {
+    hardware_task();
+    if (buffer_flag){
+      for(int i =0; i<256; i++) {
+        play_buf[i] = ((uint16_t) get_audio_frame());
+		  // add counter here for playback/sequncer timing
+		  // update_playback();
+      }
+      printf("adsr-phase: %d \n", channels[0].adsr);
+      buffer_flag = 0;
     }
+  }
 } 
 
 

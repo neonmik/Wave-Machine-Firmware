@@ -111,19 +111,19 @@ CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s"
 	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/dac.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
-CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj: /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cpp
-CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cpp
+CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
+CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj: /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp
+CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.i"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cpp > CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.i
+CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp > CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i
 
-CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.s"
-	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.s
+CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/beep_machine.cpp -o CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s
 
 CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: CMakeFiles/beepmachine-firmware-v0.20.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c
@@ -791,7 +791,7 @@ beepmachine__firmware__v0_20_OBJECTS = \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj" \
-"CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj" \
+"CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj" \
 "CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj" \
@@ -847,7 +847,7 @@ beepmachine__firmware__v0_20_EXTERNAL_OBJECTS =
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/main.cpp.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/synth.cpp.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.obj
-beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj
+beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
 beepmachine-firmware-v0.20.elf: CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj

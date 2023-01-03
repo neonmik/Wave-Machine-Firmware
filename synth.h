@@ -1,6 +1,10 @@
 #pragma once
 
 #include <cstdint>
+#include <stdio.h>
+#include "pico/stdlib.h"
+#include "pico/time.h"
+
 
 namespace synth {
 
@@ -64,6 +68,7 @@ namespace synth {
   };
 
   struct AudioChannel {
+    uint8_t   note          = 0;
     uint8_t   waveforms     = 0;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
     uint16_t  frequency     = 660;    // frequency of the voice (Hz)
     uint16_t  volume        = 0xffff; // channel volume (default 50%)
@@ -81,11 +86,13 @@ namespace synth {
     bool      filter_enable = false;
     uint16_t  filter_cutoff_frequency = 0;
 
+    uint8_t   is_active     = false;
     uint32_t  adsr_frame    = 0;      // number of frames into the current ADSR phase
     uint32_t  adsr_end_frame = 0;     // frame target at which the ADSR changes to the next phase
     uint32_t  adsr          = 0;
     int32_t   adsr_step     = 0;
     ADSRPhase adsr_phase    = ADSRPhase::OFF;
+    uint32_t  adsr_activation_time = 0;
 
     uint8_t   wave_buf_pos  = 0;      //
     int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
@@ -98,6 +105,7 @@ namespace synth {
       adsr_phase = ADSRPhase::ATTACK;
       adsr_end_frame = (attack_ms * sample_rate) / 1000;
       adsr_step = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(adsr_end_frame);
+      // printf("triggered attack %d", adsr_frame);
     }
     void trigger_decay() {
       adsr_frame = 0;
@@ -121,6 +129,9 @@ namespace synth {
       adsr_frame = 0;
       adsr_phase = ADSRPhase::OFF;
       adsr_step = 0;
+      is_active = false;
+      note = 0;
+      adsr_activation_time = 0;
     }
   };
 

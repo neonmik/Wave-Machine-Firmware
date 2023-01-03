@@ -1,29 +1,5 @@
-#include "hardware.h"
+#include "beep_machine.h"
 
-uint32_t keys_history[] = {
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-    0xFFFFFFFF,
-};
-uint32_t keys      =    0xFFFFFFFF;
-uint32_t keys_last =    0xFFFFFFFF;
-uint8_t num_keys_down;
-
-
-uint8_t leds = 0xFF;
-
-#define UP              1
-#define DOWN            0
-
-bool led_state[22];
-
-bool rgb_state          = 0;
-uint16_t rgb_colour[3]  = {65535, 0 ,0};
 
 
 uint32_t software_index = 0;
@@ -31,26 +7,9 @@ uint32_t hardware_index = 2;
 
 #define MAX_PRESETS     7
 
-uint32_t knobs[8];
+using namespace beep_machine;
 
-// public variable
-
-int preset            = 0;
-int page              = 0;
-bool page_flag        = 0;
-bool lfo_flag         = 0;
-bool arp_flag         = 0;
-bool preset_flag      = 0;
-
-int preset_start;
-int preset_end;
-
-int long_press        = 400;
-
-
-
-// functions
-
+extern void note_priority(int status, int note, int velocity);
 
 
 // ----------------------
@@ -285,30 +244,12 @@ void leds_test (int repeats, int delay) {
   sr_cycle(delay, UP);
   led_flash(LED_LFO_PIN, repeats, delay);
   led_flash(LED_ARP_PIN, repeats, delay);
-  rgb_cycle(delay/2);
+  rgb_cycle(delay/4);
   led_flash(LED_ARP_PIN, repeats, delay);
   led_flash(LED_LFO_PIN, repeats, delay);
   sr_cycle(delay, DOWN);
 }
 
-void set_page (int page) {
-  switch (page) {
-    case 0:
-      sr_clear();
-      break;
-    case 1:
-      sr_bit_toggle(LED_PAGE1);
-      break;
-    case 2:
-      sr_bit_toggle(LED_PAGE1);
-      sr_bit_toggle(LED_PAGE2);
-      break;
-    case 3:
-      sr_bit_toggle(LED_PAGE2);
-      sr_bit_toggle(LED_PAGE3);
-      break;
-  } 
-}
 
 
 // ----------------------
@@ -335,6 +276,7 @@ void keys_init(){
   gpio_put(MUX_SEL_B, 1);
   gpio_put(MUX_SEL_C, 1);
   gpio_put(MUX_SEL_D, 1);
+
 }
 void keys_read(){
   //static, so it remains through iterations
@@ -342,6 +284,11 @@ void keys_read(){
   
   keys_history[history_index] = 0;
   
+  gpio_put(MUX_SEL_A, 0);
+  gpio_put(MUX_SEL_B, 0);
+  gpio_put(MUX_SEL_C, 0);
+  gpio_put(MUX_SEL_D, 0); 
+
   for (int i = 0; i < 16; i++) {
     // nop needed to stop the processor reading too quickly, the mux cant keep up...
 
@@ -353,8 +300,6 @@ void keys_read(){
     gpio_put(MUX_SEL_C, (i >> 2) & 1);
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
     gpio_put(MUX_SEL_D, (i >> 3) & 1);
-    
-    
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
       
     
@@ -400,17 +345,17 @@ void keys_update() {
 	num_keys_down = 0;
 
 	for (int i = 0; i < MAX_KEYS; i++) {
-		if ( !((k>>i) & 1) ) {
-			// num_keys_down++;
-		}
+		// if ( !((k>>i) & 1) ) {
+		// 	num_keys_down++;
+		// }
 		if ( (!((k>>i) & 1)) &&  (((k_last>>i) & 1))  )  {  // new key down
       // 
-      printf("Key: %d on\n", ((i) + 1));
-			// note_priority(0x90, i+48, 127);   // keyboard starts at midi note 36
+      if (KEYS_PRINT_OUT) printf("Key: %d on\n", ((i) + 1));
+			note_priority(0x90, i+48, 127);   // keyboard starts at midi note 36
 		}
 		if ( ((k>>i) & 1) &&  (!((k_last>>i) & 1))  )  {  // key up
-			// printf("Key: %d off\n", (i + 1));
-      // note_priority(0x80, i+48 ,0);
+
+      note_priority(0x80, i+48 ,0);
       // set_note_off(i + 36);   // keyboard starts at midi note 36
 			// dec_physical_notes_on();
 		}
@@ -418,30 +363,26 @@ void keys_update() {
 
 	// check mode and aux button  (we only care about a mode press, but need press and release events for aux button)
 	if ( (!((k>>PAGE_KEY) & 1)) &&  (((k_last>>PAGE_KEY) & 1)) ){
-    page_flag = true;
-    printf("Key: Page\n");
+    set_page_flag(true);
+    if (KEYS_PRINT_OUT) printf("Key: Page\n");
 	}
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
-    led_toggle(LED_LFO_PIN);
-    lfo_flag = !lfo_flag;
-    printf("Key: LFO\n");
+    toggle_lfo_flag();
 	}
   if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
-    led_toggle(LED_ARP_PIN);
-    arp_flag = !arp_flag;
-    printf("Key: ARP\n");
+    toggle_arp_flag();
 	}
   if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
     //press preset key
     preset_start = to_ms_since_boot (get_absolute_time());
-    printf("Key: Preset ON\n");
+    if (KEYS_PRINT_OUT) printf("Key: Preset ON\n");
 	}
 	if ( (((k>>PRESET_KEY) & 1)) &&  (!((k_last>>PRESET_KEY) & 1)) ){
     //release preset key
     preset_end = to_ms_since_boot (get_absolute_time());
-    if (preset_end - preset_start < long_press){
+    if (preset_end - preset_start < LONG_PRESS){
       //short press
-      printf("Key: Preset OFF - Short\n");
+      if (KEYS_PRINT_OUT) printf("Key: Preset OFF - Short\n");
       //raise preset flag;
       preset_flag = true;
       preset++;
@@ -450,9 +391,9 @@ void keys_update() {
       preset_flag = false;
   
     }
-    if (preset_end - preset_start > long_press){
+    if (preset_end - preset_start > LONG_PRESS){
       //long press
-      printf("Key: Preset OFF - Long\n");
+      if (KEYS_PRINT_OUT) printf("Key: Preset OFF - Long\n");
   
       //preset save
       //raise preset_save_flag:
@@ -470,36 +411,19 @@ void keys_update() {
 // ----------------------
 
 void knobs_init (void) {
-  // new code
   adc_init();
   adc_gpio_init(26);
   adc_select_input(0);
-  
-  
-  
-  
-  // old code
-  // // initi SPI channel
-  // spi_init(spi0, 4*1000*1000); // ** Try changing to 18Mhz, it should be able to take it
-  
-  // // set ADC pins
-  // gpio_set_function(ADC_DOUT, GPIO_FUNC_SPI);
-  // gpio_set_function(ADC_CLK, GPIO_FUNC_SPI);
-  // gpio_set_function(ADC_DIN, GPIO_FUNC_SPI);
-  
-  // // set ADC chip select pin
-  // gpio_init(ADC_CS);
-  // gpio_set_dir(ADC_CS, GPIO_OUT);
-  // gpio_put(ADC_CS, 1);
-
 }
 uint32_t knobs_read (uint8_t channel) {
   uint32_t sample = 0;
   uint32_t output = 0;
 
+  // Translates channel number into a binary address for the mux
   gpio_put(MUX_SEL_A, channel & 1); 
   gpio_put(MUX_SEL_B, (channel >> 1) & 1);
   gpio_put(MUX_SEL_C, (channel >> 2) & 1);
+  gpio_put(MUX_SEL_D, (channel >> 3) & 1);
   
   // nop needed to stop the processor reading too quickly, the mux cant keep up...
   asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
@@ -507,7 +431,7 @@ uint32_t knobs_read (uint8_t channel) {
   // ----------
   // FIR filter
   // ----------
-  // take 16 samples and add them together - slighty better
+  // take 16 samples and add them together - slighty better but takes more time
 
   // for (int i = 0; i < 8; i++) {
   //   sample += adc_read();
@@ -522,39 +446,208 @@ uint32_t knobs_read (uint8_t channel) {
   output = (sample>>2);
   if (output<=5) output = 0;
   
+  gpio_put(MUX_SEL_A, 0);
+  gpio_put(MUX_SEL_B, 0);
+  gpio_put(MUX_SEL_C, 0);
+  gpio_put(MUX_SEL_D, 0);
   //output result
   return output;
-
-  // unsigned int commandout = 0;
-
-  // // read a channel from the MCP3008 ADC
-  // commandout = channel & 0x7; // only 0-7
-  // commandout |= 0x18;        // start bit +single ended bit
-
-  // uint8_t spibuf[3];
-
-  // spibuf[0] = commandout;
-  // spibuf[1] = 0;
-  // spibuf[2] = 0;
-
-  // gpio_put(ADC_CS, 0);  // Active low
-  // spi_write_read_blocking(spi0, spibuf, spibuf, 3);
-  // gpio_put(ADC_CS, 1);  // Active low
-
-  // return ((spibuf[1] << 8) | (spibuf[2])) >> 4;
 }
 void knobs_update (void) {
   static uint8_t poll;
 
+  gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
+
   // only need to read one every time as it's so quick
-
-  knobs[poll] = knobs_read(poll);
-
-  // old
-  // knobs[poll] = knobs_read(poll);
+  set_knob(poll, knobs_read(poll));
+  
+  gpio_put(23, 0); // puts SMPS back into PWM mode
 
   poll++;
   poll &= 0x3;
+}
+
+void set_knob(uint8_t knob, uint32_t value) {
+  knobs[knob] = value;
+}
+uint32_t get_knob(uint8_t knob) {
+  return knobs[knob];
+}
+
+void pagination_init() {
+  // pinMode(aLED, OUTPUT);
+  for(int i=0; i < MAX_KNOBS; i++){
+    knob_values[i] = get_knob(i);
+    knob_states[i] = ACTIVE;
+  }
+  default_pagination();
+}
+void default_pagination () {
+  // ADSR default values
+  page_values[ADSR][0]=0; //A
+  page_values[ADSR][1]=0; // D
+  page_values[ADSR][2]=1023; // S
+  page_values[ADSR][3]=0; // R
+}
+// read knobs and digital switches and handle pagination
+void pagination_get(){
+
+  if(get_page_flag()){
+    page_change = true;
+
+    // current_page = !current_page;
+    // Or 
+    uint8_t temp_pages = 0;
+
+    // increment the current page
+    current_page++;
+
+    // check to see if the arp is on, if so allow the page to open
+    if (get_arp_flag()) {
+      temp_pages = MAX_PAGES; // sets the page loop to be it's full length
+    }
+    if (!get_arp_flag()) temp_pages = (MAX_PAGES-1); // shrinks the loop so we dont end up with loads of pages we don't need when not using Arp.
+    
+    // keep the amount of pages right
+    if (current_page >= temp_pages) current_page = 0;
+    
+    // set the page we're now on
+    set_page(current_page);
+    
+    // clear the page flag for next time
+    set_page_flag(false);
+  }
+
+  // if page has changed then protect knobs
+  if(page_change){
+    page_change = false; // set the Page change back to false so it can be read again...
+
+    // bitmask the knob leds off
+    sr_shift_out((leds &= 0xF)); 
+
+    for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
+      knob_states[i] = PROTECTED;
+    }
+  }
+  // read knobs values, show sync with the LED, enable knob when it matches the stored value
+  for (int i = 0; i < MAX_KNOBS; i++){
+    value = get_knob((uint8_t) i);
+    in_sync = abs(value - page_values[current_page][i]) < protection_value;
+
+    // enable knob when it matches the stored value
+    if (in_sync){
+      knob_states[i] = ACTIVE;
+    }
+  
+    // // if knob is moving, show if it's active or not
+    // if (abs(value - knob_values[i]) > 5){
+    //   // if knob is active, blink LED
+    //   if(knob_states[i] == ACTIVE){
+    //     // bitshift an ON to the current knob and output it to the ShiftReg
+    //     sr_shift_out((leds |= 1 << (7 - i)));
+    //   } else {
+    //     // bitshift an OFF to the current knob and output it to the ShiftReg
+    //     sr_shift_out((leds |= 0 << (7 - i)));
+    //   }
+    // }
+    
+    knob_values[i] = value;
+
+    // if enabled then mirror the real time knob value
+    if(knob_states[i] == ACTIVE){
+      sr_shift_out((leds |= 1 << (7 - i)));
+      page_values[current_page][i] = value;
+    }
+  }
+}
+void print_knob_array(uint32_t *array, int len){
+  for(int i = 0;i< len;i++){
+    printf("| ");
+    printf("%.4d", array[i]);
+  }
+}
+void print_knob_page(){
+  printf("Page: %d ", current_page);
+  print_knob_array(page_values[current_page], MAX_KNOBS);
+  printf("\n");
+}
+
+
+// ----------------------
+//          FLAGS
+// ----------------------
+void set_page (uint8_t value) {
+  // using a switch here so that I can easily change the LEDs... find a better way?
+  switch (value) {
+    case 0:
+      page = 0;
+      sr_clear();
+      break;
+    case 1:
+      page = 1;
+      sr_bit_toggle(LED_PAGE1);
+      break;
+    case 2:
+      page = 2;
+      sr_bit_toggle(LED_PAGE1);
+      sr_bit_toggle(LED_PAGE2);
+      break;
+    case 3:
+      page = 3;
+      sr_bit_toggle(LED_PAGE2);
+      sr_bit_toggle(LED_PAGE3);
+      break;
+}
+}
+void set_page_flag(uint8_t value) {
+  page_flag = value;
+}
+uint8_t get_page_flag(void) {
+  return page_flag;
+}
+
+void set_lfo_flag(uint8_t value) {
+  lfo_flag = value;
+  led_put(LED_LFO_PIN, value);
+}
+void toggle_lfo_flag(void) {
+  led_toggle(LED_LFO_PIN);
+  lfo_flag = !lfo_flag;
+  if (KEYS_PRINT_OUT) printf("Key: LFO\n");
+}
+uint8_t get_lfo_flag(void) {
+  return lfo_flag;
+}
+
+void set_arp_flag(uint8_t value) {
+  arp_flag = value;
+  led_put(LED_ARP_PIN, value);
+}
+void toggle_arp_flag(void) {
+  arp_flag = !arp_flag;
+  led_toggle(LED_ARP_PIN);
+  if (KEYS_PRINT_OUT) printf("Key: ARP\n");
+}
+uint8_t get_arp_flag(void) {
+  return arp_flag;
+}
+
+void set_preset(uint8_t value) {
+  preset = value;
+}
+void change_preset(void) {
+  preset++;
+  preset&=0x7;
+  set_preset(preset);
+}
+uint8_t get_preset(void) {
+  return preset;
+}
+void set_preset_flag(uint8_t value) {
+  preset_flag = value;
+}
+uint8_t get_preset_flag(void) {
+  return preset_flag;
 }
 
 
@@ -564,17 +657,21 @@ void knobs_update (void) {
 
 
 void hardware_init (void) {
+  stdio_init_all();
+
   leds_init();
   rgb_init();
   keys_init();
   knobs_init(); // need to write code to replace this for SR in
   // dac_init();
-
   pagination_init();
-
-  stdio_init_all();
+  
 
   puts("Welcome to the jungle...");
+
+  if (HARDWARE_TEST) hardware_test(10);
+
+  hardware_index = 0;
 }
 
 void hardware_test (int delay) {
@@ -587,4 +684,11 @@ void hardware_task (void) {
   knobs_update();
   pagination_get();
   
+  if (KNOBS_PRINT_OUT) {
+    if (hardware_index==0) {
+      print_knob_page();
+      }
+  }
+  hardware_index++;
+  hardware_index&=0xFF;
 }

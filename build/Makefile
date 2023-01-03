@@ -1196,6 +1196,30 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
 
+beep_machine.obj: beep_machine.cpp.obj
+.PHONY : beep_machine.obj
+
+# target to build an object file
+beep_machine.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.obj
+.PHONY : beep_machine.cpp.obj
+
+beep_machine.i: beep_machine.cpp.i
+.PHONY : beep_machine.i
+
+# target to preprocess a source file
+beep_machine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.i
+.PHONY : beep_machine.cpp.i
+
+beep_machine.s: beep_machine.cpp.s
+.PHONY : beep_machine.s
+
+# target to generate assembly for a file
+beep_machine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/beep_machine.cpp.s
+.PHONY : beep_machine.cpp.s
+
 dac.obj: dac.cpp.obj
 .PHONY : dac.obj
 
@@ -1219,30 +1243,6 @@ dac.s: dac.cpp.s
 dac.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/dac.cpp.s
 .PHONY : dac.cpp.s
-
-hardware.obj: hardware.cpp.obj
-.PHONY : hardware.obj
-
-# target to build an object file
-hardware.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.obj
-.PHONY : hardware.cpp.obj
-
-hardware.i: hardware.cpp.i
-.PHONY : hardware.i
-
-# target to preprocess a source file
-hardware.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.i
-.PHONY : hardware.cpp.i
-
-hardware.s: hardware.cpp.s
-.PHONY : hardware.s
-
-# target to generate assembly for a file
-hardware.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.20.dir/build.make CMakeFiles/beepmachine-firmware-v0.20.dir/hardware.cpp.s
-.PHONY : hardware.cpp.s
 
 main.obj: main.cpp.obj
 .PHONY : main.obj
@@ -1430,12 +1430,12 @@ help:
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.obj"
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.i"
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.s"
+	@echo "... beep_machine.obj"
+	@echo "... beep_machine.i"
+	@echo "... beep_machine.s"
 	@echo "... dac.obj"
 	@echo "... dac.i"
 	@echo "... dac.s"
-	@echo "... hardware.obj"
-	@echo "... hardware.i"
-	@echo "... hardware.s"
 	@echo "... main.obj"
 	@echo "... main.i"
 	@echo "... main.s"

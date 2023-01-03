@@ -10,7 +10,7 @@ uint16_t play_buf[BUF_SAMPLES];
 
 void dac_init (void) {
 	// init SPI channel
-	spi_init(DAC_SPI, 20000000); 
+	spi_init(DAC_SPI, 18000000); 
 	spi_set_format(DAC_SPI, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST); // New SPI setup
 
 	// set DAC pins
@@ -60,21 +60,17 @@ void dma_handler()
 {
 	if(dma_hw->intr & (1u<<dma_chan_a)) { // channel a complete?
 		dma_hw->ints0=1u<<dma_chan_a; // clear the interrupt request
-		fill_buffer((uint16_t*) buf_a, PICO_DEFAULT_LED_PIN); // buf a transferred, so refill it
+		dma_buffer((uint16_t*) buf_a, PICO_DEFAULT_LED_PIN); // buf a transferred, so refill it
 	}
 	if(dma_hw->intr & (1u<<dma_chan_b)) { // channel b complete?
 		dma_hw->ints0=1u<<dma_chan_b; // clear the interrupt request
-		fill_buffer((uint16_t*) buf_b, PICO_DEFAULT_LED_PIN); // buf b transferred, so refill it
+		dma_buffer((uint16_t*) buf_b, PICO_DEFAULT_LED_PIN); // buf b transferred, so refill it
 	}
 
 }
 
-void fill_buffer(uint16_t* buf, uint pin)
+void dma_buffer(uint16_t* buf, uint pin)
 {
-	// static volatile float x=0, y=0; // variables only visable in here, but important priority for memory?
-	// const float pi2 = 6.27319; // pi squared...
-	// const float dx = pi2 * wave_frequency/fs; // setup counter/index length pi2 * frequency of desired wave
-
 	static uint16_t sample = 0;
   
 	// gpio_put(pin, 1); // pin output to test speed of loop
@@ -83,11 +79,12 @@ void fill_buffer(uint16_t* buf, uint pin)
 		buf[i] = (sample) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
 		play_buf[i] = 0;
 	}
-
 	sample_clock++;
-
+	sample_clock&=0xff;
   	buffer_flag = true;
 	// gpio_put(pin, 0); // pin output to test speed of loop
 }
+
+
 
 
