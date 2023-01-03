@@ -7,6 +7,7 @@
 #include "hardware/irq.h"
 #include "hardware/spi.h"
 #include "hardware/dma.h"
+#include "hardware/clocks.h"
 
 #include <math.h>
 
@@ -23,7 +24,7 @@
 
 typedef int16_t (*buffer_callback)(void);
 
-const unsigned long clk_hz = 125000000; // MCU core frequency
+const unsigned long clk_hz = clock_get_hz(clk_sys); // MCU core frequency
 const uint16_t audio_sample_rate = 44100; //selecting the sample rate (44100) - a ternary operator, basically setting result = 44100, if it was sample_rate = 0 ? 44100 : 22000, it would be 22000
 const float sample_rate_div = clk_hz/ audio_sample_rate; //125m/44100 = 2'834.46712
 

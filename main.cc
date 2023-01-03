@@ -15,13 +15,14 @@
 #include "hardware/pwm.h"
 #include "hardware/spi.h"
 #include "hardware/dma.h"
+#include "hardware/clocks.h"
 
 #include <math.h> 
 
 #include "synth.h" // will remove/rework this eventually
 #include "note_handling.cc"
 #include "dac.h"
-#include "hardware.h"
+#include "system.h"
 
 
 
@@ -165,6 +166,7 @@ void voices_set (int a, int d, int s, int r, int w) {
 
   voices_init();
 
+
   while (true) {
     hardware_task();
     if (buffer_flag){
@@ -173,7 +175,7 @@ void voices_set (int a, int d, int s, int r, int w) {
 		  // add counter here for playback/sequncer timing
 		  // update_playback();
       }
-      printf("adsr-phase: %d \n", channels[0].adsr);
+      // printf("adsr-pha se: %d \n", channels[0].adsr);
       buffer_flag = 0;
     }
   }

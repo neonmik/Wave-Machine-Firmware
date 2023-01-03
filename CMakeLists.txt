@@ -11,7 +11,7 @@ add_executable(${PROJECT_NAME}
     main.cc
     synth.cc
     dac.cc
-    hardware.cc
+    system.cc
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 0)

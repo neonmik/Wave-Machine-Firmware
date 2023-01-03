@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef HARDWARE_H_
-#define HARDWARE_H_
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
 #include <stdio.h>
 #include "pico/stdlib.h"

@@ -2164,7 +2164,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "hardware.cc",
+			"path" : "system.cc",
 			"sourceGroupIndex" : 0
 		},
 		{

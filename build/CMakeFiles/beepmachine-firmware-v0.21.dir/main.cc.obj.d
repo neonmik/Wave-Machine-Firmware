@@ -87,6 +87,9 @@ CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.obj: \
  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/include/hardware/dma.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/dma.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dma.h \
+ /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/include/hardware/clocks.h \
+ /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/clocks.h \
+ /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/clocks.h \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/math.h \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cmath \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/bits/cpp_type_traits.h \
@@ -129,4 +132,4 @@ CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.obj: \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
  /Users/nickallott/pico/Beep-Machine-Firmware/note_handling.cc \
  /Users/nickallott/pico/Beep-Machine-Firmware/dac.h \
- /Users/nickallott/pico/Beep-Machine-Firmware/hardware.h
+ /Users/nickallott/pico/Beep-Machine-Firmware/system.h
