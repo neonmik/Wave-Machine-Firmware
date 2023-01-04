@@ -131,5 +131,5 @@ CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.obj: \
  /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
  /Users/nickallott/pico/Beep-Machine-Firmware/note_handling.cc \
- /Users/nickallott/pico/Beep-Machine-Firmware/dac.h \
- /Users/nickallott/pico/Beep-Machine-Firmware/system.h
+ /Users/nickallott/pico/Beep-Machine-Firmware/drivers/dac.h \
+ /Users/nickallott/pico/Beep-Machine-Firmware/hardware.h

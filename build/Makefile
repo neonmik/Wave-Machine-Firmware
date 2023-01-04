@@ -1196,29 +1196,53 @@ Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
 .PHONY : Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.s
 
-dac.obj: dac.cc.obj
-.PHONY : dac.obj
+drivers/dac.obj: drivers/dac.cc.obj
+.PHONY : drivers/dac.obj
 
 # target to build an object file
-dac.cc.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/dac.cc.obj
-.PHONY : dac.cc.obj
+drivers/dac.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/drivers/dac.cc.obj
+.PHONY : drivers/dac.cc.obj
 
-dac.i: dac.cc.i
-.PHONY : dac.i
+drivers/dac.i: drivers/dac.cc.i
+.PHONY : drivers/dac.i
 
 # target to preprocess a source file
-dac.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/dac.cc.i
-.PHONY : dac.cc.i
+drivers/dac.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/drivers/dac.cc.i
+.PHONY : drivers/dac.cc.i
 
-dac.s: dac.cc.s
-.PHONY : dac.s
+drivers/dac.s: drivers/dac.cc.s
+.PHONY : drivers/dac.s
 
 # target to generate assembly for a file
-dac.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/dac.cc.s
-.PHONY : dac.cc.s
+drivers/dac.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/drivers/dac.cc.s
+.PHONY : drivers/dac.cc.s
+
+hardware.obj: hardware.cc.obj
+.PHONY : hardware.obj
+
+# target to build an object file
+hardware.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.obj
+.PHONY : hardware.cc.obj
+
+hardware.i: hardware.cc.i
+.PHONY : hardware.i
+
+# target to preprocess a source file
+hardware.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.i
+.PHONY : hardware.cc.i
+
+hardware.s: hardware.cc.s
+.PHONY : hardware.s
+
+# target to generate assembly for a file
+hardware.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.s
+.PHONY : hardware.cc.s
 
 main.obj: main.cc.obj
 .PHONY : main.obj
@@ -1267,30 +1291,6 @@ synth.s: synth.cc.s
 synth.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/synth.cc.s
 .PHONY : synth.cc.s
-
-system.obj: system.cc.obj
-.PHONY : system.obj
-
-# target to build an object file
-system.cc.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/system.cc.obj
-.PHONY : system.cc.obj
-
-system.i: system.cc.i
-.PHONY : system.i
-
-# target to preprocess a source file
-system.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/system.cc.i
-.PHONY : system.cc.i
-
-system.s: system.cc.s
-.PHONY : system.s
-
-# target to generate assembly for a file
-system.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.21.dir/build.make CMakeFiles/beepmachine-firmware-v0.21.dir/system.cc.s
-.PHONY : system.cc.s
 
 # Help Target
 help:
@@ -1430,18 +1430,18 @@ help:
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.obj"
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.i"
 	@echo "... Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.s"
-	@echo "... dac.obj"
-	@echo "... dac.i"
-	@echo "... dac.s"
+	@echo "... drivers/dac.obj"
+	@echo "... drivers/dac.i"
+	@echo "... drivers/dac.s"
+	@echo "... hardware.obj"
+	@echo "... hardware.i"
+	@echo "... hardware.s"
 	@echo "... main.obj"
 	@echo "... main.i"
 	@echo "... main.s"
 	@echo "... synth.obj"
 	@echo "... synth.i"
 	@echo "... synth.s"
-	@echo "... system.obj"
-	@echo "... system.i"
-	@echo "... system.s"
 .PHONY : help
 
 

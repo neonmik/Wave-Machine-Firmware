@@ -10,8 +10,8 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     main.cc
     synth.cc
-    dac.cc
-    system.cc
+    drivers/dac.cc
+    hardware.cc
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 0)

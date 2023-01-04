@@ -43,12 +43,13 @@ namespace synth {
   // |X   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
   // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+--->
 
-  #define CHANNEL_COUNT 8
+  #define MAX_VOICES 8
 
   constexpr float pi = 3.14159265358979323846f;
 
-  const uint32_t sample_rate = 44100;
+  static uint32_t sample_rate = 44100;
   extern uint16_t volume;
+
 
   enum Waveform {
     NOISE     = 128,
@@ -105,7 +106,6 @@ namespace synth {
       adsr_phase = ADSRPhase::ATTACK;
       adsr_end_frame = (attack_ms * sample_rate) / 1000;
       adsr_step = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(adsr_end_frame);
-      // printf("triggered attack %d", adsr_frame);
     }
     void trigger_decay() {
       adsr_frame = 0;
@@ -133,11 +133,13 @@ namespace synth {
       note = 0;
       adsr_activation_time = 0;
     }
+    
   };
 
-  extern AudioChannel channels[CHANNEL_COUNT];
+  extern AudioChannel channels[MAX_VOICES];
 
+  
   int16_t get_audio_frame();
   bool is_audio_playing();
-
+  // void init(uint16_t sr);
 }

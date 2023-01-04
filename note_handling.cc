@@ -1,5 +1,5 @@
 
-#define NOTE_DEBUG 1
+#define NOTE_DEBUG 0
 
 int note2freq[] = {8, 9, 9, 10, 10, 11, 12, 12, 13, 14, 15, 15, 16, 17, 18, 19, 21, 22, 23, 24, 26, 28, 29, 31, 33, 35, 37, 39, 41, 44, 46, 49, 52, 55, 58, 62, 65, 69, 73, 78, 82, 87, 92, 98, 104, 110, 117, 123, 131, 139, 147, 156, 165, 175, 185, 196, 208, 220, 233, 247, 262, 277, 294, 311, 330, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988, 1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951, 4186, 4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902, 8372, 8870, 9397, 9956, 10548, 11175, 11840, 12544};
 
@@ -12,6 +12,7 @@ void set_note_on(int slot, int note, int velocity) {
 void set_note_off(int slot, int note, int velocity) {
   synth::channels[slot].trigger_release();
 }
+
 void note_priority(int status, int note, int velocity) {
   // Last-note priority... add in lowest/highest
   switch (status)  { //check which type we received
@@ -19,7 +20,7 @@ void note_priority(int status, int note, int velocity) {
       if (velocity>0)  {   //is velocity 0?  if so, we want it to be thought of as note off
         static int8_t slot = -1; // means if no free voices are left, it will be -1 still
         
-        for (int i = 0; i < CHANNEL_COUNT; i++)  {
+        for (int i = 0; i < MAX_VOICES; i++)  {
           if (synth::channels[i].note == 0) { // voice hasn't got a note yet (different from active)
             slot = i;
             break;  //don't need to check any more if we've found one open slot
@@ -29,7 +30,7 @@ void note_priority(int status, int note, int velocity) {
           int8_t oldest_slot = -1;
           uint32_t max_time = 0xffffffff;
           uint32_t max_rel_time = 0xffffffff;
-          for (int i=0; i < CHANNEL_COUNT; i++) {
+          for (int i=0; i < MAX_VOICES; i++) {
            if (synth::channels[i].adsr_activation_time < max_rel_time &&  !synth::channels[i].is_active) {
              max_rel_time =  synth::channels[i].adsr_activation_time;
              slot = i; // oldest slot already in Release state
@@ -52,7 +53,7 @@ void note_priority(int status, int note, int velocity) {
       }
 
     case 0x80:
-      for (int voice = 0; voice < CHANNEL_COUNT; voice++)  {
+      for (int voice = 0; voice < MAX_VOICES; voice++)  {
         if (synth::channels[voice].note == note)  { //check for a matching note
           set_note_off(voice, note, velocity);
           //no break here just in case there are somehow multiple of the same note stuck on

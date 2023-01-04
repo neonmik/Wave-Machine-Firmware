@@ -1,6 +1,8 @@
 #include "synth.h"
 #include <math.h>
 
+uint16_t pitch_scale;
+
 namespace synth {
 
   uint32_t prng_xorshift_state = 0x32B71700;
@@ -31,7 +33,7 @@ namespace synth {
     }
 
     bool any_channel_playing = false;
-    for(int c = 0; c < CHANNEL_COUNT; c++) {
+    for(int c = 0; c < MAX_VOICES; c++) {
       if(channels[c].volume > 0 && channels[c].adsr_phase != ADSRPhase::OFF) {
         any_channel_playing = true;
       }
@@ -43,7 +45,7 @@ namespace synth {
   int16_t get_audio_frame() {
     int32_t sample = 0;  // used to combine channel output
     
-    for(int c = 0; c < CHANNEL_COUNT; c++) {
+    for(int c = 0; c < MAX_VOICES; c++) {
 
       auto &channel = channels[c];
 
@@ -52,7 +54,7 @@ namespace synth {
       // the current waveform we are
 
       // if we put 440Hz in here
-      channel.waveform_offset += ((channel.frequency * 256) << 8) / sample_rate;
+      channel.waveform_offset += ((((channel.frequency * pitch_scale)>>9) * 256) << 8) / sample_rate;
 
       // it comes out at 653.873923
 
