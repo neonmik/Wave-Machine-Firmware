@@ -14,8 +14,8 @@
 
 #define abs(x) ({ __typeof__(x) _x = (x); _x >= 0 ? _x : -_x; })
 
-#define KEYS_PRINT_OUT      1
-#define KNOBS_PRINT_OUT     0
+#define KEYS_PRINT_OUT      0
+#define KNOBS_PRINT_OUT     1
 #define HARDWARE_TEST       0
 
 #define UP              1
@@ -98,6 +98,7 @@ namespace beep_machine {
     static bool lfo_flag               =           0;
     static bool arp_flag               =           0;
     static bool preset_flag            =           0;
+    static bool pagination_flag        =           0;
 
     static uint32_t preset_start;
     static uint32_t preset_end;
@@ -119,7 +120,9 @@ namespace beep_machine {
 
     static bool rgb_state              =           0;
     static uint16_t rgb_colour[3]      =           {65535, 0 ,0};
-
+    
+    uint32_t get_pagintaion (int page, int knob);
+    uint8_t get_pagination_flag ();
     
 };
 
@@ -207,7 +210,6 @@ void pagination_init (void);
 void default_pagination (void);
 void pagination_update (void);
 
-uint32_t get_pagintaion (int page, int knob);
 
 void print_knob_array (int *array, int len);
 void print_knob_page (void);

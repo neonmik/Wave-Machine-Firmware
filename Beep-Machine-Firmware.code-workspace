@@ -22,6 +22,7 @@
 		"cortex-debug.openocdPath": "openocd",
 		"files.associations": {
 			"stdlib.h": "c"
-		}
+		},
+		"cortex-debug.variableUseNaturalFormat": true
 	}
 }

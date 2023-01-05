@@ -8,9 +8,11 @@ void set_note_on(int slot, int note, int velocity) {
   synth::channels[slot].frequency = note2freq[synth::channels[slot].note];
   synth::channels[slot].trigger_attack();
   synth::channels[slot].is_active = true;
+  // printf("Trigged ATTACK [%d] \n", slot);
 }
 void set_note_off(int slot, int note, int velocity) {
   synth::channels[slot].trigger_release();
+  // printf("Trigged RELEASE [%d] \n", slot);
 }
 
 void note_priority(int status, int note, int velocity) {
@@ -46,7 +48,7 @@ void note_priority(int status, int note, int velocity) {
         }
         synth::channels[slot].off();
         
-        if (NOTE_DEBUG) printf("Slot: %d \n", slot);
+        if (NOTE_DEBUG) printf("Slot: %d Note: %d \n", slot, note);
         set_note_on(slot, note, velocity);
         synth::channels[slot].adsr_activation_time = to_ms_since_boot(get_absolute_time());
         break;  //only breaks if velocity > 0.  otherwise, the switch just rolls onto next case, note_off.

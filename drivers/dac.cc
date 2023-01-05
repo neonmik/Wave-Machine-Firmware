@@ -81,12 +81,14 @@ void dma_buffer(uint16_t* output_buffer, uint pin)
   
 	// gpio_put(pin, 1); // pin output to test speed of loop
 	for(int i =0; i<BUF_SAMPLES; i++) { // Number of samples loop = 256...
-		sample = (play_buffer[i]>>4);
+		sample = (play_buffer[i]);
+		output_buffer[i] = 0;
 		output_buffer[i] = (sample) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
-		play_buffer[i] = 0;
+
+
 	}
-	sample_clock++;
-	sample_clock&=0xff;
+	// sample_clock++;
+	// sample_clock&=0xff;
   	buffer_flag = true;
 	// gpio_put(pin, 0); // pin output to test speed of loop
 }

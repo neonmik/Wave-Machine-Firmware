@@ -45,7 +45,7 @@ namespace synth {
 
   #define MAX_VOICES 8
 
-  constexpr float pi = 3.14159265358979323846f;
+  // constexpr float pi = 3.14159265358979323846f;
 
   static uint32_t sample_rate = 44100;
   extern uint16_t volume;
@@ -72,11 +72,11 @@ namespace synth {
     uint8_t   note          = 0;
     uint8_t   waveforms     = 0;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
     uint16_t  frequency     = 660;    // frequency of the voice (Hz)
-    uint16_t  volume        = 0xffff; // channel volume (default 50%)
+    uint16_t  volume        = 0x1; // channel volume (default 50%)
 
     uint16_t  attack_ms     = 2;      // attack period
     uint16_t  decay_ms      = 6;      // decay period
-    uint16_t  sustain       = 0xffff; // sustain volume
+    uint16_t  sustain       = 0xff; // sustain volume
     uint16_t  release_ms    = 1;      // release period
     uint16_t  pulse_width   = 0x7fff; // duty cycle of square wave (default 50%)
     int16_t   noise         = 0;      // current noise value
@@ -102,6 +102,7 @@ namespace synth {
     void (*wave_buffer_callback)(AudioChannel &channel);
 
     void trigger_attack()  {
+
       adsr_frame = 0;
       adsr_phase = ADSRPhase::ATTACK;
       adsr_end_frame = (attack_ms * sample_rate) / 1000;

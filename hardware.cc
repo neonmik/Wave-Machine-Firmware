@@ -2,9 +2,10 @@
 #include "log_table.h"
 
 extern uint16_t pitch_scale;
+extern uint8_t hardware_index;
 
 uint32_t software_index = 0;
-uint32_t hardware_index = 2;
+
 
 #define MAX_PRESETS     7
 
@@ -486,10 +487,10 @@ void pagination_init() {
 }
 void default_pagination () {
   // ADSR default values
-  page_values[ADSR][0]=0; //A
-  page_values[ADSR][1]=0; // D
+  page_values[ADSR][0]=256; //A
+  page_values[ADSR][1]=20; // D
   page_values[ADSR][2]=1023; // S
-  page_values[ADSR][3]=0; // R
+  page_values[ADSR][3]=20; // R
 }
 // read knobs and digital switches and handle pagination
 void pagination_update(){
@@ -561,10 +562,18 @@ void pagination_update(){
       page_values[current_page][i] = value;
     }
   }
+  pagination_flag = 1;
 }
 
-uint32_t get_pagintaion (int page, int knob) {
+uint32_t beep_machine::get_pagintaion (int page, int knob) {
   return page_values[page][knob];
+}
+
+uint8_t beep_machine::get_pagination_flag (void) {
+  uint8_t temp;
+  temp = pagination_flag;
+  pagination_flag = 0;
+  return temp;
 }
 
 void print_knob_array(uint32_t *array, int len){
@@ -686,11 +695,19 @@ void hardware_test (int delay) {
 }
 
 void hardware_task (void) {
-  keys_read();
-  keys_update();
-  knobs_update();
-  pagination_update();
-  
+  if (hardware_index == 0) {
+    keys_read();
+  }
+  if (hardware_index == 63) {
+    keys_update();
+  }
+  if (hardware_index == 127) {
+    knobs_update();
+  }
+  if (hardware_index == 191) {
+    pagination_update();
+
+  }
   // --------------- //
   // PAGE 0 (GLOBAL) //
   // --------------- //
@@ -725,11 +742,11 @@ void hardware_task (void) {
   // ??? PAGE 3 (Mod ADSR???) (Optional) //
   // ----------------------------------- //
   
-  if (KNOBS_PRINT_OUT) {
-    if (hardware_index==0) {
-      print_knob_page();
-      }
-  }
-  hardware_index++;
-  hardware_index&=0xFF;
+  // if (KNOBS_PRINT_OUT) {
+  //   if (hardware_index==0) {
+  //     print_knob_page();
+  //     }
+  // }
+  // hardware_index++;
+  // hardware_index&=0xff;
 }
