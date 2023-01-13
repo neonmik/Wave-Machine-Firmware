@@ -3,7 +3,15 @@
 
 uint16_t pitch_scale;
 
+
 namespace synth {
+  uint8_t waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+
+  uint16_t  attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
+  uint16_t  decay_ms;      // decay period
+  uint16_t  sustain;   // sustain volume
+  uint16_t  release_ms;      // release period
+
 
   uint32_t prng_xorshift_state = 0x32B71700;
 
@@ -70,14 +78,11 @@ namespace synth {
         switch (channel.adsr_phase) {
           case ADSRPhase::ATTACK:
             channel.trigger_decay();
-            // printf("Trigged DECAY [%d] \n", c);
             break;
           case ADSRPhase::DECAY:
             channel.trigger_sustain();
-            // printf("Trigged SUSTAIN [%d] \n", c);
             break;
           case ADSRPhase::RELEASE:
-            // printf("Trigged OFF [%d] \n", c);
             channel.off();
             break;
           default:
@@ -103,18 +108,18 @@ namespace synth {
         int32_t channel_sample = 0;
 
 
-        if(channel.waveforms & Waveform::NOISE) {
+        if(waveforms & Waveform::NOISE) {
           channel_sample += channel.noise;
           waveform_count++;
         }
 
-        if(channel.waveforms & Waveform::SAW) {
+        if(waveforms & Waveform::SAW) {
           channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
           waveform_count++;
         }
 
         // creates a triangle wave of ^
-        if (channel.waveforms & Waveform::TRIANGLE) {
+        if (waveforms & Waveform::TRIANGLE) {
           if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
             channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
           }
@@ -124,20 +129,21 @@ namespace synth {
           waveform_count++;
         }
 
-        if (channel.waveforms & Waveform::SQUARE) {
+        if (waveforms & Waveform::SQUARE) {
           channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
           waveform_count++;
         }
-
-        if(channel.waveforms & Waveform::SINE) {
+        
+        if(waveforms & Waveform::SINE) {
           // the sine_waveform sample contains 256 samples in
           // total so we'll just use the most significant bits
           // of the current waveform position to index into it
           channel_sample += sine_waveform[channel.waveform_offset >> 8];
           waveform_count++;
+          
         }
 
-        if(channel.waveforms & Waveform::WAVE) {
+        if(waveforms & Waveform::WAVE) {
           channel_sample += channel.wave_buffer[channel.wave_buf_pos];
           if (++channel.wave_buf_pos == 64) {
             channel.wave_buf_pos = 0;
@@ -147,22 +153,16 @@ namespace synth {
           waveform_count++;
         }
 
+        // divide the sample by the amount of waveforms - good for multi oscillator voices
         channel_sample = channel_sample / waveform_count;
-        // if (c==0) printf("PRE ADSR SAMPLE: %.5d [%d] \n", channel_sample, c);
-
+        
+        // apply ADSR
         channel_sample = (int64_t(channel_sample) * int32_t(channel.adsr >> 8)) >> 16;
-        // if (c==0) printf("POST ADSR SAMPLE: %.5d [%d] \n", channel_sample, c);
 
         // apply channel volume
         channel_sample = (int64_t(channel_sample) * int32_t(channel.volume)) >> 16;
-        // if (c==0) printf("POST VOLUME SAMPLE: %.5d [%d] \n", channel_sample, c);
-        
-        // combine channel sample into the final sample
-        // if (c==0) printf("channel_sample = %.5d  | ", channel_sample, c);
-        sample += channel_sample;
 
-        // not clipped here with full volume at channel settings and main settings
-        // if (c==0) printf(" sample = %.5d\n", sample, c);
+        sample += channel_sample;
       }
     }
     // printf("PRE MASTER VOLUME SAMPLE: %.5d \n", sample);
@@ -170,7 +170,10 @@ namespace synth {
     //  printf("POST MASTER VOLUME SAMPLE: %.5d \n", sample);
     // clip result to 16-bit
     sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
+    
+    //attempt at soft clipping
     // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
+    
     // printf("%.5d \n", sample);
     return sample;
   }

@@ -1881,6 +1881,8 @@ CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.obj: /Users/nickallott/pic
   /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/include/hardware/spi.h \
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/spi.h \
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/spi.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
   /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h
 
 CMakeFiles/beepmachine-firmware-v0.21.dir/main.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/main.cc \
@@ -2136,13 +2138,13 @@ CMakeFiles/beepmachine-firmware-v0.21.dir/synth.cc.obj: /Users/nickallott/pico/B
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/riemann_zeta.tcc
 
 
-/opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint:
-
-/Users/nickallott/pico/Beep-Machine-Firmware/synth.h:
-
 /Users/nickallott/pico/Beep-Machine-Firmware/main.cc:
 
 /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h:
+
+/opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint:
+
+/Users/nickallott/pico/Beep-Machine-Firmware/synth.h:
 
 /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pwm.h:
 

@@ -85,4 +85,6 @@ CMakeFiles/beepmachine-firmware-v0.21.dir/hardware.cc.obj: \
  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/include/hardware/spi.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/spi.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/spi.h \
+ /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
+ /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
  /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h

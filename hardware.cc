@@ -11,8 +11,14 @@ uint32_t software_index = 0;
 
 using namespace beep_machine;
 
-
 extern void note_priority(int status, int note, int velocity);
+
+extern uint8_t synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+
+extern uint16_t  synth::attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
+extern uint16_t  synth::decay_ms;      // decay period
+extern uint16_t  synth::sustain;   // sustain volume
+extern uint16_t  synth::release_ms;      // release period
 
 
 // ----------------------
@@ -280,6 +286,9 @@ void keys_init(){
   gpio_put(MUX_SEL_C, 1);
   gpio_put(MUX_SEL_D, 1);
 
+  gpio_init(DEBUG_PIN); // set LED pin
+  gpio_set_dir(DEBUG_PIN, GPIO_OUT); // set LED pin to out
+
 }
 void keys_read(){
   //static, so it remains through iterations
@@ -364,22 +373,47 @@ void keys_update() {
 		}
 	}
 
-	// check mode and aux button  (we only care about a mode press, but need press and release events for aux button)
+
 	if ( (!((k>>PAGE_KEY) & 1)) &&  (((k_last>>PAGE_KEY) & 1)) ){
+    // press PAGE/SHIFT key
     set_page_flag(true);
+    // use the following for timed buttons
+    // shift_start = to_ms_since_boot (get_absolute_time());
     if (KEYS_PRINT_OUT) printf("Key: Page\n");
 	}
+
+  // if ( (((k>>PAGE_KEY) & 1)) &&  (!((k_last>>PAGE_KEY) & 1)) ){
+  //   // release PAGE/SHIFT KEY
+  //   shift_end = to_ms_since_boot (get_absolute_time());
+  //   if (shift_end - shift_start < LONG_PRESS) {
+  //     // short press
+  //     set_page_flag(true);
+  //   }
+  //   if (shift_end - shift_start > LONG_PRESS){
+  //     // long press
+  //     // toggle_shift_flag();
+  //   }
+    
+  //   if (KEYS_PRINT_OUT) printf("Key: Page\n");
+	// }
+
+
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
     toggle_lfo_flag();
 	}
+
+
   if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
     toggle_arp_flag();
-	}
+	} 
+
+
   if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
     //press preset key
     preset_start = to_ms_since_boot (get_absolute_time());
     if (KEYS_PRINT_OUT) printf("Key: Preset ON\n");
 	}
+
 	if ( (((k>>PRESET_KEY) & 1)) &&  (!((k_last>>PRESET_KEY) & 1)) ){
     //release preset key
     preset_end = to_ms_since_boot (get_absolute_time());
@@ -496,28 +530,23 @@ void default_pagination () {
 void pagination_update(){
 
   if(get_page_flag()){
-    page_change = true;
-
-    // current_page = !current_page;
-    // Or 
     uint8_t temp_pages = 0;
 
-    // increment the current page
+    page_change = true;
+
     current_page++;
 
-    // check to see if the arp is on, if so allow the page to open
+    // ARP on
     if (get_arp_flag()) {
       temp_pages = MAX_PAGES; // sets the page loop to be it's full length
     }
-    if (!get_arp_flag()) temp_pages = (MAX_PAGES-1); // shrinks the loop so we dont end up with loads of pages we don't need when not using Arp.
+    // ARP off
+    if (!get_arp_flag()) temp_pages = (MAX_PAGES-1);
     
-    // keep the amount of pages right
+    // count the pages
     if (current_page >= temp_pages) current_page = 0;
     
-    // set the page we're now on
     set_page(current_page);
-    
-    // clear the page flag for next time
     set_page_flag(false);
   }
 
@@ -568,7 +597,6 @@ void pagination_update(){
 uint32_t beep_machine::get_pagintaion (int page, int knob) {
   return page_values[page][knob];
 }
-
 uint8_t beep_machine::get_pagination_flag (void) {
   uint8_t temp;
   temp = pagination_flag;
@@ -592,6 +620,13 @@ void print_knob_page(){
 // ----------------------
 //          FLAGS
 // ----------------------
+void toggle_shift_flag (void) {
+  shift_flag != shift_flag;
+}
+bool get_shift_flag (void){
+  return shift_flag;
+}
+
 void set_page (uint8_t value) {
   // using a switch here so that I can easily change the LEDs... find a better way?
   switch (value) {
@@ -706,29 +741,40 @@ void hardware_task (void) {
   }
   if (hardware_index == 191) {
     pagination_update();
-
+    synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
+    if (shift_flag) synth::waveforms |= 1<<(get_pagintaion(0,2)>>7);
+    // synth::waveforms = (16 * ((get_pagintaion(0,2)>>7)+1));      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   }
   // --------------- //
   // PAGE 0 (GLOBAL) //
   // --------------- //
   // 1
-  // ??? SHOULD BE MODE RATE ???
+  // ??? SHOULD BE MOD RATE ???
   // 2
   // ??? SHOULD BE MOD DEPTH ???
   // 3
   // waveVec = pageValues[0][2];
+  // synth::waveforms = map(get_pagintaion(0,2),0,1023,1,128);      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
   // 4
   pitch_scale = get_pitch_log(get_pagintaion(0,3)); // might need optional stability/lofi switch...
   // ------------- //
   // PAGE 1 (ADSR) //
   // ------------- //
   
-  // setAttackScale((pageValues[1][0]>>2), VOICES);
-  // setDecayScale((pageValues[1][1]>>2), VOICES);
-  // setSustainVal((pageValues[1][2]>>2), VOICES);
-  // setReleaseScale((pageValues[1][3]>>2), VOICES);
+  // need to implement an easy change thing... knobs_touched?
+  // if (get_pagination_flag()) {
+  // 1 - ATTACK
+  synth::attack_ms = ((get_pagintaion(1,0)+10)<<2);
+  // 2 - DECAY
+  synth::decay_ms = ((get_pagintaion(1,1)+10)<<2); // +10 because if it geos below roughly there, the note volume is unpredicatble... theres also an issue between attack and decay levels outputing something weird
+  // 3 - SUSTAIN
+  synth::sustain = (get_pagintaion(1,2)<<6);
+  // 4 - RELEASE
+  synth::release_ms = (get_pagintaion(1,3)<<2);
+  // // }
   // ----------------------- //
-  // PAGE 2 (ARP) (Optional) //
+  // PAGE 2 (LFO) (Optional) //
   // ----------------------- //
   // 1
   // arpDelay = ((pageValues[2][0]>>1) + 1); // need the +1 to keep the timer going
@@ -739,14 +785,14 @@ void hardware_task (void) {
   // 4
   // ??? ???
   // ----------------------------------- //
-  // ??? PAGE 3 (Mod ADSR???) (Optional) //
+  // ??? PAGE 3 (ARP) (Optional) //
   // ----------------------------------- //
   
-  // if (KNOBS_PRINT_OUT) {
-  //   if (hardware_index==0) {
-  //     print_knob_page();
-  //     }
-  // }
+  if (KNOBS_PRINT_OUT) {
+    if (hardware_index==200) {
+      print_knob_page();
+      }
+  }
   // hardware_index++;
   // hardware_index&=0xff;
 }

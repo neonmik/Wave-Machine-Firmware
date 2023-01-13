@@ -10,12 +10,14 @@
 #include "hardware/pwm.h"
 #include "hardware/spi.h"
 
+#include "synth.h"
+
 
 
 #define abs(x) ({ __typeof__(x) _x = (x); _x >= 0 ? _x : -_x; })
 
 #define KEYS_PRINT_OUT      0
-#define KNOBS_PRINT_OUT     1
+#define KNOBS_PRINT_OUT     0
 #define HARDWARE_TEST       0
 
 #define UP              1
@@ -34,6 +36,8 @@
 #define ARP_KEY         29
 #define PRESET_KEY      30
 
+#define DEBUG_PIN       2
+
 #define LONG_PRESS      400
 
 #define SR_DATA_WIDTH   8
@@ -41,10 +45,10 @@
 #define SR_CLK          19
 #define SR_LATCH        20
 
-#define ADC_DIN         3
-#define ADC_DOUT        4
-#define ADC_CLK         2
-#define ADC_CS          5
+// #define ADC_DIN         3
+// #define ADC_DOUT        4
+// #define ADC_CLK         2
+// #define ADC_CS          5
 
 #define MAX_PAGES         4 // the max number of pages available
 #define MAX_KNOBS         4 // the max number of knobs available
@@ -99,9 +103,13 @@ namespace beep_machine {
     static bool arp_flag               =           0;
     static bool preset_flag            =           0;
     static bool pagination_flag        =           0;
+    static bool shift_flag             =           0;
 
     static uint32_t preset_start;
     static uint32_t preset_end;
+
+    static uint32_t shift_start;
+    static uint32_t shift_end;
 
     // knobs
     static uint32_t knobs[8];
@@ -126,6 +134,8 @@ namespace beep_machine {
     
 };
 
+void toggle_shift_flag (void);
+bool get_shift_flag (void);
 
 void set_page (uint8_t page);
 void set_page_flag(uint8_t value);
