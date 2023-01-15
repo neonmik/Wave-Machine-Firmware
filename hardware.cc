@@ -23,6 +23,8 @@ extern uint16_t  synth::attack_ms;      // attack period - moved to global as it
 extern uint16_t  synth::decay_ms;      // decay period
 extern uint16_t  synth::sustain;   // sustain volume
 extern uint16_t  synth::release_ms;      // release period
+extern uint16_t  synth::wave_vector;      // release period
+extern uint16_t   synth::wave;
 
 Adc adc;
 Keys keys;
@@ -594,11 +596,15 @@ void hardware_task (void) {
   // --------------- //
   // PAGE 0 (GLOBAL) //
   // --------------- //
+  
   // 1
   // ??? SHOULD BE MOD RATE ???
+  synth::wave = ((get_pagintaion(0,0)>>6)*256);
   // 2
   // ??? SHOULD BE MOD DEPTH ???
+  synth::wave_vector = (get_pagintaion(0,1)<<2);
   // 3
+
   // waveVec = pageValues[0][2];
   // synth::waveforms = map(get_pagintaion(0,2),0,1023,1,128);      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
@@ -617,7 +623,7 @@ void hardware_task (void) {
   // 3 - SUSTAIN
   synth::sustain = (get_pagintaion(1,2)<<6);
   // 4 - RELEASE
-  synth::release_ms = (get_pagintaion(1,3)<<2);
+  synth::release_ms = ((get_pagintaion(1,3))<<2);
   // // }
   // ----------------------- //
   // PAGE 2 (LFO) (Optional) //

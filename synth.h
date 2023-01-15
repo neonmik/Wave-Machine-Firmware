@@ -5,6 +5,8 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
+#include "wavetable.h"
+
 
 namespace synth {
 
@@ -69,6 +71,8 @@ namespace synth {
   };
 
   extern uint8_t waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  extern uint16_t wave;
+  extern uint16_t wave_vector;
 
   extern uint16_t  attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
   extern uint16_t  decay_ms;      // decay period

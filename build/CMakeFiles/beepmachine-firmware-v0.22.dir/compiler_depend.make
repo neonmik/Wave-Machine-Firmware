@@ -2004,6 +2004,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: /Users/nickallott/pic
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/spi.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
+  /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/drivers/adc.h \
   /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/include/hardware/adc.h \
@@ -2145,6 +2146,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj: /Users/nickallott/pico/Be
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/riemann_zeta.tcc \
   /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
+  /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/note_priority.cc \
   /Users/nickallott/pico/Beep-Machine-Firmware/drivers/dac.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/hardware.h
@@ -2227,6 +2229,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj: /Users/nickallott/pico/B
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/uart.h \
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h \
   /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/include/pico/stdio_uart.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/math.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cmath \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/bits/cpp_type_traits.h \
@@ -2688,6 +2691,8 @@ generated/pico_base/pico/config_autogen.h:
 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/timespec.h:
 
 /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/assert.h:
+
+/Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h:
 
 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h:
 
