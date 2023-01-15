@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
     synth.cc
     drivers/dac.cc
     drivers/adc.cc
+    drivers/keys.cc
     hardware.cc
 )
 

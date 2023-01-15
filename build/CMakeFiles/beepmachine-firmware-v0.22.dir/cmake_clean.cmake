@@ -88,6 +88,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.obj"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.obj.d"
+  "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj"
+  "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj"

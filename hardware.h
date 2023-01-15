@@ -22,23 +22,6 @@
 #define UP              1
 #define DOWN            0
 
-#define MUX_SEL_A       12
-#define MUX_SEL_B       13
-#define MUX_SEL_C       14
-#define MUX_SEL_D       15
-#define MUX_OUT_0       16
-#define MUX_OUT_1       17
-
-#define MAX_KEYS        27
-#define PAGE_KEY        27
-#define LFO_KEY         28
-#define ARP_KEY         29
-#define PRESET_KEY      30
-
-#define DEBUG_PIN       2
-
-#define LONG_PRESS      400
-
 #define SR_DATA_WIDTH   8
 #define SR_DATA         18
 #define SR_CLK          19
@@ -74,21 +57,6 @@ const int PICO_LED_PIN = PICO_DEFAULT_LED_PIN;
 #define LED_PAGE3       6
 
 namespace beep_machine {
-    // keys 
-    static uint32_t keys_history[8]    =           {
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                                0xFFFFFFFF,
-                                            };
-    static uint32_t keys               =           0xFFFFFFFF;
-    static uint32_t keys_last          =           0xFFFFFFFF;
-    static uint8_t num_keys_down       =           0;
-
     // preset, page and event flags
     static uint8_t preset              =           0;
     static uint8_t page                =           0;

@@ -91,4 +91,5 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/adc.h \
  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/include/hardware/dma.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/dma.h \
- /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dma.h
+ /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dma.h \
+ /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.h

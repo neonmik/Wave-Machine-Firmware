@@ -130,6 +130,6 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj: \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/riemann_zeta.tcc \
  /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
- /Users/nickallott/pico/Beep-Machine-Firmware/note_handling.cc \
+ /Users/nickallott/pico/Beep-Machine-Firmware/note_priority.cc \
  /Users/nickallott/pico/Beep-Machine-Firmware/drivers/dac.h \
  /Users/nickallott/pico/Beep-Machine-Firmware/hardware.h

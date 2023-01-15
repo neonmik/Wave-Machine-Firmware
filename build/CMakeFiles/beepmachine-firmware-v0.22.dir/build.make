@@ -125,10 +125,24 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.s"
 	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/drivers/adc.cc -o CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.s
 
+CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
+CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.cc
+CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.cc
+
+CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.i"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.cc > CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.i
+
+CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.s"
+	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.cc -o CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.s
+
 CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc
 CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj"
 	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj -c /Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.s: cmake_force
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.i: cmake_force
@@ -198,7 +212,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.i: cmake_force
@@ -225,7 +239,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.i: cmake_force
@@ -239,7 +253,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/sem.c.i: cmake_force
@@ -253,7 +267,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.i: cmake_force
@@ -267,7 +281,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.i: cmake_force
@@ -281,7 +295,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/timeout_helper.c.i: cmake_force
@@ -295,7 +309,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.i: cmake_force
@@ -309,7 +323,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/datetime.c.i: cmake_force
@@ -323,7 +337,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.i: cmake_force
@@ -337,7 +351,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/queue.c.i: cmake_force
@@ -351,7 +365,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.i: cmake_force
@@ -365,7 +379,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj: /Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj -c /Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/critical_section.c.i: cmake_force
@@ -379,7 +393,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/com
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.i: cmake_force
@@ -392,7 +406,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_divider/divider.S.i: cmake_force
@@ -406,7 +420,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.i: cmake_force
@@ -420,7 +434,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.i: cmake_force
@@ -434,7 +448,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.i: cmake_force
@@ -448,7 +462,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_vreg/vreg.c.i: cmake_force
@@ -462,7 +476,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.i: cmake_force
@@ -476,7 +490,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.i: cmake_force
@@ -490,7 +504,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.i: cmake_force
@@ -503,7 +517,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.i: cmake_force
@@ -517,7 +531,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.i: cmake_force
@@ -530,7 +544,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.i: cmake_force
@@ -543,7 +557,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.i: cmake_force
@@ -557,7 +571,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.i: cmake_force
@@ -571,7 +585,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_math.c.i: cmake_force
@@ -584,7 +598,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.i: cmake_force
@@ -597,7 +611,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.i: cmake_force
@@ -610,7 +624,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.i: cmake_force
@@ -624,7 +638,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.i: cmake_force
@@ -638,7 +652,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_math.c.i: cmake_force
@@ -651,7 +665,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.i: cmake_force
@@ -665,7 +679,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_malloc/pico_malloc.c.i: cmake_force
@@ -678,7 +692,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.i: cmake_force
@@ -691,7 +705,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building ASM object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(ASM_DEFINES) $(ASM_INCLUDES) $(ASM_FLAGS) -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj   -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.i: cmake_force
@@ -705,7 +719,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj"
 	/opt/homebrew/bin/arm-none-eabi-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/new_delete.cpp.i: cmake_force
@@ -719,7 +733,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.i: cmake_force
@@ -733,7 +747,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.i: cmake_force
@@ -747,7 +761,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.i: cmake_force
@@ -761,7 +775,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.i: cmake_force
@@ -775,7 +789,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.i: cmake_force
@@ -789,7 +803,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/flags.make
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj: /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj: CMakeFiles/beepmachine-firmware-v0.22.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building C object CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj -MF CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj.d -o CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj -c /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.i: cmake_force
@@ -806,6 +820,7 @@ beepmachine__firmware__v0_22_OBJECTS = \
 "CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj" \
 "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.obj" \
 "CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.obj" \
+"CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj" \
 "CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj" \
 "CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj" \
 "CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj" \
@@ -863,6 +878,7 @@ beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/main.c
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.obj
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.obj
+beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
@@ -915,7 +931,7 @@ beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/Users/
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/build.make
 beepmachine-firmware-v0.22.elf: pico-sdk/src/rp2_common/boot_stage2/bs2_default_padded_checksummed.S
 beepmachine-firmware-v0.22.elf: CMakeFiles/beepmachine-firmware-v0.22.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Linking CXX executable beepmachine-firmware-v0.22.elf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Linking CXX executable beepmachine-firmware-v0.22.elf"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/beepmachine-firmware-v0.22.dir/link.txt --verbose=$(VERBOSE)
 	/opt/homebrew/bin/arm-none-eabi-objcopy -Oihex /Users/nickallott/pico/Beep-Machine-Firmware/build/beepmachine-firmware-v0.22.elf beepmachine-firmware-v0.22.hex
 	/opt/homebrew/bin/arm-none-eabi-objcopy -Obinary /Users/nickallott/pico/Beep-Machine-Firmware/build/beepmachine-firmware-v0.22.elf beepmachine-firmware-v0.22.bin

@@ -28,7 +28,7 @@
 
 
 #include "synth.h"
-#include "note_handling.cc"
+#include "note_priority.cc"
 #include "drivers/dac.h"
 #include "hardware.h"
 

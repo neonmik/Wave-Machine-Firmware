@@ -1244,6 +1244,30 @@ drivers/dac.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.s
 .PHONY : drivers/dac.cc.s
 
+drivers/keys.obj: drivers/keys.cc.obj
+.PHONY : drivers/keys.obj
+
+# target to build an object file
+drivers/keys.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj
+.PHONY : drivers/keys.cc.obj
+
+drivers/keys.i: drivers/keys.cc.i
+.PHONY : drivers/keys.i
+
+# target to preprocess a source file
+drivers/keys.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.i
+.PHONY : drivers/keys.cc.i
+
+drivers/keys.s: drivers/keys.cc.s
+.PHONY : drivers/keys.s
+
+# target to generate assembly for a file
+drivers/keys.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.s
+.PHONY : drivers/keys.cc.s
+
 hardware.obj: hardware.cc.obj
 .PHONY : hardware.obj
 
@@ -1460,6 +1484,9 @@ help:
 	@echo "... drivers/dac.obj"
 	@echo "... drivers/dac.i"
 	@echo "... drivers/dac.s"
+	@echo "... drivers/keys.obj"
+	@echo "... drivers/keys.i"
+	@echo "... drivers/keys.s"
 	@echo "... hardware.obj"
 	@echo "... hardware.i"
 	@echo "... hardware.s"
