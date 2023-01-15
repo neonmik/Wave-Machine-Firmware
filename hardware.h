@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "hardware/adc.h"
 #include "hardware/pwm.h"
 #include "hardware/spi.h"
 
@@ -44,11 +43,6 @@
 #define SR_DATA         18
 #define SR_CLK          19
 #define SR_LATCH        20
-
-// #define ADC_DIN         3
-// #define ADC_DOUT        4
-// #define ADC_CLK         2
-// #define ADC_CS          5
 
 #define MAX_PAGES         4 // the max number of pages available
 #define MAX_KNOBS         4 // the max number of knobs available
@@ -201,25 +195,15 @@ void set_page (int page);
 void keys_init();
 void keys_read();
 void keys_update();
-
-
-
+uint32_t keys_reverse(uint32_t input);
 
 // ----------------------
 //          KNOBS
 // ----------------------
 
-void knobs_init (void);
-uint32_t knobs_read (uint8_t channel);
-void knobs_update (void);
-
-void set_knob(uint8_t knob, uint32_t value);
-uint32_t get_knob(uint8_t knob);
-
 void pagination_init (void);
 void default_pagination (void);
 void pagination_update (void);
-
 
 void print_knob_array (int *array, int len);
 void print_knob_page (void);

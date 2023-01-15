@@ -1,4 +1,4 @@
-/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles/beepmachine-firmware-v0.21.dir
+/Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles/beepmachine-firmware-v0.22.dir
 /Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles/ELF2UF2Build.dir
 /Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles/edit_cache.dir
 /Users/nickallott/pico/Beep-Machine-Firmware/build/CMakeFiles/rebuild_cache.dir

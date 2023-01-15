@@ -1,6 +1,9 @@
 #include "hardware.h"
 #include "log_table.h"
 
+#include "drivers/adc.h"
+
+
 extern uint16_t pitch_scale;
 extern uint8_t hardware_index;
 
@@ -19,6 +22,8 @@ extern uint16_t  synth::attack_ms;      // attack period - moved to global as it
 extern uint16_t  synth::decay_ms;      // decay period
 extern uint16_t  synth::sustain;   // sustain volume
 extern uint16_t  synth::release_ms;      // release period
+
+Adc adc;
 
 
 // ----------------------
@@ -266,19 +271,30 @@ void leds_test (int repeats, int delay) {
 // ----------------------
 
 void keys_init(){
+  // initiate pins for mux address
   gpio_init(MUX_SEL_A);
   gpio_init(MUX_SEL_B);
   gpio_init(MUX_SEL_C);
   gpio_init(MUX_SEL_D);
-
+  // set the pins direction
   gpio_set_dir(MUX_SEL_A, GPIO_OUT);
   gpio_set_dir(MUX_SEL_B, GPIO_OUT);
   gpio_set_dir(MUX_SEL_C, GPIO_OUT);
   gpio_set_dir(MUX_SEL_D, GPIO_OUT);
+  // set the slew rate slow (for reducing amount of cross talk on address changes... hopefully)
+  gpio_set_slew_rate(MUX_SEL_A, GPIO_SLEW_RATE_SLOW);
+  gpio_set_slew_rate(MUX_SEL_B, GPIO_SLEW_RATE_SLOW);
+  gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
+  gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
 
+  // initiate pins for mux output
+  gpio_init(MUX_OUT_0);
+  gpio_init(MUX_OUT_1);
+  // set the pins direction
   gpio_set_dir(MUX_OUT_0, GPIO_IN);
-  gpio_pull_up(MUX_OUT_0);
   gpio_set_dir(MUX_OUT_1, GPIO_IN);
+  // set pins for pull up - already doing this on PCB, just a precaution
+  gpio_pull_up(MUX_OUT_0);
   gpio_pull_up(MUX_OUT_1);
 
   gpio_put(MUX_SEL_A, 1);
@@ -302,18 +318,19 @@ void keys_read(){
   gpio_put(MUX_SEL_D, 0); 
 
   for (int i = 0; i < 16; i++) {
+
     // nop needed to stop the processor reading too quickly, the mux cant keep up...
 
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
     gpio_put(MUX_SEL_A, i & 1); 
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_B, (i >> 1) & 1);
+    gpio_put(MUX_SEL_B, i & 2);
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_C, (i >> 2) & 1);
+    gpio_put(MUX_SEL_C, i & 4);
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_D, (i >> 3) & 1);
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+    gpio_put(MUX_SEL_D, i & 8);
       
+    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
     
     keys_history[history_index] |= gpio_get(MUX_OUT_0) << (i);
     asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
@@ -336,18 +353,16 @@ void keys_read(){
 		(keys_history[0] == keys_history[7]))
 	{
 		// reverse bit order  - for messed up hardware
-    unsigned int input = keys_history[0];
-    unsigned int output = 0;
-    
-    for (int i = 0; i < 32; i++) {
-      if ((input & (1 << i))) 
-            output |= 1 << ((32 - 1) - i);
-    }
-    
-    keys = output;
-    // keys = keys_history[0];
+    keys = keys_reverse(keys_history[0]);
 	}
 
+}
+uint32_t keys_reverse (uint32_t input) {
+  uint32_t output = 0;
+  for (int i = 0; i < 32; i++) {
+      if ((input & (1 << i))) output |= 1 << ((32 - 1) - i);
+  }
+  return output;
 }
 void keys_update() {
   uint32_t k, k_last;
@@ -447,84 +462,20 @@ void keys_update() {
 //          KNOBS
 // ----------------------
 
-void knobs_init (void) {
-  adc_init();
-  adc_gpio_init(26);
-  adc_select_input(0);
-}
-uint32_t knobs_read (uint8_t channel) {
-  uint32_t sample = 0;
-  uint32_t output = 0;
-
-  // Translates channel number into a binary address for the mux
-  gpio_put(MUX_SEL_A, channel & 1); 
-  gpio_put(MUX_SEL_B, (channel >> 1) & 1);
-  gpio_put(MUX_SEL_C, (channel >> 2) & 1);
-  gpio_put(MUX_SEL_D, (channel >> 3) & 1);
-  
-  // nop needed to stop the processor reading too quickly, the mux cant keep up...
-  asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-  
-  // ----------
-  // FIR filter
-  // ----------
-  // take 16 samples and add them together - slighty better but takes more time
-
-  // for (int i = 0; i < 8; i++) {
-  //   sample += adc_read();
-  // }
-  // output = ((sample/8)>>2); // divide samples to get average
-
-  // ----------
-  // IIR filter
-  // ----------
-  // take 1 sample, weighted against the previous ones
-  sample = sample - (sample>>2) + adc_read();
-  output = (sample>>2);
-  if (output<=5) output = 0;
-  
-  gpio_put(MUX_SEL_A, 0);
-  gpio_put(MUX_SEL_B, 0);
-  gpio_put(MUX_SEL_C, 0);
-  gpio_put(MUX_SEL_D, 0);
-  //output result
-  return output;
-}
-void knobs_update (void) {
-  static uint8_t poll;
-
-  gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
-
-  // only need to read one every time as it's so quick
-  set_knob(poll, knobs_read(poll));
-  
-  gpio_put(23, 0); // puts SMPS back into PWM mode
-
-  poll++;
-  poll &= 0x3;
-}
-
-void set_knob(uint8_t knob, uint32_t value) {
-  knobs[knob] = value;
-}
-uint32_t get_knob(uint8_t knob) {
-  return knobs[knob];
-}
-
 void pagination_init() {
   // pinMode(aLED, OUTPUT);
   for(int i=0; i < MAX_KNOBS; i++){
-    knob_values[i] = get_knob(i);
+    knob_values[i] = adc.value(i);
     knob_states[i] = ACTIVE;
   }
   default_pagination();
 }
 void default_pagination () {
   // ADSR default values
-  page_values[ADSR][0]=256; //A
+  page_values[ADSR][0]=10; //A
   page_values[ADSR][1]=20; // D
   page_values[ADSR][2]=1023; // S
-  page_values[ADSR][3]=20; // R
+  page_values[ADSR][3]=200; // R
 }
 // read knobs and digital switches and handle pagination
 void pagination_update(){
@@ -563,7 +514,7 @@ void pagination_update(){
   }
   // read knobs values, show sync with the LED, enable knob when it matches the stored value
   for (int i = 0; i < MAX_KNOBS; i++){
-    value = get_knob((uint8_t) i);
+    value = adc.value(i);
     in_sync = abs(value - page_values[current_page][i]) < protection_value;
 
     // enable knob when it matches the stored value
@@ -713,7 +664,8 @@ void hardware_init (void) {
   leds_init();
   rgb_init();
   keys_init();
-  knobs_init(); // need to write code to replace this for SR in
+  adc.init();
+  // knobs_init(); // need to write code to replace this for SR in
   // dac_init();
   pagination_init();
   
@@ -737,12 +689,13 @@ void hardware_task (void) {
     keys_update();
   }
   if (hardware_index == 127) {
-    knobs_update();
+    // knobs_update();
+    adc.update();
   }
   if (hardware_index == 191) {
     pagination_update();
-    synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
-    if (shift_flag) synth::waveforms |= 1<<(get_pagintaion(0,2)>>7);
+    // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
+    // if (shift_flag) synth::waveforms |= 1<<(get_pagintaion(0,2)>>7);
     // synth::waveforms = (16 * ((get_pagintaion(0,2)>>7)+1));      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   }
   // --------------- //
@@ -757,7 +710,7 @@ void hardware_task (void) {
   // synth::waveforms = map(get_pagintaion(0,2),0,1023,1,128);      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
   // 4
-  pitch_scale = get_pitch_log(get_pagintaion(0,3)); // might need optional stability/lofi switch...
+  pitch_scale = get_pitch_log(get_pagintaion(0,3)>>2); // might need optional stability/lofi switch...
   // ------------- //
   // PAGE 1 (ADSR) //
   // ------------- //
