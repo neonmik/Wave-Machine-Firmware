@@ -306,20 +306,6 @@ void keys_update() {
     if (KEYS_PRINT_OUT) printf("Key: Page\n");
 	}
 
-  // if ( (((k>>PAGE_KEY) & 1)) &&  (!((k_last>>PAGE_KEY) & 1)) ){
-  //   // release PAGE/SHIFT KEY
-  //   shift_end = to_ms_since_boot (get_absolute_time());
-  //   if (shift_end - shift_start < LONG_PRESS) {
-  //     // short press
-  //     set_page_flag(true);
-  //   }
-  //   if (shift_end - shift_start > LONG_PRESS){
-  //     // long press
-  //     // toggle_shift_flag();
-  //   }
-    
-  //   if (KEYS_PRINT_OUT) printf("Key: Page\n");
-	// }
 
 
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
@@ -455,7 +441,7 @@ void pagination_update(){
 }
 
 uint32_t beep_machine::get_pagintaion (int page, int knob) {
-  return page_values[page][knob];
+  return (page_values[page][knob]>>2);
 }
 uint8_t beep_machine::get_pagination_flag (void) {
   uint8_t temp;
@@ -574,8 +560,6 @@ void hardware_init (void) {
   rgb_init();
   keys.init();
   adc.init();
-  // knobs_init(); // need to write code to replace this for SR in
-  // dac_init();
   pagination_init();
   
 
@@ -619,7 +603,7 @@ void hardware_task (void) {
   // synth::waveforms = map(get_pagintaion(0,2),0,1023,1,128);      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
   // 4
-  pitch_scale = get_pitch_log(get_pagintaion(0,3)>>2); // might need optional stability/lofi switch...
+  pitch_scale = get_pitch_log(get_pagintaion(0,3)); // might need optional stability/lofi switch...
   // ------------- //
   // PAGE 1 (ADSR) //
   // ------------- //
