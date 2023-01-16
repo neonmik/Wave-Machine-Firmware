@@ -2,6 +2,7 @@
 
 #include "pico/stdlib.h"
 
+
 #include "wavetable.h"
 
 // This wants to be a LFO for modulating different sources...
@@ -20,7 +21,7 @@ namespace modulation {
         VECTOR = 3
     };
 
-    static uint16_t    index       = 0;
+    static uint8_t    index       = 0;
     static uint32_t    increment   = 0;
     static uint16_t    acc         = 0;
     static int16_t     output      = 0;
@@ -31,7 +32,7 @@ namespace modulation {
 
     static uint8_t     matrix      = Matrix::OFF;
 
-    static uint8_t     env_rate    = 255; //figure this out
+    static uint8_t     lfo_rate    = 255; //figure this out
 
 
     void set_depth(int input);
@@ -42,7 +43,9 @@ namespace modulation {
 
     void init (void);
     void update (void);
-    uint16_t get_output(void);
+    uint16_t get_output_uint(void);
+    int16_t get_output_int(void);
+    
 
 
 }

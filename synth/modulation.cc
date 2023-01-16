@@ -1,17 +1,20 @@
 #include "modulation.h"
 
+#include <math.h>
+
 namespace modulation {
 
     void set_depth(int input) {
-        depth = input;
+        // depth = log(input+1)/log(1024)*255;
+        depth = (input>>2);
     }
 
     void set_rate(int input) {
-        rate = ((65536 * (input)) / env_rate)>>6;
+        rate = ((65536 * (input)) / lfo_rate)>>6;
     }
 
     void set_wave(int waveform) {
-        wave = waveform*256;
+        wave = (waveform>>6)*256;
     }
 
     void set_matrix(uint8_t input) {
@@ -31,12 +34,14 @@ namespace modulation {
         // output = 0;
         acc += rate;
         index = acc >> 8;
-        output = ((wavetable[wave + index]*depth)>>8); //
+        output = ((wavetable[wave + index]*depth)>>10); // the bit shift is to compenstate for the huge jump when multiplying the depth
     }
 
-    uint16_t get_output() {
-        return (output+32768);
+    uint16_t get_output_uint() {
+        return (output+32767);
     }
-
+    int16_t get_output_int() {
+        return (output);
+    }
     
 }

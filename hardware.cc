@@ -3,6 +3,7 @@
 
 #include "drivers/adc.h"
 #include "drivers/keys.h"
+// #include "drivers/switch.h"
 
 #include "synth/modulation.h"
 
@@ -641,7 +642,7 @@ void hardware_task (void) {
   // 3 - DEPTH
   modulation::set_depth(get_pagintaion(2,2));
   // 4 - WAVESHAPE
-  modulation::set_wave(get_pagintaion(2,3)>>6);
+  modulation::set_wave(get_pagintaion(2,3));
   // ----------------------------------- //
   // ??? PAGE 3 (ARP) (Optional)         //
   // ----------------------------------- //

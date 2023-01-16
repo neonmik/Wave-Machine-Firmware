@@ -86,8 +86,9 @@ int main() {
   while (true) {
     
     if (buffer_flag){
-      modulation::update();
-      synth::wave_vector = (modulation::get_output() + synth::wave_vector)>>2;
+      if (get_lfo_flag()) modulation::update();
+      // modulation::update();
+      synth::wave_vector += (modulation::get_output_uint()>>4);
       for(int i =0; i<256; i++) {
         uint16_t sample = ((get_audio_frame()+32768)>>4); // create next sample, add 32768 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
@@ -95,7 +96,7 @@ int main() {
 
       }
       buffer_flag = 0;
-      
+
     } else {
       hardware_task();
     }

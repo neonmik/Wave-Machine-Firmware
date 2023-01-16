@@ -154,5 +154,4 @@ namespace synth {
   int16_t get_audio_frame();
   bool is_audio_playing();
 
-  // void init(uint16_t sr);
 }
