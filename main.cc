@@ -26,7 +26,7 @@
 #include <math.h> 
 
 
-
+// #include "modulation.h"
 #include "synth.h"
 #include "note_priority.cc"
 #include "drivers/dac.h"
@@ -62,7 +62,7 @@ void voices_init (void) {
   synth::decay_ms    = 100;
   synth::sustain     = 0x7fff; // set to less than full scale as it clips - full scale: 0xffff = 65535 
   synth::release_ms  = 1000;
-  synth::waveforms = Waveform::SINE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  synth::waveforms = Waveform::WAVETABLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   for (int i = 0; i < MAX_VOICES; i++) {
     // channels[i].waveforms   = Waveform::SINE | Waveform::SAW; 

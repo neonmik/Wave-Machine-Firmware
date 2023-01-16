@@ -141,7 +141,7 @@ namespace synth {
           waveform_count++;
         }
         
-        if(waveforms & Waveform::SINE) {
+        if(waveforms & Waveform::WAVETABLE) {
           // the sine_waveform sample contains 256 samples in
           // total so we'll just use the most significant bits
           // of the current waveform position to index into it

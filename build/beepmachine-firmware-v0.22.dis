@@ -43,9 +43,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  19 .debug_line   00013b83  00000000  00000000  000555c0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_str    00005c02  00000000  00000000  00069143  2**0
+ 20 .debug_str    00005c07  00000000  00000000  00069143  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_frame  00002048  00000000  00000000  0006ed48  2**2
+ 21 .debug_frame  00002048  00000000  00000000  0006ed4c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 /Users/nickallott/pico/Beep-Machine-Firmware/build/beepmachine-firmware-v0.22.elf:     file format elf32-littlearm

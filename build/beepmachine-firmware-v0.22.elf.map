@@ -1238,9 +1238,9 @@ Discarded input sections
  .text          0x0000000000000000        0x0 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
  .data          0x0000000000000000        0x0 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
  .bss           0x0000000000000000        0x0 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
- .text          0x0000000000000000        0x0 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccfMeCcW.o
- .data          0x0000000000000000        0x0 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccfMeCcW.o
- .bss           0x0000000000000000        0x0 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccfMeCcW.o
+ .text          0x0000000000000000        0x0 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccs5krVp.o
+ .data          0x0000000000000000        0x0 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccs5krVp.o
+ .bss           0x0000000000000000        0x0 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccs5krVp.o
  .data          0x0000000000000000        0x0 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .bss           0x0000000000000000        0x0 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .text          0x0000000000000000        0x0 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libg.a(lib_a-calloc.o)
@@ -1456,7 +1456,7 @@ LOAD /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-
 .boot2          0x0000000010000000      0x100
                 0x0000000010000000                __boot2_start__ = .
  *(.boot2)
- .boot2         0x0000000010000000      0x100 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccfMeCcW.o
+ .boot2         0x0000000010000000      0x100 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccs5krVp.o
                 0x0000000010000100                __boot2_end__ = .
                 0x0000000000000001                ASSERT (((__boot2_end__ - __boot2_start__) == 0x100), ERROR: Pico second stage bootloader must be 256 bytes in size)
 
@@ -2661,7 +2661,7 @@ LOAD CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/sr
 LOAD CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
 LOAD CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
 LOAD CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
-LOAD /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccfMeCcW.o
+LOAD /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccs5krVp.o
 LOAD /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a
 LOAD /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a
 START GROUP
@@ -2770,7 +2770,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x00000000000006f8       0x2c CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
  .ARM.attributes
-                0x0000000000000724       0x22 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccfMeCcW.o
+                0x0000000000000724       0x22 /var/folders/qh/wzbl_dx50_s371n865l3xj_c0000gn/T//ccs5krVp.o
  .ARM.attributes
                 0x0000000000000746       0x1e /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .ARM.attributes
@@ -3098,88 +3098,88 @@ LOAD linker stubs
  .debug_line    0x00000000000132ff      0x558 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
  .debug_line    0x0000000000013857      0x32c CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
 
-.debug_str      0x0000000000000000     0x5c02
- .debug_str     0x0000000000000000     0x1427 CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj
-                                       0x164f (size before relaxing)
- .debug_str     0x0000000000001427      0x1a4 CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj
-                                       0x1392 (size before relaxing)
- .debug_str     0x00000000000015cb      0x864 CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.obj
+.debug_str      0x0000000000000000     0x5c07
+ .debug_str     0x0000000000000000     0x142c CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj
+                                       0x1654 (size before relaxing)
+ .debug_str     0x000000000000142c      0x1a4 CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj
+                                       0x1397 (size before relaxing)
+ .debug_str     0x00000000000015d0      0x864 CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/dac.cc.obj
                                        0x1697 (size before relaxing)
- .debug_str     0x0000000000001e2f      0x397 CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.obj
+ .debug_str     0x0000000000001e34      0x397 CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/adc.cc.obj
                                         0x75c (size before relaxing)
- .debug_str     0x00000000000021c6      0x138 CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj
+ .debug_str     0x00000000000021cb      0x138 CMakeFiles/beepmachine-firmware-v0.22.dir/drivers/keys.cc.obj
                                         0x5fa (size before relaxing)
- .debug_str     0x00000000000022fe      0x834 CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj
+ .debug_str     0x0000000000002303      0x834 CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj
                                        0x14fa (size before relaxing)
- .debug_str     0x0000000000002b32      0x4e1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
+ .debug_str     0x0000000000002b37      0x4e1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
                                         0x9b4 (size before relaxing)
- .debug_str     0x0000000000003013      0x1c1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
+ .debug_str     0x0000000000003018      0x1c1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
                                         0x380 (size before relaxing)
- .debug_str     0x00000000000031d4       0x86 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
+ .debug_str     0x00000000000031d9       0x86 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
                                         0x23c (size before relaxing)
- .debug_str     0x000000000000325a       0xf1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+ .debug_str     0x000000000000325f       0xf1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
                                         0x367 (size before relaxing)
- .debug_str     0x000000000000334b      0x3a8 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+ .debug_str     0x0000000000003350      0x3a8 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
                                         0x7dd (size before relaxing)
- .debug_str     0x00000000000036f3       0x61 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
+ .debug_str     0x00000000000036f8       0x61 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
                                         0x21d (size before relaxing)
- .debug_str     0x0000000000003754      0x6a1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj
+ .debug_str     0x0000000000003759      0x6a1 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_time/time.c.obj
                                         0xbb2 (size before relaxing)
- .debug_str     0x0000000000003df5      0x155 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+ .debug_str     0x0000000000003dfa      0x155 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
                                         0x6b5 (size before relaxing)
- .debug_str     0x0000000000003f4a       0xd9 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj
+ .debug_str     0x0000000000003f4f       0xd9 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_util/pheap.c.obj
                                         0x406 (size before relaxing)
- .debug_str     0x0000000000004023      0x16a CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
+ .debug_str     0x0000000000004028      0x16a CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
                                         0x5e1 (size before relaxing)
- .debug_str     0x000000000000418d      0x1ef CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
+ .debug_str     0x0000000000004192      0x1ef CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
                                         0x554 (size before relaxing)
- .debug_str     0x000000000000437c      0x1da CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+ .debug_str     0x0000000000004381      0x1da CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
                                         0x61f (size before relaxing)
- .debug_str     0x0000000000004556      0x243 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
+ .debug_str     0x000000000000455b      0x243 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
                                         0x693 (size before relaxing)
- .debug_str     0x0000000000004799       0x94 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
+ .debug_str     0x000000000000479e       0x94 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
                                         0x2f7 (size before relaxing)
- .debug_str     0x000000000000482d      0x12b CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
+ .debug_str     0x0000000000004832      0x12b CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
                                         0x33e (size before relaxing)
- .debug_str     0x0000000000004958       0x70 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
+ .debug_str     0x000000000000495d       0x70 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
                                         0x23b (size before relaxing)
- .debug_str     0x00000000000049c8      0x260 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+ .debug_str     0x00000000000049cd      0x260 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
                                         0x49c (size before relaxing)
- .debug_str     0x0000000000004c28       0x5a CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
+ .debug_str     0x0000000000004c2d       0x5a CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
                                          0x8d (size before relaxing)
- .debug_str     0x0000000000004c82       0xc9 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
+ .debug_str     0x0000000000004c87       0xc9 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
                                         0x276 (size before relaxing)
- .debug_str     0x0000000000004d4b       0x46 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
+ .debug_str     0x0000000000004d50       0x46 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
                                          0x87 (size before relaxing)
- .debug_str     0x0000000000004d91       0x4a CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+ .debug_str     0x0000000000004d96       0x4a CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
                                          0x8b (size before relaxing)
- .debug_str     0x0000000000004ddb       0xa2 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
+ .debug_str     0x0000000000004de0       0xa2 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
                                         0x2b5 (size before relaxing)
- .debug_str     0x0000000000004e7d       0x50 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+ .debug_str     0x0000000000004e82       0x50 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
                                          0x91 (size before relaxing)
- .debug_str     0x0000000000004ecd       0x55 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
+ .debug_str     0x0000000000004ed2       0x55 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
                                          0x96 (size before relaxing)
- .debug_str     0x0000000000004f22       0x48 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
+ .debug_str     0x0000000000004f27       0x48 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
                                          0x89 (size before relaxing)
- .debug_str     0x0000000000004f6a       0x86 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
+ .debug_str     0x0000000000004f6f       0x86 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
                                         0x2d1 (size before relaxing)
- .debug_str     0x0000000000004ff0       0x4e CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
+ .debug_str     0x0000000000004ff5       0x4e CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
                                          0x8f (size before relaxing)
- .debug_str     0x000000000000503e       0x4c CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
+ .debug_str     0x0000000000005043       0x4c CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
                                          0x8d (size before relaxing)
- .debug_str     0x000000000000508a       0x49 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
+ .debug_str     0x000000000000508f       0x49 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
                                          0x8a (size before relaxing)
- .debug_str     0x00000000000050d3      0x23e CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+ .debug_str     0x00000000000050d8      0x23e CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
                                         0x3fe (size before relaxing)
- .debug_str     0x0000000000005311      0x36d CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_str     0x0000000000005316      0x36d CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
                                         0x7d4 (size before relaxing)
- .debug_str     0x000000000000567e      0x2bb CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+ .debug_str     0x0000000000005683      0x2bb CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
                                         0x760 (size before relaxing)
- .debug_str     0x0000000000005939      0x187 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
+ .debug_str     0x000000000000593e      0x187 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
                                         0x5ad (size before relaxing)
- .debug_str     0x0000000000005ac0      0x100 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
+ .debug_str     0x0000000000005ac5      0x100 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/dma.c.obj
                                         0x48a (size before relaxing)
- .debug_str     0x0000000000005bc0       0x42 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
+ .debug_str     0x0000000000005bc5       0x42 CMakeFiles/beepmachine-firmware-v0.22.dir/Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
                                         0x287 (size before relaxing)
 
 .debug_frame    0x0000000000000000     0x2048

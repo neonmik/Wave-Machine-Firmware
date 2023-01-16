@@ -58,7 +58,7 @@ namespace synth {
     SQUARE    = 64,
     SAW       = 32,
     TRIANGLE  = 16,
-    SINE      = 8,
+    WAVETABLE = 8,
     WAVE      = 1
   };
 
