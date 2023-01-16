@@ -5,7 +5,7 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
-#include "wavetable.h"
+#include "synth/wavetable.h"
 
 
 namespace synth {

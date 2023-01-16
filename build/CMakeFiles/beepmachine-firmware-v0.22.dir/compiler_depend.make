@@ -2004,7 +2004,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: /Users/nickallott/pic
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/spi.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
-  /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/wavetable.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/drivers/adc.h \
   /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/include/hardware/adc.h \
@@ -2013,7 +2013,8 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: /Users/nickallott/pic
   /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/include/hardware/dma.h \
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/dma.h \
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dma.h \
-  /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.h
+  /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.h
 
 CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/main.cc \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/stdio.h \
@@ -2144,9 +2145,10 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj: /Users/nickallott/pico/Be
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/poly_hermite.tcc \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/poly_laguerre.tcc \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/riemann_zeta.tcc \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/wavetable.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
-  /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/note_priority.cc \
   /Users/nickallott/pico/Beep-Machine-Firmware/drivers/dac.h \
   /Users/nickallott/pico/Beep-Machine-Firmware/hardware.h
@@ -2229,7 +2231,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj: /Users/nickallott/pico/B
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/uart.h \
   /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h \
   /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/include/pico/stdio_uart.h \
-  /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/wavetable.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/math.h \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cmath \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/bits/cpp_type_traits.h \
@@ -2269,10 +2271,74 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj: /Users/nickallott/pico/B
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/poly_laguerre.tcc \
   /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/tr1/riemann_zeta.tcc
 
+CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.obj: /Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.cc \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_stdlib/include/pico/stdlib.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/types.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/assert.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cassert \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v6-m/nofp/bits/c++config.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v6-m/nofp/bits/os_defines.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v6-m/nofp/bits/cpu_defines.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/pstl/pstl_config.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/assert.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/_ansi.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/newlib.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/_newlib_version.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/config.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/ieeefp.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/features.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/stdint.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/machine/_default_types.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_intsup.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h \
+  generated/pico_base/pico/version.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/config.h \
+  generated/pico_base/pico/config_autogen.h \
+  /Users/nickallott/pico/pico-sdk/src/boards/include/boards/pico.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/platform_defs.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/addressmap.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/sio.h \
+  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/cdefs.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/types.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/error.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio/include/pico/stdio.h \
+  /Users/nickallott/pico/pico-sdk/src/common/pico_time/include/pico/time.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_timer/include/hardware/timer.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/timer.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_base/include/hardware/address_mapped.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/timer.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_gpio/include/hardware/gpio.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/sio.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/interp.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/padsbank0.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pads_bank0.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/iobank0.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/io_bank0.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_irq/include/hardware/irq.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/intctrl.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/m0plus.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_uart/include/hardware/uart.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/uart.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/uart.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h \
+  /Users/nickallott/pico/pico-sdk/src/rp2_common/pico_stdio_uart/include/pico/stdio_uart.h \
+  /Users/nickallott/pico/Beep-Machine-Firmware/synth/wavetable.h
+
+
+/Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.cc:
 
 /Users/nickallott/pico/Beep-Machine-Firmware/note_priority.cc:
 
 /Users/nickallott/pico/Beep-Machine-Firmware/main.cc:
+
+/Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.h:
 
 /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h:
 
@@ -2668,6 +2734,8 @@ generated/pico_base/pico/config_autogen.h:
 
 /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/platform_defs.h:
 
+/Users/nickallott/pico/Beep-Machine-Firmware/synth/wavetable.h:
+
 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_pthreadtypes.h:
 
 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v6-m/nofp/bits/c++config.h:
@@ -2691,8 +2759,6 @@ generated/pico_base/pico/config_autogen.h:
 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/timespec.h:
 
 /Users/nickallott/pico/pico-sdk/src/common/pico_base/include/pico/assert.h:
-
-/Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h:
 
 /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/sys/_stdint.h:
 

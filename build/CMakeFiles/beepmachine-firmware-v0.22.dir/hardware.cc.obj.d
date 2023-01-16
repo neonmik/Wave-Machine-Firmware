@@ -84,7 +84,7 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/spi.h \
  /Users/nickallott/pico/Beep-Machine-Firmware/synth.h \
  /opt/homebrew/Cellar/arm-none-eabi-gcc/10.3-2021.07/gcc/arm-none-eabi/include/c++/10.3.1/cstdint \
- /Users/nickallott/pico/Beep-Machine-Firmware/wavetable.h \
+ /Users/nickallott/pico/Beep-Machine-Firmware/synth/wavetable.h \
  /Users/nickallott/pico/Beep-Machine-Firmware/log_table.h \
  /Users/nickallott/pico/Beep-Machine-Firmware/drivers/adc.h \
  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_adc/include/hardware/adc.h \
@@ -93,4 +93,5 @@ CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj: \
  /Users/nickallott/pico/pico-sdk/src/rp2_common/hardware_dma/include/hardware/dma.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/dma.h \
  /Users/nickallott/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dma.h \
- /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.h
+ /Users/nickallott/pico/Beep-Machine-Firmware/drivers/keys.h \
+ /Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.h

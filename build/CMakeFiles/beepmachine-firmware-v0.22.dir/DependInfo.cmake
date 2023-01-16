@@ -154,6 +154,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/nickallott/pico/Beep-Machine-Firmware/hardware.cc" "CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj.d"
   "/Users/nickallott/pico/Beep-Machine-Firmware/main.cc" "CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj.d"
   "/Users/nickallott/pico/Beep-Machine-Firmware/synth.cc" "CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj.d"
+  "/Users/nickallott/pico/Beep-Machine-Firmware/synth/modulation.cc" "CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.obj" "gcc" "CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.obj.d"
   )
 
 # Targets to which this target links.

@@ -26,7 +26,7 @@
 #include <math.h> 
 
 
-// #include "modulation.h"
+#include "synth/modulation.h"
 #include "synth.h"
 #include "note_priority.cc"
 #include "drivers/dac.h"
@@ -81,17 +81,13 @@ int main() {
   dac_init(SAMPLE_RATE);
 
   voices_init();
-
+  modulation::init();
 
   while (true) {
-
-    if (buffer_flag==0) {
-      hardware_task();
-    }
-    // gpio_put(DEBUG_PIN, 1);
     
     if (buffer_flag){
-
+      modulation::update();
+      synth::wave_vector = (modulation::get_output() + synth::wave_vector)>>2;
       for(int i =0; i<256; i++) {
         uint16_t sample = ((get_audio_frame()+32768)>>4); // create next sample, add 32768 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
@@ -100,7 +96,12 @@ int main() {
       }
       buffer_flag = 0;
       
+    } else {
+      hardware_task();
     }
+    // gpio_put(DEBUG_PIN, 1);
+    
+    
     
     // printf("release: %.4d \n", synth::release_ms);
     

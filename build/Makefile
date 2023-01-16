@@ -1340,6 +1340,30 @@ synth.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.s
 .PHONY : synth.cc.s
 
+synth/modulation.obj: synth/modulation.cc.obj
+.PHONY : synth/modulation.obj
+
+# target to build an object file
+synth/modulation.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.obj
+.PHONY : synth/modulation.cc.obj
+
+synth/modulation.i: synth/modulation.cc.i
+.PHONY : synth/modulation.i
+
+# target to preprocess a source file
+synth/modulation.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.i
+.PHONY : synth/modulation.cc.i
+
+synth/modulation.s: synth/modulation.cc.s
+.PHONY : synth/modulation.s
+
+# target to generate assembly for a file
+synth/modulation.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.s
+.PHONY : synth/modulation.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1496,6 +1520,9 @@ help:
 	@echo "... synth.obj"
 	@echo "... synth.i"
 	@echo "... synth.s"
+	@echo "... synth/modulation.obj"
+	@echo "... synth/modulation.i"
+	@echo "... synth/modulation.s"
 .PHONY : help
 
 

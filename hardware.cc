@@ -4,6 +4,8 @@
 #include "drivers/adc.h"
 #include "drivers/keys.h"
 
+#include "synth/modulation.h"
+
 
 extern uint16_t pitch_scale;
 extern uint8_t hardware_index;
@@ -373,6 +375,10 @@ void default_pagination () {
   page_values[ADSR][1]=20; // D
   page_values[ADSR][2]=1023; // S
   page_values[ADSR][3]=200; // R
+  page_values[MOD][0]=20; //A
+  page_values[MOD][1]=20; // D
+  page_values[MOD][2]=20; // S
+  page_values[MOD][3]=20; // R
 }
 // read knobs and digital switches and handle pagination
 void pagination_update(){
@@ -626,9 +632,20 @@ void hardware_task (void) {
   synth::release_ms = ((get_pagintaion(1,3))<<2);
   // // }
   // ----------------------- //
-  // PAGE 2 (LFO) (Optional) //
+  // PAGE 2 (LFO)            //
   // ----------------------- //
-  // 1
+  // 1 - MATRIX
+  modulation::set_matrix((uint8_t)(get_pagintaion(2,0)>>10));
+  // 2 - RATE
+  modulation::set_rate(get_pagintaion(2,1));
+  // 3 - DEPTH
+  modulation::set_depth(get_pagintaion(2,2));
+  // 4 - WAVESHAPE
+  modulation::set_wave(get_pagintaion(2,3)>>6);
+  // ----------------------------------- //
+  // ??? PAGE 3 (ARP) (Optional)         //
+  // ----------------------------------- //
+  // 1 - MATRIX
   // arpDelay = ((pageValues[2][0]>>1) + 1); // need the +1 to keep the timer going
   // 2
   // arpRelease = map(pageValues[2][1], 0, 1023, 40, 300); // 40 lets you get down to blips and boops, not sure this really is useful... 
@@ -636,9 +653,6 @@ void hardware_task (void) {
   // ??? ???
   // 4
   // ??? ???
-  // ----------------------------------- //
-  // ??? PAGE 3 (ARP) (Optional) //
-  // ----------------------------------- //
   
   if (KNOBS_PRINT_OUT) {
     if (hardware_index==200) {

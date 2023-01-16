@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
     drivers/adc.cc
     drivers/keys.cc
     hardware.cc
+    synth/modulation.cc
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
