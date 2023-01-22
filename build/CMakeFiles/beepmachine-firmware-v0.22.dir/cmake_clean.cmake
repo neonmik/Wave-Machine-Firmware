@@ -94,10 +94,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/beepmachine-firmware-v0.22.dir/hardware.cc.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.obj.d"
-  "CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj"
-  "CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj.d"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.obj"
   "CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.obj.d"
+  "CMakeFiles/beepmachine-firmware-v0.22.dir/synth/synth.cc.obj"
+  "CMakeFiles/beepmachine-firmware-v0.22.dir/synth/synth.cc.obj.d"
   "beepmachine-firmware-v0.22.elf"
   "beepmachine-firmware-v0.22.pdb"
 )

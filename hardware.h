@@ -9,7 +9,7 @@
 #include "hardware/pwm.h"
 #include "hardware/spi.h"
 
-#include "synth.h"
+#include "synth/synth.h"
 
 
 
@@ -38,7 +38,7 @@
 #define MOD               2
 #define ARP               3
 
-#define protection_value  5 // the amount of protection the knob gets before unlocking.
+#define protection_value  10 // the amount of protection the knob gets before unlocking.
 
 const int PICO_LED_PIN = PICO_DEFAULT_LED_PIN;
 

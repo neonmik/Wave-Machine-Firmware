@@ -10,11 +10,15 @@ namespace synth {
 
   uint16_t wave;
   uint16_t wave_vector;
+  uint16_t vector_mod;
 
   uint16_t  attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
   uint16_t  decay_ms;      // decay period
   uint16_t  sustain;   // sustain volume
   uint16_t  release_ms;      // release period
+
+  int16_t   vibrato;
+  uint16_t  tremelo;
 
 
   uint32_t prng_xorshift_state = 0x32B71700;
@@ -59,7 +63,8 @@ namespace synth {
     int16_t clipped_sample = 0;
 
     // implemented this here so that it's set for the whoel sample run...
-    uint16_t vector = (wave + wave_vector);
+    uint16_t vector = (wave + (wave_vector + vector_mod));
+    int32_t output_volume = (volume - tremelo);
     
     for(int c = 0; c < MAX_VOICES; c++) {
 
@@ -72,6 +77,9 @@ namespace synth {
 
       // if we put 440Hz in here
       channel.waveform_offset += ((((channel.frequency * pitch_scale)>>9) * 256) << 8) / sample_rate;
+
+      //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
+      channel.waveform_offset += vibrato;
 
       // it comes out at 653 - all the numbers after the decimal get removed, the actual result is 653.873923
 
@@ -173,8 +181,10 @@ namespace synth {
       }
     }
     // printf("PRE MASTER VOLUME SAMPLE: %.5d \n", sample);
-    sample = (int64_t(sample) * int32_t(volume)) >> 16;
-    //  printf("POST MASTER VOLUME SAMPLE: %.5d \n", sample);
+    sample = (int64_t(sample) * output_volume) >> 16;
+
+
+
     // clip result to 16-bit
     sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
     

@@ -27,7 +27,7 @@ extern uint16_t  synth::decay_ms;      // decay period
 extern uint16_t  synth::sustain;   // sustain volume
 extern uint16_t  synth::release_ms;      // release period
 extern uint16_t  synth::wave_vector;      // release period
-extern uint16_t   synth::wave;
+extern uint16_t  synth::wave;
 
 Adc adc;
 Keys keys;
@@ -314,11 +314,13 @@ void keys_update() {
 
 
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
+    modulation::toggle();
     toggle_lfo_flag();
 	}
 
 
   if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
+    
     toggle_arp_flag();
 	} 
 
@@ -374,32 +376,30 @@ void default_pagination () {
   // ADSR default values
   page_values[ADSR][0]=10; //A
   page_values[ADSR][1]=20; // D
-  page_values[ADSR][2]=1023; // S
-  page_values[ADSR][3]=200; // R
-  page_values[MOD][0]=20; //A
-  page_values[MOD][1]=20; // D
-  page_values[MOD][2]=20; // S
-  page_values[MOD][3]=20; // R
+  page_values[ADSR][2]=4095; // S
+  page_values[ADSR][3]=4095; // R
+  page_values[MOD][0]=0; //A
+  page_values[MOD][1]=0; // D
+  page_values[MOD][2]=0; // S
+  page_values[MOD][3]=0; // R
 }
 // read knobs and digital switches and handle pagination
 void pagination_update(){
 
   if(get_page_flag()){
-    uint8_t temp_pages = 0;
+    uint8_t pages = MAX_PAGES;
 
     page_change = true;
 
     current_page++;
 
+    // LFO on
+    // if (!get_lfo_flag()) pages--;
     // ARP on
-    if (get_arp_flag()) {
-      temp_pages = MAX_PAGES; // sets the page loop to be it's full length
-    }
-    // ARP off
-    if (!get_arp_flag()) temp_pages = (MAX_PAGES-1);
+    if (!get_arp_flag()) pages--;
     
     // count the pages
-    if (current_page >= temp_pages) current_page = 0;
+    if (current_page >= pages) current_page = 0;
     
     set_page(current_page);
     set_page_flag(false);
@@ -476,7 +476,7 @@ void print_knob_page(){
 //          FLAGS
 // ----------------------
 void toggle_shift_flag (void) {
-  shift_flag != shift_flag;
+  shift_flag = !shift_flag;
 }
 bool get_shift_flag (void){
   return shift_flag;
@@ -503,7 +503,10 @@ void set_page (uint8_t value) {
       sr_bit_toggle(LED_PAGE2);
       sr_bit_toggle(LED_PAGE3);
       break;
+  }
 }
+uint8_t get_page(void) {
+  return page;
 }
 void set_page_flag(uint8_t value) {
   page_flag = value;
@@ -574,7 +577,7 @@ void hardware_init (void) {
 
   puts("Welcome to the jungle...");
 
-  if (HARDWARE_TEST) hardware_test(10);
+  // if (HARDWARE_TEST) hardware_test(50);
 
   hardware_index = 0;
 }
@@ -591,75 +594,77 @@ void hardware_task (void) {
     keys_update();
   }
   if (hardware_index == 127) {
-    // knobs_update();
     adc.update();
   }
   if (hardware_index == 191) {
     pagination_update();
-    // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
-    // if (shift_flag) synth::waveforms |= 1<<(get_pagintaion(0,2)>>7);
-    // synth::waveforms = (16 * ((get_pagintaion(0,2)>>7)+1));      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   }
-  // --------------- //
-  // PAGE 0 (GLOBAL) //
-  // --------------- //
+  if (hardware_index == 200) {
+    
+    switch (get_page()) {
+      case 0:
+        // --------------- //
+        // PAGE 0 (GLOBAL) //
+        // --------------- //
+        // 1 - 
+        synth::wave = ((get_pagintaion(0,0)>>6)*256);
+        // 2
+        synth::wave_vector = (get_pagintaion(0,1));
+        // 3
+        // 4
+        pitch_scale = get_pitch_log(get_pagintaion(0,3)); // might need optional stability/lofi switch...
+        break;
+      case 1:
+        // ------------- //
+        // PAGE 1 (ADSR) //
+        // ------------- //
+        
+        // need to implement an easy change thing... knobs_touched?
+        // if (get_pagination_flag()) {
+        // 1 - ATTACK
+        synth::attack_ms = ((get_pagintaion(1,0)+10)<<2);
+        // 2 - DECAY
+        synth::decay_ms = ((get_pagintaion(1,1)+10)<<2); // +10 because if it geos below roughly there, the note volume is unpredicatble... theres also an issue between attack and decay levels outputing something weird
+        // 3 - SUSTAIN
+        synth::sustain = (get_pagintaion(1,2)<<6);
+        // 4 - RELEASE
+        synth::release_ms = ((get_pagintaion(1,3))<<2);
+        break;
+      case 2:
+        // ----------------------- //
+        // PAGE 2 (LFO)            //
+        // ----------------------- //
+        // 1 - MATRIX
+        // uint8_t tester = (get_pagintaion(2,0)>>8);
+        modulation::set_matrix(get_pagintaion(2,0)>>8);
+        // 2 - RATE
+        modulation::set_rate(get_pagintaion(2,1));
+        // 3 - DEPTH
+        modulation::set_depth(get_pagintaion(2,2));
+        // 4 - WAVESHAPE
+        modulation::set_wave(get_pagintaion(2,3));
+        break;
+      case 3:
+        // ----------------------------------- //
+        // ??? PAGE 3 (ARP) (Optional)         //
+        // ----------------------------------- //
+        // 1 - MATRIX
+        // arpDelay = ((pageValues[2][0]>>1) + 1); // need the +1 to keep the timer going
+        // 2
+        // arpRelease = map(pageValues[2][1], 0, 1023, 40, 300); // 40 lets you get down to blips and boops, not sure this really is useful... 
+        // 3
+        // ??? ???
+        // 4
+        // ??? ???
+        break;
+    }
+  }
   
-  // 1
-  // ??? SHOULD BE MOD RATE ???
-  synth::wave = ((get_pagintaion(0,0)>>6)*256);
-  // 2
-  // ??? SHOULD BE MOD DEPTH ???
-  synth::wave_vector = (get_pagintaion(0,1)<<2);
-  // 3
-
-  // waveVec = pageValues[0][2];
-  // synth::waveforms = map(get_pagintaion(0,2),0,1023,1,128);      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-  // synth::waveforms = 1<<(get_pagintaion(0,2)>>7);
-  // 4
-  pitch_scale = get_pitch_log(get_pagintaion(0,3)); // might need optional stability/lofi switch...
-  // ------------- //
-  // PAGE 1 (ADSR) //
-  // ------------- //
-  
-  // need to implement an easy change thing... knobs_touched?
-  // if (get_pagination_flag()) {
-  // 1 - ATTACK
-  synth::attack_ms = ((get_pagintaion(1,0)+10)<<2);
-  // 2 - DECAY
-  synth::decay_ms = ((get_pagintaion(1,1)+10)<<2); // +10 because if it geos below roughly there, the note volume is unpredicatble... theres also an issue between attack and decay levels outputing something weird
-  // 3 - SUSTAIN
-  synth::sustain = (get_pagintaion(1,2)<<6);
-  // 4 - RELEASE
-  synth::release_ms = ((get_pagintaion(1,3))<<2);
-  // // }
-  // ----------------------- //
-  // PAGE 2 (LFO)            //
-  // ----------------------- //
-  // 1 - MATRIX
-  modulation::set_matrix((uint8_t)(get_pagintaion(2,0)>>10));
-  // 2 - RATE
-  modulation::set_rate(get_pagintaion(2,1));
-  // 3 - DEPTH
-  modulation::set_depth(get_pagintaion(2,2));
-  // 4 - WAVESHAPE
-  modulation::set_wave(get_pagintaion(2,3));
-  // ----------------------------------- //
-  // ??? PAGE 3 (ARP) (Optional)         //
-  // ----------------------------------- //
-  // 1 - MATRIX
-  // arpDelay = ((pageValues[2][0]>>1) + 1); // need the +1 to keep the timer going
-  // 2
-  // arpRelease = map(pageValues[2][1], 0, 1023, 40, 300); // 40 lets you get down to blips and boops, not sure this really is useful... 
-  // 3
-  // ??? ???
-  // 4
-  // ??? ???
   
   if (KNOBS_PRINT_OUT) {
     if (hardware_index==200) {
       print_knob_page();
       }
   }
-  // hardware_index++;
-  // hardware_index&=0xff;
+
 }

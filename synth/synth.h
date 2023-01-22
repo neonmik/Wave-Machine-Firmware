@@ -5,7 +5,7 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
-#include "synth/wavetable.h"
+#include "wavetable.h"
 
 
 namespace synth {
@@ -50,7 +50,8 @@ namespace synth {
   // constexpr float pi = 3.14159265358979323846f;
 
   static uint32_t sample_rate = 44100;
-  extern uint16_t volume ;
+  extern uint16_t volume;
+
 
 
   enum Waveform {
@@ -70,21 +71,25 @@ namespace synth {
     OFF
   };
 
-  extern uint8_t waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-  extern uint16_t wave;
-  extern uint16_t wave_vector;
+  extern uint8_t    waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  extern uint16_t   wave;
+  extern uint16_t   wave_vector;
+  extern uint16_t   vector_mod;
 
-  extern uint16_t  attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
-  extern uint16_t  decay_ms;      // decay period
-  extern uint16_t  sustain;   // sustain volume
-  extern uint16_t  release_ms;      // release period
+  extern uint16_t   attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
+  extern uint16_t   decay_ms;      // decay period
+  extern uint16_t   sustain;   // sustain volume
+  extern uint16_t   release_ms;      // release period
+
+  extern int16_t    vibrato;
+  extern uint16_t   tremelo;
 
   struct AudioChannel {
     
     
     uint8_t   note          = 0;
     uint16_t  frequency     = 660;    // frequency of the voice (Hz)
-    uint16_t  volume        = 0x1;    // channel volume (default 50%)
+    uint16_t  volume        = 0x7fff;    // channel volume (default 50%)
     uint8_t   gate          = false;  // used for tracking a note that's released, but not finished.
 
     uint16_t  pulse_width   = 0x7fff; // duty cycle of square wave (default 50%)

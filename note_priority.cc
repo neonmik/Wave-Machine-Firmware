@@ -48,7 +48,7 @@ void note_priority(int status, int note, int velocity) {
           for (int i = 0; i < MAX_VOICES; i++)  {
             if (!synth::channels[i].gate && (synth::channels[i].adsr_activation_time<longest_released_time)) {
               longest_released_time = synth::channels[i].adsr_activation_time;
-              slot = i; // shouldn't be called unless theres one or clots notes in release, and then should give the oldest
+              slot = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
             }
             //still active
             else if (synth::channels[i].adsr_activation_time<longest_active_time) {
@@ -63,7 +63,7 @@ void note_priority(int status, int note, int velocity) {
           // for (int i = 0; i < MAX_VOICES; i++)  {
           //   if (!synth::channels[i].gate && (synth::channels[i].adsr_activation_time>longest_released_time)) {
           //     longest_released_time = synth::channels[i].adsr_activation_time;
-          //     slot = i; // shouldn't be called unless theres one or clots notes in release, and then should give the oldest
+          //     slot = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
           //     printf("released slot %u \n", slot);
           //   }
           //   //still active

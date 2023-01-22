@@ -1316,30 +1316,6 @@ main.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/main.cc.s
 .PHONY : main.cc.s
 
-synth.obj: synth.cc.obj
-.PHONY : synth.obj
-
-# target to build an object file
-synth.cc.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.obj
-.PHONY : synth.cc.obj
-
-synth.i: synth.cc.i
-.PHONY : synth.i
-
-# target to preprocess a source file
-synth.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.i
-.PHONY : synth.cc.i
-
-synth.s: synth.cc.s
-.PHONY : synth.s
-
-# target to generate assembly for a file
-synth.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth.cc.s
-.PHONY : synth.cc.s
-
 synth/modulation.obj: synth/modulation.cc.obj
 .PHONY : synth/modulation.obj
 
@@ -1363,6 +1339,30 @@ synth/modulation.s: synth/modulation.cc.s
 synth/modulation.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/modulation.cc.s
 .PHONY : synth/modulation.cc.s
+
+synth/synth.obj: synth/synth.cc.obj
+.PHONY : synth/synth.obj
+
+# target to build an object file
+synth/synth.cc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/synth.cc.obj
+.PHONY : synth/synth.cc.obj
+
+synth/synth.i: synth/synth.cc.i
+.PHONY : synth/synth.i
+
+# target to preprocess a source file
+synth/synth.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/synth.cc.i
+.PHONY : synth/synth.cc.i
+
+synth/synth.s: synth/synth.cc.s
+.PHONY : synth/synth.s
+
+# target to generate assembly for a file
+synth/synth.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/beepmachine-firmware-v0.22.dir/build.make CMakeFiles/beepmachine-firmware-v0.22.dir/synth/synth.cc.s
+.PHONY : synth/synth.cc.s
 
 # Help Target
 help:
@@ -1517,12 +1517,12 @@ help:
 	@echo "... main.obj"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... synth.obj"
-	@echo "... synth.i"
-	@echo "... synth.s"
 	@echo "... synth/modulation.obj"
 	@echo "... synth/modulation.i"
 	@echo "... synth/modulation.s"
+	@echo "... synth/synth.obj"
+	@echo "... synth/synth.i"
+	@echo "... synth/synth.s"
 .PHONY : help
 
 
