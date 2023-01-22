@@ -17,7 +17,7 @@ Things to implement:
 
 Future Implementaions:
 
-- Add double oscillators per voice
+- Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 - Tidy codebase to allow for cleaner abstraction, and therfore allowing multicore support
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)

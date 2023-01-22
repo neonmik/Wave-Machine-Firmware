@@ -1,5 +1,5 @@
 /**
- *            Beep Machine Firmware v0.13
+ *            Beep Machine Firmware v0.23
  * 
  * Copyright (c) 2022 Nick Allott Musical Services (NAMS)
  *  
@@ -34,21 +34,13 @@
 
 
 #define SAMPLE_RATE     44100
+#define MAX_VOICES      8
 #define BPM 120 // part of a function for determinding bpm ms
 
 
 
 using namespace synth;
-synth::AudioChannel synth::channels[MAX_VOICES];
-extern uint16_t   synth::attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
-extern uint16_t   synth::decay_ms;      // decay period
-extern uint16_t   synth::sustain;   // sustain volume
-extern uint16_t   synth::release_ms;      // release period
-extern uint16_t   synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-extern uint16_t   synth::wave_vector;
-extern int16_t    synth::vibrato;
-extern uint16_t   synth::tremelo;
-extern uint16_t   synth::vector_mod;
+
 
 using namespace beep_machine;
 
@@ -60,18 +52,6 @@ extern uint16_t play_buffer[256];
 uint8_t hardware_index;
 
 
-
-
-void voices_init (void) {
-  
-  synth::attack_ms   = 1000; 
-  synth::decay_ms    = 100;
-  synth::sustain     = 0x7fff; // set to less than full scale as it clips - full scale: 0xffff = 65535 
-  synth::release_ms  = 1000;
-  // synth::waveforms = Waveform::WAVETABLE | Waveform::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-
-}
-
 int main() {
   
   
@@ -79,17 +59,15 @@ int main() {
 
   dac_init(SAMPLE_RATE);
 
-  // voices_init();
   modulation::init();
 
   while (true) {
     
     if (buffer_flag){
-      
-      // if (get_lfo_flag()) modulation::update();
+
       modulation::update();
       for(int i =0; i<256; i++) {
-        uint16_t sample = ((get_audio_frame()+32767)>>4); // create next sample, add 32768 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
+        uint16_t sample = ((synth::get_audio_frame()+32767)>>4); // create next sample, add 32767 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
 		  // add counter here for playback/sequncer timing
 

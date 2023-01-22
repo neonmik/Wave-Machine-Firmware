@@ -12,10 +12,10 @@ add_executable(${PROJECT_NAME}
     drivers/dac.cc
     drivers/adc.cc
     drivers/keys.cc
+    drivers/button.cc
     hardware.cc
     synth/synth.cc
     synth/modulation.cc
-    # drivers/switch.cc
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 0)

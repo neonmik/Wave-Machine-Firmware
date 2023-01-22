@@ -3,7 +3,7 @@
 
 #include "drivers/adc.h"
 #include "drivers/keys.h"
-// #include "drivers/switch.h"
+#include "drivers/button.h"
 
 #include "synth/modulation.h"
 
@@ -31,6 +31,10 @@ extern uint16_t  synth::wave;
 
 Adc adc;
 Keys keys;
+Buttons page_button;
+Buttons LFO_button;
+Buttons ARP_button;
+Buttons preset_button;
 
 
 // ----------------------
@@ -302,58 +306,38 @@ void keys_update() {
 		}
 	}
 
-
+  // Page
 	if ( (!((k>>PAGE_KEY) & 1)) &&  (((k_last>>PAGE_KEY) & 1)) ){
-    // press PAGE/SHIFT key
-    set_page_flag(true);
-    // use the following for timed buttons
-    // shift_start = to_ms_since_boot (get_absolute_time());
-    if (KEYS_PRINT_OUT) printf("Key: Page\n");
+    page_button.pressed();
+    if (KEYS_PRINT_OUT) printf("Page key pressed\n");
+	}
+	if ( (((k>>PAGE_KEY) & 1)) &&  (!((k_last>>PAGE_KEY) & 1)) ){
+    page_button.released();
+    if (KEYS_PRINT_OUT) printf("Page key released\n");
 	}
 
-
-
+  // LFO
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
-    modulation::toggle();
-    toggle_lfo_flag();
+    LFO_button.pressed();
+	}
+  if ( (((k>>LFO_KEY) & 1)) &&  (!((k_last>>LFO_KEY) & 1)) ){
+    LFO_button.released();
 	}
 
-
+  // ARP
   if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
-    
-    toggle_arp_flag();
+    ARP_button.pressed();
 	} 
-
-
-  if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
-    //press preset key
-    preset_start = to_ms_since_boot (get_absolute_time());
-    if (KEYS_PRINT_OUT) printf("Key: Preset ON\n");
+  if ( (((k>>ARP_KEY) & 1)) &&  (!((k_last>>ARP_KEY) & 1)) ){
+    ARP_button.released();
 	}
 
+  // Preset
+  if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
+    preset_button.pressed();
+	}
 	if ( (((k>>PRESET_KEY) & 1)) &&  (!((k_last>>PRESET_KEY) & 1)) ){
-    //release preset key
-    preset_end = to_ms_since_boot (get_absolute_time());
-    if (preset_end - preset_start < LONG_PRESS){
-      //short press
-      if (KEYS_PRINT_OUT) printf("Key: Preset OFF - Short\n");
-      //raise preset flag;
-      preset_flag = true;
-      preset++;
-      preset&=0x7;
-      rgb_preset(preset);
-      preset_flag = false;
-  
-    }
-    if (preset_end - preset_start > LONG_PRESS){
-      //long press
-      if (KEYS_PRINT_OUT) printf("Key: Preset OFF - Long\n");
-  
-      //preset save
-      //raise preset_save_flag:
-      //      - save current settings in the pagination settings (all knob arrays)
-      //      - flashed rgb led twice
-    }
+    preset_button.released();
 	}
 
 	// store keys for next time
@@ -386,7 +370,7 @@ void default_pagination () {
 // read knobs and digital switches and handle pagination
 void pagination_update(){
 
-  if(get_page_flag()){
+  if(page_button.get_short()){
     uint8_t pages = MAX_PAGES;
 
     page_change = true;
@@ -520,6 +504,7 @@ void set_lfo_flag(uint8_t value) {
   led_put(LED_LFO_PIN, value);
 }
 void toggle_lfo_flag(void) {
+  modulation::toggle();
   led_toggle(LED_LFO_PIN);
   lfo_flag = !lfo_flag;
   if (KEYS_PRINT_OUT) printf("Key: LFO\n");
@@ -548,6 +533,7 @@ void change_preset(void) {
   preset++;
   preset&=0x7;
   set_preset(preset);
+  rgb_preset(preset);
 }
 uint8_t get_preset(void) {
   return preset;
@@ -592,6 +578,9 @@ void hardware_task (void) {
   }
   if (hardware_index == 63) {
     keys_update();
+    if (ARP_button.get_short()) toggle_arp_flag();
+    if (preset_button.get_short()) change_preset();
+    if (LFO_button.get_short()) toggle_lfo_flag();
   }
   if (hardware_index == 127) {
     adc.update();
