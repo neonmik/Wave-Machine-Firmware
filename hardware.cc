@@ -576,19 +576,19 @@ void hardware_task (void) {
   if (hardware_index == 0) {
     keys.read();
   }
-  if (hardware_index == 63) {
+  if (hardware_index == 1) {
     keys_update();
     if (ARP_button.get_short()) toggle_arp_flag();
     if (preset_button.get_short()) change_preset();
     if (LFO_button.get_short()) toggle_lfo_flag();
   }
-  if (hardware_index == 127) {
+  if (hardware_index == 2) {
     adc.update();
   }
-  if (hardware_index == 191) {
+  if (hardware_index == 3) {
     pagination_update();
   }
-  if (hardware_index == 200) {
+  if (hardware_index == 4) {
     
     switch (get_page()) {
       case 0:
@@ -596,11 +596,12 @@ void hardware_task (void) {
         // PAGE 0 (GLOBAL) //
         // --------------- //
         // 1 - 
+        // if (page_button.get_shift()) {
+          
+        // }
         synth::wave = ((get_pagintaion(0,0)>>6)*256);
-        // 2
         synth::wave_vector = (get_pagintaion(0,1));
         // 3
-        // 4
         pitch_scale = get_pitch_log(get_pagintaion(0,3)); // might need optional stability/lofi switch...
         break;
       case 1:
@@ -648,8 +649,8 @@ void hardware_task (void) {
         break;
     }
   }
-  
-  
+
+
   if (KNOBS_PRINT_OUT) {
     if (hardware_index==200) {
       print_knob_page();

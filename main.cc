@@ -70,16 +70,20 @@ int main() {
         uint16_t sample = ((synth::get_audio_frame()+32767)>>4); // create next sample, add 32767 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
 		  // add counter here for playback/sequncer timing
+      
 
       }
       buffer_flag = 0;
+      continue;
 
     } else {
-       hardware_task();
+        hardware_task();
+        hardware_index++;
+        if (hardware_index > 5) hardware_index = 0;
+        
     }
     
-    hardware_index++;
-    hardware_index&=0xff;
+    
 
   }
 } 

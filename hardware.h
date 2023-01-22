@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef HARDWARE_H_
-#define HARDWARE_H_
-
 #include <stdio.h>
 #include "pico/stdlib.h"
 
@@ -183,5 +180,3 @@ void print_knob_page (void);
 void hardware_init (void);
 void hardware_test (int delay);
 void hardware_task (void);
-
-#endif
