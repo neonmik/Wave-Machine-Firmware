@@ -20,7 +20,7 @@ using namespace beep_machine;
 
 extern void note_priority(int status, int note, int velocity);
 
-extern uint8_t synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+extern uint16_t  synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
 extern uint16_t  synth::attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
 extern uint16_t  synth::decay_ms;      // decay period

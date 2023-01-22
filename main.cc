@@ -44,7 +44,7 @@ extern uint16_t   synth::attack_ms;      // attack period - moved to global as i
 extern uint16_t   synth::decay_ms;      // decay period
 extern uint16_t   synth::sustain;   // sustain volume
 extern uint16_t   synth::release_ms;      // release period
-extern uint8_t    synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+extern uint16_t   synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 extern uint16_t   synth::wave_vector;
 extern int16_t    synth::vibrato;
 extern uint16_t   synth::tremelo;
@@ -68,15 +68,8 @@ void voices_init (void) {
   synth::decay_ms    = 100;
   synth::sustain     = 0x7fff; // set to less than full scale as it clips - full scale: 0xffff = 65535 
   synth::release_ms  = 1000;
-  synth::waveforms = Waveform::WAVETABLE | Waveform::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  // synth::waveforms = Waveform::WAVETABLE | Waveform::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
-  for (int i = 0; i < MAX_VOICES; i++) {
-    // channels[i].waveforms   = Waveform::WAVETABLE | Waveform::SAW; 
-    channels[i].volume      = 0x7fff; // halved channel volume so it doesnt clip - full scale : 0xffff = 65535
-    channels[i].note        = 0;
-    channels[i].frequency   = 0;
-    channels[i].is_active   = 0;
-  }
 }
 
 int main() {
@@ -86,7 +79,7 @@ int main() {
 
   dac_init(SAMPLE_RATE);
 
-  voices_init();
+  // voices_init();
   modulation::init();
 
   while (true) {

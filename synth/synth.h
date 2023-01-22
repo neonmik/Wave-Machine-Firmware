@@ -55,11 +55,12 @@ namespace synth {
 
 
   enum Waveform {
+    WAVETABLE = 256,
     NOISE     = 128,
     SQUARE    = 64,
     SAW       = 32,
     TRIANGLE  = 16,
-    WAVETABLE = 8,
+    SINE      = 8,
     WAVE      = 1
   };
 
@@ -71,7 +72,7 @@ namespace synth {
     OFF
   };
 
-  extern uint8_t    waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  extern uint16_t   waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   extern uint16_t   wave;
   extern uint16_t   wave_vector;
   extern uint16_t   vector_mod;
@@ -86,9 +87,8 @@ namespace synth {
 
   struct AudioChannel {
     
-    
     uint8_t   note          = 0;
-    uint16_t  frequency     = 660;    // frequency of the voice (Hz)
+    uint16_t  frequency     = 0;    // frequency of the voice (Hz)
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%)
     uint8_t   gate          = false;  // used for tracking a note that's released, but not finished.
 
