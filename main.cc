@@ -38,15 +38,6 @@
 #define BPM 120 // part of a function for determinding bpm ms
 
 
-
-using namespace synth;
-
-
-using namespace beep_machine;
-
-using namespace modulation;
-
-
 extern bool buffer_flag;
 extern uint16_t play_buffer[256];
 uint8_t hardware_index;
@@ -77,11 +68,16 @@ int main() {
       continue;
 
     } else {
-        hardware_task();
-        hardware_index++;
-        if (hardware_index > 5) hardware_index = 0;
         
+      hardware_task();
+        
+      hardware_index++;
+      //could be either of these, but apprently you can't loop 4/5/6 times like this...?
+      hardware_index &= 0x7;
+      if (hardware_index > 5) hardware_index = 0; // this takes 2-3 more instructions to accomplish
+
     }
+    
     
     
 

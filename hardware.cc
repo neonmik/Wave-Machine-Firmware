@@ -4,6 +4,7 @@
 #include "drivers/adc.h"
 #include "drivers/keys.h"
 #include "drivers/button.h"
+#include "drivers/leds.h"
 
 #include "synth/modulation.h"
 
@@ -20,34 +21,25 @@ using namespace beep_machine;
 
 extern void note_priority(int status, int note, int velocity);
 
-extern uint16_t  synth::waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-
-extern uint16_t  synth::attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
-extern uint16_t  synth::decay_ms;      // decay period
-extern uint16_t  synth::sustain;   // sustain volume
-extern uint16_t  synth::release_ms;      // release period
-extern uint16_t  synth::wave_vector;      // release period
-extern uint16_t  synth::wave;
 
 Adc adc;
 Keys keys;
-Buttons page_button;
-Buttons LFO_button;
-Buttons ARP_button;
-Buttons preset_button;
+
 
 
 // ----------------------
 //          LEDS
 // ----------------------
 
-
+void sr_step_ (void) {
+  gpio_put(SR_CLK, 1);
+  gpio_put(SR_CLK, 0);
+}
 void sr_shift_out(uint8_t val) {
   gpio_put(SR_LATCH, 0);
   for (int i = 0; i < SR_DATA_WIDTH; i++)  {
         gpio_put(SR_DATA, !!(val & (1 << i)));
-        gpio_put(SR_CLK, 1);
-        gpio_put(SR_CLK, 0);
+        sr_step_();
   }
   gpio_put(SR_LATCH, 1);
 }
@@ -59,7 +51,7 @@ void sr_bit_toggle (int pin) {
   leds ^= (1 << (7 - pin));
   sr_shift_out(leds);
 }
-void sr_clear(void) {
+void sr_clear_buffer(void) {
   leds = 0;
   sr_shift_out(leds);
 }
@@ -68,7 +60,7 @@ void sr_off(void) {
 }
 void sr_cycle(int delay, int dir) {
   leds = 0;
-  sr_clear();
+  sr_clear_buffer();
   sleep_ms(delay);
 
   if (dir == UP) {
@@ -84,7 +76,7 @@ void sr_cycle(int delay, int dir) {
       sleep_ms(delay);
     }
   }
-  sr_clear();
+  sr_clear_buffer();
 }
 void sr_print_pins(void) {
   
@@ -111,169 +103,165 @@ void sr_init (void) {
   gpio_set_dir(SR_CLK, GPIO_OUT);
   gpio_set_dir(SR_LATCH, GPIO_OUT);
 
-  sr_clear();
+  sr_clear_buffer();
 }
 
-void pwm_pin_init (int pin) {
-  gpio_set_function(pin, GPIO_FUNC_PWM);
-  uint slice_num = pwm_gpio_to_slice_num(pin);
-  
-  pwm_set_gpio_level(pin, 0);
-  pwm_set_enabled(slice_num, true);
-}
-void pwm_output_polarity (void) {
-  uint slice_num0 = pwm_gpio_to_slice_num(LEDR_PIN);
-  uint slice_num1 = pwm_gpio_to_slice_num(LEDB_PIN);
-  pwm_set_output_polarity(slice_num0, true, true);
-  pwm_set_output_polarity(slice_num1, true, false);
-}
-
-void led_toggle (int pin) {
-  led_state[pin] = !led_state[pin]; // toggle the led state
-  gpio_put(pin, led_state[pin]); // send to LED
-}
-void led_put (int pin, bool state) {
-  gpio_put(pin, state);
-}
-void led_flash (int pin, int repeats, int delay) {
-  for (int r = 0; r < repeats; r++) {
-    led_toggle(pin);
-    sleep_ms(delay);
-    led_toggle(pin);
-    sleep_ms(delay);
-  }
-}
-void leds_init (void) {
-
-  gpio_init(PICO_LED_PIN); // set LED pin
-  gpio_set_dir(PICO_LED_PIN, GPIO_OUT); // set LED pin to out
-  
-  gpio_init(LED_LFO_PIN);
-  gpio_set_dir(LED_LFO_PIN, GPIO_OUT);
-
-  gpio_init(LED_ARP_PIN);
-  gpio_set_dir(LED_ARP_PIN, GPIO_OUT);
-
-
-  pwm_pin_init(LEDR_PIN);
-  pwm_pin_init(LEDG_PIN);
-  pwm_pin_init(LEDB_PIN);
-
-  pwm_output_polarity ();
-
-  sr_init();
-}
-
-void rgb_set_off(void) {
-  rgb_state = 0;
-  pwm_set_gpio_level(LEDR_PIN, 0);
-  pwm_set_gpio_level(LEDG_PIN, 0);
-  pwm_set_gpio_level(LEDB_PIN, 0);
-}
-void rgb_update(int r, int g, int b) {
-  rgb_state = 1;
-  pwm_set_gpio_level(LEDR_PIN, r);
-  pwm_set_gpio_level(LEDG_PIN, g);
-  pwm_set_gpio_level(LEDB_PIN, b);
-}
-void rgb_update_8bit(int r, int g, int b) {
-  rgb_state = 1;
-  pwm_set_gpio_level(LEDR_PIN, (r<<8));
-  pwm_set_gpio_level(LEDG_PIN, (g<<8));
-  pwm_set_gpio_level(LEDB_PIN, (b<<8));
-}
-void rgb_recall (void) {
-  rgb_state = 1;
-  rgb_update(rgb_colour[0],rgb_colour[1],rgb_colour[2]);
-}
-void rgb_set_on (void) {
-  rgb_state = 1;
-  pwm_set_gpio_level(LEDR_PIN, 65535);
-  pwm_set_gpio_level(LEDG_PIN, 65535);
-  pwm_set_gpio_level(LEDB_PIN, 65535);
-}
-void rgb_flash (int repeats, int delay){
-  if (rgb_state) {
-    for (int r = 0; r < repeats; r++) {
-      rgb_set_off();
-      sleep_ms(delay);
-      rgb_recall();
-      sleep_ms(delay);
-    }
-  } else {
-    for (int r = 0; r < repeats; r++) {
-      rgb_recall();
-      sleep_ms(delay);
-      rgb_set_off();
-      sleep_ms(delay);
-    }
-  }
-
-  
-}
-void rgb_cycle (int speed) {
-  
-  // reset array to blue incase wer'e on a different colour
-  rgb_colour[0] = 65535;
-  rgb_colour[1] = 0;
-  rgb_colour[2] = 0;  
-
-  // Choose the colours to increment and decrement.
-  for (int decColour = 0; decColour < 3; decColour += 1) {
-    volatile int incColour = decColour == 2 ? 0 : decColour + 1;
-
-    // cross-fade the two colours.
-    for(int i = 0; i < 65535; i += 1) {
-      rgb_colour[decColour] -= 1;
-      rgb_colour[incColour] += 1;
-      
-      rgb_update(rgb_colour[0],rgb_colour[1],rgb_colour[2]);
-      sleep_us(speed);
-    }
-  }
-}
-void rgb_preset (int preset) {
-  switch (preset) {
-    case 0: //red
-      rgb_update_8bit(255, 0, 0);
-      break;
-    case 1: // purple
-      rgb_update_8bit(74, 0, 181);
-      break;
-    case 2: // pink
-      rgb_update_8bit(255, 0, 35);
-      break;
-    case 3: // teal
-      rgb_update_8bit(0, 115, 150);
-      break;
-    case 4: // blue
-      rgb_update_8bit(10, 0, 255);
-      break;
-    case 5: // orange
-      rgb_update_8bit(255, 39, 0);
-      break;
-    case 6: // green
-      rgb_update_8bit(15, 255, 0);
-      break;
-    case 7: // tutti frutti
-      rgb_update_8bit(255, 100, 90);
-      break;
-  } 
-}
-void rgb_init (void) {
-  rgb_preset(0);
-}
-
-void leds_test (int repeats, int delay) {
-  // rgb_flash(2, 200);
-  sr_cycle(delay, UP);
-  led_flash(LED_LFO_PIN, repeats, delay);
-  led_flash(LED_ARP_PIN, repeats, delay);
-  rgb_cycle(delay/4);
-  led_flash(LED_ARP_PIN, repeats, delay);
-  led_flash(LED_LFO_PIN, repeats, delay);
-  sr_cycle(delay, DOWN);
-}
+// void pwm_pin_init (int pin) {
+//   gpio_set_function(pin, GPIO_FUNC_PWM);
+//   uint slice_num = pwm_gpio_to_slice_num(pin);
+// 
+//   pwm_set_gpio_level(pin, 0);
+//   pwm_set_enabled(slice_num, true);
+// }
+// void pwm_output_polarity (void) {
+//   uint slice_num0 = pwm_gpio_to_slice_num(LEDR_PIN);
+//   uint slice_num1 = pwm_gpio_to_slice_num(LEDB_PIN);
+//   pwm_set_output_polarity(slice_num0, true, true);
+//   pwm_set_output_polarity(slice_num1, true, false);
+// }
+// void led_toggle (int pin) {
+//   led_state[pin] = !led_state[pin]; // toggle the led state
+//   gpio_put(pin, led_state[pin]); // send to LED
+// }
+// void led_put (int pin, bool state) {
+//   gpio_put(pin, state);
+// }
+// void led_flash (int pin, int repeats, int delay) {
+//   for (int r = 0; r < repeats; r++) {
+//     led_toggle(pin);
+//     sleep_ms(delay);
+//     led_toggle(pin);
+//     sleep_ms(delay);
+//   }
+// }
+// void leds_init (void) {
+// 
+//   gpio_init(PICO_LED_PIN); // set LED pin
+//   gpio_set_dir(PICO_LED_PIN, GPIO_OUT); // set LED pin to out
+// 
+//   gpio_init(LED_LFO_PIN);
+//   gpio_set_dir(LED_LFO_PIN, GPIO_OUT);
+// 
+//   gpio_init(LED_ARP_PIN);
+//   gpio_set_dir(LED_ARP_PIN, GPIO_OUT);
+// }
+// 
+// void rgb_set_off(void) {
+//   rgb_state = 0;
+//   pwm_set_gpio_level(LEDR_PIN, 0);
+//   pwm_set_gpio_level(LEDG_PIN, 0);
+//   pwm_set_gpio_level(LEDB_PIN, 0);
+// }
+// void rgb_update(int r, int g, int b) {
+//   rgb_state = 1;
+//   pwm_set_gpio_level(LEDR_PIN, r);
+//   pwm_set_gpio_level(LEDG_PIN, g);
+//   pwm_set_gpio_level(LEDB_PIN, b);
+// }
+// void rgb_update_8bit(int r, int g, int b) {
+//   rgb_state = 1;
+//   pwm_set_gpio_level(LEDR_PIN, (r<<8));
+//   pwm_set_gpio_level(LEDG_PIN, (g<<8));
+//   pwm_set_gpio_level(LEDB_PIN, (b<<8));
+// }
+// void rgb_recall (void) {
+//   rgb_state = 1;
+//   rgb_update(rgb_colour[0],rgb_colour[1],rgb_colour[2]);
+// }
+// void rgb_set_on (void) {
+//   rgb_state = 1;
+//   pwm_set_gpio_level(LEDR_PIN, 65535);
+//   pwm_set_gpio_level(LEDG_PIN, 65535);
+//   pwm_set_gpio_level(LEDB_PIN, 65535);
+// }
+// void rgb_flash (int repeats, int delay){
+//   if (rgb_state) {
+//     for (int r = 0; r < repeats; r++) {
+//       rgb_set_off();
+//       sleep_ms(delay);
+//       rgb_recall();
+//       sleep_ms(delay);
+//     }
+//   } else {
+//     for (int r = 0; r < repeats; r++) {
+//       rgb_recall();
+//       sleep_ms(delay);
+//       rgb_set_off();
+//       sleep_ms(delay);
+//     }
+//   }
+// 
+// 
+// }
+// void rgb_cycle (int speed) {
+// 
+//   // reset array to blue incase wer'e on a different colour
+//   rgb_colour[0] = 65535;
+//   rgb_colour[1] = 0;
+//   rgb_colour[2] = 0;  
+// 
+//   // Choose the colours to increment and decrement.
+//   for (int decColour = 0; decColour < 3; decColour += 1) {
+//     volatile int incColour = decColour == 2 ? 0 : decColour + 1;
+// 
+//     // cross-fade the two colours.
+//     for(int i = 0; i < 65535; i += 1) {
+//       rgb_colour[decColour] -= 1;
+//       rgb_colour[incColour] += 1;
+    // 
+//       rgb_update(rgb_colour[0],rgb_colour[1],rgb_colour[2]);
+//       sleep_us(speed);
+//     }
+//   }
+// }
+// void rgb_preset (int preset) {
+//   switch (preset) {
+//     case 0: //red
+//       rgb_update_8bit(255, 0, 0);
+//       break;
+//     case 1: // purple
+//       rgb_update_8bit(74, 0, 181);
+//       break;
+//     case 2: // pink
+//       rgb_update_8bit(255, 0, 35);
+//       break;
+//     case 3: // teal
+//       rgb_update_8bit(0, 115, 150);
+//       break;
+//     case 4: // blue
+//       rgb_update_8bit(10, 0, 255);
+//       break;
+//     case 5: // orange
+//       rgb_update_8bit(255, 39, 0);
+//       break;
+//     case 6: // green
+//       rgb_update_8bit(15, 255, 0);
+//       break;
+//     case 7: // tutti frutti
+//       rgb_update_8bit(255, 100, 90);
+//       break;
+//   } 
+// }
+// 
+//   pwm_pin_init(LEDR_PIN);
+//   pwm_pin_init(LEDG_PIN);
+//   pwm_pin_init(LEDB_PIN);
+// 
+//   pwm_output_polarity ();
+// 
+//   rgb_preset(0);
+// }
+// 
+// void leds_test (int repeats, int delay) {
+//   // rgb_flash(2, 200);
+//   sr_cycle(delay, UP);
+//   led_flash(LED_LFO_PIN, repeats, delay);
+//   led_flash(LED_ARP_PIN, repeats, delay);
+//   rgb_cycle(delay/4);
+//   led_flash(LED_ARP_PIN, repeats, delay);
+//   led_flash(LED_LFO_PIN, repeats, delay);
+//   sr_cycle(delay, DOWN);
+// }
 
 
 
@@ -308,36 +296,36 @@ void keys_update() {
 
   // Page
 	if ( (!((k>>PAGE_KEY) & 1)) &&  (((k_last>>PAGE_KEY) & 1)) ){
-    page_button.pressed();
+    Buttons::page.pressed();
     if (KEYS_PRINT_OUT) printf("Page key pressed\n");
 	}
 	if ( (((k>>PAGE_KEY) & 1)) &&  (!((k_last>>PAGE_KEY) & 1)) ){
-    page_button.released();
+    Buttons::page.released();
     if (KEYS_PRINT_OUT) printf("Page key released\n");
 	}
 
   // LFO
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
-    LFO_button.pressed();
+    Buttons::lfo.pressed();
 	}
   if ( (((k>>LFO_KEY) & 1)) &&  (!((k_last>>LFO_KEY) & 1)) ){
-    LFO_button.released();
+    Buttons::lfo.released();
 	}
 
   // ARP
   if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
-    ARP_button.pressed();
+    Buttons::arp.pressed();
 	} 
   if ( (((k>>ARP_KEY) & 1)) &&  (!((k_last>>ARP_KEY) & 1)) ){
-    ARP_button.released();
+    Buttons::arp.released();
 	}
 
   // Preset
   if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
-    preset_button.pressed();
+    Buttons::preset.pressed();
 	}
 	if ( (((k>>PRESET_KEY) & 1)) &&  (!((k_last>>PRESET_KEY) & 1)) ){
-    preset_button.released();
+    Buttons::preset.released();
 	}
 
 	// store keys for next time
@@ -360,8 +348,8 @@ void default_pagination () {
   // ADSR default values
   page_values[ADSR][0]=10; //A
   page_values[ADSR][1]=20; // D
-  page_values[ADSR][2]=4095; // S
-  page_values[ADSR][3]=4095; // R
+  page_values[ADSR][2]=2047; // S
+  page_values[ADSR][3]=511; // R
   page_values[MOD][0]=0; //A
   page_values[MOD][1]=0; // D
   page_values[MOD][2]=0; // S
@@ -370,7 +358,7 @@ void default_pagination () {
 // read knobs and digital switches and handle pagination
 void pagination_update(){
 
-  if(page_button.get_short()){
+  if(Buttons::page.get_short()){
     uint8_t pages = MAX_PAGES;
 
     page_change = true;
@@ -471,7 +459,7 @@ void set_page (uint8_t value) {
   switch (value) {
     case 0:
       page = 0;
-      sr_clear();
+      sr_clear_buffer();
       break;
     case 1:
       page = 1;
@@ -501,11 +489,12 @@ uint8_t get_page_flag(void) {
 
 void set_lfo_flag(uint8_t value) {
   lfo_flag = value;
-  led_put(LED_LFO_PIN, value);
+  Leds::lfo.set(value);
 }
 void toggle_lfo_flag(void) {
   modulation::toggle();
-  led_toggle(LED_LFO_PIN);
+
+  Leds::lfo.toggle();
   lfo_flag = !lfo_flag;
   if (KEYS_PRINT_OUT) printf("Key: LFO\n");
 }
@@ -515,11 +504,11 @@ uint8_t get_lfo_flag(void) {
 
 void set_arp_flag(uint8_t value) {
   arp_flag = value;
-  led_put(LED_ARP_PIN, value);
+  Leds::arp.set(value);
 }
 void toggle_arp_flag(void) {
   arp_flag = !arp_flag;
-  led_toggle(LED_ARP_PIN);
+  Leds::arp.toggle();
   if (KEYS_PRINT_OUT) printf("Key: ARP\n");
 }
 uint8_t get_arp_flag(void) {
@@ -533,7 +522,7 @@ void change_preset(void) {
   preset++;
   preset&=0x7;
   set_preset(preset);
-  rgb_preset(preset);
+  Leds::rgb.preset(preset);
 }
 uint8_t get_preset(void) {
   return preset;
@@ -554,8 +543,11 @@ uint8_t get_preset_flag(void) {
 void hardware_init (void) {
   stdio_init_all();
 
-  leds_init();
-  rgb_init();
+  // leds_init();
+
+  sr_init();
+  // rgb_init();
+  Leds::init();
   keys.init();
   adc.init();
   pagination_init();
@@ -563,13 +555,13 @@ void hardware_init (void) {
 
   puts("Welcome to the jungle...");
 
-  // if (HARDWARE_TEST) hardware_test(50);
+  if (HARDWARE_TEST) hardware_test(50);
 
   hardware_index = 0;
 }
 
 void hardware_test (int delay) {
-  leds_test(1, delay);
+  Leds::test(delay);
 }
 
 void hardware_task (void) {
@@ -578,9 +570,9 @@ void hardware_task (void) {
   }
   if (hardware_index == 1) {
     keys_update();
-    if (ARP_button.get_short()) toggle_arp_flag();
-    if (preset_button.get_short()) change_preset();
-    if (LFO_button.get_short()) toggle_lfo_flag();
+    if (Buttons::arp.get_short()) toggle_arp_flag();
+    if (Buttons::preset.get_short()) change_preset();
+    if (Buttons::lfo.get_short()) toggle_lfo_flag();
   }
   if (hardware_index == 2) {
     adc.update();
@@ -589,16 +581,15 @@ void hardware_task (void) {
     pagination_update();
   }
   if (hardware_index == 4) {
-    
+    // if (page_button.get_shift()) {
+          
+    // }
     switch (get_page()) {
       case 0:
         // --------------- //
         // PAGE 0 (GLOBAL) //
         // --------------- //
-        // 1 - 
-        // if (page_button.get_shift()) {
-          
-        // }
+
         synth::wave = ((get_pagintaion(0,0)>>6)*256);
         synth::wave_vector = (get_pagintaion(0,1));
         // 3

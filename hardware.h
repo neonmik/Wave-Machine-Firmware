@@ -3,10 +3,12 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "hardware/pwm.h"
+// #include "hardware/pwm.h"
 #include "hardware/spi.h"
 
 #include "synth/synth.h"
+
+
 
 
 
@@ -14,7 +16,7 @@
 
 #define KEYS_PRINT_OUT      0
 #define KNOBS_PRINT_OUT     0
-#define HARDWARE_TEST       0
+#define HARDWARE_TEST       1
 
 #define UP              1
 #define DOWN            0
@@ -37,13 +39,13 @@
 
 #define protection_value  10 // the amount of protection the knob gets before unlocking.
 
-const int PICO_LED_PIN = PICO_DEFAULT_LED_PIN;
+// const int PICO_LED_PIN = PICO_DEFAULT_LED_PIN;
 
-#define LED_LFO_PIN     21
-#define LED_ARP_PIN     22
-#define LEDR_PIN        6
-#define LEDG_PIN        7
-#define LEDB_PIN        8
+// #define LED_LFO_PIN     21
+// #define LED_ARP_PIN     22
+// #define LEDR_PIN        6
+// #define LEDG_PIN        7
+// #define LEDB_PIN        8
 
 #define LED_KNOB1       0
 #define LED_KNOB2       1
@@ -85,8 +87,8 @@ namespace beep_machine {
     static uint8_t leds                =           0xFF;
     static bool led_state[22];
 
-    static bool rgb_state              =           0;
-    static uint16_t rgb_colour[3]      =           {65535, 0 ,0};
+    // static bool rgb_state              =           0;
+    // static uint16_t rgb_colour[3]      =           {65535, 0 ,0};
     
     uint32_t get_pagintaion (int page, int knob);
     uint8_t get_pagination_flag ();
@@ -122,34 +124,34 @@ uint32_t get_knob(uint8_t knob);
 //          LEDS
 // ----------------------
 
-
+void sr_step_ (void);
 void sr_shift_out(uint8_t val);
 void sr_bit_on (int pin);
 void sr_bit_toggle (int pin);
-void sr_clear(void);
+void sr_clear_buffer(void);
 void sr_off(void);
 void sr_cycle(int delay, int dir);
 void sr_print_pins(void);
 void sr_init (void);
 
-void pwm_pin_init (int pin);
-void pwm_output_polarity (void);
+// void pwm_pin_init (int pin);
+// void pwm_output_polarity (void);
 
-void led_toggle (int pin);
-void led_put (int pin, bool state);
-void led_flash (int pin, int repeats, int delay);
-void leds_init (void);
+// void led_toggle (int pin);
+// void led_put (int pin, bool state);
+// void led_flash (int pin, int repeats, int delay);
+// void leds_init (void);
 
-void rgb_set_off(void);
-void rgb_update(int r, int g, int b);
-void rgb_update_8bit(int r, int g, int b);
-void rgb_recall (void);
-void rgb_set_on (void);
-void rgb_flash (int repeats, int delay);
-void rgb_cycle (int speed);
-void rgb_preset (int preset);
-void rgb_init (void);
-void leds_test (int repeats, int delay);
+// void rgb_set_off(void);
+// void rgb_update(int r, int g, int b);
+// void rgb_update_8bit(int r, int g, int b);
+// void rgb_recall (void);
+// void rgb_set_on (void);
+// void rgb_flash (int repeats, int delay);
+// void rgb_cycle (int speed);
+// void rgb_preset (int preset);
+// void rgb_init (void);
+// void leds_test (int repeats, int delay);
 void set_page (int page);
 
 

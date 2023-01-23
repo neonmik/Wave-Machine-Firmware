@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     drivers/adc.cc
     drivers/keys.cc
     drivers/button.cc
+    drivers/leds.cc
     hardware.cc
     synth/synth.cc
     synth/modulation.cc
