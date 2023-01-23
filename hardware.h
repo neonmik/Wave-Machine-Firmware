@@ -16,7 +16,7 @@
 
 #define KEYS_PRINT_OUT      0
 #define KNOBS_PRINT_OUT     0
-#define HARDWARE_TEST       1
+#define HARDWARE_TEST       0
 
 #define UP              1
 #define DOWN            0
@@ -66,13 +66,13 @@ namespace beep_machine {
     static bool pagination_flag        =           0;
     static bool shift_flag             =           0;
 
-    static uint32_t preset_start;
-    static uint32_t preset_end;
+    // static uint32_t preset_start;
+    // static uint32_t preset_end;
 
-    static uint32_t shift_start;
-    static uint32_t shift_end;
+    // static uint32_t shift_start;
+    // static uint32_t shift_end;
 
-    // knobs
+    // pagination
     static uint32_t knobs[8];
     static uint32_t page_values[MAX_PAGES][MAX_KNOBS]; // the permanent storage of every value for every page, used by the actual music code
     static uint32_t knob_values[MAX_KNOBS]; // last read knob values
@@ -82,13 +82,8 @@ namespace beep_machine {
     static uint8_t current_page    = 0; // the current page id of values being edited
     static bool page_change    = false; // signals the page change
     static bool in_sync        = false; //temp variable to detect when the knob's value matches the stored value
-
-    // leds
     static uint8_t leds                =           0xFF;
     static bool led_state[22];
-
-    // static bool rgb_state              =           0;
-    // static uint16_t rgb_colour[3]      =           {65535, 0 ,0};
     
     uint32_t get_pagintaion (int page, int knob);
     uint8_t get_pagination_flag ();
@@ -134,24 +129,7 @@ void sr_cycle(int delay, int dir);
 void sr_print_pins(void);
 void sr_init (void);
 
-// void pwm_pin_init (int pin);
-// void pwm_output_polarity (void);
 
-// void led_toggle (int pin);
-// void led_put (int pin, bool state);
-// void led_flash (int pin, int repeats, int delay);
-// void leds_init (void);
-
-// void rgb_set_off(void);
-// void rgb_update(int r, int g, int b);
-// void rgb_update_8bit(int r, int g, int b);
-// void rgb_recall (void);
-// void rgb_set_on (void);
-// void rgb_flash (int repeats, int delay);
-// void rgb_cycle (int speed);
-// void rgb_preset (int preset);
-// void rgb_init (void);
-// void leds_test (int repeats, int delay);
 void set_page (int page);
 
 
@@ -159,10 +137,7 @@ void set_page (int page);
 //          KEYS
 // ----------------------
 
-void keys_init();
-void keys_read();
 void keys_update();
-uint32_t keys_reverse(uint32_t input);
 
 // ----------------------
 //          KNOBS

@@ -43,7 +43,7 @@ extern uint16_t play_buffer[256];
 uint8_t hardware_index;
 
 
-int main() {
+ int main() {
   
   
   hardware_init();
