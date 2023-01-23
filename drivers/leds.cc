@@ -36,6 +36,8 @@ namespace Leds {
         pwm_pin_init(_pin[2]);
 
         pwm_output_polarity ();
+        
+        Rgb::preset(0); // set the default position for the RGB LED
     }
     void Rgb::on () {
         _state = true;
@@ -158,43 +160,43 @@ namespace Leds {
     }
 
 
-    Led pico(Pins::LED_PICO_PIN);
-    Led lfo(Pins::LED_LFO_PIN);
-    Led arp(Pins::LED_ARP_PIN);
-    Rgb rgb(Pins::LEDR_PIN, Pins::LEDG_PIN, Pins::LEDB_PIN);
+    Led PICO(Pins::LED_PICO_PIN);
+    Led LFO(Pins::LED_LFO_PIN);
+    Led ARP(Pins::LED_ARP_PIN);
+    Rgb RGB(Pins::LEDR_PIN, Pins::LEDG_PIN, Pins::LEDB_PIN);
 
 
     void init(void)
     {
 
-        pico.init();
+        PICO.init();
 
-        lfo.init();
-        arp.init();
+        LFO.init();
+        ARP.init();
 
-        rgb.init();
+        RGB.init();
     }
     void on(){
-        pico.on();
-        lfo.on();
-        arp.on();
-        rgb.on();
+        PICO.on();
+        LFO.on();
+        ARP.on();
+        RGB.on();
     }
     void off(){
-        pico.off();
-        lfo.off();
-        arp.off();
-        rgb.off();
+        PICO.off();
+        LFO.off();
+        ARP.off();
+        RGB.off();
     }
     void test(uint8_t delay){
-        pico.flash(1, delay);
+        PICO.flash(1, delay);
         // put shift reg here
-        lfo.flash(1, delay);
-        arp.flash(1, delay);
-        rgb.cycle(delay/4);
-        arp.flash(1, delay);
-        lfo.flash(1, delay);
+        LFO.flash(1, delay);
+        ARP.flash(1, delay);
+        RGB.cycle(delay/4);
+        ARP.flash(1, delay);
+        LFO.flash(1, delay);
         // put shift reg here
-        pico.flash(1, delay);
+        PICO.flash(1, delay);
     }
 }

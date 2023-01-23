@@ -77,10 +77,10 @@ namespace Leds {
         
     };
 
-    extern Led pico;
-    extern Led lfo;
-    extern Led arp;
-    extern Rgb rgb;
+    extern Led PICO;
+    extern Led LFO;
+    extern Led ARP;
+    extern Rgb RGB;
 
     void init(void);
     void on(void);

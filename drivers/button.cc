@@ -37,8 +37,8 @@ namespace Buttons {
         return shift_flag_;
     }
 
-    Button page;
-    Button lfo;
-    Button arp;
-    Button preset;
+    Button PAGE;
+    Button LFO;
+    Button ARP;
+    Button PRESET;
 }

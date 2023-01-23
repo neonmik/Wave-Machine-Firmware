@@ -296,36 +296,36 @@ void keys_update() {
 
   // Page
 	if ( (!((k>>PAGE_KEY) & 1)) &&  (((k_last>>PAGE_KEY) & 1)) ){
-    Buttons::page.pressed();
+    Buttons::PAGE.pressed();
     if (KEYS_PRINT_OUT) printf("Page key pressed\n");
 	}
 	if ( (((k>>PAGE_KEY) & 1)) &&  (!((k_last>>PAGE_KEY) & 1)) ){
-    Buttons::page.released();
+    Buttons::PAGE.released();
     if (KEYS_PRINT_OUT) printf("Page key released\n");
 	}
 
   // LFO
 	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
-    Buttons::lfo.pressed();
+    Buttons::LFO.pressed();
 	}
   if ( (((k>>LFO_KEY) & 1)) &&  (!((k_last>>LFO_KEY) & 1)) ){
-    Buttons::lfo.released();
+    Buttons::LFO.released();
 	}
 
   // ARP
   if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
-    Buttons::arp.pressed();
+    Buttons::ARP.pressed();
 	} 
   if ( (((k>>ARP_KEY) & 1)) &&  (!((k_last>>ARP_KEY) & 1)) ){
-    Buttons::arp.released();
+    Buttons::ARP.released();
 	}
 
   // Preset
   if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
-    Buttons::preset.pressed();
+    Buttons::PRESET.pressed();
 	}
 	if ( (((k>>PRESET_KEY) & 1)) &&  (!((k_last>>PRESET_KEY) & 1)) ){
-    Buttons::preset.released();
+    Buttons::PRESET.released();
 	}
 
 	// store keys for next time
@@ -346,19 +346,19 @@ void pagination_init() {
 }
 void default_pagination () {
   // ADSR default values
-  page_values[ADSR][0]=10; //A
-  page_values[ADSR][1]=20; // D
-  page_values[ADSR][2]=2047; // S
-  page_values[ADSR][3]=511; // R
-  page_values[MOD][0]=0; //A
-  page_values[MOD][1]=0; // D
-  page_values[MOD][2]=0; // S
-  page_values[MOD][3]=0; // R
+  page_values[Page::ADSR][0]=10; //A
+  page_values[Page::ADSR][1]=20; // D
+  page_values[Page::ADSR][2]=2047; // S
+  page_values[Page::ADSR][3]=511; // R
+  page_values[Page::LFO][0]=0; //A
+  page_values[Page::LFO][1]=0; // D
+  page_values[Page::LFO][2]=0; // S
+  page_values[Page::LFO][3]=0; // R
 }
 // read knobs and digital switches and handle pagination
 void pagination_update(){
 
-  if(Buttons::page.get_short()){
+  if(Buttons::PAGE.get_short()){
     uint8_t pages = MAX_PAGES;
 
     page_change = true;
@@ -489,12 +489,12 @@ uint8_t get_page_flag(void) {
 
 void set_lfo_flag(uint8_t value) {
   lfo_flag = value;
-  Leds::lfo.set(value);
+  Leds::LFO.set(value);
 }
 void toggle_lfo_flag(void) {
   modulation::toggle();
 
-  Leds::lfo.toggle();
+  Leds::LFO.toggle();
   lfo_flag = !lfo_flag;
   if (KEYS_PRINT_OUT) printf("Key: LFO\n");
 }
@@ -504,11 +504,11 @@ uint8_t get_lfo_flag(void) {
 
 void set_arp_flag(uint8_t value) {
   arp_flag = value;
-  Leds::arp.set(value);
+  Leds::ARP.set(value);
 }
 void toggle_arp_flag(void) {
   arp_flag = !arp_flag;
-  Leds::arp.toggle();
+  Leds::ARP.toggle();
   if (KEYS_PRINT_OUT) printf("Key: ARP\n");
 }
 uint8_t get_arp_flag(void) {
@@ -522,7 +522,7 @@ void change_preset(void) {
   preset++;
   preset&=0x7;
   set_preset(preset);
-  Leds::rgb.preset(preset);
+  Leds::RGB.preset(preset);
 }
 uint8_t get_preset(void) {
   return preset;
@@ -570,9 +570,9 @@ void hardware_task (void) {
   }
   if (hardware_index == 1) {
     keys_update();
-    if (Buttons::arp.get_short()) toggle_arp_flag();
-    if (Buttons::preset.get_short()) change_preset();
-    if (Buttons::lfo.get_short()) toggle_lfo_flag();
+    if (Buttons::ARP.get_short()) toggle_arp_flag();
+    if (Buttons::PRESET.get_short()) change_preset();
+    if (Buttons::LFO.get_short()) toggle_lfo_flag();
   }
   if (hardware_index == 2) {
     adc.update();

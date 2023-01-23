@@ -32,10 +32,12 @@
 #define PROTECTED        -1
 #define ACTIVE            1
 
-#define MAIN              0
-#define ADSR              1
-#define MOD               2
-#define ARP               3
+enum Page : uint8_t{
+    MAIN    = 0,
+    ADSR    = 1,
+    LFO     = 2,
+    ARP     =3
+};
 
 #define protection_value  10 // the amount of protection the knob gets before unlocking.
 

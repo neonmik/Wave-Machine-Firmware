@@ -48,8 +48,8 @@ namespace Buttons {
             bool get_shift (void);
     };
 
-    extern Button page;
-    extern Button lfo;
-    extern Button arp;
-    extern Button preset;
+    extern Button PAGE;
+    extern Button LFO;
+    extern Button ARP;
+    extern Button PRESET;
 }
