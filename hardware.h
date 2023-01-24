@@ -16,15 +16,7 @@
 
 #define KEYS_PRINT_OUT      0
 #define KNOBS_PRINT_OUT     0
-#define HARDWARE_TEST       0
-
-#define UP              1
-#define DOWN            0
-
-#define SR_DATA_WIDTH   8
-#define SR_DATA         18
-#define SR_CLK          19
-#define SR_LATCH        20
+#define HARDWARE_TEST       1
 
 #define MAX_PAGES         4 // the max number of pages available
 #define MAX_KNOBS         4 // the max number of knobs available
@@ -36,26 +28,19 @@ enum Page : uint8_t{
     MAIN    = 0,
     ADSR    = 1,
     LFO     = 2,
-    ARP     =3
+    ARP     = 3
 };
 
 #define protection_value  10 // the amount of protection the knob gets before unlocking.
 
-// const int PICO_LED_PIN = PICO_DEFAULT_LED_PIN;
 
-// #define LED_LFO_PIN     21
-// #define LED_ARP_PIN     22
-// #define LEDR_PIN        6
-// #define LEDG_PIN        7
-// #define LEDB_PIN        8
-
-#define LED_KNOB1       0
-#define LED_KNOB2       1
-#define LED_KNOB3       2
-#define LED_KNOB4       3
-#define LED_PAGE1       4
-#define LED_PAGE2       5
-#define LED_PAGE3       6
+// #define LED_KNOB1       0
+// #define LED_KNOB2       1
+// #define LED_KNOB3       2
+// #define LED_KNOB4       3
+// #define LED_PAGE1       4
+// #define LED_PAGE2       5
+// #define LED_PAGE3       6
 
 namespace beep_machine {
     // preset, page and event flags
@@ -68,11 +53,6 @@ namespace beep_machine {
     static bool pagination_flag        =           0;
     static bool shift_flag             =           0;
 
-    // static uint32_t preset_start;
-    // static uint32_t preset_end;
-
-    // static uint32_t shift_start;
-    // static uint32_t shift_end;
 
     // pagination
     static uint32_t knobs[8];
@@ -84,8 +64,6 @@ namespace beep_machine {
     static uint8_t current_page    = 0; // the current page id of values being edited
     static bool page_change    = false; // signals the page change
     static bool in_sync        = false; //temp variable to detect when the knob's value matches the stored value
-    static uint8_t leds                =           0xFF;
-    static bool led_state[22];
     
     uint32_t get_pagintaion (int page, int knob);
     uint8_t get_pagination_flag ();
@@ -121,17 +99,6 @@ uint32_t get_knob(uint8_t knob);
 //          LEDS
 // ----------------------
 
-void sr_step_ (void);
-void sr_shift_out(uint8_t val);
-void sr_bit_on (int pin);
-void sr_bit_toggle (int pin);
-void sr_clear_buffer(void);
-void sr_off(void);
-void sr_cycle(int delay, int dir);
-void sr_print_pins(void);
-void sr_init (void);
-
-
 void set_page (int page);
 
 
@@ -159,3 +126,4 @@ void print_knob_page (void);
 void hardware_init (void);
 void hardware_test (int delay);
 void hardware_task (void);
+void hardware_debug (void);

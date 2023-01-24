@@ -21,8 +21,22 @@
 		},
 		"cortex-debug.openocdPath": "openocd",
 		"files.associations": {
-			"stdlib.h": "c"
+			"stdlib.h": "c",
+			"cmath": "cpp",
+			"compare": "cpp",
+			"concepts": "cpp",
+			"cstdarg": "cpp",
+			"cstdint": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"exception": "cpp",
+			"type_traits": "cpp",
+			"limits": "cpp",
+			"new": "cpp",
+			"*.tcc": "cpp",
+			"cinttypes": "cpp",
+			"typeinfo": "cpp"
 		},
-		"cortex-debug.variableUseNaturalFormat": false
+		"cortex-debug.variableUseNaturalFormat": true
 	}
 }

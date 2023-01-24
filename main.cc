@@ -27,6 +27,7 @@
 
 
 #include "synth/modulation.h"
+#include "synth/arp.h"
 #include "synth/synth.h"
 #include "note_priority.cc"
 #include "drivers/dac.h"
@@ -38,12 +39,15 @@
 #define BPM 120 // part of a function for determinding bpm ms
 
 
+
 extern bool buffer_flag;
 extern uint16_t play_buffer[256];
 uint8_t hardware_index;
+uint16_t software_index = 0;
+extern uint16_t Arp::beat;
 
 
- int main() {
+  int main() {
   
   
   hardware_init();
@@ -51,6 +55,7 @@ uint8_t hardware_index;
   dac_init(SAMPLE_RATE);
 
   modulation::init();
+  Arp::init(BPM, SAMPLE_RATE);
 
   while (true) {
     
@@ -60,11 +65,13 @@ uint8_t hardware_index;
       for(int i =0; i<256; i++) {
         uint16_t sample = ((synth::get_audio_frame()+32767)>>4); // create next sample, add 32767 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
-		  // add counter here for playback/sequncer timing
-      
 
+        // ounter here for playback/sequncer timing
+        software_index++;
+        Arp::update_playback();
       }
       buffer_flag = 0;
+      // hardware_debug();
       continue;
 
     } else {
@@ -77,7 +84,7 @@ uint8_t hardware_index;
       if (hardware_index > 5) hardware_index = 0; // this takes 2-3 more instructions to accomplish
 
     }
-    
+
     
     
 

@@ -40,15 +40,10 @@ void Adc::update() {
     // passes last actual sample to a buffer
     // sample_[mux_address_] = values_[mux_address_];
     // filters new sample with old sample
-    sample_[mux_address_] = sample_[mux_address_] - (sample_[mux_address_]>>4) + adc_read();
-
-    // filters out lowest results, but might not be needed
-    // output = (sample>>2);
-    // if (output<=5) output = 0;
+    sample_[mux_address_] = sample_[mux_address_] - (sample_[mux_address_]>>2) + adc_read();
 
     // moves filtered sample to the adc array
-    values_[mux_address_] = (sample_[mux_address_]>>4);
-    
+    values_[mux_address_] = (sample_[mux_address_]>>2);  
 
     // sets the index to loop
     mux_address_ = (mux_address_ + 1) % MAX_KNOBS;

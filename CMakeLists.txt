@@ -9,12 +9,18 @@ pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
     main.cc
+
     drivers/dac.cc
+
     drivers/adc.cc
     drivers/keys.cc
     drivers/button.cc
     drivers/leds.cc
+    drivers/shiftreg.cc
+    drivers/rgb.cc
+
     hardware.cc
+
     synth/synth.cc
     synth/modulation.cc
 )
