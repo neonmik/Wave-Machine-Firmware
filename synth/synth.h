@@ -47,7 +47,7 @@ namespace synth {
 
   #define MAX_VOICES 8
 
-  // constexpr float pi = 3.14159265358979323846f;
+  constexpr float pi = 3.14159265358979323846f;
 
   static uint32_t sample_rate = 44100;
   extern uint16_t volume;
@@ -85,6 +85,10 @@ namespace synth {
   extern int16_t    vibrato;
   extern uint16_t   tremelo;
 
+  
+  // extern bool      filter_enable;
+  // extern uint16_t  filter_cutoff_frequency;
+
   struct AudioChannel {
     
     uint8_t   note          = 0;
@@ -97,9 +101,7 @@ namespace synth {
 
     uint32_t  waveform_offset  = 0;   // voice offset (Q8)
 
-    int32_t   filter_last_sample = 0;
-    bool      filter_enable = false;
-    uint16_t  filter_cutoff_frequency = 0;
+    // int32_t   filter_last_sample;
 
     uint8_t   is_active     = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
 

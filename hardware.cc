@@ -20,98 +20,24 @@ extern uint8_t hardware_index;
 
 using namespace beep_machine;
 
-extern void note_priority(int status, int note, int velocity);
-
-
-Adc adc;
-Keys keys;
-
-
 // ----------------------
-//          KEYS
-// ----------------------
-
-
-void keys_update() {
-  uint32_t k, k_last;
-
-	k =  keys.get();
-	k_last = keys.get_last();
-	// num_keys_down = 0;
-
-	for (int i = 0; i < MAX_KEYS; i++) {
-		// if ( !((k>>i) & 1) ) {
-		// 	num_keys_down++;
-		// }
-		if ( (!((k>>i) & 1)) &&  (((k_last>>i) & 1))  )  {  // new key down
-      // 
-      if (KEYS_PRINT_OUT) printf("Key: %d on\n", ((i) + 1));
-			note_priority(0x90, i+48, 127);   // keyboard starts at midi note 36
-		}
-		if ( ((k>>i) & 1) &&  (!((k_last>>i) & 1))  )  {  // key up
-
-      note_priority(0x80, i+48 ,0);
-      // set_note_off(i + 36);   // keyboard starts at midi note 36
-			// dec_physical_notes_on();
-		}
-	}
-
-  // Page
-	if ( (!((k>>PAGE_KEY) & 1)) &&  (((k_last>>PAGE_KEY) & 1)) ){
-    Buttons::PAGE.pressed();
-    if (KEYS_PRINT_OUT) printf("Page key pressed\n");
-	}
-	if ( (((k>>PAGE_KEY) & 1)) &&  (!((k_last>>PAGE_KEY) & 1)) ){
-    Buttons::PAGE.released();
-    if (KEYS_PRINT_OUT) printf("Page key released\n");
-	}
-
-  // LFO
-	if ( (!((k>>LFO_KEY) & 1)) &&  (((k_last>>LFO_KEY) & 1)) ){
-    Buttons::LFO.pressed();
-	}
-  if ( (((k>>LFO_KEY) & 1)) &&  (!((k_last>>LFO_KEY) & 1)) ){
-    Buttons::LFO.released();
-	}
-
-  // ARP
-  if ( (!((k>>ARP_KEY) & 1)) &&  (((k_last>>ARP_KEY) & 1)) ){
-    Buttons::ARP.pressed();
-	} 
-  if ( (((k>>ARP_KEY) & 1)) &&  (!((k_last>>ARP_KEY) & 1)) ){
-    Buttons::ARP.released();
-	}
-
-  // Preset
-  if ( (!((k>>PRESET_KEY) & 1)) &&  (((k_last>>PRESET_KEY) & 1)) ){
-    Buttons::PRESET.pressed();
-	}
-	if ( (((k>>PRESET_KEY) & 1)) &&  (!((k_last>>PRESET_KEY) & 1)) ){
-    Buttons::PRESET.released();
-	}
-
-	// store keys for next time
-	keys.set_last(k);
-}
-
-// ----------------------
-//          KNOBS
+//     PAGINATION/UI
 // ----------------------
 
 void pagination_init() {
   // pinMode(aLED, OUTPUT);
   for(int i=0; i < MAX_KNOBS; i++){
-    knob_values[i] = adc.value(i);
+    knob_values[i] = ADC::value(i);
     knob_states[i] = ACTIVE;
   }
   default_pagination();
 }
 void default_pagination () {
   // ADSR default values
-  page_values[Page::ADSR][0]=10; //A
-  page_values[Page::ADSR][1]=20; // D
-  page_values[Page::ADSR][2]=2047; // S
-  page_values[Page::ADSR][3]=511; // R
+  page_values[Page::ADSR][0]=synth::attack_ms; //A
+  page_values[Page::ADSR][1]=synth::decay_ms; // D
+  page_values[Page::ADSR][2]=synth::sustain; // S
+  page_values[Page::ADSR][3]=synth::release_ms; // R
   page_values[Page::LFO][0]=0; //A
   page_values[Page::LFO][1]=0; // D
   page_values[Page::LFO][2]=0; // S
@@ -143,8 +69,8 @@ void pagination_update(){
   if(page_change){
     page_change = false; // set the Page change back to false so it can be read again...
 
-    // bitmask the knob leds off
-    Leds::KNOBS_off();
+    // turn off all the KNOB LED's
+    LEDS::KNOBS.off();
 
     for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
       knob_states[i] = PROTECTED;
@@ -152,7 +78,7 @@ void pagination_update(){
   }
   // read knobs values, show sync with the LED, enable knob when it matches the stored value
   for (int i = 0; i < MAX_KNOBS; i++){
-    value = adc.value(i);
+    value = ADC::value(i);
     in_sync = abs(value - page_values[current_page][i]) < protection_value;
 
     // enable knob when it matches the stored value
@@ -160,24 +86,24 @@ void pagination_update(){
       knob_states[i] = ACTIVE;
     }
   
-    // // if knob is moving, show if it's active or not
-    // if (abs(value - knob_values[i]) > 5){
-    //   // if knob is active, blink LED
-    //   if(knob_states[i] == ACTIVE){
-    //     // bitshift an ON to the current knob and output it to the ShiftReg
-    //     sr_shift_out((leds |= 1 << (7 - i)));
-    //   } else {
-    //     // bitshift an OFF to the current knob and output it to the ShiftReg
-    //     sr_shift_out((leds |= 0 << (7 - i)));
-    //   }
-    // }
+    // if knob is moving, show if it's active or not
+    //  if(abs(value - knob_values[i]) > 5){
+    //       // if knob is active, blink LED
+    //       if(knob_states[i] == ACTIVE){
+    //         Leds::KNOB_select(i, 1);
+    //         continue;
+    //       } else {
+    //         Leds::KNOB_select(i, 0);
+    //       }
+    //  }
+
     
     knob_values[i] = value;
 
     // if enabled then mirror the real time knob value
     if(knob_states[i] == ACTIVE){
       // Leds::SR.set_pin(i);
-      Leds::KNOB_select(i);
+      LEDS::KNOB_select(i, 1);
       page_values[current_page][i] = value;
     }
   }
@@ -206,100 +132,102 @@ void print_knob_page(){
   printf("\n");
 }
 
-
 // ----------------------
-//          FLAGS
+//       FLAGS/UI
 // ----------------------
-void toggle_shift_flag (void) {
-  shift_flag = !shift_flag;
-}
-bool get_shift_flag (void){
-  return shift_flag;
-}
 
-void set_page (uint8_t value) {
-  // using a switch here so that I can easily change the LEDs... find a better way?
-  switch (value) {
-    case 0:
-      page = 0;
-      Leds::PAGES_off();
-      break;
-    case 1:
-      page = 1;
-      Leds::PAGE_1.toggle();
-      break;
-    case 2:
-      page = 2;
-      Leds::PAGE_1.toggle();
-      Leds::PAGE_2.toggle();
-      break;
-    case 3:
-      page = 3;
-      Leds::PAGE_2.toggle();
-      Leds::PAGE_3.toggle();
-      break;
+namespace beep_machine {
+  void toggle_shift_flag (void) {
+    shift_flag = !shift_flag;
+  }
+  bool get_shift_flag (void){
+    return shift_flag;
+  }
+
+  void set_page (uint8_t value) {
+    // using a switch here so that I can easily change the LEDs... find a better way?
+    switch (value) {
+      case 0:
+        page = 0;
+        // Leds::PAGES_off();
+        LEDS::PAGES.off();
+        break;
+      case 1:
+        page = 1;
+        LEDS::PAGE_1.toggle();
+        break;
+      case 2:
+        page = 2;
+        LEDS::PAGE_1.toggle();
+        LEDS::PAGE_2.toggle();
+        break;
+      case 3:
+        page = 3;
+        LEDS::PAGE_2.toggle();
+        LEDS::PAGE_3.toggle();
+        break;
+    }
+  }
+  uint8_t get_page(void) {
+    return page;
+  }
+  void set_page_flag(uint8_t value) {
+    page_flag = value;
+  }
+  uint8_t get_page_flag(void) {
+    return page_flag;
+  }
+
+  void set_lfo_flag(uint8_t value) {
+    lfo_flag = value;
+    if (lfo_flag) LEDS::LFO.on();
+    if (!lfo_flag) LEDS::LFO.off();
+
+  }
+  void toggle_lfo_flag(void) {
+    modulation::toggle();
+
+    LEDS::LFO.toggle();
+    lfo_flag = !lfo_flag;
+    if (KEYS_PRINT_OUT) printf("Key: LFO\n");
+  }
+  uint8_t get_lfo_flag(void) {
+    return lfo_flag;
+  }
+
+  void set_arp_flag(uint8_t value) {
+    arp_flag = value;
+    if (arp_flag) LEDS::ARP.on();
+    if (!arp_flag) LEDS::ARP.off();
+  }
+  void toggle_arp_flag(void) {
+    arp_flag = !arp_flag;
+    LEDS::ARP.toggle();
+    if (KEYS_PRINT_OUT) printf("Key: ARP\n");
+  }
+  uint8_t get_arp_flag(void) {
+    return arp_flag;
+  }
+
+  void set_preset(uint8_t value) {
+    preset = value;
+  }
+  void change_preset(void) {
+    preset++;
+    preset&=0x7;
+    set_preset(preset);
+    LEDS::RGB.preset(preset);
+  }
+  uint8_t get_preset(void) {
+    return preset;
+  }
+  void set_preset_flag(uint8_t value) {
+    preset_flag = value;
+  }
+  uint8_t get_preset_flag(void) {
+    return preset_flag;
   }
 }
-uint8_t get_page(void) {
-  return page;
-}
-void set_page_flag(uint8_t value) {
-  page_flag = value;
-}
-uint8_t get_page_flag(void) {
-  return page_flag;
-}
-
-void set_lfo_flag(uint8_t value) {
-  lfo_flag = value;
-  if (lfo_flag) Leds::LFO.on();
-  if (!lfo_flag) Leds::LFO.off();
-
-}
-void toggle_lfo_flag(void) {
-  modulation::toggle();
-
-  Leds::LFO.toggle();
-  lfo_flag = !lfo_flag;
-  if (KEYS_PRINT_OUT) printf("Key: LFO\n");
-}
-uint8_t get_lfo_flag(void) {
-  return lfo_flag;
-}
-
-void set_arp_flag(uint8_t value) {
-  arp_flag = value;
-  if (arp_flag) Leds::ARP.on();
-  if (!arp_flag) Leds::ARP.off();
-}
-void toggle_arp_flag(void) {
-  arp_flag = !arp_flag;
-  Leds::ARP.toggle();
-  if (KEYS_PRINT_OUT) printf("Key: ARP\n");
-}
-uint8_t get_arp_flag(void) {
-  return arp_flag;
-}
-
-void set_preset(uint8_t value) {
-  preset = value;
-}
-void change_preset(void) {
-  preset++;
-  preset&=0x7;
-  set_preset(preset);
-  Leds::RGB.preset(preset);
-}
-uint8_t get_preset(void) {
-  return preset;
-}
-void set_preset_flag(uint8_t value) {
-  preset_flag = value;
-}
-uint8_t get_preset_flag(void) {
-  return preset_flag;
-}
-
 
 // ----------------------
 //        HARDWARE
@@ -309,9 +237,9 @@ uint8_t get_preset_flag(void) {
 void hardware_init (void) {
   stdio_init_all();
 
-  Leds::init();
-  keys.init();
-  adc.init();
+  LEDS::init();
+  KEYS::init();
+  ADC::init();
   pagination_init();
   
 
@@ -324,28 +252,28 @@ void hardware_init (void) {
 
 void hardware_test (int delay) {
   
-  Leds::test(delay);
+  LEDS::test(delay);
 }
 
 void hardware_task (void) {
+  
   if (hardware_index == 0) {
-    keys.read();
+    KEYS::read();
   }
   if (hardware_index == 1) {
-    keys_update();
+    KEYS::update();
     if (Buttons::ARP.get_short()) toggle_arp_flag();
     if (Buttons::PRESET.get_short()) change_preset();
     if (Buttons::LFO.get_short()) toggle_lfo_flag();
   }
   if (hardware_index == 2) {
-    adc.update();
+    ADC::update();
   }
   if (hardware_index == 3) {
-
-    Leds::update();
+    pagination_update();
   }
   if (hardware_index == 4) {
-    pagination_update();
+    LEDS::update();
   }
   if (hardware_index == 5) {
     // if (page_button.get_shift()) {
@@ -417,5 +345,5 @@ void hardware_task (void) {
 
 }
 void hardware_debug (void) {
-  Leds::SPARE.toggle();
+  LEDS::SPARE.toggle();
 }

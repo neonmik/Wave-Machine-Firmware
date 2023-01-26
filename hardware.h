@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-// #include "hardware/pwm.h"
 #include "hardware/spi.h"
 
 #include "synth/synth.h"
@@ -16,7 +15,7 @@
 
 #define KEYS_PRINT_OUT      0
 #define KNOBS_PRINT_OUT     0
-#define HARDWARE_TEST       1
+#define HARDWARE_TEST       0
 
 #define MAX_PAGES         4 // the max number of pages available
 #define MAX_KNOBS         4 // the max number of knobs available
@@ -43,63 +42,62 @@ enum Page : uint8_t{
 // #define LED_PAGE3       6
 
 namespace beep_machine {
-    // preset, page and event flags
-    static uint8_t preset              =           0;
-    static uint8_t page                =           0;
-    static bool page_flag              =           0;
-    static bool lfo_flag               =           0;
-    static bool arp_flag               =           0;
-    static bool preset_flag            =           0;
-    static bool pagination_flag        =           0;
-    static bool shift_flag             =           0;
+    namespace {
+        // preset, page and event flags
+        uint8_t preset              =           0;
+        uint8_t page                =           0;
+        bool page_flag              =           0;
+        bool lfo_flag               =           0;
+        bool arp_flag               =           0;
+        bool preset_flag            =           0;
+        bool pagination_flag        =           0;
+        bool shift_flag             =           0;
+
+        // pagination
+        uint32_t knobs[8];
+        uint32_t page_values[MAX_PAGES][MAX_KNOBS]; // the permanent storage of every value for every page, used by the actual music code
+        uint32_t knob_values[MAX_KNOBS]; // last read knob values
+        uint8_t knob_states[MAX_KNOBS]; // knobs state (protected, enable...)
+
+        uint32_t value           = 0; // current (temporary) value just read
+        uint8_t current_page    = 0; // the current page id of values being edited
+        bool page_change    = false; // signals the page change
+        bool in_sync        = false; //temp variable to detect when the knob's value matches the stored value
+    }
+    
+    
 
 
-    // pagination
-    static uint32_t knobs[8];
-    static uint32_t page_values[MAX_PAGES][MAX_KNOBS]; // the permanent storage of every value for every page, used by the actual music code
-    static uint32_t knob_values[MAX_KNOBS]; // last read knob values
-    static uint8_t knob_states[MAX_KNOBS]; // knobs state (protected, enable...)
-
-    static uint32_t value           = 0; // current (temporary) value just read
-    static uint8_t current_page    = 0; // the current page id of values being edited
-    static bool page_change    = false; // signals the page change
-    static bool in_sync        = false; //temp variable to detect when the knob's value matches the stored value
+    
     
     uint32_t get_pagintaion (int page, int knob);
     uint8_t get_pagination_flag ();
+
+    void toggle_shift_flag (void);
+    bool get_shift_flag (void);
+
+    void set_page (uint8_t page);
+    void set_page_flag(uint8_t value);
+    uint8_t get_page_flag(void);
+
+    void set_lfo_flag(uint8_t value);
+    void toggle_lfo_flag(void);
+    uint8_t get_lfo_flag(void);
+
+    void set_arp_flag(uint8_t value);
+    void toggle_arp_flag(void);
+    uint8_t get_arp_flag(void);
+
+    void set_preset(uint8_t preset);
+    void change_preset(void);
+    uint8_t get_preset(void);
+    void set_preset_flag(uint8_t value);
+    uint8_t get_preset_flag(void);
+
+    void set_knob(uint8_t knob, uint32_t value);
+    uint32_t get_knob(uint8_t knob);
     
 };
-
-void toggle_shift_flag (void);
-bool get_shift_flag (void);
-
-void set_page (uint8_t page);
-void set_page_flag(uint8_t value);
-uint8_t get_page_flag(void);
-
-void set_lfo_flag(uint8_t value);
-void toggle_lfo_flag(void);
-uint8_t get_lfo_flag(void);
-
-void set_arp_flag(uint8_t value);
-void toggle_arp_flag(void);
-uint8_t get_arp_flag(void);
-
-void set_preset(uint8_t preset);
-void change_preset(void);
-uint8_t get_preset(void);
-void set_preset_flag(uint8_t value);
-uint8_t get_preset_flag(void);
-
-void set_knob(uint8_t knob, uint32_t value);
-uint32_t get_knob(uint8_t knob);
-
-
-// ----------------------
-//          LEDS
-// ----------------------
-
-void set_page (int page);
 
 
 // ----------------------

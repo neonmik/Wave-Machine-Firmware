@@ -29,10 +29,12 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 #include "synth/synth.h"
-#include "note_priority.cc"
-#include "drivers/dac.h"
-#include "hardware.h"
 
+
+#include "drivers/dac.h"
+
+#include "hardware.h"
+#include "drivers/leds.h"
 
 #define SAMPLE_RATE     44100
 #define MAX_VOICES      8
@@ -47,7 +49,7 @@ uint16_t software_index = 0;
 extern uint16_t Arp::beat;
 
 
-  int main() {
+int main() {
   
   
   hardware_init();
@@ -58,7 +60,7 @@ extern uint16_t Arp::beat;
   Arp::init(BPM, SAMPLE_RATE);
 
   while (true) {
-    
+
     if (buffer_flag){
 
       modulation::update();
@@ -68,7 +70,7 @@ extern uint16_t Arp::beat;
 
         // ounter here for playback/sequncer timing
         software_index++;
-        Arp::update_playback();
+        // Arp::update_playback();
       }
       buffer_flag = 0;
       // hardware_debug();
@@ -80,7 +82,7 @@ extern uint16_t Arp::beat;
         
       hardware_index++;
       //could be either of these, but apprently you can't loop 4/5/6 times like this...?
-      hardware_index &= 0x7;
+      // hardware_index &= 0x7;
       if (hardware_index > 5) hardware_index = 0; // this takes 2-3 more instructions to accomplish
 
     }

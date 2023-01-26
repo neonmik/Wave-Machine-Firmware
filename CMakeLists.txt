@@ -21,6 +21,8 @@ add_executable(${PROJECT_NAME}
 
     hardware.cc
 
+    note_priority.cc
+
     synth/synth.cc
     synth/modulation.cc
 )

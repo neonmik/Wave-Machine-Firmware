@@ -13,26 +13,17 @@
 #include "hardware/adc.h"
 #include "hardware/dma.h"
 
+namespace ADC {
+    namespace {
+        uint16_t _adc_value;
+        uint16_t _values[MAX_KNOBS];
 
-class Adc {
-    private:
-        uint16_t adc_value_;
-        uint16_t values_[MAX_KNOBS];
-
-        uint8_t mux_address_;
-        uint32_t sample_[MAX_KNOBS];
-        uint32_t output_;
-
-    public:
-        Adc() { }
-        ~Adc() { }
-
-        void init();
-        void update();
-
-        inline int16_t value(int knob) const {
-            return values_[knob];
-        }
-
-
-};
+        uint8_t _mux_address;
+        uint32_t _sample[MAX_KNOBS];
+        uint32_t _output;
+    }
+    
+    void init();
+    void update();
+    uint16_t value(int knob);
+}

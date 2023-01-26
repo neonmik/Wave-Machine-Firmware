@@ -1,88 +1,156 @@
 #include "keys.h"
 
-void Keys::init(){
-  // initiate pins for mux address
-  gpio_init(MUX_SEL_A);
-  gpio_init(MUX_SEL_B);
-  gpio_init(MUX_SEL_C);
-  gpio_init(MUX_SEL_D);
-  // set the pins direction
-  gpio_set_dir(MUX_SEL_A, GPIO_OUT);
-  gpio_set_dir(MUX_SEL_B, GPIO_OUT);
-  gpio_set_dir(MUX_SEL_C, GPIO_OUT);
-  gpio_set_dir(MUX_SEL_D, GPIO_OUT);
-  // set the slew rate slow (for reducing amount of cross talk on address changes... hopefully)
-  gpio_set_slew_rate(MUX_SEL_A, GPIO_SLEW_RATE_SLOW);
-  gpio_set_slew_rate(MUX_SEL_B, GPIO_SLEW_RATE_SLOW);
-  gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
-  gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
+#include "../note_priority.h"
 
-  // initiate pins for mux output
-  gpio_init(MUX_OUT_0);
-  gpio_init(MUX_OUT_1);
-  // set the pins direction
-  gpio_set_dir(MUX_OUT_0, GPIO_IN);
-  gpio_set_dir(MUX_OUT_1, GPIO_IN);
-  // set pins for pull up - already doing this on PCB, just a precaution
-  gpio_pull_up(MUX_OUT_0);
-  gpio_pull_up(MUX_OUT_1);
-
-  gpio_put(MUX_SEL_A, 1);
-  gpio_put(MUX_SEL_B, 1);
-  gpio_put(MUX_SEL_C, 1);
-  gpio_put(MUX_SEL_D, 1);
-
-  gpio_init(DEBUG_PIN); // set LED pin
-  gpio_set_dir(DEBUG_PIN, GPIO_OUT); // set LED pin to out
-
-}
-void Keys::read(){
+namespace KEYS {
   
-  keys_history[history_index] = 0;
-  
-  gpio_put(MUX_SEL_A, 0);
-  gpio_put(MUX_SEL_B, 0);
-  gpio_put(MUX_SEL_C, 0);
-  gpio_put(MUX_SEL_D, 0); 
+  Keyboard Keys;
 
-  for (int i = 0; i < 16; i++) {
+  void Keyboard::init(){
+    // initiate pins for mux address
+    gpio_init(MUX_SEL_A);
+    gpio_init(MUX_SEL_B);
+    gpio_init(MUX_SEL_C);
+    gpio_init(MUX_SEL_D);
+    // set the pins direction
+    gpio_set_dir(MUX_SEL_A, GPIO_OUT);
+    gpio_set_dir(MUX_SEL_B, GPIO_OUT);
+    gpio_set_dir(MUX_SEL_C, GPIO_OUT);
+    gpio_set_dir(MUX_SEL_D, GPIO_OUT);
+    // set the slew rate slow (for reducing amount of cross talk on address changes... hopefully)
+    gpio_set_slew_rate(MUX_SEL_A, GPIO_SLEW_RATE_SLOW);
+    gpio_set_slew_rate(MUX_SEL_B, GPIO_SLEW_RATE_SLOW);
+    gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
+    gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
 
-    // nop needed to stop the processor reading too quickly, the mux cant keep up...
+    // initiate pins for mux output
+    gpio_init(MUX_OUT_0);
+    gpio_init(MUX_OUT_1);
+    // set the pins direction
+    gpio_set_dir(MUX_OUT_0, GPIO_IN);
+    gpio_set_dir(MUX_OUT_1, GPIO_IN);
+    // set pins for pull up - already doing this on PCB, just a precaution
+    gpio_pull_up(MUX_OUT_0);
+    gpio_pull_up(MUX_OUT_1);
 
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_A, i & 1); 
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_B, i & 2);
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_C, i & 4);
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    gpio_put(MUX_SEL_D, i & 8);
+    gpio_put(MUX_SEL_A, 1);
+    gpio_put(MUX_SEL_B, 1);
+    gpio_put(MUX_SEL_C, 1);
+    gpio_put(MUX_SEL_D, 1);
+  }
+  void Keyboard::read(){
+    
+    _history[history_index] = 0;
+    
+    gpio_put(MUX_SEL_A, 0);
+    gpio_put(MUX_SEL_B, 0);
+    gpio_put(MUX_SEL_C, 0);
+    gpio_put(MUX_SEL_D, 0); 
+
+    for (int i = 0; i < 16; i++) {
+
+      // nop needed to stop the processor reading too quickly, the mux cant keep up...
+
+      asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+      gpio_put(MUX_SEL_A, i & 1); 
+      asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+      gpio_put(MUX_SEL_B, i & 2);
+      asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+      gpio_put(MUX_SEL_C, i & 4);
+      asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+      gpio_put(MUX_SEL_D, i & 8);
+        
+      asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
       
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+      _history[history_index] |= gpio_get(MUX_OUT_0) << (i);
+      asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+      _history[history_index] |= gpio_get(MUX_OUT_1) << (i + 16);
+      
+      
+    }
+    // masks 32th key (spare pin in) and function keys - saves pulling floating pins high
+    _history[history_index] |= 0x1; 
+
+    // loops round history index
+    history_index++;
+    history_index &= 0x7;
     
-    keys_history[history_index] |= gpio_get(MUX_OUT_0) << (i);
-    asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-    keys_history[history_index] |= gpio_get(MUX_OUT_1) << (i + 16);
-    
+    if ((_history[0] == _history[1]) &&
+      (_history[0] == _history[2]) &&
+      (_history[0] == _history[3]) &&
+      (_history[0] == _history[4]) &&
+      (_history[0] == _history[5]) &&
+      (_history[0] == _history[6]) &&
+      (_history[0] == _history[7]))
+    {
+      // reverse bit order  - for messed up hardware
+      _current = reverse(_history[0]);
+    }
+
+  }
+
+  void init () {
+    Keys.init();
+    for (int i = 0; i < 8; i++) {
+      Keys.read();
+    }
+  }
+  void read () {
+    Keys.read();
+  }
+  void update () {
+    uint32_t keys, keys_last;
+
+    keys = Keys.get();
+    keys_last = Keys.get_last();
+
+    for (int i = 0; i < MAX_KEYS; i++) {
+      // if ( !((k>>i) & 1) ) {
+      // 	num_keys_down++;
+      // }
+      if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
+        Note_Priority::event(0x90, i + 48, 127);   // keyboard starts at midi note 36
+      }
+      if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
+        Note_Priority::event(0x80, i + 48, 0);
+        // dec_physical_notes_on();
+      }
+    }
+
+    // Page
+    if ( (!((keys>>PAGE_KEY) & 1)) &&  (((keys_last>>PAGE_KEY) & 1)) ){
+      Buttons::PAGE.pressed();
+    }
+    if ( (((keys>>PAGE_KEY) & 1)) &&  (!((keys_last>>PAGE_KEY) & 1)) ){
+      Buttons::PAGE.released();
+    }
+
+    // LFO
+    if ( (!((keys>>LFO_KEY) & 1)) &&  (((keys_last>>LFO_KEY) & 1)) ){
+      Buttons::LFO.pressed();
+    }
+    if ( (((keys>>LFO_KEY) & 1)) &&  (!((keys_last>>LFO_KEY) & 1)) ){
+      Buttons::LFO.released();
+    }
+
+    // ARP
+    if ( (!((keys>>ARP_KEY) & 1)) &&  (((keys_last>>ARP_KEY) & 1)) ){
+      Buttons::ARP.pressed();
+    } 
+    if ( (((keys>>ARP_KEY) & 1)) &&  (!((keys_last>>ARP_KEY) & 1)) ){
+      Buttons::ARP.released();
+    }
+
+    // Preset
+    if ( (!((keys>>PRESET_KEY) & 1)) &&  (((keys_last>>PRESET_KEY) & 1)) ){
+      Buttons::PRESET.pressed();
+    }
+    if ( (((keys>>PRESET_KEY) & 1)) &&  (!((keys_last>>PRESET_KEY) & 1)) ){
+      Buttons::PRESET.released();
+    }
+
+    // store keys for next time
+    Keys.set_last(keys);
     
   }
-  // masks 32th key (spare pin in) and function keys - saves pulling floating pins high
-  keys_history[history_index] |= 0x1; 
-
-  // loops round history index
-  history_index++;
-  history_index &= 0x7;
-  
-  if ((keys_history[0] == keys_history[1]) &&
-		(keys_history[0] == keys_history[2]) &&
-		(keys_history[0] == keys_history[3]) &&
-		(keys_history[0] == keys_history[4]) &&
-		(keys_history[0] == keys_history[5]) &&
-		(keys_history[0] == keys_history[6]) &&
-		(keys_history[0] == keys_history[7]))
-	{
-    // reverse bit order  - for messed up hardware
-    keys = reverse(keys_history[0]);
-	}
-
 }

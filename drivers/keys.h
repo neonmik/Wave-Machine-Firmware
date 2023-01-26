@@ -19,51 +19,57 @@
 
 #include "pico/stdlib.h"
 
-class Keys {
-    private:
-        uint32_t keys_history[8]    =       
-        {
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-            0xFFFFFFFF,
-        };
+#include "button.h"
 
-        uint32_t keys               =       0xFFFFFFFF;
-        uint32_t keys_last          =       0xFFFFFFFF;
-        uint8_t num_keys_down       =       0;
-        uint8_t history_index;
-        inline uint32_t reverse(uint32_t input) {
-            uint32_t output = 0;
-            for (int i = 0; i < 32; i++) {
-                if ((input & (1 << i))) output |= 1 << ((32 - 1) - i);
+
+
+namespace KEYS {
+    class Keyboard {
+        private:
+            uint32_t _history[8]    =       
+            {
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+                0xFFFFFFFF,
+            };
+
+            uint32_t    _current         =       0xFFFFFFFF;
+            uint32_t    _last            =       0xFFFFFFFF;
+            uint8_t     _number_down     =       0;
+            uint8_t     history_index;
+            inline uint32_t reverse(uint32_t input) {
+                uint32_t output = 0;
+                for (int i = 0; i < 32; i++) {
+                    if ((input & (1 << i))) output |= 1 << ((32 - 1) - i);
+                }
+                return output;
             }
-            return output;
-        }
-    public:
-        Keys() { }
-        ~Keys() { }
+        public:
+            Keyboard() { }
+            ~Keyboard() { }
 
-        void init();
-        void read();
-        inline int32_t get() const {
-            return keys;
-        }
-        inline int32_t get_last() const {
-            return keys_last;
-        }
-        inline void set_last(uint32_t last) {
-            keys_last = last;
-        }
+            void init();
+            void read();
+            inline int32_t get() const {
+                return _current;
+            }
+            inline int32_t get_last() const {
+                return _last;
+            }
+            inline void set_last(uint32_t last) {
+                _last = last;
+            }
 
-};
+    };
 
+    extern Keyboard Keys;
 
-
-
-
-
+    void init (void);
+    void read (void);
+    void update (void);
+}

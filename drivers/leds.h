@@ -13,13 +13,13 @@ enum Direction : uint8_t {
     DOWN            = 0
 };
 
-enum LED : uint8_t {
+enum Leds : uint8_t {
     LED_PICO_PIN    = PICO_DEFAULT_LED_PIN, // 25
     LED_LFO_PIN     = 21,
     LED_ARP_PIN     = 22,
 };
 
-namespace Leds {
+namespace LEDS {
     
     class Led {
         private:
@@ -137,7 +137,8 @@ namespace Leds {
                 }
             }
             void preset (uint8_t preset) {
-                colour(colours[preset], colours[preset+1], colours[preset+2]);
+                uint8_t temp = (preset*3);
+                colour(colours[temp], colours[temp+1], colours[temp+2]);
             }
 
     };
@@ -202,7 +203,7 @@ namespace Leds {
     void on(void);
     void off(void);
     void KNOBS_off(void);
-    void KNOB_select(uint8_t knob);
+    void KNOB_select(uint8_t knob, bool state);
     void PAGES_off(void);
     void flash(int repeats, int delay);
     void test(uint8_t delay);

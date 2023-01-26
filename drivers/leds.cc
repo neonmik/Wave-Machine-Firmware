@@ -1,10 +1,10 @@
 #include "leds.h"
 
-namespace Leds {
+namespace LEDS {
 
-    Led PICO(LED::LED_PICO_PIN);
-    Led LFO(LED::LED_LFO_PIN);
-    Led ARP(LED::LED_ARP_PIN);
+    Led PICO(Leds::LED_PICO_PIN);
+    Led LFO(Leds::LED_LFO_PIN);
+    Led ARP(Leds::LED_ARP_PIN);
     Rgb RGB;
     SR  KNOBS(Pins::KNOBS);
     SR  KNOB_1(Pins::KNOB_1);
@@ -54,19 +54,23 @@ namespace Leds {
         KNOB_3.off();
         KNOB_4.off();
     }
-    void KNOB_select(uint8_t knob) {
+    void KNOB_select(uint8_t knob, bool state) {
         switch (knob) {
             case (0):
-                KNOB_1.on();
+                if (state) KNOB_1.on(); 
+                if (!state) KNOB_1.off();
                 break;
             case (1):
-                KNOB_2.on();
+                if (state) KNOB_2.on(); 
+                if (!state) KNOB_2.off();
                 break;
             case (2):
-                KNOB_3.on();
+                if (state) KNOB_3.on(); 
+                if (!state) KNOB_3.off();
                 break;
             case (3):
-                KNOB_4.on();
+                if (state) KNOB_4.on(); 
+                if (!state) KNOB_4.off();
                 break;
         }
             
