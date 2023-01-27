@@ -59,6 +59,6 @@ namespace ADC {
     }
     
     uint16_t value(int knob) {
-        return _values[knob];
+        return (_values[knob]>>2); // downshifting for better system wide performance
     }
 }

@@ -44,7 +44,7 @@ namespace modulation {
     void set_depth(int input);
     void set_rate(int input);
     void set_wave(int waveform);
-    void set_matrix(uint8_t input);
+    void set_matrix(int input);
     uint8_t get_matrix(void);
 
     void init (void);

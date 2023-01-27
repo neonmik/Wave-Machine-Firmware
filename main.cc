@@ -33,7 +33,7 @@
 
 #include "drivers/dac.h"
 
-#include "hardware.h"
+#include "ui.h"
 #include "drivers/leds.h"
 
 #define SAMPLE_RATE     44100
@@ -52,12 +52,14 @@ extern uint16_t Arp::beat;
 int main() {
   
   
-  hardware_init();
+  UI::init();
 
-  dac_init(SAMPLE_RATE);
+  
 
   modulation::init();
   Arp::init(BPM, SAMPLE_RATE);
+
+  dac_init(SAMPLE_RATE);
 
   while (true) {
 
@@ -73,17 +75,13 @@ int main() {
         // Arp::update_playback();
       }
       buffer_flag = 0;
-      // hardware_debug();
+
       continue;
 
     } else {
         
-      hardware_task();
+      UI::update();
         
-      hardware_index++;
-      //could be either of these, but apprently you can't loop 4/5/6 times like this...?
-      // hardware_index &= 0x7;
-      if (hardware_index > 5) hardware_index = 0; // this takes 2-3 more instructions to accomplish
 
     }
 

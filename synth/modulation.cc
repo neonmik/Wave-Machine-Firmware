@@ -29,10 +29,11 @@ namespace modulation {
         }
     }
 
-    void set_matrix(uint8_t input) {
-        if (input != last_matrix) {
-            matrix = input;
-            last_wave = input;
+    void set_matrix(int input) {
+        uint8_t temp = (input>>8);
+        if (temp != last_matrix) {
+            matrix = temp;
+            last_matrix = temp;
             init();
         }
     }

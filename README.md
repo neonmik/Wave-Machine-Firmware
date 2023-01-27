@@ -5,9 +5,10 @@ Current nightly firmware for Beep Machine Hardware.
 Things to implement:
 
 - Prove hardware functions (MIDI)
-- Improve Hardware files - current things to fix:
-    - Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
-    
+- Add Arp functionality
+- Improve Pagintation funtionality:
+    - Make sure it always pulls values from presets (especially on start up)
+    -
 - Improve Oscillator script - current bugs include:
     - Improve ADSR - some confusion if you release key in attack stage, skips DS and jumps to release.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
@@ -35,3 +36,5 @@ Things already implemented:
 - Intergrate/prove Oscillator code
     - ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
     - Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
+- Improve Hardware files - current things to fix:
+    - Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support

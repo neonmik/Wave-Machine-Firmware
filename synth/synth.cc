@@ -2,9 +2,6 @@
 #include <math.h>
 
 
-uint16_t pitch_scale;
-
-
 namespace synth {
   uint16_t waveforms = Waveform::WAVETABLE | Waveform::TRIANGLE;;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
@@ -14,11 +11,13 @@ namespace synth {
 
   uint16_t  attack_ms   = 10;      // attack period - moved to global as it's not needed per voice for this implementation.
   uint16_t  decay_ms    = 10;      // decay period
-  uint16_t  sustain     = 0x7fff;   // sustain volume
+  uint16_t  sustain     = 0x6fff;   // sustain volume
   uint16_t  release_ms  = 500;      // release period
 
   int16_t   vibrato;
   uint16_t  tremelo;
+
+  uint16_t pitch_scale = 512;
 
   // bool      filter_enable = false;
   // uint16_t  filter_cutoff_frequency = 400 ;

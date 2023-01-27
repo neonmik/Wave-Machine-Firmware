@@ -19,12 +19,13 @@ add_executable(${PROJECT_NAME}
     drivers/shiftreg.cc
     drivers/rgb.cc
 
-    hardware.cc
+    ui.cc
 
     note_priority.cc
 
     synth/synth.cc
     synth/modulation.cc
+    synth/settings.cc
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 0)

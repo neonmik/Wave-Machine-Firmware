@@ -85,6 +85,8 @@ namespace synth {
   extern int16_t    vibrato;
   extern uint16_t   tremelo;
 
+  extern uint16_t pitch_scale;
+
   
   // extern bool      filter_enable;
   // extern uint16_t  filter_cutoff_frequency;
@@ -160,6 +162,5 @@ namespace synth {
   
   int16_t get_audio_frame();
   bool is_audio_playing();
-  void init(uint8_t voices);
 
 }

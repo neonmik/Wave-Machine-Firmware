@@ -3,12 +3,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "hardware/spi.h"
-
-#include "synth/synth.h"
-
-
-
+#include "synth/settings.h"
 
 
 #define abs(x) ({ __typeof__(x) _x = (x); _x >= 0 ? _x : -_x; })
@@ -33,15 +28,7 @@ enum Page : uint8_t{
 #define protection_value  10 // the amount of protection the knob gets before unlocking.
 
 
-// #define LED_KNOB1       0
-// #define LED_KNOB2       1
-// #define LED_KNOB3       2
-// #define LED_KNOB4       3
-// #define LED_PAGE1       4
-// #define LED_PAGE2       5
-// #define LED_PAGE3       6
-
-namespace beep_machine {
+namespace UI {
     namespace {
         // preset, page and event flags
         uint8_t preset              =           0;
@@ -50,10 +37,9 @@ namespace beep_machine {
         bool lfo_flag               =           0;
         bool arp_flag               =           0;
         bool preset_flag            =           0;
-        bool pagination_flag        =           0;
         bool shift_flag             =           0;
 
-        // pagination
+        bool _touched               =           0;
         uint32_t knobs[8];
         uint32_t page_values[MAX_PAGES][MAX_KNOBS]; // the permanent storage of every value for every page, used by the actual music code
         uint32_t knob_values[MAX_KNOBS]; // last read knob values
@@ -62,12 +48,9 @@ namespace beep_machine {
         uint32_t value           = 0; // current (temporary) value just read
         uint8_t current_page    = 0; // the current page id of values being edited
         bool page_change    = false; // signals the page change
+        bool preset_change  = false;
         bool in_sync        = false; //temp variable to detect when the knob's value matches the stored value
     }
-    
-    
-
-
     
     
     uint32_t get_pagintaion (int page, int knob);
@@ -80,13 +63,11 @@ namespace beep_machine {
     void set_page_flag(uint8_t value);
     uint8_t get_page_flag(void);
 
-    void set_lfo_flag(uint8_t value);
-    void toggle_lfo_flag(void);
-    uint8_t get_lfo_flag(void);
+    void toggle_lfo(void);
+    uint8_t get_lfo(void);
 
-    void set_arp_flag(uint8_t value);
-    void toggle_arp_flag(void);
-    uint8_t get_arp_flag(void);
+    void toggle_arp(void);
+    uint8_t get_arp(void);
 
     void set_preset(uint8_t preset);
     void change_preset(void);
@@ -97,31 +78,25 @@ namespace beep_machine {
     void set_knob(uint8_t knob, uint32_t value);
     uint32_t get_knob(uint8_t knob);
     
-};
 
+    // ----------------------
+    //          KNOBS
+    // ----------------------
 
-// ----------------------
-//          KEYS
-// ----------------------
+    void pagination_init (void);
+    void default_pagination (void);
+    void pagination_protect(void);
+    void pagination_update (void);
 
-void keys_update();
+    void print_knob_array (int *array, int len);
+    void print_knob_page (void);
 
-// ----------------------
-//          KNOBS
-// ----------------------
+    // ----------------------
+    //        HARDWARE
+    // ----------------------
 
-void pagination_init (void);
-void default_pagination (void);
-void pagination_update (void);
-
-void print_knob_array (int *array, int len);
-void print_knob_page (void);
-
-// ----------------------
-//        HARDWARE
-// ----------------------
-
-void hardware_init (void);
-void hardware_test (int delay);
-void hardware_task (void);
-void hardware_debug (void);
+    void init (void);
+    void test (int delay);
+    void update (void);
+    void hardware_debug (void);
+}
