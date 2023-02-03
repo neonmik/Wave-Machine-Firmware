@@ -54,9 +54,9 @@ int main() {
   
   UI::init();
 
-  
+  synth::init(SAMPLE_RATE);
 
-  modulation::init();
+  MOD::init();
   Arp::init(BPM, SAMPLE_RATE);
 
   dac_init(SAMPLE_RATE);
@@ -64,8 +64,9 @@ int main() {
   while (true) {
 
     if (buffer_flag){
+      
+      if (SETTINGS::get_lfo()) MOD::update(); // only updates the MOD values every 256 samples
 
-      modulation::update();
       for(int i =0; i<256; i++) {
         uint16_t sample = ((synth::get_audio_frame()+32767)>>4); // create next sample, add 32767 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
@@ -76,7 +77,7 @@ int main() {
       }
       buffer_flag = 0;
 
-      continue;
+      continue; // skips the UI update to save resources
 
     } else {
         

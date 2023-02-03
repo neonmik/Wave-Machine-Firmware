@@ -141,6 +141,8 @@ namespace SETTINGS {
                     }
                     void toggle (void) {
                         _active = !_active;
+                        if (_active) MOD::MOD1.start();
+                        if (!_active) MOD::MOD1.stop();
                     }
                     void set (uint8_t control, uint16_t input) {
                         _input[control] = input;
@@ -162,17 +164,17 @@ namespace SETTINGS {
                     uint16_t get (uint8_t control) {
                         return _input[control];
                     }
-                    void update (void) {   
-                        if (_active) modulation::start();
-                        if (!_active) modulation::stop();
-                        modulation::set_matrix(_matrix);
-                        modulation::set_rate(_rate);
-                        modulation::set_depth(_depth);
-                        modulation::set_wave(_waveshape);;
+                    void update (void) { 
+                        if (_active) {  
+                            MOD::MOD1.set_matrix(_matrix);
+                            MOD::MOD1.set_rate(_rate);
+                            MOD::MOD1.set_depth(_depth);
+                            MOD::MOD1.set_wave(_waveshape);
+                        }
                     }
                     void fetch (void) {
                         //pull defaults from function, for now
-
+                        
                     }
             };
             class Arp {
@@ -328,7 +330,9 @@ namespace SETTINGS {
                 ARP.update();
             }
     };
+    
     extern PRESET Preset[8];
+    
     void init (void);
     
     void set_preset (uint8_t preset);

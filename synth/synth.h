@@ -49,7 +49,6 @@ namespace synth {
 
   constexpr float pi = 3.14159265358979323846f;
 
-  static uint32_t sample_rate = 44100;
   extern uint16_t volume;
 
 
@@ -72,6 +71,8 @@ namespace synth {
     OFF
   };
 
+  extern uint32_t   sample_rate;
+
   extern uint16_t   waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
   extern uint16_t   wave;
   extern uint16_t   wave_vector;
@@ -91,7 +92,7 @@ namespace synth {
   // extern bool      filter_enable;
   // extern uint16_t  filter_cutoff_frequency;
 
-  struct AudioChannel {
+  struct Oscillators {
     
     uint8_t   note          = 0;
     uint16_t  frequency     = 0;    // frequency of the voice (Hz)
@@ -118,7 +119,7 @@ namespace synth {
     int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
 
     void *user_data = nullptr;
-    void (*wave_buffer_callback)(AudioChannel &channel);
+    void (*wave_buffer_callback)(Oscillators &channel);
 
     void trigger_attack()  {
       adsr_frame = 0;
@@ -157,10 +158,11 @@ namespace synth {
     
   };
 
-  extern AudioChannel channels[MAX_VOICES];
+  extern Oscillators channels[MAX_VOICES];
 
   
   int16_t get_audio_frame();
   bool is_audio_playing();
+  void init (uint32_t _sample_rate);
 
 }

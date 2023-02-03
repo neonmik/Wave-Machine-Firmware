@@ -202,7 +202,7 @@ namespace UI {
 
     puts("Welcome to the jungle...");
 
-    if (HARDWARE_TEST) test(50);
+    if (HARDWARE_TEST) test(10);
 
     hardware_index = 0;
   }

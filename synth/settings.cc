@@ -14,6 +14,7 @@ namespace SETTINGS {
     }
 
     void set_page (uint8_t page) {
+        _changed = true;
         _page = page;
     }
     uint8_t get_page (void) {
