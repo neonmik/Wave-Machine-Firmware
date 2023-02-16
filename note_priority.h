@@ -12,6 +12,7 @@ namespace Note_Priority {
     
     void note_on(int slot, int note, int velocity);
     void note_off(int slot, int note, int velocity);
+    void note_clear(int slot);
     void event(int status, int note, int velocity);
 }
 

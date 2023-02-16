@@ -88,6 +88,8 @@ namespace synth {
 
   extern uint16_t pitch_scale;
 
+  extern uint8_t octave;
+
   
   // extern bool      filter_enable;
   // extern uint16_t  filter_cutoff_frequency;
@@ -122,6 +124,8 @@ namespace synth {
     void (*wave_buffer_callback)(Oscillators &channel);
 
     void trigger_attack()  {
+      gate = true;
+
       adsr_frame = 0;
       adsr_phase = ADSRPhase::ATTACK;
       adsr_end_frame = (attack_ms * sample_rate) / 1000;
@@ -140,6 +144,8 @@ namespace synth {
       adsr_step = 0;
     }
     void trigger_release() {
+      gate = false;
+      
       adsr_frame = 0;
       adsr_phase = ADSRPhase::RELEASE;
       adsr_end_frame = (release_ms * sample_rate) / 1000;

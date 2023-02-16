@@ -6,16 +6,19 @@ namespace Note_Priority {
   void note_on(int slot, int note, int velocity) {
     synth::channels[slot].note  = note;
     synth::channels[slot].frequency = note2freq[synth::channels[slot].note];
-    synth::channels[slot].gate = true;
+
     synth::channels[slot].is_active = true;
     synth::channels[slot].adsr_activation_time = to_ms_since_boot(get_absolute_time());
     synth::channels[slot].trigger_attack();
     // printf("note on");
   }
   void note_off(int slot, int note, int velocity) {
-    synth::channels[slot].gate = false;
     synth::channels[slot].trigger_release();
     // printf("note off");
+  }
+
+  void note_clear (int slot) {
+    synth::channels[slot].off();
   }
 
   void event(int status, int note, int velocity) {

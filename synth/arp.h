@@ -3,42 +3,69 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-extern uint16_t software_index;
+#include "../note_priority.h"
+
+
 
 namespace Arp {
-    static uint8_t _bpm;
+
+    static uint16_t _index;
+
+    static uint8_t _bpm = 120;
     static uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
     static uint16_t seq_tick = 0;
-    static uint16_t prev_beat = 1;
+    static uint16_t prev_beat;
     static uint16_t beat;
+    static bool beat_changed;
     static uint16_t _s_p_ms;
+    static uint32_t _s_p_sixteenth;
+
+    static bool _hold;
+    static bool _arp_active;
+    static const uint8_t max_arp = 8;
+    static uint8_t arp_notes[max_arp];
+    static uint8_t buffer[max_arp];
+    static uint8_t arp_index;
+    static int8_t arp_loop;
+    static bool note_active;
+    static bool release_active;
+
+    static uint8_t _direction;
+    static bool _up = 1;
+    static bool _down = 0;
+
+    static uint16_t arp_delay = 100;
+    static uint16_t arp_release = 100;
+    static uint32_t arp_ms;
+
     
-    uint16_t samples_per_sixteenth_note () {
-        // samples per ms * (ms_per_minute/bpm)/8 (to make 1/16ths note)
-        return (_s_p_ms * (60000/_bpm)/8);
-    }
-    void set_bpm (uint8_t bpm) {
-        _bpm = bpm;
-    }
-    void set_samplerate (uint16_t samplerate) {
-        _s_p_ms = samplerate / 1000;
-    } 
-    void init (uint8_t bpm, uint16_t samplerate) {
-        set_bpm(bpm);
-        set_samplerate(samplerate);
-    }
-    void update_playback(void) {
-        
-        
-        if (software_index & samples_per_sixteenth_note()) {
-            beat++;
-        }
-         if (beat == max_beats) beat = 0;
+    void on (void);
+    void off (void);
+    void set (bool state);
+    bool get (void);
+    void toggle (void);
 
-        if (beat == prev_beat) return;
-        prev_beat = beat;
+    void index (void);
 
-        
-    }
+    uint16_t samples_per_sixteenth_note (void);
+    
+    void set_bpm (uint8_t bpm);
+    uint8_t get_bpm (void);
+
+    void set_samplerate (uint16_t samplerate);
+
+    void init (uint8_t bpm, uint16_t samplerate);
+    
+    void update_playback(void);
+    
+    void add_notes (uint8_t note);
+    void clear_notes (void);
+    void stop_all (void);
+    
+    void set_delay (uint16_t delay);
+    void set_release (uint16_t release);
+
+    void set_direction (uint8_t direction);
+    
 }
 

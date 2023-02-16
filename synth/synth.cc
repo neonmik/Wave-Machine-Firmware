@@ -19,6 +19,8 @@ namespace synth {
 
   uint16_t pitch_scale = 512;
 
+  uint8_t octave = 0;
+
   // bool      filter_enable = false;
   // uint16_t  filter_cutoff_frequency = 400 ;
 
@@ -88,7 +90,7 @@ namespace synth {
       // increment the waveform position counter. this provides an
       // Q16 fixed point value representing how far through
       // the current waveform we are
-      channel.waveform_offset += ((((channel.frequency * pitch_scale)>>9) * 256) << 8) / sample_rate;
+      channel.waveform_offset += (((((channel.frequency * pitch_scale)>>9) << octave) * 256) << 8) / sample_rate;
 
       //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
       channel.waveform_offset += vibrato;

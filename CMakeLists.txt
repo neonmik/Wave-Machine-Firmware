@@ -23,6 +23,7 @@ add_executable(${PROJECT_NAME}
 
     note_priority.cc
 
+    synth/arp.cc
     synth/synth.cc
     synth/modulation.cc
     synth/settings.cc

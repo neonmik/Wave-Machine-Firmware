@@ -4,6 +4,7 @@
 
 #include "synth.h"
 #include "modulation.h"
+#include "arp.h"
 
 #include "log_table.h"
 
@@ -28,7 +29,7 @@ namespace SETTINGS {
                     uint16_t _input[4];
                     uint16_t _waveshape;
                     uint16_t _wavevector;
-                    uint16_t _TBC;
+                    uint8_t _octave;
                     uint16_t _pitch;
                 public:
                 Wave () { }
@@ -44,7 +45,7 @@ namespace SETTINGS {
                             _wavevector = input;
                             break;
                         case 2:
-                            _TBC = input;
+                            _octave = (input>>8);
                             break;
                         case 3:
                             _pitch = get_pitch_log(input);
@@ -57,7 +58,7 @@ namespace SETTINGS {
                 void update (void) {
                     synth::wave = _waveshape;
                     synth::wave_vector = _wavevector;
-                    // blank
+                    synth::octave = _octave;
                     synth::pitch_scale = _pitch;
                 }
                 void fetch (void) {
@@ -177,17 +178,19 @@ namespace SETTINGS {
                         
                     }
             };
-            class Arp {
+            class arp {
                 private:
                     bool _active;
+                    bool _toggled;
+                    bool _changed;
                     uint16_t _input[4];
                     uint16_t _matrix;
                     uint16_t _rate;
                     uint16_t _depth;
                     uint16_t _direction;
                 public:
-                    Arp () { }
-                    ~Arp () { }
+                    arp () { }
+                    ~arp () { }
 
                     void on (void) {
                         _active = true;
@@ -197,33 +200,67 @@ namespace SETTINGS {
                     }
                     void toggle (void) {
                         _active = !_active;
+                        // if (_active) Arp::on();
+                        // if (!_active) Arp::off();
+                        // _toggled = true;
                     }
                     void set (uint8_t control, uint16_t input) {
                         _input[control] = input;
+                        _changed = true;
                         switch (control) {
                             case 0:
                                 _matrix = input;
                                 break;
                             case 1:
-                                _rate = input;
+                                _rate = (input>>3);
                                 break;
                             case 2:
                                 _depth = input;
                                 break;
                             case 3:
-                                _direction = input;
+                                _direction = (input>>8);
                                 break;
                         }
                     }
                     void update (void) {
-
+                        // if (_toggled) {
+                            if (_active) Arp::on();
+                            if (!_active) Arp::off();
+                        //     _toggled = false;
+                        // }
+                        if (_active) {
+                             if (_changed) {
+                                Arp::set_bpm(_rate);
+                                Arp::set_direction(_direction);
+                                
+                                _changed = false;
+                            }
+                            
+                        }
+                        
                     }
                     uint16_t get (uint8_t control) {
-                        return _input[control];
+                        uint16_t temp;
+                        switch (control) {
+                            case 0:
+                                temp = _matrix;
+                                break;
+                            case 1:
+                                temp = _rate;
+                                break;
+                            case 2:
+                                temp = _depth;
+                                break;
+                            case 3:
+                                temp = _direction;;
+                                break;
+                        }
+                        return temp;
                     }
                     void fetch (void) {
-                //pull defaults from function, for now
-            }
+                        //pull defaults from function, for now
+                        _rate = Arp::get_bpm();
+                    }
             };
         public:
             PRESET () { }
@@ -234,7 +271,7 @@ namespace SETTINGS {
             Lfo     MOD1;
             // Lfo     MOD2;
             // Lfo     MOD3;
-            Arp     ARP;
+            arp     ARP;
 
             void init (void) {
             }
@@ -320,7 +357,6 @@ namespace SETTINGS {
                 MAIN.fetch();
                 ADSR.fetch();
                 MOD1.fetch();
-                // MOD2.fetch();
                 ARP.fetch();
             }
             void update (void) {

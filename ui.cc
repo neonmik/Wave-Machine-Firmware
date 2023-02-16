@@ -6,6 +6,8 @@
 #include "drivers/button.h"
 #include "drivers/leds.h"
 
+#include "synth/arp.h"
+
 extern uint8_t hardware_index;
 
 
@@ -145,7 +147,6 @@ namespace UI {
   }
  
   void toggle_lfo(void) {
-    // modulation::toggle();
     LEDS::LFO.toggle();
     SETTINGS::toggle_lfo();
     if (KEYS_PRINT_OUT) printf("Key: LFO\n");
@@ -219,10 +220,11 @@ namespace UI {
       if (Buttons::ARP.get_short()) toggle_arp();
       if (Buttons::LFO.get_short()) toggle_lfo();
     }
-    if (hardware_index == 2) ADC::update();
-    if (hardware_index == 3) pagination_update();
-    if (hardware_index == 4) LEDS::update();
-    if (hardware_index == 5) SETTINGS::update();
+    if (hardware_index == 3) if (Arp::get()) Arp::update_playback();
+    if (hardware_index == 3) ADC::update();
+    if (hardware_index == 4) pagination_update();
+    if (hardware_index == 5) LEDS::update();
+    if (hardware_index == 6) SETTINGS::update();
 
 
     if (KNOBS_PRINT_OUT) {
@@ -233,7 +235,7 @@ namespace UI {
     hardware_index++;
       //could be either of these, but apprently you can't loop 4/5/6 times like this...?
       // hardware_index &= 0x7;
-    if (hardware_index > 5) hardware_index = 0; // this takes 2-3 more instructions to accomplish
+    if (hardware_index > 6) hardware_index = 0; // this takes 2-3 more instructions to accomplish
   }
   void hardware_debug (void) {
     LEDS::SPARE.toggle();

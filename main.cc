@@ -71,16 +71,15 @@ int main() {
         uint16_t sample = ((synth::get_audio_frame()+32767)>>4); // create next sample, add 32767 (to move from a signed to unsigned, deafult C behavior is wrong), then shift down to 12 bit from 16 bit.
         play_buffer[i] = sample;
 
-        // ounter here for playback/sequncer timing
-        software_index++;
-        // Arp::update_playback();
+        // counter here for playback/sequncer timing
+        // software_index++;
+        Arp::index();
       }
       buffer_flag = 0;
-
       continue; // skips the UI update to save resources
 
     } else {
-        
+      
       UI::update();
         
 
