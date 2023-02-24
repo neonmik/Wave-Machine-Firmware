@@ -27,6 +27,7 @@ int main() {
   
   
   UI::init();
+  
 
   SYNTH::init(SAMPLE_RATE);
   MOD::init();

@@ -82,11 +82,14 @@ namespace UI {
     // ----------------------
     //          KNOBS
     // ----------------------
-
-    void pagination_init (void);
-    void default_pagination (void);
-    void pagination_protect(void);
-    void pagination_update (void);
+    namespace pagination
+    {
+        void init (void);
+        void protect(void);
+        void update (void);
+    } // namespace pagination
+    
+    
 
     void print_knob_array (int *array, int len);
     void print_knob_page (void);

@@ -14,77 +14,80 @@ namespace UI {
   // ----------------------
   //     PAGINATION/UI
   // ----------------------
-
-  void pagination_init() {
-    for(int i=0; i < MAX_KNOBS; i++){
-      // knob_values[i] = ADC::value(i);
-      knob_states[i] = ACTIVE;
-    }
-  }
-  void pagination_protect() {
-    LEDS::KNOBS.off();
-    for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
-      knob_states[i] = PROTECTED;
-    }
-  }
-  void pagination_update(){
-    if(Buttons::PAGE.get_short()){
-      uint8_t pages = MAX_PAGES;
-
-      page_change = true;
-
-      current_page++;
-
-      // LFO on
-      // doesnt work correctly, need to be selective about pages available, or use another method
-      // if (!get_lfo_flag()) pages--;
-      // ARP on
-      if (!get_arp()) pages--;
-      
-      // count the pages
-      if (current_page >= pages) current_page = 0;
-      
-      set_page(current_page);
-      pagination_protect();
-    }
-
-    if (Buttons::PRESET.get_short()) {
-      change_preset();
-      pagination_protect();
-    }
-
-    // read knobs values, show sync with the LED, enable knob when it matches the stored value
-    for (int i = 0; i < MAX_KNOBS; i++){
-      value = ADC::value(i);
-      in_sync = abs(value - SETTINGS::get_value(current_page, i)) < protection_value;
-
-      // enable knob when it matches the stored value
-      if (in_sync){
+  namespace PAGINATION {
+    void init() {
+      for(int i=0; i < MAX_KNOBS; i++){
+        // knob_values[i] = ADC::value(i);
         knob_states[i] = ACTIVE;
       }
-    
-      // if knob is moving, show if it's active or not
-      //  if(abs(value - knob_values[i]) > 5){
-      //       // if knob is active, blink LED
-      //       if(knob_states[i] == ACTIVE){
-      //         Leds::KNOB_select(i, 1);
-      //         continue;
-      //       } else {
-      //         Leds::KNOB_select(i, 0);
-      //       }
-      //  }
-      // knob_values[i] = value;
-
-      // if enabled then mirror the real time knob value
-      if(knob_states[i] == ACTIVE){
-        LEDS::KNOB_select(i, 1);
-        SETTINGS::set_value(current_page, i, value);
-
-        _touched = true;
+      update();
+    }
+    void protect() {
+      LEDS::KNOBS.off();
+      for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
+        knob_states[i] = PROTECTED;
       }
     }
-    
+    void update(){
+      if(Buttons::PAGE.get_short()){
+        uint8_t pages = MAX_PAGES;
+
+        page_change = true;
+
+        current_page++;
+
+        // LFO on
+        // doesnt work correctly, need to be selective about pages available, or use another method
+        // if (!get_lfo_flag()) pages--;
+        // ARP on
+        if (!get_arp()) pages--;
+        
+        // count the pages
+        if (current_page >= pages) current_page = 0;
+        
+        set_page(current_page);
+        protect();
+      }
+
+      if (Buttons::PRESET.get_short()) {
+        change_preset();
+        protect();
+      }
+
+      // read knobs values, show sync with the LED, enable knob when it matches the stored value
+      for (int i = 0; i < MAX_KNOBS; i++){
+        value = ADC::value(i);
+        in_sync = abs(value - SETTINGS::get_value(current_page, i)) < protection_value;
+
+        // enable knob when it matches the stored value
+        if (in_sync){
+          knob_states[i] = ACTIVE;
+        }
+      
+        // if knob is moving, show if it's active or not
+        //  if(abs(value - knob_values[i]) > 5){
+        //       // if knob is active, blink LED
+        //       if(knob_states[i] == ACTIVE){
+        //         Leds::KNOB_select(i, 1);
+        //         continue;
+        //       } else {
+        //         Leds::KNOB_select(i, 0);
+        //       }
+        //  }
+        // knob_values[i] = value;
+
+        // if enabled then mirror the real time knob value
+        if(knob_states[i] == ACTIVE){
+          LEDS::KNOB_select(i, 1);
+          SETTINGS::set_value(current_page, i, value);
+
+          _touched = true;
+        }
+      }
+      
+    }
   }
+  
 
   // ----------------------
   //       FLAGS/UI
@@ -181,8 +184,8 @@ namespace UI {
     KEYS::init();
     ADC::init();
     SETTINGS::init();
-    pagination_init();
-    pagination_update();
+    PAGINATION::init();
+
 
     puts("Welcome to the jungle...");
 
@@ -205,7 +208,7 @@ namespace UI {
     }
     if (hardware_index == 3) if (ARP::get()) ARP::update_playback();
     if (hardware_index == 3) ADC::update();
-    if (hardware_index == 4) pagination_update();
+    if (hardware_index == 4) PAGINATION::update();
     if (hardware_index == 5) LEDS::update();
     if (hardware_index == 6) SETTINGS::update();
 
