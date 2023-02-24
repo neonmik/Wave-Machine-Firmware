@@ -147,14 +147,14 @@ namespace MOD {
                         _vector = (uint16_t(uint32_t(_sample)+32767))>>6; // (>> 8 is 0-255, >> 6 is 0-1023, >>4 is 0-4095)
 
                     }
-                    synth::vibrato = _vibrato;
-                    synth::tremelo = _trem;
-                    synth::vector_mod = _vector;
+                    SYNTH::vibrato = _vibrato;
+                    SYNTH::tremelo = _trem;
+                    SYNTH::vector_mod = _vector;
                 }
                 else {
-                    synth::vibrato = 0;
-                    synth::tremelo = 0;
-                    synth::vector_mod = 0;
+                    SYNTH::vibrato = 0;
+                    SYNTH::tremelo = 0;
+                    SYNTH::vector_mod = 0;
                 }
                 
             }

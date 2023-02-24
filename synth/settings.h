@@ -8,6 +8,7 @@
 
 #include "log_table.h"
 
+#define MAX_PRESETS     7
 
 namespace SETTINGS {
     namespace {
@@ -56,17 +57,17 @@ namespace SETTINGS {
                     return _input[control];
                 }
                 void update (void) {
-                    synth::wave = _waveshape;
-                    synth::wave_vector = _wavevector;
-                    synth::octave = _octave;
-                    synth::pitch_scale = _pitch;
+                    SYNTH::wave = _waveshape;
+                    SYNTH::wave_vector = _wavevector;
+                    SYNTH::octave = _octave;
+                    SYNTH::pitch_scale = _pitch;
                 }
                 void fetch (void) {
                     //pull defaults from function, for now
-                    _waveshape = synth::wave;
-                    _wavevector = synth::wave_vector;
-                    //blank
-                    _pitch = synth::pitch_scale;
+                    _waveshape = SYNTH::wave;
+                    _wavevector = SYNTH::wave_vector;
+                    _octave = SYNTH::octave;
+                    _pitch = SYNTH::pitch_scale;
                 }
             };
             class Env {
@@ -110,17 +111,17 @@ namespace SETTINGS {
                         return _input[control];
                     }
                     void update (void) {
-                        synth::attack_ms = _attack;
-                        synth::decay_ms = _decay;
-                        synth::sustain = _sustain;
-                        synth::release_ms = _release;
+                        SYNTH::attack_ms = _attack;
+                        SYNTH::decay_ms = _decay;
+                        SYNTH::sustain = _sustain;
+                        SYNTH::release_ms = _release;
                     }
                     void fetch (void) {
                         //pull defaults from function, for now
-                        _attack = synth::attack_ms;
-                        _decay = synth::decay_ms;
-                        _sustain = synth::sustain;
-                        _release = synth::release_ms;
+                        _attack = SYNTH::attack_ms;
+                        _decay = SYNTH::decay_ms;
+                        _sustain = SYNTH::sustain;
+                        _release = SYNTH::release_ms;
                     }
             };
             class Lfo {
@@ -178,7 +179,7 @@ namespace SETTINGS {
                         
                     }
             };
-            class arp {
+            class Arp {
                 private:
                     bool _active;
                     bool _toggled;
@@ -189,8 +190,8 @@ namespace SETTINGS {
                     uint16_t _depth;
                     uint16_t _direction;
                 public:
-                    arp () { }
-                    ~arp () { }
+                    Arp () { }
+                    ~Arp () { }
 
                     void on (void) {
                         _active = true;
@@ -200,8 +201,8 @@ namespace SETTINGS {
                     }
                     void toggle (void) {
                         _active = !_active;
-                        // if (_active) Arp::on();
-                        // if (!_active) Arp::off();
+                        // if (_active) ARP::on();
+                        // if (!_active) ARP::off();
                         // _toggled = true;
                     }
                     void set (uint8_t control, uint16_t input) {
@@ -224,14 +225,14 @@ namespace SETTINGS {
                     }
                     void update (void) {
                         // if (_toggled) {
-                            if (_active) Arp::on();
-                            if (!_active) Arp::off();
+                            if (_active) ARP::on();
+                            if (!_active) ARP::off();
                         //     _toggled = false;
                         // }
                         if (_active) {
                              if (_changed) {
-                                Arp::set_bpm(_rate);
-                                Arp::set_direction(_direction);
+                                ARP::set_bpm(_rate);
+                                ARP::set_direction(_direction);
                                 
                                 _changed = false;
                             }
@@ -259,7 +260,7 @@ namespace SETTINGS {
                     }
                     void fetch (void) {
                         //pull defaults from function, for now
-                        _rate = Arp::get_bpm();
+                        _rate = ARP::get_bpm();
                     }
             };
         public:
@@ -271,7 +272,7 @@ namespace SETTINGS {
             Lfo     MOD1;
             // Lfo     MOD2;
             // Lfo     MOD3;
-            arp     ARP;
+            Arp     ARP;
 
             void init (void) {
             }

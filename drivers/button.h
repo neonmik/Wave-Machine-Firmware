@@ -20,19 +20,19 @@ namespace Buttons {
         
     class Button {
         private:
-            bool        short_flag_     = 0;
-            bool        long_flag_      = 0;
-            bool        double_flag_    = 0;
-            bool        shift_flag_     = 0;
+            bool        _short          = 0;
+            bool        _long           = 0;
+            bool        _double         = 0;
+            bool        _shift          = 0;
 
 
-            bool        state_          = 0;
-            bool        last_state_     = 0;
+            bool        _state          = 0;
+            bool        _last_state     = 0;
 
-            uint32_t    start_          = 0;
-            uint32_t    end_            = 0;
-            uint32_t    released_       = 0;
-            uint8_t     counter_        = 0;
+            uint32_t    _start          = 0;
+            uint32_t    _end            = 0;
+            uint32_t    _released       = 0;
+            uint8_t     _counter        = 0;
 
         public:
 

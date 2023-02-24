@@ -16,35 +16,106 @@
 #define DAC_CS          9
 #define DAC_SPI         spi1
 
-#define BUF_SAMPLES     256
 
-typedef int16_t (*buffer_callback)(void);
-
-
-#define size_bits log2(BUF_SAMPLES * sizeof(uint16_t))  // 9, basically
+#define BUFFER_SIZE     256
 
 
-static uint32_t clock_speed; // for storing MCU core frequency
+#define size_bits log2(BUFFER_SIZE * sizeof(uint16_t))
 
-static const uint16_t buffer_samples = 256; 
-       
+namespace DAC {
+    namespace {
+        bool        _full;
+        
+        uint32_t    _clock_speed;
+        uint16_t    _sample_rate;
+        uint16_t     _buffer_size    = BUFFER_SIZE;
+        uint16_t    _buffer[BUFFER_SIZE];
 
-void dac_init (uint16_t sample_rate);
-// void dac_buffer(int16_t sample);
+        volatile uint16_t buf_a[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
+        volatile uint16_t buf_b[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
+        
+        float       _divider;
+        unsigned int slice_num;
+        int dma_chan_a, dma_chan_b;
 
+        void dma_buffer(uint16_t* buf) {
+            for (int i = 0; i < _buffer_size; i++) { // Number of samples loop = 256...
+                buf[i] = (_buffer[i]) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
+            }
+            _full = true;
+        }
+        void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
 
-static float sample_rate_div; //// for storing divider for DMA - usually 125m/44100 = 2'834.46712, but is dynamic to the input and the system clock.
+            dma_channel_config cfg = dma_channel_get_default_config(dma_chan);
 
-static unsigned int slice_num;
-static int dma_chan_a, dma_chan_b;
+            // 16 Bit transfers
+            channel_config_set_transfer_data_size(&cfg, DMA_SIZE_16);
+            // increments read address after channel transfer
+            channel_config_set_read_increment(&cfg, true);
+            // sets the wrapping on the buffer (?)
+            channel_config_set_ring(&cfg, false, size_bits);
+            // set Timer 0 for timer pacing
+            channel_config_set_dreq(&cfg, 0x3b);
+            // selects next channel (in this case filp flops between channel A and B) 
+            channel_config_set_chain_to(&cfg, dma_chan_chain);
 
-static volatile uint16_t buf_a[BUF_SAMPLES] __attribute__((aligned(BUF_SAMPLES * sizeof(uint16_t))));
-static volatile uint16_t buf_b[BUF_SAMPLES] __attribute__((aligned(BUF_SAMPLES * sizeof(uint16_t))));
+            dma_channel_configure(
+                dma_chan,             		// Channel to be configured
+                &cfg,                 		// The configuration we just created
+                &spi_get_hw(DAC_SPI)->dr, 	// write address
+                buf,                  		// The initial read address
+                _buffer_size,          		// Number of transfers
+                false                 		// Start immediately?
+            );
+        }
+        void dma_handler(void) {
+            if(dma_hw->intr & (1u<<dma_chan_a)) { // channel a complete?
+                dma_hw->ints0=1u<<dma_chan_a; // clear the interrupt request
+                dma_buffer((uint16_t*) buf_a); // buf a transferred, so refill it
+            }
+            if(dma_hw->intr & (1u<<dma_chan_b)) { // channel b complete?
+                dma_hw->ints0=1u<<dma_chan_b; // clear the interrupt request
+                dma_buffer((uint16_t*) buf_b); // buf b transferred, so refill it
+            }
+        }
+    
+        void init_spi (uint16_t sample_rate) {
+            spi_init(DAC_SPI, 20000000); 
+            spi_set_format(DAC_SPI, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST); // New SPI setup
 
-void dma_init (void);
-void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf);
-void dma_handler(void);
-void dma_buffer(uint16_t* buf, uint pin);
+            // set DAC pins
+            gpio_set_function(DAC_DATA, GPIO_FUNC_SPI);
+            gpio_set_function(DAC_CLK, GPIO_FUNC_SPI);
+            gpio_set_function(DAC_CS, GPIO_FUNC_SPI); // New CS setup - replaces next 3 lines
+        }
+        void init_dma (void) {
+            
+            // Get a free channel, panic() if there are none
+            dma_chan_a = dma_claim_unused_channel(true);
+            dma_chan_b = dma_claim_unused_channel(true);
 
+            // configures the two DMA's and links them too each other
+            dma_channel(dma_chan_a, dma_chan_b, buf_a);
+            dma_channel(dma_chan_b, dma_chan_a, buf_b);
+
+            // sets up the interupt timer and points it to the handler
+            irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
+            dma_set_irq0_channel_mask_enabled((1<<dma_chan_a) | (1<<dma_chan_b), true);
+            irq_set_enabled(DMA_IRQ_0,true);
+
+            const int dma_timer = 0; // dma_claim_unused_timer(true); // panic upon failure
+            dma_timer_claim(dma_timer); // panic if fail
+            dma_timer_set_fraction(dma_timer, 1, _divider);
+
+            dma_channel_start(dma_chan_a); // seems to start something
+        }
+        
+    }
+
+    void init (uint16_t sample_rate);
+    void fill (uint16_t buffer, uint16_t index);
+    void clear_state (void);
+    bool get_state (void);
+}
 
 #endif 

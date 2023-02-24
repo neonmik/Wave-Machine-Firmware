@@ -1,6 +1,6 @@
 #include "arp.h"
 
-namespace Arp {
+namespace ARP {
 
     void on (void) {
         _arp_active = true;
@@ -70,8 +70,9 @@ namespace Arp {
                 if (beat >= arp_loop) beat = 0;
 
                 if (!note_active) {
-                    // make sure n
-                    Note_Priority::note_clear(beat);
+                    // make sure no note is playing
+                    // Note_Priority::note_clear(beat);
+
                     Note_Priority::note_on(beat, arp_notes[beat], 127);
 
                     release_active = false;
@@ -79,7 +80,7 @@ namespace Arp {
 
                 }
 
-                if (!release_active) {
+                if (note_active && !release_active) {
                     
                     Note_Priority::note_off(prev_beat, arp_notes[prev_beat], 0);
 

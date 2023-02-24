@@ -83,10 +83,9 @@ namespace KEYS {
       (_history[0] == _history[4]) &&
       (_history[0] == _history[5]) &&
       (_history[0] == _history[6]) &&
-      (_history[0] == _history[7]))
-    {
-      // reverse bit order  - for messed up hardware
-      _current = reverse(_history[0]);
+      (_history[0] == _history[7])) {
+        // reverse bit order  - for messed up hardware
+        _current = reverse(_history[0]);
     }
 
   }
@@ -106,7 +105,7 @@ namespace KEYS {
     keys = Keys.get();
     keys_last = Keys.get_last();
 
-    if (!(Arp::get())) {
+    if (!(ARP::get())) {
       for (int i = 0; i < MAX_KEYS; i++) {
         // if ( !((k>>i) & 1) ) {
         // 	num_keys_down++;
@@ -120,11 +119,11 @@ namespace KEYS {
         }
       }
     } else {
-      Arp::clear_notes();
+      ARP::clear_notes();
       
       for (int i = 0; i < MAX_KEYS; i++) {
         if (!((keys>>i) & 1 && (((keys_last>>i) & 1))))  {  // new key down
-          Arp::add_notes(i+48);
+          ARP::add_notes(i+48);
         }
       }
     }

@@ -4,21 +4,21 @@
 
 namespace Note_Priority {
   void note_on(int slot, int note, int velocity) {
-    synth::channels[slot].note  = note;
-    synth::channels[slot].frequency = note2freq[synth::channels[slot].note];
+    SYNTH::channels[slot].note  = note;
+    SYNTH::channels[slot].frequency = note2freq[SYNTH::channels[slot].note];
 
-    synth::channels[slot].is_active = true;
-    synth::channels[slot].adsr_activation_time = to_ms_since_boot(get_absolute_time());
-    synth::channels[slot].trigger_attack();
+    SYNTH::channels[slot].is_active = true;
+    SYNTH::channels[slot].adsr_activation_time = to_ms_since_boot(get_absolute_time());
+    SYNTH::channels[slot].trigger_attack();
     // printf("note on");
   }
   void note_off(int slot, int note, int velocity) {
-    synth::channels[slot].trigger_release();
+    SYNTH::channels[slot].trigger_release();
     // printf("note off");
   }
 
   void note_clear (int slot) {
-    synth::channels[slot].off();
+    SYNTH::channels[slot].off();
   }
 
   void event(int status, int note, int velocity) {
@@ -29,11 +29,11 @@ namespace Note_Priority {
           int8_t slot = -1; // means if no free voices are left, it will be -1 still
 
           for (int i = 0; i < MAX_VOICES; i++)  {
-            if (synth::channels[i].note == note && synth::channels[i].is_active) { 
+            if (SYNTH::channels[i].note == note && SYNTH::channels[i].is_active) { 
               slot = i;
               break;  // breaks for loop as a free slot has been found
             }
-            if (!synth::channels[i].is_active) {
+            if (!SYNTH::channels[i].is_active) {
               slot = i;
               break;
             }
@@ -48,13 +48,13 @@ namespace Note_Priority {
             uint32_t longest_released_time = longest_time; // for keeping track of the slot which has been held the longest
             uint32_t longest_active_time = longest_time; // for keeping track of the slot which has been held the longest
             for (int i = 0; i < MAX_VOICES; i++)  {
-              if (!synth::channels[i].gate && (synth::channels[i].adsr_activation_time<longest_released_time)) {
-                longest_released_time = synth::channels[i].adsr_activation_time;
+              if (!SYNTH::channels[i].gate && (SYNTH::channels[i].adsr_activation_time<longest_released_time)) {
+                longest_released_time = SYNTH::channels[i].adsr_activation_time;
                 slot = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
               }
               //still active
-              else if (synth::channels[i].adsr_activation_time<longest_active_time) {
-                longest_active_time = synth::channels[i].adsr_activation_time;
+              else if (SYNTH::channels[i].adsr_activation_time<longest_active_time) {
+                longest_active_time = SYNTH::channels[i].adsr_activation_time;
                 oldest_slot = i; // will give the oldest slot thats still being used
               }
             }
@@ -63,14 +63,14 @@ namespace Note_Priority {
             // uint32_t longest_released_time = 0; // for keeping track of the slot which has been held the longest
             // uint32_t longest_active_time = 0; // for keeping track of the slot which has been held the longest
             // for (int i = 0; i < MAX_VOICES; i++)  {
-            //   if (!synth::channels[i].gate && (synth::channels[i].adsr_activation_time>longest_released_time)) {
-            //     longest_released_time = synth::channels[i].adsr_activation_time;
+            //   if (!SYNTH::channels[i].gate && (SYNTH::channels[i].adsr_activation_time>longest_released_time)) {
+            //     longest_released_time = SYNTH::channels[i].adsr_activation_time;
             //     slot = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
             //     printf("released slot %u \n", slot);
             //   }
             //   //still active
-            //   else if (synth::channels[i].adsr_activation_time>longest_active_time) {
-            //     longest_active_time = synth::channels[i].adsr_activation_time;
+            //   else if (SYNTH::channels[i].adsr_activation_time>longest_active_time) {
+            //     longest_active_time = SYNTH::channels[i].adsr_activation_time;
             //     oldest_slot = i; // will give the oldest slot thats still being used
             //     // printf("finding active slot %u \n", i);
             //   }
@@ -83,7 +83,7 @@ namespace Note_Priority {
             }
           }
 
-          // synth::channels[slot].off(); // clear it before setting it again (resets the ADSR, hopefully)
+          // SYNTH::channels[slot].off(); // clear it before setting it again (resets the ADSR, hopefully)
 
           if (NOTE_DEBUG) printf("Slot: %d Note: %d \n", slot, note);
           
@@ -94,7 +94,7 @@ namespace Note_Priority {
 
       case 0x80:
         for (int voice = 0; voice < MAX_VOICES; voice++)  {
-          if (synth::channels[voice].note == note)  { //check for a matching note
+          if (SYNTH::channels[voice].note == note)  { //check for a matching note
             note_off(voice, note, velocity);
             //no break here just in case there are somehow multiple of the same note stuck on
           }

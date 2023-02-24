@@ -42,6 +42,7 @@ namespace KEYS {
             uint32_t    _last            =       0xFFFFFFFF;
             uint8_t     _number_down     =       0;
             uint8_t     history_index;
+            
             inline uint32_t reverse(uint32_t input) {
                 uint32_t output = 0;
                 for (int i = 0; i < 32; i++) {
@@ -50,6 +51,7 @@ namespace KEYS {
                 return output;
             }
         public:
+            
             Keyboard() { }
             ~Keyboard() { }
 

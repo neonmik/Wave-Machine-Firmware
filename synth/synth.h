@@ -8,7 +8,7 @@
 #include "wavetable.h"
 
 
-namespace synth {
+namespace SYNTH {
 
   // The duration a note is played is determined by the amount of attack,
   // decay, and release, combined with the length of the note as defined by
@@ -167,7 +167,7 @@ namespace synth {
   extern Oscillators channels[MAX_VOICES];
 
   
-  int16_t get_audio_frame();
+  uint16_t get_audio_frame();
   bool is_audio_playing();
   void init (uint32_t _sample_rate);
 

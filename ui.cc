@@ -8,11 +8,6 @@
 
 #include "synth/arp.h"
 
-extern uint8_t hardware_index;
-
-
-
-#define MAX_PRESETS     7
 
 namespace UI {
 
@@ -21,24 +16,11 @@ namespace UI {
   // ----------------------
 
   void pagination_init() {
-
     for(int i=0; i < MAX_KNOBS; i++){
-      knob_values[i] = ADC::value(i);
+      // knob_values[i] = ADC::value(i);
       knob_states[i] = ACTIVE;
     }
   }
-  // void default_pagination () {
-  //   // ADSR default values
-  //   page_values[Page::ADSR][0]=synth::attack_ms; //A
-  //   page_values[Page::ADSR][1]=synth::decay_ms; // D
-  //   page_values[Page::ADSR][2]=synth::sustain; // S
-  //   page_values[Page::ADSR][3]=synth::release_ms; // R
-  //   page_values[Page::LFO][0]=0; //A
-  //   page_values[Page::LFO][1]=0; // D
-  //   page_values[Page::LFO][2]=0; // S
-  //   page_values[Page::LFO][3]=0; // R
-  // }
-  // read knobs and digital switches and handle pagination
   void pagination_protect() {
     LEDS::KNOBS.off();
     for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
@@ -54,6 +36,7 @@ namespace UI {
       current_page++;
 
       // LFO on
+      // doesnt work correctly, need to be selective about pages available, or use another method
       // if (!get_lfo_flag()) pages--;
       // ARP on
       if (!get_arp()) pages--;
@@ -64,6 +47,7 @@ namespace UI {
       set_page(current_page);
       pagination_protect();
     }
+
     if (Buttons::PRESET.get_short()) {
       change_preset();
       pagination_protect();
@@ -93,10 +77,9 @@ namespace UI {
 
       // if enabled then mirror the real time knob value
       if(knob_states[i] == ACTIVE){
-        // Leds::SR.set_pin(i);
         LEDS::KNOB_select(i, 1);
         SETTINGS::set_value(current_page, i, value);
-        // page_values[current_page][i] = value;
+
         _touched = true;
       }
     }
@@ -220,7 +203,7 @@ namespace UI {
       if (Buttons::ARP.get_short()) toggle_arp();
       if (Buttons::LFO.get_short()) toggle_lfo();
     }
-    if (hardware_index == 3) if (Arp::get()) Arp::update_playback();
+    if (hardware_index == 3) if (ARP::get()) ARP::update_playback();
     if (hardware_index == 3) ADC::update();
     if (hardware_index == 4) pagination_update();
     if (hardware_index == 5) LEDS::update();

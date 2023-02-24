@@ -18,12 +18,12 @@
 #define PROTECTED        -1
 #define ACTIVE            1
 
-enum Page : uint8_t{
-    MAIN    = 0,
-    ADSR    = 1,
-    LFO     = 2,
-    ARP     = 3
-};
+// enum Page : uint8_t{
+//     MAIN    = 0,
+//     ADSR    = 1,
+//     LFO     = 2,
+//     ARP     = 3
+// };
 
 #define protection_value  10 // the amount of protection the knob gets before unlocking.
 
@@ -39,17 +39,17 @@ namespace UI {
         bool preset_flag            =           0;
         bool shift_flag             =           0;
 
+        uint8_t hardware_index;
+
         bool _touched               =           0;
-        uint32_t knobs[8];
-        uint32_t page_values[MAX_PAGES][MAX_KNOBS]; // the permanent storage of every value for every page, used by the actual music code
-        uint32_t knob_values[MAX_KNOBS]; // last read knob values
+        // uint32_t knob_values[MAX_KNOBS]; // last read knob values
         uint8_t knob_states[MAX_KNOBS]; // knobs state (protected, enable...)
 
         uint32_t value           = 0; // current (temporary) value just read
         uint8_t current_page    = 0; // the current page id of values being edited
-        bool page_change    = false; // signals the page change
-        bool preset_change  = false;
-        bool in_sync        = false; //temp variable to detect when the knob's value matches the stored value
+        bool page_change    = false; // signals the page has changed
+        bool preset_change  = false; // signals the preset has changed
+        bool in_sync        = false; // temp variable to detect when the knob's value matches the stored value
     }
     
     

@@ -2,8 +2,8 @@
 #include <math.h>
 
 
-namespace synth {
-  uint16_t waveforms = Waveform::WAVETABLE | Waveform::TRIANGLE;;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+namespace SYNTH {
+  uint16_t waveforms = Waveform::WAVETABLE; // | Waveform::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   uint16_t wave;
   uint16_t wave_vector;
@@ -72,7 +72,7 @@ namespace synth {
     return any_channel_playing;
   }
 
-  int16_t get_audio_frame() {
+  uint16_t get_audio_frame() {
     int32_t sample = 0;  // used to combine channel output
     int16_t clipped_sample = 0;
 
@@ -207,19 +207,16 @@ namespace synth {
       }
     }
 
-    
-    // printf("PRE MASTER VOLUME SAMPLE: %.5d \n", sample);
     sample = (int64_t(sample) * output_volume) >> 16;
 
-
+    //attempt at soft clipping - doesnt work
+    // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
 
     // clip result to 16-bit
     sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
     
-    //attempt at soft clipping
-    // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
     
-    // printf("%.5d \n", sample);
-    return sample;
+
+    return (sample+32767)>>4;
   }
 }
