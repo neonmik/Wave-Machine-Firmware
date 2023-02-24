@@ -40,7 +40,7 @@ int main() {
       
       if (SETTINGS::get_lfo()) MOD::update(); // only updates the MOD values every 256 samples
 
-      for(int i =0; i<256; i++) {
+      for(int i = 0; i < 256; i++) {
         DAC::fill(SYNTH::get_audio_frame(), i);
         ARP::index();
       }
