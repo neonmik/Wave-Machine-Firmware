@@ -57,14 +57,14 @@ namespace SETTINGS {
                     return _input[control];
                 }
                 void update (void) {
-                    SYNTH::wave = _waveshape;
+                    SYNTH::wave_shape = _waveshape;
                     SYNTH::wave_vector = _wavevector;
                     SYNTH::octave = _octave;
                     SYNTH::pitch_scale = _pitch;
                 }
                 void fetch (void) {
                     //pull defaults from function, for now
-                    _waveshape = SYNTH::wave;
+                    _waveshape = SYNTH::wave_shape;
                     _wavevector = SYNTH::wave_vector;
                     _octave = SYNTH::octave;
                     _pitch = SYNTH::pitch_scale;

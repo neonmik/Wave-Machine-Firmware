@@ -7,11 +7,8 @@ namespace Buttons {
         if (time_now - _last_press_time <= DOUBLE_PRESS_TIME) {
             // double press detected
             _double = true;
-            // set last press time to prevent short press detection
-            _last_press_time = 0;
-        } else {
-            _last_press_time = time_now;
         }
+        _last_press_time = time_now;
         _shift = !_shift;
         _start = time_now;
     }
@@ -20,7 +17,7 @@ namespace Buttons {
         _shift = !_shift;
         _end = to_ms_since_boot(get_absolute_time());
         // short press
-        if (!_double && _end - _start < LONG_PRESS_TIME) {
+        if (_end - _start < LONG_PRESS_TIME) {
             _short = true;
         }
         // long press

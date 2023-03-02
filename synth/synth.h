@@ -5,7 +5,6 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
-
 #include "wavetable.h"
 
 
@@ -54,7 +53,7 @@ namespace SYNTH {
 
 
 
-  enum Waveform {
+  enum Oscillator {
     WAVETABLE = 256,
     NOISE     = 128,
     SQUARE    = 64,
@@ -72,10 +71,15 @@ namespace SYNTH {
     OFF
   };
 
+  
+
   extern uint32_t   sample_rate;
 
-  extern uint16_t   waveforms;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-  extern uint16_t   wave;
+  // used oscillator types, this can use multiple oscillatros, although can't be currently adjusted by the hardware
+  extern uint16_t   oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
+
+  // variables for the wavetable oscillator
+  extern uint16_t   wave_shape;
   extern uint16_t   wave_vector;
   extern uint16_t   vector_mod;
 
@@ -95,12 +99,15 @@ namespace SYNTH {
   // extern bool      filter_enable;
   // extern uint16_t  filter_cutoff_frequency;
 
-  struct Oscillators {
+  struct Voices {
     
     uint8_t   note          = 0;
     uint16_t  frequency     = 0;    // frequency of the voice (Hz)
-    uint16_t  volume        = 0x7fff;    // channel volume (default 50%)
+    
+    uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
+
     uint8_t   gate          = false;  // used for tracking a note that's released, but not finished.
+
 
     uint16_t  pulse_width   = 0x7fff; // duty cycle of square wave (default 50%)
     int16_t   noise         = 0;      // current noise value
@@ -122,7 +129,7 @@ namespace SYNTH {
     int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
 
     void *user_data = nullptr;
-    void (*wave_buffer_callback)(Oscillators &channel);
+    void (*wave_buffer_callback)(Voices &channel);
 
     void trigger_attack()  {
       gate = true;
@@ -165,11 +172,10 @@ namespace SYNTH {
     
   };
 
-  extern Oscillators channels[MAX_VOICES];
+  extern Voices channels[MAX_VOICES];
 
   
   uint16_t get_audio_frame();
   bool is_audio_playing();
   void init (uint32_t _sample_rate);
-
 }

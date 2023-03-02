@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
     drivers/rgb.cc
 
     ui.cc
+    pagination.cc
 
     note_priority.cc
 

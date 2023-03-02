@@ -5,6 +5,8 @@
 
 #include "synth/settings.h"
 
+#include "pagination.h"
+
 
 #define abs(x) ({ __typeof__(x) _x = (x); _x >= 0 ? _x : -_x; })
 
@@ -12,23 +14,17 @@
 #define KNOBS_PRINT_OUT     0
 #define HARDWARE_TEST       0
 
-#define MAX_PAGES         4 // the max number of pages available
-#define MAX_KNOBS         4 // the max number of knobs available
 
-#define PROTECTED        -1
-#define ACTIVE            1
-
-// enum Page : uint8_t{
-//     MAIN    = 0,
-//     ADSR    = 1,
-//     LFO     = 2,
-//     ARP     = 3
-// };
-
-#define protection_value  10 // the amount of protection the knob gets before unlocking.
 
 
 namespace UI {
+
+    enum UiMode {
+        UI_MODE_NORMAL,
+        UI_MODE_CALIBRATION,
+        UI_MODE_FACTORY_TEST
+    };
+
     namespace {
         // preset, page and event flags
         uint8_t preset              =           0;
@@ -39,27 +35,11 @@ namespace UI {
         bool preset_flag            =           0;
         bool shift_flag             =           0;
 
-        uint8_t hardware_index;
+        uint8_t poll_index;
 
-        bool _touched               =           0;
-        // uint32_t knob_values[MAX_KNOBS]; // last read knob values
-        uint8_t knob_states[MAX_KNOBS]; // knobs state (protected, enable...)
-        
-        uint32_t value           = 0; // current (temporary) value just read
-        uint32_t last_value[MAX_KNOBS];
-        uint8_t current_page    = 0; // the current page id of values being edited
-        bool page_change    = false; // signals the page has changed
-        bool preset_change  = false; // signals the preset has changed
-        bool in_sync        = false; // temp variable to detect when the knob's value matches the stored value
+        UiMode _mode;
     }
     
-    
-    uint32_t get_pagintaion (int page, int knob);
-    uint8_t get_pagination_flag ();
-
-    void toggle_shift_flag (void);
-    bool get_shift_flag (void);
-
     void set_page (uint8_t page);
     void set_page_flag(uint8_t value);
     uint8_t get_page_flag(void);
@@ -73,21 +53,6 @@ namespace UI {
     void set_preset(uint8_t preset);
     void change_preset(void);
     uint8_t get_preset(void);
-    void set_preset_flag(uint8_t value);
-    uint8_t get_preset_flag(void);
-
-    void set_knob(uint8_t knob, uint32_t value);
-    uint32_t get_knob(uint8_t knob);
-    
-
-    // ----------------------
-    //          KNOBS
-    // ----------------------
-    namespace pagination {
-        void init (void);
-        void protect(void);
-        void update (void);
-    }
 
     // ----------------------
     //        HARDWARE

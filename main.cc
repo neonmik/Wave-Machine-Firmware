@@ -46,6 +46,7 @@ int main() {
     
     if (DAC::get_state()){
       if (SETTINGS::get_lfo()) MOD::update(); // only updates the MOD values every 256 samples
+      
       DAC::clear_state();
       continue; // skips the UI update to save resources
     } 

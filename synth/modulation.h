@@ -27,6 +27,7 @@ namespace MOD {
         private:
             bool        _active;
 
+            
             uint16_t    _values[4];
 
             uint8_t              _index       = 0;
@@ -48,7 +49,7 @@ namespace MOD {
             uint8_t              _matrix      = Matrix::OFF;
             uint8_t              _last_matrix = 0;
 
-            uint8_t              _sample_rate = 172; // Sample Rate (44100Hz) / 256 = 172.26... this only gets called every 256 samples at the main loop
+            uint16_t              _sample_rate = 689; // Sample Rate (44100Hz) / 64 = 689.0625... this only gets called every 64 samples at the main loop
             
         public:
             Modulation() { }
@@ -59,6 +60,7 @@ namespace MOD {
                 set_rate(0);
                 set_wave(0);
             }
+            
             void set_matrix (uint16_t input) {
                 _values[0] = input;
                 uint8_t temp = (input >> 8);
@@ -67,7 +69,6 @@ namespace MOD {
                     _last_matrix = temp;
                     init(); // clear previous results
                 }
-
             }
             uint16_t get_matrix (void) {
                 return _values[0];
@@ -173,11 +174,11 @@ namespace MOD {
 
 
 
-#pragma once
+// #pragma once
 
-#include "pico/stdlib.h"
-#include "synth.h"
-#include "wavetable.h"
+// #include "pico/stdlib.h"
+// #include "synth.h"
+// #include "wavetable.h"
 
 // This wants to be a LFO for modulating different sources...
 // I think it should be between 1Hz-20Hz (Or ???100Hz???)
@@ -244,3 +245,11 @@ namespace MOD {
 //             if (_matrix == static_cast<uint8_t>(Matrix::VIBRATO)) {
 //                 _depth = (input >> 4); // not right
 //             } else if (_matrix == static_cast<uint8_t
+
+
+// Matrix is the type of modulation (Vibrato, Tremelo, Vector, Filter)
+// Rate is the speed of the modulation (0-1023)
+// Depth is the amount of modulation (0-1023)
+// Wave is the shape of the modulation (0-1023)
+
+
