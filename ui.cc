@@ -125,7 +125,6 @@ namespace UI {
             }
             if (Buttons::PRESET.get(Buttons::ButtonState::SHIFT) && Buttons::PAGE.get(Buttons::ButtonState::SHORT)) {
                 LEDS::PRESET.flash(4,50);
-                printf("Save!!\n");
             }
             break;
           case 2:

@@ -51,10 +51,10 @@ namespace SYNTH {
     return n - 0xffff;
   }
 
-  uint32_t sample_rate;
+  uint32_t _sample_rate;
   
-  void init (uint32_t _sample_rate) {
-    sample_rate = _sample_rate;
+  void init (uint32_t sample_rate) {
+    _sample_rate = sample_rate;
   }
 
   
@@ -91,7 +91,7 @@ namespace SYNTH {
       // increment the waveform position counter. this provides an
       // Q16 fixed point value representing how far through
       // the current waveform we are
-      channel.waveform_offset += (((((channel.frequency * pitch_scale)>>9) << octave) * 256) << 8) / sample_rate;
+      channel.waveform_offset += (((((channel.frequency * pitch_scale)>>9) << octave) * 256) << 8) / _sample_rate;
 
       //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
       channel.waveform_offset += vibrato;

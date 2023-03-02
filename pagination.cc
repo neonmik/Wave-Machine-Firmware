@@ -43,7 +43,7 @@ namespace PAGINATION {
       // read knobs values, show sync with the LED, enable knob when it matches the stored value
       for (int i = 0; i < MAX_KNOBS; i++){
         value = ADC::value(i);
-        in_sync = abs(value - SETTINGS::get_value(current_page, i)) < protection_value;
+        in_sync = abs(value - SETTINGS::get_value(current_page, i)) < knob_protection_threshold;
 
         // enable knob when it matches the stored value
         if (in_sync && value != last_value[i]) {

@@ -72,8 +72,8 @@ namespace SYNTH {
   };
 
   
-
-  extern uint32_t   sample_rate;
+  extern uint32_t          _sample_rate;
+  
 
   // used oscillator types, this can use multiple oscillatros, although can't be currently adjusted by the hardware
   extern uint16_t   oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
@@ -136,13 +136,13 @@ namespace SYNTH {
 
       adsr_frame = 0;
       adsr_phase = ADSRPhase::ATTACK;
-      adsr_end_frame = (attack_ms * sample_rate) / 1000;
+      adsr_end_frame = (attack_ms * _sample_rate) / 1000;
       adsr_step = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void trigger_decay() {
       adsr_frame = 0;
       adsr_phase = ADSRPhase::DECAY;
-      adsr_end_frame = (decay_ms * sample_rate) / 1000;
+      adsr_end_frame = (decay_ms * _sample_rate) / 1000;
       adsr_step = (int32_t(sustain << 8) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void trigger_sustain() {
@@ -156,7 +156,7 @@ namespace SYNTH {
       
       adsr_frame = 0;
       adsr_phase = ADSRPhase::RELEASE;
-      adsr_end_frame = (release_ms * sample_rate) / 1000;
+      adsr_end_frame = (release_ms * _sample_rate) / 1000;
       adsr_step = (int32_t(0) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void off() {

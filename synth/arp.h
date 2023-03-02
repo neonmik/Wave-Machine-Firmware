@@ -25,9 +25,10 @@ namespace ARP {
         bool _hold;
         bool _arp_active;
         const uint8_t max_arp = 8;
-        uint8_t arp_notes[max_arp];
-        uint8_t buffer[max_arp];
-        uint8_t arp_index;
+        uint8_t arp_notes[max_arp]; //all the notes stored in the arp sequence
+        // uint8_t buffer[max_arp];
+        int8_t arp_index;
+        int8_t arp_count;
         int8_t arp_loop;
         bool note_active;
         bool release_active;

@@ -260,7 +260,7 @@ namespace SETTINGS {
                     }
                     void fetch (void) {
                         //pull defaults from function, for now
-                        _rate = ARP::get_bpm();
+                        _rate = (ARP::get_bpm()<<3);
                     }
             };
         public:
@@ -270,8 +270,6 @@ namespace SETTINGS {
             Wave    MAIN;
             Env     ADSR;
             Lfo     MOD1;
-            // Lfo     MOD2;
-            // Lfo     MOD3;
             Arp     ARP;
 
             void init (void) {
@@ -340,7 +338,6 @@ namespace SETTINGS {
             void toggle_lfo (void) {
                 _lfo_active = !_lfo_active;
                 MOD1.toggle();
-                // MOD2.toggle();
             }
             bool get_lfo (void) {
                 return _lfo_active;

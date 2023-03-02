@@ -6,10 +6,6 @@ Things to implement:
 
 - Prove hardware functions (MIDI)
 
-- Improve Arp functionality:
-    - currently wont play only one note...
-    - Needs direction functionality
-
 - Improve Pagintation funtionality:
     - Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly. 
 
@@ -48,4 +44,6 @@ Things already implemented:
     + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 + Add Arp mode
 + Improve Arp functionality:
+    + currently wont play only one note...
+    + Needs direction functionality
     + currently has a random low note on release of arp (noticable in high octaves)

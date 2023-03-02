@@ -12,10 +12,6 @@
 #define MAX_PAGES         4 // the max number of pages available
 #define MAX_KNOBS         4 // the max number of knobs available
 
-#define protection_value  10 // the amount of protection the knob gets before unlocking.
-
-
-
 namespace PAGINATION {
 
     enum class KnobState {
@@ -31,6 +27,8 @@ namespace PAGINATION {
         uint32_t last_value[MAX_KNOBS];
         uint32_t value;
         bool in_sync;
+
+        uint16_t knob_protection_threshold = 10; // the amount of protection the knob gets before unlocking.
     }
     void init();
     void protect();
