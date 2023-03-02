@@ -6,38 +6,40 @@
 #include "../note_priority.h"
 
 
+extern uint32_t software_index;
 
 namespace ARP {
+    namespace {
+        
 
-    static uint16_t _index;
+        uint8_t _bpm = 120;
+        uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
+        uint16_t seq_tick = 0;
+        uint16_t prev_beat;
+        uint16_t beat;
+        bool beat_changed;
+        uint16_t _ms_per_minute = 60000;
+        uint16_t _samples_per_ms;
+        uint32_t _samples_per_16th;
 
-    static uint8_t _bpm = 120;
-    static uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
-    static uint16_t seq_tick = 0;
-    static uint16_t prev_beat;
-    static uint16_t beat;
-    static bool beat_changed;
-    static uint16_t _s_p_ms;
-    static uint32_t _s_p_sixteenth;
+        bool _hold;
+        bool _arp_active;
+        const uint8_t max_arp = 8;
+        uint8_t arp_notes[max_arp];
+        uint8_t buffer[max_arp];
+        uint8_t arp_index;
+        int8_t arp_loop;
+        bool note_active;
+        bool release_active;
 
-    static bool _hold;
-    static bool _arp_active;
-    static const uint8_t max_arp = 8;
-    static uint8_t arp_notes[max_arp];
-    static uint8_t buffer[max_arp];
-    static uint8_t arp_index;
-    static int8_t arp_loop;
-    static bool note_active;
-    static bool release_active;
+        uint8_t _direction;
+        bool _up = 1;
+        bool _down = 0;
 
-    static uint8_t _direction;
-    static bool _up = 1;
-    static bool _down = 0;
-
-    static uint16_t arp_delay = 100;
-    static uint16_t arp_release = 100;
-    static uint32_t arp_ms;
-
+        uint16_t arp_delay = 100;
+        uint16_t arp_release = 100;
+        uint32_t arp_ms;
+    }
     
     void on (void);
     void off (void);
@@ -45,16 +47,16 @@ namespace ARP {
     bool get (void);
     void toggle (void);
 
-    void index (void);
+    void tick (void);
 
     uint16_t samples_per_sixteenth_note (void);
     
     void set_bpm (uint8_t bpm);
     uint8_t get_bpm (void);
 
-    void set_samplerate (uint16_t samplerate);
+    void set_samplerate (uint16_t sample_rate);
 
-    void init (uint8_t bpm, uint16_t samplerate);
+    void init (uint8_t bpm, uint16_t sample_rate);
     
     void update_playback(void);
     

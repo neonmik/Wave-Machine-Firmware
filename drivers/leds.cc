@@ -5,7 +5,7 @@ namespace LEDS {
     Led PICO(Leds::LED_PICO_PIN);
     Led LFO(Leds::LED_LFO_PIN);
     Led ARP(Leds::LED_ARP_PIN);
-    Rgb RGB;
+    Rgb PRESET;
     SR  KNOBS(Pins::KNOBS);
     SR  KNOB_1(Pins::KNOB_1);
     SR  KNOB_2(Pins::KNOB_2);
@@ -22,7 +22,7 @@ namespace LEDS {
         PICO.init();
         LFO.init();
         ARP.init();
-        RGB.init();
+        PRESET.init();
         ShiftReg::init();
 
     }
@@ -30,21 +30,21 @@ namespace LEDS {
         PICO.on();
         LFO.on();
         ARP.on();
-        RGB.on();
+        PRESET.on();
         ShiftReg::on_bit(Pins::ALL);
     }
     void off(){
         PICO.off();
         LFO.off();
         ARP.off();
-        RGB.off();
+        PRESET.off();
         ShiftReg::off_bit(Pins::ALL);
     }
     void toggle() {
         PICO.toggle();
         LFO.toggle();
         ARP.toggle();
-        RGB.toggle();
+        PRESET.toggle();
         ShiftReg::toggle_bit(Pins::ALL);
     }
     
@@ -106,7 +106,7 @@ namespace LEDS {
         LFO.flash(1, delay);
         ARP.flash(1, delay);
 
-        RGB.cycle(delay/8);
+        PRESET.cycle(delay/8);
 
         // Down
         ARP.flash(1, delay);

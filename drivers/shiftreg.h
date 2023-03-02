@@ -103,5 +103,37 @@ namespace ShiftReg {
 }
 
 
+// // Header file for ShiftRegPWM class
+
+// #ifndef SHIFTREGPWM_H
+// #define SHIFTREGPWM_H
+
+// #include "pico/stdlib.h"
+
+// class ShiftRegPWM {
+// public:
+// ShiftRegPWM(uint pin_sr_data, uint pin_sr_clk, uint pin_sr_latch, uint data_width, uint pwm_resolution);
+// void set_pin(uint pin, bool value);
+// void set_pin_pwm_duty_cycle(uint pin, uint duty_cycle);
+// void set_pins_pwm_duty_cycle(uint8_t pins, uint duty_cycle);
+// void set_all_pins_pwm_duty_cycles(uint duty_cycle);
+// void set_pwm_resolution(uint resolution);
+// void update();
+
+// private:
+// ShiftRegister _sr;
+// uint _pwm_resolution;
+// uint _pwm_time;
+// uint8_t _buffer[8];
+// uint8_t _pwm_duty_cycles[8];
+// uint8_t _bit_mask[8];
+
+// void _update_pwm_duty_cycles();
+// };
+
+// #endif // SHIFTREGPWM_H
+
+
+
 
     

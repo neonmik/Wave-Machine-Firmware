@@ -170,3 +170,77 @@ namespace MOD {
     void clear (void);
 }
 
+
+
+
+#pragma once
+
+#include "pico/stdlib.h"
+#include "synth.h"
+#include "wavetable.h"
+
+// This wants to be a LFO for modulating different sources...
+// I think it should be between 1Hz-20Hz (Or ???100Hz???)
+// Could be used for:
+//   - Vibrato (Note frequency modulations)
+//   - Tremelo (Note Volume Modulations)
+//   - Wave Vector Modulations
+//   - A Filter?
+
+// namespace MOD {
+
+//     enum class Matrix : uint8_t {
+//         OFF = 0,
+//         VIBRATO = 1,
+//         TREM = 2,
+//         VECTOR = 3
+//     };
+
+//     struct ModulationValues {
+//         uint16_t matrix = 0;
+//         uint16_t depth = 0;
+//         uint16_t rate = 0;
+//         uint16_t wave = 0;
+//     };
+
+//     class Modulation {
+//     private:
+//         bool _active = false;
+//         ModulationValues _values;
+//         uint8_t _index = 0;
+//         uint32_t _increment = 0;
+//         uint16_t _phase_acc = 0;
+//         int16_t _sample = 0;
+//         int16_t _vibrato = 0;
+//         uint16_t _trem = 0;
+//         uint16_t _vector = 0;
+//         uint16_t _depth = 0;
+//         uint16_t _wave = 0;
+//         uint8_t _matrix = static_cast<uint8_t>(Matrix::OFF);
+//         uint8_t _last_matrix = 0;
+//         static constexpr uint16_t _sample_rate = 172; // Sample Rate (44100Hz) / 256 = 172.26... this only gets called every 256 samples at the main loop
+//     public:
+//         Modulation() {}
+//         ~Modulation() {}
+//         void init() {
+//             set_depth(0);
+//             set_rate(0);
+//             set_wave(0);
+//         }
+//         void set_matrix(uint16_t input) {
+//             _values.matrix = input;
+//             const auto temp = (input >> 8);
+//             if (temp != _last_matrix) {
+//                 _matrix = static_cast<uint8_t>(temp);
+//                 _last_matrix = temp;
+//                 init(); // clear previous results
+//             }
+//         }
+//         uint16_t get_matrix() const {
+//             return _values.matrix;
+//         }
+//         void set_depth(uint16_t input) {
+//             _values.depth = input;
+//             if (_matrix == static_cast<uint8_t>(Matrix::VIBRATO)) {
+//                 _depth = (input >> 4); // not right
+//             } else if (_matrix == static_cast<uint8_t

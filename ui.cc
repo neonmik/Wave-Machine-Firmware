@@ -29,12 +29,12 @@ namespace UI {
       }
     }
     void update(){
-      if(Buttons::PAGE.get_short()){
+      if(Buttons::PAGE.get(Buttons::ButtonState::SHORT)){
         uint8_t pages = MAX_PAGES;
 
         page_change = true;
 
-        current_page++;
+        ++current_page;
 
         // LFO on
         // doesnt work correctly, need to be selective about pages available, or use another method
@@ -49,7 +49,7 @@ namespace UI {
         protect();
       }
 
-      if (Buttons::PRESET.get_short()) {
+      if (Buttons::PRESET.get(Buttons::ButtonState::SHORT)) {
         change_preset();
         protect();
       }
@@ -60,8 +60,9 @@ namespace UI {
         in_sync = abs(value - SETTINGS::get_value(current_page, i)) < protection_value;
 
         // enable knob when it matches the stored value
-        if (in_sync){
-          knob_states[i] = ACTIVE;
+        if (in_sync && value != last_value[i]) {
+            knob_states[i] = ACTIVE;
+            last_value[i] = value;
         }
       
         // if knob is moving, show if it's active or not
@@ -80,8 +81,6 @@ namespace UI {
         if(knob_states[i] == ACTIVE){
           LEDS::KNOB_select(i, 1);
           SETTINGS::set_value(current_page, i, value);
-
-          _touched = true;
         }
       }
       
@@ -154,7 +153,7 @@ namespace UI {
     preset++;
     preset&=0x7;
     SETTINGS::set_preset(preset);
-    LEDS::RGB.preset(preset);
+    LEDS::PRESET.preset(preset);
 
     LEDS::ARP.off();
     LEDS::LFO.off();
@@ -180,14 +179,15 @@ namespace UI {
   void init (void) {
     stdio_init_all();
 
+    puts("Welcome to the jungle...");
+
     LEDS::init();
     KEYS::init();
     ADC::init();
     SETTINGS::init();
     PAGINATION::init();
 
-
-    puts("Welcome to the jungle...");
+    if (Buttons::PRESET.get(Buttons::ButtonState::SHIFT)) test(10);
 
     if (HARDWARE_TEST) test(10);
 
@@ -199,31 +199,56 @@ namespace UI {
     LEDS::test(delay);
   }
 
-  void update (void) {
-    if (hardware_index == 0) KEYS::read();
-    if (hardware_index == 1) {
-      KEYS::update();
-      if (Buttons::ARP.get_short()) toggle_arp();
-      if (Buttons::LFO.get_short()) toggle_lfo();
-    }
-    if (hardware_index == 3) if (ARP::get()) ARP::update_playback();
-    if (hardware_index == 3) ADC::update();
-    if (hardware_index == 4) PAGINATION::update();
-    if (hardware_index == 5) LEDS::update();
-    if (hardware_index == 6) SETTINGS::update();
-
-
-    if (KNOBS_PRINT_OUT) {
-      if (hardware_index==0) {
-        print_knob_page();
+void update (void) {
+    switch(hardware_index) {
+      case 0:
+        KEYS::read();
+        break;
+      case 1:
+        KEYS::update();
+        if (Buttons::ARP.get(Buttons::ButtonState::SHORT)) {
+            toggle_arp();
         }
+        if (Buttons::LFO.get(Buttons::ButtonState::SHORT)) {
+            toggle_lfo();
+        }
+        if (Buttons::PRESET.get(Buttons::ButtonState::SHIFT) && Buttons::PAGE.get(Buttons::ButtonState::SHORT)) {
+            LEDS::PRESET.flash(4,50);
+            printf("Save!!\n");
+        }
+        break;
+      case 2:
+        if (ARP::get()) {
+            ARP::update_playback();
+        }
+      case 3:
+        ADC::update();
+        break;
+      case 4:
+        PAGINATION::update();
+        break;
+      case 5:
+        LEDS::update();
+        break;
+      case 6:
+        SETTINGS::update();
+        break;
+      default:
+        // do nothing
+        break;
     }
-    hardware_index++;
-      //could be either of these, but apprently you can't loop 4/5/6 times like this...?
-      // hardware_index &= 0x7;
-    if (hardware_index > 6) hardware_index = 0; // this takes 2-3 more instructions to accomplish
-  }
+
+    ++hardware_index;
+    if (hardware_index > 6) {
+        hardware_index = 0;
+    }
+}
+
   void hardware_debug (void) {
     LEDS::SPARE.toggle();
   }
 }
+
+
+
+    

@@ -4,6 +4,9 @@
 
 namespace Note_Priority {
   void note_on(int slot, int note, int velocity) {
+
+    if (!note) return; //for the ARP? meant to stop the playing of a random note when letting go.
+    
     SYNTH::channels[slot].note  = note;
     SYNTH::channels[slot].frequency = note2freq[SYNTH::channels[slot].note];
 
@@ -82,11 +85,6 @@ namespace Note_Priority {
               slot = oldest_slot; // if theres a note thats been released already, use the oldest one, otherwise, use the longest held note
             }
           }
-
-          // SYNTH::channels[slot].off(); // clear it before setting it again (resets the ADSR, hopefully)
-
-          if (NOTE_DEBUG) printf("Slot: %d Note: %d \n", slot, note);
-          
           note_on(slot, note, velocity);
           
           break;  //only breaks if velocity > 0.  otherwise, the switch just rolls onto next case, note_off.

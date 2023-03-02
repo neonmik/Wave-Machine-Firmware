@@ -44,8 +44,9 @@ namespace UI {
         bool _touched               =           0;
         // uint32_t knob_values[MAX_KNOBS]; // last read knob values
         uint8_t knob_states[MAX_KNOBS]; // knobs state (protected, enable...)
-
+        
         uint32_t value           = 0; // current (temporary) value just read
+        uint32_t last_value[MAX_KNOBS];
         uint8_t current_page    = 0; // the current page id of values being edited
         bool page_change    = false; // signals the page has changed
         bool preset_change  = false; // signals the preset has changed
@@ -82,17 +83,11 @@ namespace UI {
     // ----------------------
     //          KNOBS
     // ----------------------
-    namespace pagination
-    {
+    namespace pagination {
         void init (void);
         void protect(void);
         void update (void);
-    } // namespace pagination
-    
-    
-
-    void print_knob_array (int *array, int len);
-    void print_knob_page (void);
+    }
 
     // ----------------------
     //        HARDWARE

@@ -27,24 +27,24 @@ namespace ARP {
 
     }
 
-    void index (void) {
-        if (_arp_active) {
-            _index++;
-            if (_index >= _s_p_sixteenth) {
-                beat++;
-                _index = 0;
-                beat_changed = true;
-            }
-        }
-    }
+    // void tick (void) {
+    //     if (_arp_active) {
+    //         _index++;
+    //         if (_index >= _samples_per_16th) {
+    //             beat++;
+    //             _index = 0;
+    //             beat_changed = true;
+    //         }
+    //     }
+    // }
     
-    uint16_t samples_per_sixteenth_note () {
-        return _s_p_sixteenth;
-    }
+    // uint16_t samples_per_sixteenth_note () {
+    //     return _samples_per_16th;
+    // }
+
     void set_bpm (uint8_t bpm) {
         _bpm = bpm;
-        // samples per ms * (ms_per_minute/bpm)/8 (to make 1/16ths note)
-        _s_p_sixteenth = _s_p_ms * (60000/_bpm)/8;
+        _samples_per_16th = _samples_per_ms * (_ms_per_minute/_bpm)/8;
     }
     uint8_t get_bpm () {
         return _bpm;
@@ -52,88 +52,48 @@ namespace ARP {
 
 
 
-    void set_samplerate (uint16_t samplerate) {
-        _s_p_ms = samplerate / 1000;
+    void set_samplerate (uint16_t sample_rate) {
+        _samples_per_ms = (sample_rate / 1000);
     } 
-    void init (uint8_t bpm, uint16_t samplerate) {
-        set_samplerate(samplerate);
+    void init (uint8_t bpm, uint16_t sample_rate) {
+        set_samplerate(sample_rate);
         set_bpm(bpm);
     }
 
     void update_playback(void) {
-
         if (_arp_active) {
-            
-            // if (beat == prev_beat) return;
+            if (software_index && _samples_per_16th) {
+                beat++;
+                beat_changed = true;
 
-            if (beat_changed) {
-                if (beat >= arp_loop) beat = 0;
+                if (beat_changed) {
+                    if (beat >= arp_loop) beat = 0;
 
-                if (!note_active) {
-                    // make sure no note is playing
-                    // Note_Priority::note_clear(beat);
+                    if (!note_active) {
+                        Note_Priority::note_on(beat, arp_notes[beat], 127);
 
-                    Note_Priority::note_on(beat, arp_notes[beat], 127);
+                        release_active = false;
+                        note_active = true;
 
-                    release_active = false;
-                    note_active = true;
+                    }
 
+                    if (note_active && !release_active) {
+                        
+                        Note_Priority::note_off(prev_beat, arp_notes[prev_beat], 0);
+
+                        release_active = true;
+                    }
+
+                    if (note_active && release_active) {
+                        note_active = false;
+                        // stop_all();
+
+                    }
+
+                    beat_changed = false;
+                    prev_beat = beat; 
                 }
-
-                if (note_active && !release_active) {
-                    
-                    Note_Priority::note_off(prev_beat, arp_notes[prev_beat], 0);
-
-                    release_active = true;
-                }
-
-                if (note_active && release_active) {
-                    note_active = false;
-                    // stop_all();
-
-                }
-
-                
-
-
-                
-                
-                // if (arp_loop < 1) {
-                //     stop_all();
-                // }
-                beat_changed = false;
-                prev_beat = beat; 
             }
-
-            
-                // uint32_t current_ms = to_ms_since_boot(get_absolute_time());
-
-                // if (arp_notes[arp_index] && !note_active) {
-                    
-                //     Note_Priority::note_clear(arp_index);
-
-                //     Note_Priority::note_on(arp_index, arp_notes[arp_index], 127);
-
-                //     arp_release = false;
-                //     note_active = true;
-                // }
-
-                
-
-                // if ((current_ms - arp_ms >= arp_release) && !arp_release) {
-                //     Note_Priority::note_off(arp_index, arp_notes[arp_index], 0);
-                //     arp_release = true;
-                // }
-
-                // if (current_ms - arp_ms >= (arp_delay+arp_release)) {
-                //     arp_ms = current_ms;
-
-                //     note_active = false;
-
-                //     arp_index++;
-                //     if (arp_index >= arp_loop) arp_index = 0;
-                // }
-        //     }
         }
     }
 

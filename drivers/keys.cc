@@ -91,14 +91,21 @@ namespace KEYS {
   }
 
   void init () {
+    // initiate GPIO
     Keys.init();
+
+    // read the keys 8 times round to prime for the debounce
     for (int i = 0; i < 8; i++) {
       Keys.read();
     }
+    // update before leaving initiation (needs to happen for start up settings)
+    update();
   }
+
   void read () {
     Keys.read();
   }
+  
   void update () {
     uint32_t keys, keys_last;
 

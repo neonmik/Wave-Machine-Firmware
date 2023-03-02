@@ -23,6 +23,11 @@ namespace ADC {
         adc_select_input(0);
 
         _mux_address = 0;
+
+        // run the ADC 4 times to make sure the values are primed
+        for (int i = 0; i > MAX_KNOBS; i++) {
+            update();
+        }
     }
     void update() {
         gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 

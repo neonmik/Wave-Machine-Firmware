@@ -86,7 +86,7 @@ namespace LEDS {
             void init (void) {
                 RGB_LED::init();
                 colour(colours[0], colours[1], colours[2]);
-                RGB_LED::update();
+                on();
             }
             void on (void) {
                 _state = true;
@@ -96,6 +96,7 @@ namespace LEDS {
             void colour (uint16_t red, uint16_t green, uint16_t blue) {
                 RGB_LED::set(red, green, blue);
                 RGB_LED::update();
+                
             }
             void off (void) {
                 _state = false;
@@ -106,15 +107,14 @@ namespace LEDS {
                 _state = !_state;
                 if (_state) on();
                 if (!_state) off();
-
             }
             void flash (int repeats, int delay) {
-                 for (int r = 0; r < repeats; r++) {
+                for (int r = 0; r < repeats; r++) {
                     toggle();
                     sleep_ms(delay);
                     toggle();
                     sleep_ms(delay);
-                }               
+                }  
             }
             void cycle (int speed) {  
                 // reset array to red incase wer'ee on a different colour
@@ -185,7 +185,7 @@ namespace LEDS {
     extern Led PICO;
     extern Led LFO;
     extern Led ARP;
-    extern Rgb RGB;
+    extern Rgb PRESET;
     extern SR  KNOBS;
     extern SR  KNOB_1;
     extern SR  KNOB_2;

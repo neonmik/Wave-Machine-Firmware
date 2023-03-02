@@ -1,7 +1,6 @@
 #ifndef DAC_H_
 #define DAC_H_
 
-#include <stdio.h>
 #include <math.h>
 
 #include "pico/stdlib.h"
@@ -17,19 +16,30 @@
 #define DAC_SPI         spi1
 
 
-#define BUFFER_SIZE     256
+#define BUFFER_SIZE     64
 
 
 #define size_bits log2(BUFFER_SIZE * sizeof(uint16_t))
 
+typedef uint16_t (*synth_function)();
+
+extern uint32_t software_index;
+
 namespace DAC {
+    
+
     namespace {
+
+        synth_function process;
+
         bool        _full;
         
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
         uint16_t     _buffer_size    = BUFFER_SIZE;
         uint16_t    _buffer[BUFFER_SIZE];
+
+
 
         volatile uint16_t buf_a[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         volatile uint16_t buf_b[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
@@ -40,7 +50,8 @@ namespace DAC {
 
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) { // Number of samples loop = 256...
-                buf[i] = (_buffer[i]) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
+                buf[i] = (process()) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
+                ++software_index;
             }
             _full = true;
         }
@@ -112,8 +123,8 @@ namespace DAC {
         
     }
 
-    void init (uint16_t sample_rate);
-    void fill (uint16_t buffer, uint16_t index);
+    void init (uint16_t sample_rate, synth_function function);
+    // void fill (uint16_t buffer, uint16_t index);
     void clear_state (void);
     bool get_state (void);
 }
