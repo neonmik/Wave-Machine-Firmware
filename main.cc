@@ -53,7 +53,6 @@ int main() {
     
     else {
       UI::update();
-
     }
 
   }

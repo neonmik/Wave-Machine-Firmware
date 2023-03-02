@@ -34,8 +34,8 @@ namespace ARP {
         bool release_active;
 
         uint8_t _direction;
-        bool _up = 1;
-        bool _down = 0;
+        bool _up = true;
+
 
         uint16_t arp_delay = 100;
         uint16_t arp_release = 100;

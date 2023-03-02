@@ -126,6 +126,10 @@ namespace UI {
             if (Buttons::PRESET.get(Buttons::ButtonState::SHIFT) && Buttons::PAGE.get(Buttons::ButtonState::SHORT)) {
                 LEDS::PRESET.flash(4,50);
             }
+            if (Buttons::ARP.get(Buttons::ButtonState::LONG)) {
+                SETTINGS::toggle_hold();
+                LEDS::ARP.flash(2,50);
+            }
             break;
           case 2:
             if (ARP::get()) {

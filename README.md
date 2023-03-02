@@ -6,11 +6,10 @@ Things to implement:
 
 - Prove hardware functions (MIDI)
 
-- Improve Pagintation funtionality:
+- Improve Settings funtionality:
     - Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly. 
 
 - Improve Oscillator script - current bugs include:
-    - Improve ADSR - some confusion if you release key in attack stage, skips DS and jumps to release.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
@@ -18,9 +17,10 @@ Things to implement:
 - Implement USB-MIDI and MIDI
 
 
-Future Implementaions:
+Future Implementaions and WIPs:
 
 - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
+
 - Tidy codebase to allow for cleaner abstraction, and therfore allowing multicore support
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
@@ -38,6 +38,7 @@ Things already implemented:
 + Test script for LEDs
     + Added function to show led test on startup if Preset button is held down
 + Intergrate/prove Oscillator code
+    + Improve ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths.
     + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
     + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 + Improve Hardware files - current things to fix:
@@ -47,3 +48,4 @@ Things already implemented:
     + currently wont play only one note...
     + Needs direction functionality
     + currently has a random low note on release of arp (noticable in high octaves)
++ Improve Pagination handling

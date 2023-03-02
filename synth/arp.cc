@@ -59,6 +59,22 @@ namespace ARP {
         }
     }
 
+    void up_down() {
+        if (_up) {
+            arp_index++;
+            if (arp_index >= arp_count) {
+                arp_index = arp_count > 1 ? arp_count - 2 : 0;
+                _up = false;
+            }
+        } else {
+            arp_index--;
+            if (arp_index < 0) {
+                arp_index = arp_count > 1 ? 1 : 0;
+                _up = true;
+            }
+        }
+    }
+
     void update_playback(void) {
         if (_arp_active) {
             if (software_index >= _samples_per_16th) {
@@ -87,9 +103,10 @@ namespace ARP {
 
                 if (note_active && release_active) {
                     note_active = false;
-                    // stop_all();
 
-                    down();
+                    up();
+                    //down();
+                    //up_down();
 
                 }
 
@@ -104,7 +121,7 @@ namespace ARP {
         arp_notes[arp_loop] = note;
         ++arp_count;
         ++arp_loop;
-        if (arp_count> max_arp-1) {
+        if (arp_count == max_arp) {
             arp_loop = 0;
             arp_count = max_arp;
         }
