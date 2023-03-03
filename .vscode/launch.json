@@ -21,8 +21,7 @@
             "postRestartCommands": [
                 "break main",
                 "continue"
-            ],
-            "searchDir": ["/Users/nickallott/pico/openocd/tcl"]
+            ]
         }
     ]
 }
