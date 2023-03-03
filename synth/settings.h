@@ -117,11 +117,15 @@ namespace SETTINGS {
                         SYNTH::release_ms = _release;
                     }
                     void fetch (void) {
-                        //pull defaults from function, for now
+                        //pull defaults from function, f
                         _attack = SYNTH::attack_ms;
+                        _input[0] = ((SYNTH::attack_ms>>2));
                         _decay = SYNTH::decay_ms;
+                        _input[1] = ((SYNTH::decay_ms>>2));
                         _sustain = SYNTH::sustain;
+                        _input[2] = (SYNTH::sustain>>6);
                         _release = SYNTH::release_ms;
+                        _input[3] = (SYNTH::release_ms>>2);
                     }
             };
             class Lfo {
@@ -201,38 +205,37 @@ namespace SETTINGS {
                     }
                     void toggle (void) {
                         _active = !_active;
-                        // if (_active) ARP::on();
-                        // if (!_active) ARP::off();
-                        // _toggled = true;
+                        _toggled = true;
                     }
                     void set (uint8_t control, uint16_t input) {
-                        _input[control] = input;
-                        _changed = true;
-                        switch (control) {
-                            case 0:
-                                _matrix = input;
-                                break;
-                            case 1:
-                                _rate = (input>>3);
-                                break;
-                            case 2:
-                                _depth = input;
-                                break;
-                            case 3:
-                                _direction = (input>>8);
-                                break;
+                        if (input != _input[control]) {
+                            _input[control] = input;
+                            _changed = true;
+                            switch (control) {
+                                case 0:
+                                    _matrix = input;
+                                    break;
+                                case 1:
+                                    _rate = (input>>3);
+                                    break;
+                                case 2:
+                                    _depth = input;
+                                    break;
+                                case 3:
+                                    _direction = input;
+                                    break;
+                            }
                         }
                     }
                     void update (void) {
-                        // if (_toggled) {
-                            if (_active) ARP::on();
-                            if (!_active) ARP::off();
-                        //     _toggled = false;
-                        // }
+                        if (_toggled) {
+                            ARP::set(_active);
+                            _toggled = false;
+                        }
                         if (_active) {
                              if (_changed) {
                                 ARP::set_bpm(_rate);
-                                ARP::set_direction(_direction);
+                                ARP::set_direction(_direction>>8);
                                 
                                 _changed = false;
                             }
@@ -241,26 +244,16 @@ namespace SETTINGS {
                         
                     }
                     uint16_t get (uint8_t control) {
-                        uint16_t temp;
-                        switch (control) {
-                            case 0:
-                                temp = _matrix;
-                                break;
-                            case 1:
-                                temp = _rate;
-                                break;
-                            case 2:
-                                temp = _depth;
-                                break;
-                            case 3:
-                                temp = _direction;;
-                                break;
-                        }
-                        return temp;
+                        return _input[control];
                     }
                     void fetch (void) {
-                        //pull defaults from function, for now
-                        _rate = (ARP::get_bpm()<<3);
+                        // pull defaults from function, for now
+                        _input[0] = 0;
+                        _input[1] = (ARP::get_bpm()<<3);
+                        _rate = ARP::get_bpm();
+                        _input[2] = 0;
+                        _input[3] = 0;
+                        _changed = true;
                     }
             };
         public:

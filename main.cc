@@ -1,5 +1,5 @@
 /**
- *            Beep Machine Firmware v0.23
+ *            Beep Machine Firmware v0.24
  * 
  * Copyright (c) 2022 Nick Allott Musical Services (NAMS)
  *  
@@ -36,12 +36,12 @@ void core1_entry() {
 
 int main() {
 
-  
   UI::init();
-  
+
   SYNTH::init(SAMPLE_RATE);
   MOD::init();
   ARP::init(BPM, SAMPLE_RATE);
+
 
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
   // multicore_launch_core1(core1_entry);

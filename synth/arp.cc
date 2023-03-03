@@ -24,7 +24,7 @@ namespace ARP {
     void toggle (void) {
         _arp_active = !_arp_active;
         clear_notes();
-
+        stop_all();
     }
 
     void set_bpm (uint8_t bpm) {
@@ -44,34 +44,51 @@ namespace ARP {
         set_bpm(bpm);
     }
 
-    void up () {
-        arp_index++; // pushes the arp to the next note
-        if (arp_index >= arp_count) arp_index = 0; // if the arp has played all the notes that are active on the keyboard, it resets to the first note of the arp
-    }
 
-    void down () {
-        arp_index--; // pushes the arp to the next note
-        if (arp_count > 1) {
-            if (arp_index <= -1) arp_index = arp_count - 1; // if the arp has played all the notes that are active on the keyboard, it resets to the first note of the arp
-        } 
-        else {
-            arp_index = 0;
-        }
-    }
-
-    void up_down() {
-        if (_up) {
-            arp_index++;
-            if (arp_index >= arp_count) {
-                arp_index = arp_count > 1 ? arp_count - 2 : 0;
-                _up = false;
-            }
-        } else {
-            arp_index--;
-            if (arp_index < 0) {
-                arp_index = arp_count > 1 ? 1 : 0;
-                _up = true;
-            }
+    void arpeggiate(ArpDirection direction) {
+        switch (direction) {
+            case UP:
+                arp_index++;
+                if (arp_index >= arp_count) arp_index = 0;
+                break;
+            case DOWN:
+                arp_index--;
+                if (arp_count > 1) {
+                    if (arp_index <= -1) arp_index = arp_count - 1;
+                } else {
+                    arp_index = 0;
+                }
+                break;
+            case UP_DOWN:
+                if (_switch) {
+                    arp_index++;
+                    if (arp_index >= arp_count) {
+                        arp_index = arp_count > 1 ? arp_count - 2 : 0;
+                        _switch = false;
+                    }
+                } else {
+                    arp_index--;
+                    if (arp_index < 0) {
+                        arp_index = arp_count > 1 ? 1 : 0;
+                        _switch = true;
+                    }
+                }
+                break;
+            case DOWN_UP:
+                if (_switch) {
+                    arp_index--;
+                    if (arp_index < 0) {
+                        arp_index = arp_count > 1 ? 1 : 0;
+                        _switch = false;
+                    }
+                } else {
+                    arp_index++;
+                    if (arp_index >= arp_count) {
+                        arp_index = arp_count > 1 ? arp_count - 2 : 0;
+                        _switch = true;
+                    }
+                }
+                break;
         }
     }
 
@@ -81,13 +98,12 @@ namespace ARP {
                 sample_clock = 0;
                 beat++;
                 beat_changed = true;
-                printf("beat: %d\n", beat);
             }
 
             if (beat_changed) {
                 switch (note_state) {
                     case IDLE:
-                        if (arp_index > arp_count) {
+                        if (arp_index >= arp_count) {
                             arp_index = 0;
                         }
                         if (arp_notes[arp_index]) {
@@ -101,9 +117,7 @@ namespace ARP {
                         note_state = RELEASE_ACTIVE;
                         break;
                     case RELEASE_ACTIVE:
-                        // up();
-                        //down();
-                        up_down();
+                        arpeggiate(_direction);
                         note_state = IDLE;
                         break;
                 }
@@ -122,9 +136,32 @@ namespace ARP {
         arp_notes[arp_loop] = note;
         ++arp_count;
         ++arp_loop;
-        if (arp_count == max_arp) {
+        if (arp_count >= max_arp) {
             arp_loop = 0;
             arp_count = max_arp;
+        }
+    }
+
+    void remove_notes (uint8_t note) {
+        if (arp_count == 0) {
+            return;
+        }
+        for (int i = 0; i < arp_count; ++i) {
+            if (arp_notes[i] == note) {
+                // Shift all the notes after the removed note back by one
+                for (int j = i; j < arp_count - 1; ++j) {
+                    arp_notes[j] = arp_notes[j + 1];
+                }
+                // Decrement arp_count
+                --arp_count;
+                // If arp_loop is now past the end of the array, wrap around to 0
+                if (arp_loop >= arp_count) {
+                    arp_loop = 0;
+                } else if (arp_loop < 0) {
+                    arp_loop = arp_count - 1;
+                }
+                return;
+            }
         }
     }
 
@@ -153,8 +190,20 @@ namespace ARP {
     void set_release (uint16_t release) {
         arp_release = release;
     }
-
-    void set_direction (uint8_t direction) {
-        _direction = direction;
+    void set_direction (uint16_t value) {
+        switch (value) {
+            case 0:
+                _direction = ArpDirection::UP;
+                break;
+            case 1:
+                _direction =  ArpDirection::DOWN;
+                break;
+            case 2:
+                _direction =  ArpDirection::UP_DOWN;
+                break;
+            case 3:
+                _direction =  ArpDirection::DOWN_UP;
+                break;
+        }
     }
 }

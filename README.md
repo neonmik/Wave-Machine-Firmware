@@ -4,7 +4,8 @@ Current nightly firmware for Beep Machine Hardware.
 
 Things to implement:
 
-- Prove hardware functions (MIDI)
+- Multicore:
+    - Need to create/reorganise layer between hardware and synth... reformat and streamline.
 
 - Improve Settings funtionality:
     - Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly. 
@@ -14,14 +15,14 @@ Things to implement:
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
+- Prove hardware functions (MIDI)
 - Implement USB-MIDI and MIDI
+
 
 
 Future Implementaions and WIPs:
 
 - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
-
-- Tidy codebase to allow for cleaner abstraction, and therfore allowing multicore support
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
 - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - implemented, but not chosen functions yet.

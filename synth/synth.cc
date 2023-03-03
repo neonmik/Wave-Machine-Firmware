@@ -91,7 +91,7 @@ namespace SYNTH {
       // increment the waveform position counter. this provides an
       // Q16 fixed point value representing how far through
       // the current waveform we are
-      channel.waveform_offset += (((((channel.frequency * pitch_scale)>>9) << octave) * 256) << 8) / _sample_rate;
+      channel.waveform_offset += (((((channel._frequency * pitch_scale)>>9) << octave) * 256) << 8) / _sample_rate;
 
       //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
       channel.waveform_offset += vibrato;
@@ -109,7 +109,7 @@ namespace SYNTH {
             channel.trigger_sustain();
             break;
           case ADSRPhase::RELEASE:
-            channel.off();
+            channel.stopped();
             break;
           default:
             break;
@@ -129,7 +129,7 @@ namespace SYNTH {
       channel.waveform_offset &= 0xffff;
 
       // check if any waveforms are active for this channel
-      if(channel.is_active) {
+      if(channel._active) {
         uint8_t waveform_count = 0;
         int32_t channel_sample = 0;
 
@@ -215,9 +215,12 @@ namespace SYNTH {
 
     // clip result to 16-bit
     sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
-    
-    
 
     return (sample+32767)>>4;
   }
 }
+
+
+
+
+

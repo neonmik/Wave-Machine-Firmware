@@ -101,13 +101,13 @@ namespace SYNTH {
 
   struct Voices {
     
-    uint8_t   note          = 0;
-    uint16_t  frequency     = 0;    // frequency of the voice (Hz)
-    
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
 
-    uint8_t   gate          = false;  // used for tracking a note that's released, but not finished.
+    bool      _gate         = false;  // used for tracking a note that's released, but not finished.
+    bool      _active       = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
 
+    uint8_t   _note         = 0;
+    uint16_t  _frequency    = 0;    // frequency of the voice (Hz)
 
     uint16_t  pulse_width   = 0x7fff; // duty cycle of square wave (default 50%)
     int16_t   noise         = 0;      // current noise value
@@ -115,8 +115,6 @@ namespace SYNTH {
     uint32_t  waveform_offset  = 0;   // voice offset (Q8)
 
     // int32_t   filter_last_sample;
-
-    uint8_t   is_active     = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
 
     uint32_t  adsr_frame    = 0;      // number of frames into the current ADSR phase
     uint32_t  adsr_end_frame = 0;     // frame target at which the ADSR changes to the next phase
@@ -131,8 +129,26 @@ namespace SYNTH {
     void *user_data = nullptr;
     void (*wave_buffer_callback)(Voices &channel);
 
+    void note_on (uint8_t note, uint16_t frequency) {
+      _gate = true;
+      _active = true;
+
+      _note = note;
+      _frequency = frequency;
+      
+      trigger_attack();
+    }
+    void note_off () {
+      _gate = false;
+      trigger_release();
+    }
+    void clear () {
+      _active = false;
+      _note = 0;
+      _frequency = 0;
+    }
     void trigger_attack()  {
-      gate = true;
+      adsr_activation_time = to_ms_since_boot(get_absolute_time());
 
       adsr_frame = 0;
       adsr_phase = ADSRPhase::ATTACK;
@@ -152,23 +168,21 @@ namespace SYNTH {
       adsr_step = 0;
     }
     void trigger_release() {
-      gate = false;
-      
       adsr_frame = 0;
       adsr_phase = ADSRPhase::RELEASE;
       adsr_end_frame = (release_ms * _sample_rate) / 1000;
       adsr_step = (int32_t(0) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
-    void off() {
-      is_active = false;
-      note = 0;
-      frequency = 0;
+    void stopped() {
+      clear();
+
       adsr_activation_time = 0;
       adsr_frame = 0;
       adsr_phase = ADSRPhase::OFF;
       adsr_end_frame = 0;
       adsr_step = 0;
     }
+    
     
   };
 

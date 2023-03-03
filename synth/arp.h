@@ -17,6 +17,15 @@ namespace ARP {
             RELEASE_ACTIVE
         };
 
+        enum ArpDirection {
+            UP,
+            DOWN,
+            UP_DOWN,
+            DOWN_UP
+        };
+
+        ArpDirection _direction = UP;
+
         NoteState note_state = IDLE;
 
         uint8_t _bpm = 120;
@@ -41,8 +50,7 @@ namespace ARP {
         bool note_active = false;
         bool release_active = false;
 
-        uint8_t _direction;
-        bool _up = true;
+        bool _switch = true;
 
 
         uint16_t arp_delay = 100;
@@ -70,13 +78,14 @@ namespace ARP {
     void update_playback(void);
     
     void add_notes (uint8_t note);
+    void remove_notes (uint8_t note);
     void clear_notes (void);
     void stop_all (void);
     
     void set_delay (uint16_t delay);
     void set_release (uint16_t release);
 
-    void set_direction (uint8_t direction);
+    void set_direction (uint16_t direction);
     
 }
 

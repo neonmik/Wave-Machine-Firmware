@@ -17,10 +17,11 @@
         }
     },
     "cmake.buildBeforeRun": true,
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    "cortex-debug.openocdPath": "openocd",
-    "files.associations": {
-        "stdlib.h": "c"
-    },
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    // "cortex-debug.openocdPath": "openocd",
+    // "files.associations": {
+    //     "stdlib.h": "c"
+    // },
+    // "C_Cpp.errorSquiggles": "enabled"
 }
+

@@ -127,37 +127,37 @@ namespace MOD {
                     _phase_acc += _increment;
                     _index = (_phase_acc>>8);
                     _sample = (((wavetable[_wave + _index]) * _depth) >> 10);
-                    if (_matrix == Matrix::OFF) {
-                        _vibrato = 0;
-                        _trem = 0;
-                        _vector = 0;
-                    }
-                    if (_matrix == Matrix::VIBRATO) {
-                        _vibrato = (_sample>>8); // set to +/-16 as useful range at fast and slow, but +/-128 and upwards (+/-256 or +/-512) is useful for *weird*. needs Log function.
-                        _trem = 0;
-                        _vector = 0;
-                    }
-                    if (_matrix == Matrix::TREM) {
-                        _vibrato = 0;
-                        _trem = uint16_t(uint32_t(_sample)+32767);
-                        _vector = 0;
-                    }
-                    if (_matrix == Matrix::VECTOR) {
-                        _vibrato = 0;
-                        _trem = 0;
-                        _vector = (uint16_t(uint32_t(_sample)+32767))>>6; // (>> 8 is 0-255, >> 6 is 0-1023, >>4 is 0-4095)
-
+                    switch (_matrix) {
+                        case Matrix::OFF:
+                            _vibrato = 0;
+                            _trem = 0;
+                            _vector = 0;
+                            break;
+                        case Matrix::VIBRATO:
+                            _vibrato = (_sample>>8); // set to +/-16 as useful range at fast and slow, but +/-128 and upwards (+/-256 or +/-512) is useful for *weird*. needs Log function.
+                            _trem = 0;
+                            _vector = 0;
+                            break;
+                        case Matrix::TREM:  
+                            _vibrato = 0;
+                            _trem = uint16_t(uint32_t(_sample)+32767);
+                            _vector = 0;
+                            break;
+                        case Matrix::VECTOR:
+                            _vibrato = 0;
+                            _trem = 0;
+                            _vector = (uint16_t(uint32_t(_sample)+32767))>>6; // (>> 8 is 0-255, >> 6 is 0-1023, >>4 is 0-4095)
+                            break;
+                        default:
+                            _vibrato = 0;
+                            _trem = 0;
+                            _vector = 0;
+                            break;
                     }
                     SYNTH::vibrato = _vibrato;
                     SYNTH::tremelo = _trem;
                     SYNTH::vector_mod = _vector;
                 }
-                else {
-                    SYNTH::vibrato = 0;
-                    SYNTH::tremelo = 0;
-                    SYNTH::vector_mod = 0;
-                }
-                
             }
     };
 

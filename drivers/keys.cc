@@ -132,6 +132,10 @@ namespace KEYS {
         if (!((keys>>i) & 1 && (((keys_last>>i) & 1))))  {  // new key down
           ARP::add_notes(i+48);
         }
+        // if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
+        //   ARP::remove_notes(i+48);
+        //   // dec_physical_notes_on();
+        // }
       }
     }
 

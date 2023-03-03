@@ -3,8 +3,14 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
+#include "hardware/dma.h"
 
-
+enum SRPins : uint8_t {
+        SR_DATA     = 18,
+        SR_CLK      = 19,
+        SR_LATCH    = 20,
+        SR_DATA_WIDTH = 8
+};
 #define SR_DATA_WIDTH   8
 #define SR_DATA         18
 #define SR_CLK          19
