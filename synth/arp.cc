@@ -77,41 +77,42 @@ namespace ARP {
 
     void update_playback(void) {
         if (_arp_active) {
-            if (software_index >= _samples_per_16th) {
-                software_index = 0;
+            if ((sample_clock >= _samples_per_16th)) { //} && (sample_clock != sample_clock_last)) {
+                sample_clock = 0;
                 beat++;
                 beat_changed = true;
+                printf("beat: %d\n", beat);
             }
 
             if (beat_changed) {
-                if (beat >= max_beats) beat = 0;
-
-                if (note_active && !release_active) {
-                    
-                    Note_Priority::note_off(arp_index, arp_notes[arp_index], 0);
-
-                    release_active = true;
+                switch (note_state) {
+                    case IDLE:
+                        if (arp_index > arp_count) {
+                            arp_index = 0;
+                        }
+                        if (arp_notes[arp_index]) {
+                            Note_Priority::event(0x90, arp_notes[arp_index], 127);
+                            _last_note = arp_notes[arp_index];
+                            note_state = NOTE_ACTIVE;
+                        }
+                        break;
+                    case NOTE_ACTIVE:
+                        Note_Priority::event(0x80, _last_note, 0);
+                        note_state = RELEASE_ACTIVE;
+                        break;
+                    case RELEASE_ACTIVE:
+                        // up();
+                        //down();
+                        up_down();
+                        note_state = IDLE;
+                        break;
                 }
 
-                if (arp_notes[arp_index] && !note_active) {
-                    Note_Priority::note_on(arp_index, arp_notes[arp_index], 127);
-
-                    release_active = false;
-                    note_active = true;
-                    
-                }
-
-                if (note_active && release_active) {
-                    note_active = false;
-
-                    up();
-                    //down();
-                    //up_down();
-
+                if (beat >= max_beats) {
+                    beat = 0;
                 }
 
                 beat_changed = false;
-                // prev_beat = beat; 
             }
         }
     }
@@ -128,13 +129,13 @@ namespace ARP {
     }
 
     void clear_notes (void) {
-        if (!_hold) {
+        // if (!_hold) {
             for (int i = 0; i < max_arp; i++) {
                 arp_notes[i] = 0;
             }
             arp_loop = 0;
             arp_count = 0;
-        }
+        // }
     }
 
     void stop_all (void) {

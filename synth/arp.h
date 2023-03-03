@@ -6,11 +6,18 @@
 #include "../note_priority.h"
 
 
-extern uint32_t software_index;
+extern uint32_t sample_clock;
+extern uint32_t sample_clock_last;
 
 namespace ARP {
     namespace {
-        
+        enum NoteState {
+            IDLE,
+            NOTE_ACTIVE,
+            RELEASE_ACTIVE
+        };
+
+        NoteState note_state = IDLE;
 
         uint8_t _bpm = 120;
         uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
@@ -26,12 +33,13 @@ namespace ARP {
         bool _arp_active;
         const uint8_t max_arp = 8;
         uint8_t arp_notes[max_arp]; //all the notes stored in the arp sequence
+        uint8_t _last_note;
         // uint8_t buffer[max_arp];
         int8_t arp_index;
         int8_t arp_count;
         int8_t arp_loop;
-        bool note_active;
-        bool release_active;
+        bool note_active = false;
+        bool release_active = false;
 
         uint8_t _direction;
         bool _up = true;

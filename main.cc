@@ -21,9 +21,13 @@
 
 #define SAMPLE_RATE     44100
 #define MAX_VOICES      8
-#define BPM             120 // part of a function for determinding bpm ms
+#define BPM             100 // part of a function for determinding bpm ms
 
-uint32_t software_index;
+uint32_t sample_clock = 0;
+uint32_t sample_clock_last = 0;
+
+uint32_t software_index = 0;
+
 
 void core1_entry() {
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
@@ -43,18 +47,18 @@ int main() {
   // multicore_launch_core1(core1_entry);
 
   while (true) {
-    
-    if (DAC::get_state()){
-      if (SETTINGS::get_lfo()) MOD::update(); // only updates the MOD values every 64 samples
+    // once the buffer is full, update the timing critical stuff first, then the everything else.
+    if (DAC::get_state()) {
       
-      DAC::clear_state();
-      continue; // skips the UI update to save resources
-    } 
-    
-    else {
-      UI::update();
-    }
+      if (SETTINGS::get_lfo()) MOD::update(); // update the modulation if it is enabled
 
+      DAC::clear_state();
+
+    } else {
+      
+      UI::update();
+
+    }
   }
 } 
 

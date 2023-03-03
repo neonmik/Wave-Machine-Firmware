@@ -23,7 +23,7 @@
 
 typedef uint16_t (*synth_function)();
 
-extern uint32_t software_index;
+extern uint32_t sample_clock;
 
 namespace DAC {
     
@@ -51,7 +51,7 @@ namespace DAC {
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) { // Number of samples loop = 256...
                 buf[i] = (process()) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
-                ++software_index;
+                ++sample_clock;
             }
             _full = true;
         }
@@ -123,8 +123,7 @@ namespace DAC {
         
     }
 
-    void init (uint16_t sample_rate, synth_function function);
-    // void fill (uint16_t buffer, uint16_t index);
+    void init (uint16_t sample_rate, synth_function audio_process);
     void clear_state (void);
     bool get_state (void);
 }
