@@ -27,8 +27,9 @@ namespace UI {
 
     namespace {
         // preset, page and event flags
-        uint8_t preset              =           0;
-        uint8_t page                =           0;
+        uint8_t _preset              =           0;
+        uint8_t _page                =           0;
+        
         bool page_flag              =           0;
         bool lfo_flag               =           0;
         bool arp_flag               =           0;

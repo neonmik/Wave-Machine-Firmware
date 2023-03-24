@@ -39,14 +39,14 @@ namespace ARP {
         uint32_t _samples_per_16th;
 
         bool _hold;
-        bool _arp_active;
+        bool _active;
         const uint8_t max_arp = 8;
-        uint8_t arp_notes[max_arp]; //all the notes stored in the arp sequence
+        uint8_t _notes[max_arp]; //all the notes stored in the arp sequence
         uint8_t _last_note;
         // uint8_t buffer[max_arp];
-        int8_t arp_index;
-        int8_t arp_count;
-        int8_t arp_loop;
+        int8_t _play_index;
+        int8_t _count;
+        int8_t _write_index;
         bool note_active = false;
         bool release_active = false;
 
@@ -72,6 +72,8 @@ namespace ARP {
     uint8_t get_bpm (void);
 
     void set_samplerate (uint16_t sample_rate);
+
+    void set_hold (uint16_t hold);
 
     void init (uint8_t bpm, uint16_t sample_rate);
     

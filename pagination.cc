@@ -15,7 +15,7 @@ namespace PAGINATION {
       }
     }
     void update(){
-      if(Buttons::PAGE.get(Buttons::ButtonState::SHORT)){
+      if(Buttons::PAGE.get(Buttons::State::SHORT)){
         uint8_t pages = MAX_PAGES;
 
         page_change = true;
@@ -35,7 +35,7 @@ namespace PAGINATION {
         protect();
       }
 
-      if (Buttons::PRESET.get(Buttons::ButtonState::SHORT)) {
+      if (Buttons::PRESET.get(Buttons::State::SHORT)) {
         UI::change_preset();
         protect();
       }

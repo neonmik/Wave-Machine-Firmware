@@ -9,7 +9,7 @@
 #define DOUBLE_PRESS_TIME   150
 
 namespace Buttons {
-    enum class ButtonState {
+    enum class State {
         SHORT,
         LONG,
         DOUBLE,
@@ -23,10 +23,6 @@ namespace Buttons {
             bool        _long           = 0;
             bool        _double         = 0;
             bool        _shift          = 0;
-
-
-            // bool        _state          = 0;
-            // bool        _last_state     = 0;
 
             uint32_t    _start          = 0;
             uint32_t    _end            = 0;
@@ -42,7 +38,7 @@ namespace Buttons {
             void pressed (void);
             void released (void);
 
-            bool get (ButtonState state);
+            bool get (State state);
     };
 
     extern Button PAGE;

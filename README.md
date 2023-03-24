@@ -39,7 +39,6 @@ Things already implemented:
 + Test script for LEDs
     + Added function to show led test on startup if Preset button is held down
 + Intergrate/prove Oscillator code
-    + Improve ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths.
     + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
     + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 + Improve Hardware files - current things to fix:
@@ -49,4 +48,5 @@ Things already implemented:
     + currently wont play only one note...
     + Needs direction functionality
     + currently has a random low note on release of arp (noticable in high octaves)
+    + Improve ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths.
 + Improve Pagination handling

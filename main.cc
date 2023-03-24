@@ -29,10 +29,10 @@ uint32_t sample_clock_last = 0;
 uint32_t software_index = 0;
 
 
-void core1_entry() {
-  DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
-  SYNTH::init(SAMPLE_RATE);
-}
+// void core1_entry() {
+//   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
+//   SYNTH::init(SAMPLE_RATE);
+// }
 
 int main() {
 

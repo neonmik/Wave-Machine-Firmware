@@ -3,26 +3,26 @@
 namespace ARP {
 
     void on (void) {
-        _arp_active = true;
+        _active = true;
         clear_notes();
     }
 
     void off (void) {
-        _arp_active = false;
+        _active = false;
     }
 
     void set (bool state) {
-        _arp_active = state;
+        _active = state;
         clear_notes();
         stop_all();
     }
 
     bool get (void) {
-        return _arp_active;
+        return _active;
     }
 
     void toggle (void) {
-        _arp_active = !_arp_active;
+        _active = !_active;
         clear_notes();
         stop_all();
     }
@@ -30,6 +30,9 @@ namespace ARP {
     void set_bpm (uint8_t bpm) {
         _bpm = bpm;
         _samples_per_16th = _samples_per_ms * (_ms_per_minute/_bpm)/8;
+    }
+    void set_rate (uint16_t rate) {
+        set_bpm(rate>>2);
     }
     uint8_t get_bpm () {
         return _bpm;
@@ -44,47 +47,53 @@ namespace ARP {
         set_bpm(bpm);
     }
 
+    void set_hold (uint16_t hold) {
+        bool temp = (bool)(hold>>9);
+        if (temp != _hold) clear_notes();
+        _hold = temp;
+    }
+
 
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
             case UP:
-                arp_index++;
-                if (arp_index >= arp_count) arp_index = 0;
+                _play_index++;
+                if (_play_index >= _count) _play_index = 0;
                 break;
             case DOWN:
-                arp_index--;
-                if (arp_count > 1) {
-                    if (arp_index <= -1) arp_index = arp_count - 1;
+                _play_index--;
+                if (_count > 1) {
+                    if (_play_index <= -1) _play_index = _count - 1;
                 } else {
-                    arp_index = 0;
+                    _play_index = 0;
                 }
                 break;
             case UP_DOWN:
                 if (_switch) {
-                    arp_index++;
-                    if (arp_index >= arp_count) {
-                        arp_index = arp_count > 1 ? arp_count - 2 : 0;
+                    _play_index++;
+                    if (_play_index >= _count) {
+                        _play_index = _count > 1 ? _count - 2 : 0;
                         _switch = false;
                     }
                 } else {
-                    arp_index--;
-                    if (arp_index < 0) {
-                        arp_index = arp_count > 1 ? 1 : 0;
+                    _play_index--;
+                    if (_play_index < 0) {
+                        _play_index = _count > 1 ? 1 : 0;
                         _switch = true;
                     }
                 }
                 break;
             case DOWN_UP:
                 if (_switch) {
-                    arp_index--;
-                    if (arp_index < 0) {
-                        arp_index = arp_count > 1 ? 1 : 0;
+                    _play_index--;
+                    if (_play_index < 0) {
+                        _play_index = _count > 1 ? 1 : 0;
                         _switch = false;
                     }
                 } else {
-                    arp_index++;
-                    if (arp_index >= arp_count) {
-                        arp_index = arp_count > 1 ? arp_count - 2 : 0;
+                    _play_index++;
+                    if (_play_index >= _count) {
+                        _play_index = _count > 1 ? _count - 2 : 0;
                         _switch = true;
                     }
                 }
@@ -93,7 +102,7 @@ namespace ARP {
     }
 
     void update_playback(void) {
-        if (_arp_active) {
+        if (_active) {
             if ((sample_clock >= _samples_per_16th)) { //} && (sample_clock != sample_clock_last)) {
                 sample_clock = 0;
                 beat++;
@@ -103,17 +112,17 @@ namespace ARP {
             if (beat_changed) {
                 switch (note_state) {
                     case IDLE:
-                        if (arp_index >= arp_count) {
-                            arp_index = 0;
+                        if (_play_index >= _count) {
+                            _play_index = 0;
                         }
-                        if (arp_notes[arp_index]) {
-                            Note_Priority::event(0x90, arp_notes[arp_index], 127);
-                            _last_note = arp_notes[arp_index];
+                        if (_notes[_play_index]) {
+                            Note_Priority::priority(0x90, _notes[_play_index], 127);
+                            _last_note = _notes[_play_index];
                             note_state = NOTE_ACTIVE;
                         }
                         break;
                     case NOTE_ACTIVE:
-                        Note_Priority::event(0x80, _last_note, 0);
+                        Note_Priority::priority(0x80, _last_note, 0);
                         note_state = RELEASE_ACTIVE;
                         break;
                     case RELEASE_ACTIVE:
@@ -133,54 +142,67 @@ namespace ARP {
 
 
     void add_notes (uint8_t note) {
-        arp_notes[arp_loop] = note;
-        ++arp_count;
-        ++arp_loop;
-        if (arp_count >= max_arp) {
-            arp_loop = 0;
-            arp_count = max_arp;
+        for (int i = 0; i < max_arp; ++i) {
+            if (_notes[i] == note) {
+                return;
+            }
         }
+
+        // played order
+        _notes[_write_index] = note;
+        ++_count;
+        ++_write_index;
+        if (_count >= max_arp) {
+            _count = max_arp;
+        }
+        if (_write_index >= max_arp) {
+            _write_index = 0;
+        }
+
+        // organises the order to ascending, just comment if you want played order
+        int j;
+        for (j = _count - 1; j > 0 && _notes[j - 1] > note; j--) {
+            _notes[j] = _notes[j - 1];
+        }
+        _notes[j] = note;
+        
     }
 
     void remove_notes (uint8_t note) {
-        if (arp_count == 0) {
+        if (_hold) {
             return;
         }
-        for (int i = 0; i < arp_count; ++i) {
-            if (arp_notes[i] == note) {
+        if (_count == 0) {
+            return;
+        }
+        for (int i = 0; i <= _count; ++i) {
+            if (_notes[i] == note) {
                 // Shift all the notes after the removed note back by one
-                for (int j = i; j < arp_count - 1; ++j) {
-                    arp_notes[j] = arp_notes[j + 1];
-                }
+                for (int j = i; j < _count + 1; ++j) {
+                    _notes[j] = _notes[j + 1];
+                    _notes[j + 1] = 0;
+                    }
                 // Decrement arp_count
-                --arp_count;
-                // If arp_loop is now past the end of the array, wrap around to 0
-                if (arp_loop >= arp_count) {
-                    arp_loop = 0;
-                } else if (arp_loop < 0) {
-                    arp_loop = arp_count - 1;
-                }
-                return;
+                --_count;
+                --_write_index;
+                if (_count < 0) _count = 0;
+                if (_write_index <= 0) _write_index = _count;
+
+                //don't return here in case the note is in the list more than once
             }
         }
     }
 
     void clear_notes (void) {
-        // if (!_hold) {
-            for (int i = 0; i < max_arp; i++) {
-                arp_notes[i] = 0;
-            }
-            arp_loop = 0;
-            arp_count = 0;
-        // }
+        for (int i = 0; i < max_arp; i++) {
+            _notes[i] = 0;
+        }
+        _write_index = 0;
+        _count = 0;
     }
 
     void stop_all (void) {
-        for (int i = 0; i < max_arp; i++) {
-            // if (arp_notes[i] == 0) {
-                Note_Priority::note_off(i, 0, 0);
-            }
-        // }
+        Note_Priority::voice_clear();
     }
 
     void set_delay (uint16_t delay) {
@@ -191,7 +213,7 @@ namespace ARP {
         arp_release = release;
     }
     void set_direction (uint16_t value) {
-        switch (value) {
+        switch (value>>8) {
             case 0:
                 _direction = ArpDirection::UP;
                 break;

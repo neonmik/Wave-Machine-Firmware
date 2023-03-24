@@ -11,43 +11,35 @@
 
 namespace UI {
 
-  // ----------------------
-  //     PAGINATION/UI
-  // ----------------------
-  
-  // ----------------------
-  //       FLAGS/UI
-  // ----------------------
-
   void set_page (uint8_t value) {
     // using a switch here so that I can easily change the LEDs... find a better way?
     switch (value) {
       case 0:
-        page = 0;
+        _page = 0;
         LEDS::PAGES.off();
-        SETTINGS::set_page(page);
+        SETTINGS::set_page(_page);
         break;
       case 1:
-        page = 1;
+        _page = 1;
         LEDS::PAGE_1.toggle();
-        SETTINGS::set_page(page);
+        SETTINGS::set_page(_page);
         break;
       case 2:
-        page = 2;
+        _page = 2;
         LEDS::PAGE_1.toggle();
         LEDS::PAGE_2.toggle();
-        SETTINGS::set_page(page);
+        SETTINGS::set_page(_page);
         break;
       case 3:
-        page = 3;
+        _page = 3;
         LEDS::PAGE_2.toggle();
         LEDS::PAGE_3.toggle();
-        SETTINGS::set_page(page);
+        SETTINGS::set_page(_page);
         break;
     }
   }
   uint8_t get_page(void) {
-    return page;
+    return _page;
   }
  
   void toggle_lfo(void) {
@@ -68,10 +60,10 @@ namespace UI {
   }
 
   void change_preset(void) {
-    preset++;
-    preset&=0x7;
-    SETTINGS::set_preset(preset);
-    LEDS::PRESET.preset(preset);
+    _preset++;
+    _preset&=0x7;
+    SETTINGS::set_preset(_preset);
+    LEDS::PRESET.preset(_preset);
 
     LEDS::ARP.off();
     LEDS::LFO.off();
@@ -79,7 +71,7 @@ namespace UI {
     if (SETTINGS::get_lfo()) LEDS::LFO.on();
   }
   uint8_t get_preset(void) {
-    return preset;
+    return _preset;
   }
 
   // ----------------------
@@ -98,7 +90,7 @@ namespace UI {
     SETTINGS::init();
     PAGINATION::init();
 
-    if (Buttons::PRESET.get(Buttons::ButtonState::SHIFT)) test(10);
+    if (Buttons::PRESET.get(Buttons::State::SHIFT)) test(10);
 
     poll_index = 0;
   }
@@ -117,13 +109,13 @@ namespace UI {
             break;
           case 1:
             KEYS::update();
-            if (Buttons::ARP.get(Buttons::ButtonState::SHORT)) {
+            if (Buttons::ARP.get(Buttons::State::SHORT)) {
                 toggle_arp();
             }
-            if (Buttons::LFO.get(Buttons::ButtonState::SHORT)) {
+            if (Buttons::LFO.get(Buttons::State::SHORT)) {
                 toggle_lfo();
             }
-            if (Buttons::PRESET.get(Buttons::ButtonState::SHIFT) && Buttons::PAGE.get(Buttons::ButtonState::SHORT)) {
+            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
             }
             // if (Buttons::ARP.get(Buttons::ButtonState::LONG)) {
@@ -132,9 +124,8 @@ namespace UI {
             // }
             break;
           case 2:
-            if (ARP::get()) {
-                ARP::update_playback();
-            }
+            if (ARP::get()) ARP::update_playback();
+            Note_Priority::update();
           case 3:
             ADC::update();
             break;
@@ -153,9 +144,7 @@ namespace UI {
         }
 
         ++poll_index;
-        if (poll_index > 6) {
-            poll_index = 0;
-        }
+        if (poll_index > 6) poll_index = 0;
         break;
 
       case UI_MODE_FACTORY_TEST:

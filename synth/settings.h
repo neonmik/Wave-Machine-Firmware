@@ -6,7 +6,7 @@
 #include "modulation.h"
 #include "arp.h"
 
-#include "log_table.h"
+
 
 #define MAX_PRESETS     7
 
@@ -30,7 +30,7 @@ namespace SETTINGS {
                     uint16_t _input[4];
                     uint16_t _waveshape;
                     uint16_t _wavevector;
-                    uint8_t _octave;
+                    uint16_t _octave;
                     uint16_t _pitch;
                 public:
                 Wave () { }
@@ -57,17 +57,17 @@ namespace SETTINGS {
                     return _input[control];
                 }
                 void update (void) {
-                    SYNTH::wave_shape = _waveshape;
-                    SYNTH::wave_vector = _wavevector;
-                    SYNTH::octave = _octave;
-                    SYNTH::pitch_scale = _pitch;
+                    SYNTH::_wave_shape = _waveshape;
+                    SYNTH::_wave_vector =_wavevector;
+                    SYNTH::_octave = _octave;
+                    SYNTH::_pitch_scale = _pitch;
                 }
                 void fetch (void) {
                     //pull defaults from function, for now
-                    _waveshape = SYNTH::wave_shape;
-                    _wavevector = SYNTH::wave_vector;
-                    _octave = SYNTH::octave;
-                    _pitch = SYNTH::pitch_scale;
+                    _waveshape = SYNTH::_wave_shape;
+                    _wavevector = SYNTH::_wave_vector;
+                    _octave = SYNTH::_octave;
+                    _pitch = SYNTH::_pitch_scale;
                 }
             };
             class Env {
@@ -103,7 +103,7 @@ namespace SETTINGS {
                                 _sustain = (input<<6);
                                 break;
                             case 3:
-                                _release = (input<<2);
+                                _release = ((input<<2)+10);
                                 break;
                         }
                     }
@@ -111,21 +111,21 @@ namespace SETTINGS {
                         return _input[control];
                     }
                     void update (void) {
-                        SYNTH::attack_ms = _attack;
-                        SYNTH::decay_ms = _decay;
-                        SYNTH::sustain = _sustain;
-                        SYNTH::release_ms = _release;
+                        SYNTH::_attack_ms  = _attack;
+                        SYNTH::_decay_ms = _decay;
+                        SYNTH::_sustain = _sustain;
+                        SYNTH::_release_ms = _release;
                     }
                     void fetch (void) {
                         //pull defaults from function, f
-                        _attack = SYNTH::attack_ms;
-                        _input[0] = ((SYNTH::attack_ms>>2));
-                        _decay = SYNTH::decay_ms;
-                        _input[1] = ((SYNTH::decay_ms>>2));
-                        _sustain = SYNTH::sustain;
-                        _input[2] = (SYNTH::sustain>>6);
-                        _release = SYNTH::release_ms;
-                        _input[3] = (SYNTH::release_ms>>2);
+                        _attack = SYNTH::_attack_ms;
+                        _input[0] = ((SYNTH::_attack_ms>>2));
+                        _decay = SYNTH::_decay_ms;
+                        _input[1] = ((SYNTH::_decay_ms>>2));
+                        _sustain = SYNTH::_sustain;
+                        _input[2] = (SYNTH::_sustain>>6);
+                        _release = SYNTH::_release_ms;
+                        _input[3] = (SYNTH::_release_ms>>2);
                     }
             };
             class Lfo {
@@ -216,7 +216,7 @@ namespace SETTINGS {
                                     _matrix = input;
                                     break;
                                 case 1:
-                                    _rate = (input>>3);
+                                    _rate = input;
                                     break;
                                 case 2:
                                     _depth = input;
@@ -234,8 +234,9 @@ namespace SETTINGS {
                         }
                         if (_active) {
                              if (_changed) {
+                                ARP::set_hold(_matrix);
                                 ARP::set_bpm(_rate);
-                                ARP::set_direction(_direction>>8);
+                                ARP::set_direction(_direction);
                                 
                                 _changed = false;
                             }
@@ -249,7 +250,7 @@ namespace SETTINGS {
                     void fetch (void) {
                         // pull defaults from function, for now
                         _input[0] = 0;
-                        _input[1] = (ARP::get_bpm()<<3);
+                        _input[1] = (ARP::get_bpm());
                         _rate = ARP::get_bpm();
                         _input[2] = 0;
                         _input[3] = 0;

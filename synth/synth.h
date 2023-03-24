@@ -6,48 +6,15 @@
 #include "pico/time.h"
 
 #include "wavetable.h"
+#include "log_table.h"
 
 
 namespace SYNTH {
 
-  // The duration a note is played is determined by the amount of attack,
-  // decay, and release, combined with the length of the note as defined by
-  // the user.
-  //
-  // - Attack:  number of milliseconds it takes for a note to hit full volume
-  // - Decay:   number of milliseconds it takes for a note to settle to sustain volume
-  // - Sustain: percentage of full volume that the note sustains at (duration implied by held note)
-  // - Release: number of milliseconds it takes for a note to reduce to zero volume after it has ended
-  //
-  // Attack (750ms) - Decay (500ms) -------- Sustain ----- Release (250ms)
-  //
-  //                +         +                                  +    +
-  //                |         |                                  |    |
-  //                |         |                                  |    |
-  //                |         |                                  |    |
-  //                v         v                                  v    v
-  // 0ms               1000ms              2000ms              3000ms              4000ms
-  //
-  // |              XXXX |                   |                   |                   |
-  // |             X    X|XX                 |                   |                   |
-  // |            X      |  XXX              |                   |                   |
-  // |           X       |     XXXXXXXXXXXXXX|XXXXXXXXXXXXXXXXXXX|                   |
-  // |          X        |                   |                   |X                  |
-  // |         X         |                   |                   |X                  |
-  // |        X          |                   |                   | X                 |
-  // |       X           |                   |                   | X                 |
-  // |      X            |                   |                   |  X                |
-  // |     X             |                   |                   |  X                |
-  // |    X              |                   |                   |   X               |
-  // |   X               |                   |                   |   X               |
-  // |  X +    +    +    |    +    +    +    |    +    +    +    |    +    +    +    |    +
-  // | X  |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-  // |X   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-  // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+--->
 
   #define MAX_VOICES 8
 
-  constexpr float pi = 3.14159265358979323846f;
+  // constexpr float pi = 3.14159265358979323846f;
 
   extern uint16_t volume;
 
@@ -71,40 +38,41 @@ namespace SYNTH {
     OFF
   };
 
+  extern uint32_t   _sample_rate;
   
-  extern uint32_t          _sample_rate;
-  
-
   // used oscillator types, this can use multiple oscillatros, although can't be currently adjusted by the hardware
-  extern uint16_t   oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
+  extern uint16_t   _oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
 
   // variables for the wavetable oscillator
-  extern uint16_t   wave_shape;
-  extern uint16_t   wave_vector;
-  extern uint16_t   vector_mod;
+  extern uint16_t   _wave_shape;
+  extern uint16_t   _wave_vector;
+  extern uint16_t   _vector_mod;
 
-  extern uint16_t   attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
-  extern uint16_t   decay_ms;      // decay period
-  extern uint16_t   sustain;   // sustain volume
-  extern uint16_t   release_ms;      // release period
+  extern uint16_t   _attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
+  extern uint16_t   _decay_ms;      // decay period
+  extern uint16_t   _sustain;   // sustain volume
+  extern uint16_t   _release_ms;      // release period
 
-  extern int16_t    vibrato;
-  extern uint16_t   tremelo;
+  extern int16_t    _vibrato;
+  extern uint16_t   _tremelo;
 
-  extern uint16_t pitch_scale;
+  extern uint16_t _pitch_scale;
 
-  extern uint8_t octave;
+  extern uint8_t _octave;
 
-  
+
   // extern bool      filter_enable;
   // extern uint16_t  filter_cutoff_frequency;
 
   struct Voices {
     
+    // ADSR envelope;
+
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
 
     bool      _gate         = false;  // used for tracking a note that's released, but not finished.
     bool      _active       = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
+    uint64_t  activation_time  = 0;
 
     uint8_t   _note         = 0;
     uint16_t  _frequency    = 0;    // frequency of the voice (Hz)
@@ -142,24 +110,26 @@ namespace SYNTH {
       _gate = false;
       trigger_release();
     }
+    
     void clear () {
       _active = false;
       _note = 0;
       _frequency = 0;
     }
+    
     void trigger_attack()  {
       adsr_activation_time = to_ms_since_boot(get_absolute_time());
 
       adsr_frame = 0;
       adsr_phase = ADSRPhase::ATTACK;
-      adsr_end_frame = (attack_ms * _sample_rate) / 1000;
+      adsr_end_frame = (_attack_ms * _sample_rate) / 1000;
       adsr_step = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void trigger_decay() {
       adsr_frame = 0;
       adsr_phase = ADSRPhase::DECAY;
-      adsr_end_frame = (decay_ms * _sample_rate) / 1000;
-      adsr_step = (int32_t(sustain << 8) - int32_t(adsr)) / int32_t(adsr_end_frame);
+      adsr_end_frame = (_decay_ms * _sample_rate) / 1000;
+      adsr_step = (int32_t(_sustain << 8) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void trigger_sustain() {
       adsr_frame = 0;
@@ -170,10 +140,10 @@ namespace SYNTH {
     void trigger_release() {
       adsr_frame = 0;
       adsr_phase = ADSRPhase::RELEASE;
-      adsr_end_frame = (release_ms * _sample_rate) / 1000;
+      adsr_end_frame = (_release_ms * _sample_rate) / 1000;
       adsr_step = (int32_t(0) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
-    void stopped() {
+    void stopped() { 
       clear();
 
       adsr_activation_time = 0;

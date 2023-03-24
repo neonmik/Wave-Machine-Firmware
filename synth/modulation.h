@@ -6,14 +6,6 @@
 
 #include "wavetable.h"
 
-// This wants to be a LFO for modulating different sources...
-// I think it should be between 1Hz-20Hz (Or ???100Hz???)
-// Could be used for:
-//                      - Vibrato (Note frequency modulations)
-//                      - Tremelo (Note Volume Modulations)
-//                      - Wave Vector Modulations
-//                      - A Filter?
-
 namespace MOD {
 
     enum Matrix : uint8_t{
@@ -35,9 +27,9 @@ namespace MOD {
             uint16_t             _phase_acc   = 0;
 
             int16_t              _sample      = 0;
-            int16_t              _vibrato     = 0;
+            uint16_t             _vibrato     = 0;
             uint16_t             _trem        = 0;
-            uint8_t              _vector      = 0;
+            uint16_t             _vector      = 0;
 
 
             uint16_t             _depth       = 0;
@@ -154,9 +146,9 @@ namespace MOD {
                             _vector = 0;
                             break;
                     }
-                    SYNTH::vibrato = _vibrato;
-                    SYNTH::tremelo = _trem;
-                    SYNTH::vector_mod = _vector;
+                    SYNTH::_vibrato = _vibrato;
+                    SYNTH::_tremelo = _trem;
+                    SYNTH::_vector_mod = _vector;
                 }
             }
     };

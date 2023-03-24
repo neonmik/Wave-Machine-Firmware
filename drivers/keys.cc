@@ -1,6 +1,6 @@
 #include "keys.h"
 
-#include "../note_priority.h"
+
 #include "../synth/arp.h"
 
 
@@ -112,32 +112,15 @@ namespace KEYS {
     keys = Keys.get();
     keys_last = Keys.get_last();
 
-    if (!(ARP::get())) {
-      for (int i = 0; i < MAX_KEYS; i++) {
-        // if ( !((k>>i) & 1) ) {
-        // 	num_keys_down++;
-        // }
-        if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
-          Note_Priority::event(0x90, i + 48, 127);   // keyboard starts at midi note 36
-        }
-        if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
-          Note_Priority::event(0x80, i + 48, 0);
-          // dec_physical_notes_on();
-        }
+    for (int i = 0; i < MAX_KEYS; i++) {
+      if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
+        Note_Priority::note_on(i+48);
       }
-    } else {
-      ARP::clear_notes();
-      
-      for (int i = 0; i < MAX_KEYS; i++) {
-        if (!((keys>>i) & 1 && (((keys_last>>i) & 1))))  {  // new key down
-          ARP::add_notes(i+48);
-        }
-        // if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
-        //   ARP::remove_notes(i+48);
-        //   // dec_physical_notes_on();
-        // }
+      if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
+        Note_Priority::note_off(i+48);
       }
     }
+
 
     // Page
     if ( (!((keys>>PAGE_KEY) & 1)) &&  (((keys_last>>PAGE_KEY) & 1)) ){

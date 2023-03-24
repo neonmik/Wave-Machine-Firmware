@@ -24,10 +24,12 @@ add_executable(${PROJECT_NAME}
 
     note_priority.cc
 
+    synth/adsr.cc
     synth/arp.cc
     synth/synth.cc
     synth/modulation.cc
     synth/settings.cc
+    
 )
 
 pico_enable_stdio_usb(${PROJECT_NAME} 0)

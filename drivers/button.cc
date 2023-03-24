@@ -12,7 +12,6 @@ namespace Buttons {
         _shift = !_shift;
         _start = time_now;
     }
-
     void Button::released () {
         _shift = !_shift;
         _end = to_ms_since_boot(get_absolute_time());
@@ -25,28 +24,27 @@ namespace Buttons {
             _long = true;
         }
     }
-
-  bool Button::get(ButtonState state) {
+    bool Button::get(State state) {
         switch(state) {
-            case ButtonState::SHORT:
+            case State::SHORT:
                 if (_short) {
                     _short = false;
                     return true;
                 }
                 break;
-            case ButtonState::LONG:
+            case State::LONG:
                 if (_long) {
                     _long = false;
                     return true;
                 }
                 break;
-            case ButtonState::DOUBLE:
+            case State::DOUBLE:
                 if (_double) {
                     _double = false;
                     return true;
                 }
                 break;
-            case ButtonState::SHIFT:
+            case State::SHIFT:
                 return _shift;
             default:
                 break;
