@@ -27,13 +27,11 @@ namespace ARP {
         stop_all();
     }
 
-    void set_bpm (uint8_t bpm) {
+    void set_bpm (uint16_t bpm) {
         _bpm = bpm;
         _samples_per_16th = _samples_per_ms * (_ms_per_minute/_bpm)/8;
     }
-    void set_rate (uint16_t rate) {
-        set_bpm(rate>>2);
-    }
+    
     uint8_t get_bpm () {
         return _bpm;
     }
@@ -47,18 +45,15 @@ namespace ARP {
         set_bpm(bpm);
     }
 
-    void set_hold (uint16_t hold) {
-        bool temp = (bool)(hold>>9);
-        if (temp != _hold) clear_notes();
-        _hold = temp;
-    }
-
 
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
             case UP:
                 _play_index++;
-                if (_play_index >= _count) _play_index = 0;
+                if (_play_index >= _count) {
+                    _play_index = 0;
+                    update_range();
+                }
                 break;
             case DOWN:
                 _play_index--;
@@ -66,6 +61,7 @@ namespace ARP {
                     if (_play_index <= -1) _play_index = _count - 1;
                 } else {
                     _play_index = 0;
+                    update_range();
                 }
                 break;
             case UP_DOWN:
@@ -80,6 +76,7 @@ namespace ARP {
                     if (_play_index < 0) {
                         _play_index = _count > 1 ? 1 : 0;
                         _switch = true;
+                        update_range();
                     }
                 }
                 break;
@@ -95,6 +92,7 @@ namespace ARP {
                     if (_play_index >= _count) {
                         _play_index = _count > 1 ? _count - 2 : 0;
                         _switch = true;
+                        update_range();
                     }
                 }
                 break;
@@ -111,24 +109,31 @@ namespace ARP {
 
             if (beat_changed) {
                 switch (note_state) {
+                    case NOTE_ACTIVE:
+                        Note_Priority::priority(0x80, _last_note, 0);
+                        arpeggiate(_direction);
+                        note_state = IDLE;
+
+                        // dont think this is neccessary anymore
+                        // note_state = RELEASE_ACTIVE;
+                        
+                        break; // for gap between notes, comment to remove gap
                     case IDLE:
                         if (_play_index >= _count) {
                             _play_index = 0;
                         }
                         if (_notes[_play_index]) {
-                            Note_Priority::priority(0x90, _notes[_play_index], 127);
-                            _last_note = _notes[_play_index];
+                            _last_note = ((_notes[_play_index])+(_octave*12));
+                            Note_Priority::priority(0x90, _last_note, 127);
                             note_state = NOTE_ACTIVE;
                         }
                         break;
-                    case NOTE_ACTIVE:
-                        Note_Priority::priority(0x80, _last_note, 0);
-                        note_state = RELEASE_ACTIVE;
-                        break;
-                    case RELEASE_ACTIVE:
-                        arpeggiate(_direction);
-                        note_state = IDLE;
-                        break;
+
+                    // dont think this is neccessary anymore - by positioning NOTE_ACTIVE before IDLE, it will always be released before the next note is played
+                    // case RELEASE_ACTIVE:
+                    //     arpeggiate(_direction);
+                    //     note_state = IDLE;
+                    //     break;
                 }
 
                 if (beat >= max_beats) {
@@ -205,13 +210,26 @@ namespace ARP {
         Note_Priority::voice_clear();
     }
 
-    void set_delay (uint16_t delay) {
-        arp_delay = delay;
+    // void set_delay (uint16_t delay) {
+    //     arp_delay = delay;
+    // }
+    // void set_release (uint16_t release) {
+    //     arp_release = release;
+    // }
+    
+    void set_hold (uint16_t hold) {
+        bool temp = (bool)(hold>>9);
+        // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
+        if (_hold) {
+            if (temp != _hold) clear_notes();
+        }
+        _hold = temp;
+    }
+    void set_rate (uint16_t rate) {
+        volatile uint16_t temp = rate>>2;
+        set_bpm(temp);
     }
 
-    void set_release (uint16_t release) {
-        arp_release = release;
-    }
     void set_direction (uint16_t value) {
         switch (value>>8) {
             case 0:
@@ -227,5 +245,15 @@ namespace ARP {
                 _direction =  ArpDirection::DOWN_UP;
                 break;
         }
+    }
+    void set_range (uint16_t value) {
+        _range = value>>8;
+    }
+    void update_range () {
+        ++_octave;
+        if (_octave > _range) {
+            _octave = 0;
+        }
+        printf("octave: %d\n", _octave);
     }
 }

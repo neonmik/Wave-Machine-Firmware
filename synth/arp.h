@@ -28,7 +28,7 @@ namespace ARP {
 
         NoteState note_state = IDLE;
 
-        uint8_t _bpm = 120;
+        uint16_t _bpm = 120;
         uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
         uint16_t seq_tick = 0;
         uint16_t prev_beat;
@@ -47,6 +47,8 @@ namespace ARP {
         int8_t _play_index;
         int8_t _count;
         int8_t _write_index;
+        int8_t _range;
+        int8_t _octave;
         bool note_active = false;
         bool release_active = false;
 
@@ -68,7 +70,7 @@ namespace ARP {
 
     uint16_t samples_per_sixteenth_note (void);
     
-    void set_bpm (uint8_t bpm);
+    void set_bpm (uint16_t bpm);
     uint8_t get_bpm (void);
 
     void set_samplerate (uint16_t sample_rate);
@@ -84,10 +86,13 @@ namespace ARP {
     void clear_notes (void);
     void stop_all (void);
     
-    void set_delay (uint16_t delay);
-    void set_release (uint16_t release);
+    // void set_delay (uint16_t delay);
+    // void set_release (uint16_t release);
 
     void set_direction (uint16_t direction);
+
+    void set_range (uint16_t range);
+    void update_range (void);
     
 }
 

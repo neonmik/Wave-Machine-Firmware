@@ -237,6 +237,7 @@ namespace SETTINGS {
                                 ARP::set_hold(_matrix);
                                 ARP::set_bpm(_rate);
                                 ARP::set_direction(_direction);
+                                ARP::set_range(_depth);
                                 
                                 _changed = false;
                             }
