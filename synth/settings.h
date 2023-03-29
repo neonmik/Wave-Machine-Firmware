@@ -235,7 +235,7 @@ namespace SETTINGS {
                         if (_active) {
                              if (_changed) {
                                 ARP::set_hold(_matrix);
-                                ARP::set_bpm(_rate);
+                                ARP::set_rate(_rate);
                                 ARP::set_direction(_direction);
                                 ARP::set_range(_depth);
                                 

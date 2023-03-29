@@ -124,7 +124,7 @@ namespace UI {
             // }
             break;
           case 2:
-            if (ARP::get()) ARP::update_playback();
+            if (ARP::get()) ARP::update();
             Note_Priority::update();
           case 3:
             ADC::update();

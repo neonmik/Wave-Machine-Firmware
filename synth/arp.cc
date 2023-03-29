@@ -58,7 +58,10 @@ namespace ARP {
             case DOWN:
                 _play_index--;
                 if (_count > 1) {
-                    if (_play_index <= -1) _play_index = _count - 1;
+                    if (_play_index <= -1) {
+                        _play_index = _count - 1;
+                        update_range();
+                    }
                 } else {
                     _play_index = 0;
                     update_range();
@@ -99,7 +102,7 @@ namespace ARP {
         }
     }
 
-    void update_playback(void) {
+    void update (void) {
         if (_active) {
             if ((sample_clock >= _samples_per_16th)) { //} && (sample_clock != sample_clock_last)) {
                 sample_clock = 0;
@@ -225,12 +228,9 @@ namespace ARP {
         }
         _hold = temp;
     }
-    void set_rate (uint16_t rate) {
-        volatile uint16_t temp = rate>>2;
-        set_bpm(temp);
-    }
 
     void set_direction (uint16_t value) {
+        // bitshift to get 0-3 for the Arp direction
         switch (value>>8) {
             case 0:
                 _direction = ArpDirection::UP;
@@ -247,13 +247,32 @@ namespace ARP {
         }
     }
     void set_range (uint16_t value) {
+        // bit shift to get 0-4 octaves of range for the Arp
         _range = value>>8;
     }
     void update_range () {
         ++_octave;
-        if (_octave > _range) {
-            _octave = 0;
-        }
-        printf("octave: %d\n", _octave);
+        if (_octave > _range) _octave = 0;
+    }
+
+    long map(long x, long in_min, long in_max, long out_min, long out_max) {
+        volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        return temp;
+    }
+
+    void set_rate (uint16_t rate) {
+        // for freerunning/external clock
+        // if (!clock_external()) {
+        _rate = map(rate, 0, 1023, 30, 350);
+        set_bpm(_rate);
+        // } else {
+        //     break/leave alone
+        // }
+
+    }
+
+    void set_division (uint16_t division) {
+        // set the division of the bpm clock...
+        // currently /8 to get a 16th note, but rename the _samples_per_16th to _samples_per_division
     }
 }

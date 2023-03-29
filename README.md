@@ -8,15 +8,31 @@ Things to implement:
     - Need to create/reorganise layer between hardware and synth... reformat and streamline.
 
 - Improve Settings funtionality:
-    - Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly. 
+    - Refactor to allow saving, and also to improve code functionality - could be the key to Multicore
+    - Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
+    - Make sure it only calls a para update when a values actually changed (probably need to improve the input value stabilities for this)
+
 
 - Improve Oscillator script - current bugs include:
+    - Add and test functions for updating parameters, instead of accesing them directly from outside
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
+
+- Improve Mod code:
+    - Move function calls to the synth side
+    - Make outside variable updates go through functions
+    - Make every function take 0-1023 for consistancy from the hardware layer
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
-- Prove hardware functions (MIDI)
-- Implement USB-MIDI and MIDI
+- Prove hardware functions:
+    - MIDI
+    - EEPROM
+    - CV?
+
+- Implement USB-MIDI and MIDI:
+    - Notes
+    - CC controls
+    - Tempo
 
 
 
@@ -25,9 +41,11 @@ Future Implementaions and WIPs:
 - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
+
 - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - implemented, but not chosen functions yet.
 
 - Start-up settings (MIDI channel, other funtions?)
+
 - Multicore support (probably hadware functions on one side, oscillators on another)
 
 - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
