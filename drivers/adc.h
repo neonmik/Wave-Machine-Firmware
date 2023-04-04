@@ -10,6 +10,8 @@
 #define MAX_KNOBS       4
 
 #include "pico/stdlib.h"
+#include "stdio.h"
+
 #include "hardware/adc.h"
 #include "hardware/dma.h"
 
@@ -26,4 +28,6 @@ namespace ADC {
     void init();
     void update();
     uint16_t value(int knob);
+
+    long map(long x, long in_min, long in_max, long out_min, long out_max);
 }

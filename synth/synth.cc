@@ -221,6 +221,35 @@ namespace SYNTH {
 
     return (sample+32767)>>4;
   }
+
+  void set_waveshape (uint16_t shape) {
+    _wave_shape = ((shape>>6)*256);
+  }
+  void set_wavevector (uint16_t vector) {
+    _wave_vector = vector;
+  }
+  void set_octave (uint16_t octave) {
+    _octave = (octave>>8);
+  }
+  void set_pitch_scale (uint16_t scale) {
+    _pitch_scale = get_pitch_log(scale);
+  }
+  uint16_t get_pitch_log (uint16_t index) {
+      return log_table[index];
+  }
+
+  void set_attack (uint16_t attack) {
+    _attack_ms = (attack<<2)+2;
+  }
+  void set_decay (uint16_t decay) {
+    _decay_ms = (decay<<2)+2;
+  }
+  void set_sustain (uint16_t sustain) {
+    _sustain = (sustain<<5);
+  }
+  void set_release (uint16_t release) {
+    _release_ms = (release<<2)+2;
+  }
 }
 
 

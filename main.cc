@@ -36,7 +36,7 @@ uint32_t software_index = 0;
 
 int main() {
 
-  UI::init();
+    UI::init();
 
   SYNTH::init(SAMPLE_RATE);
   MOD::init();

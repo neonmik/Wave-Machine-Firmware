@@ -21,7 +21,7 @@
 
 #include "button.h"
 
-#include "../note_priority.h"
+#include "../synth/note_priority.h"
 
 namespace KEYS {
     class Keyboard {

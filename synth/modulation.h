@@ -81,7 +81,7 @@ namespace MOD {
 
             void set_rate (uint16_t input) {
                 _values[2] = input;
-                // ((uint16_t wrap around * Hz) / 187.5 (sample rate for lfo (48k / 256)) >> 6 (divide by 64 to get sub Hz freq without the floating point hit)
+                // ((uint16_t wrap around * Hz+1(must always be above 0hz)) / 187.5 (sample rate for lfo (48k / 256)) >> 6 (divide by 64 to get sub Hz freq without the floating point hit)
                 _increment = ((65535 * (input+1)) / _sample_rate) >> 6; 
             }
             uint16_t get_rate (void) {

@@ -15,10 +15,6 @@ namespace SETTINGS {
         uint8_t _preset;
         uint8_t _page;
         bool    _changed;
-        uint16_t get_pitch_log (int index) {
-            uint16_t pitch = log_table[index];
-            return pitch;
-        }
     }
     class PRESET {
         private:
@@ -40,16 +36,16 @@ namespace SETTINGS {
                     _input[control] = input;
                     switch (control) {
                         case 0:
-                            _waveshape = ((input>>6)*256);
+                            _waveshape = input;
                             break;
                         case 1:
                             _wavevector = input;
                             break;
                         case 2:
-                            _octave = (input>>8);
+                            _octave = input;
                             break;
                         case 3:
-                            _pitch = get_pitch_log(input);
+                            _pitch = input;
                             break;
                     }
                 }
@@ -57,10 +53,10 @@ namespace SETTINGS {
                     return _input[control];
                 }
                 void update (void) {
-                    SYNTH::_wave_shape = _waveshape;
-                    SYNTH::_wave_vector =_wavevector;
-                    SYNTH::_octave = _octave;
-                    SYNTH::_pitch_scale = _pitch;
+                    SYNTH::set_waveshape(_waveshape);
+                    SYNTH::set_wavevector(_wavevector);
+                    SYNTH::set_octave(_octave);
+                    SYNTH::set_pitch_scale(_pitch);
                 }
                 void fetch (void) {
                     //pull defaults from function, for now
@@ -94,16 +90,16 @@ namespace SETTINGS {
                         _input[control] = input;
                         switch (control) {
                             case 0:
-                                _attack = ((input<<2)+10);
+                                _attack = input;
                                 break;
                             case 1:
-                                _decay = ((input<<2)+10);
+                                _decay = input;
                                 break;
                             case 2:
-                                _sustain = (input<<6);
+                                _sustain = input;
                                 break;
                             case 3:
-                                _release = ((input<<2)+10);
+                                _release = input;
                                 break;
                         }
                     }
@@ -111,10 +107,10 @@ namespace SETTINGS {
                         return _input[control];
                     }
                     void update (void) {
-                        SYNTH::_attack_ms  = _attack;
-                        SYNTH::_decay_ms = _decay;
-                        SYNTH::_sustain = _sustain;
-                        SYNTH::_release_ms = _release;
+                        SYNTH::set_attack(_attack);
+                        SYNTH::set_decay(_decay);
+                        SYNTH::set_sustain(_sustain);
+                        SYNTH::set_release(_release);
                     }
                     void fetch (void) {
                         //pull defaults from function, f
@@ -123,7 +119,7 @@ namespace SETTINGS {
                         _decay = SYNTH::_decay_ms;
                         _input[1] = ((SYNTH::_decay_ms>>2));
                         _sustain = SYNTH::_sustain;
-                        _input[2] = (SYNTH::_sustain>>6);
+                        _input[2] = (SYNTH::_sustain>>5);
                         _release = SYNTH::_release_ms;
                         _input[3] = (SYNTH::_release_ms>>2);
                     }
@@ -252,7 +248,6 @@ namespace SETTINGS {
                         // pull defaults from function, for now
                         _input[0] = 0;
                         _input[1] = (ARP::get_bpm());
-                        _rate = ARP::get_bpm();
                         _input[2] = 0;
                         _input[3] = 0;
                         _changed = true;

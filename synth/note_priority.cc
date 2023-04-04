@@ -1,6 +1,6 @@
 #include "note_priority.h"
 
-#include "synth/synth.h"
+#include "synth.h"
 
 namespace Note_Priority {
   // synth voice control

@@ -5,7 +5,7 @@
 
 #include "pico/stdlib.h"
 
-#include "synth/arp.h"
+#include "arp.h"
 
 enum class Priority {
     FIRST,      // First/oldest notes stay the longest

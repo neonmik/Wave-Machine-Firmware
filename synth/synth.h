@@ -162,4 +162,16 @@ namespace SYNTH {
   uint16_t get_audio_frame();
   bool is_audio_playing();
   void init (uint32_t _sample_rate);
+
+  void set_waveshape (uint16_t shape);
+  void set_wavevector (uint16_t vector);
+  void set_octave (uint16_t octave);
+  void set_pitch_scale (uint16_t scale);
+  uint16_t get_pitch_log (uint16_t index);
+
+  void set_attack (uint16_t attack);
+  void set_decay (uint16_t decay);
+  void set_sustain (uint16_t sustain);
+  void set_release (uint16_t release);
+  
 }

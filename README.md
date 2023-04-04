@@ -8,19 +8,26 @@ Things to implement:
     - Need to create/reorganise layer between hardware and synth... reformat and streamline.
 
 - Improve Settings funtionality:
+    + Make everything that takes an input take it from a range of 0-1023
     - Refactor to allow saving, and also to improve code functionality - could be the key to Multicore
-    - Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
+    \/ Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
     - Make sure it only calls a para update when a values actually changed (probably need to improve the input value stabilities for this)
 
 
 - Improve Oscillator script - current bugs include:
-    - Add and test functions for updating parameters, instead of accesing them directly from outside
+    + Add functions for all hardware controls
+    - Add functions for all software controls (mod params)
+    + Add and test functions for updating parameters, instead of accesing them directly from outside
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Improve Mod code:
+    - fix control for preset/pagination
     - Move function calls to the synth side
-    - Make outside variable updates go through functions
-    - Make every function take 0-1023 for consistancy from the hardware layer
+    + Make outside variable updates go through functions
+    + Make every function take 0-1023 for consistancy from the hardware layer
+
+- Arp code:
+    - fix control for preset/pagination - currently persists between presets no matter of the state of the new preset.
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 

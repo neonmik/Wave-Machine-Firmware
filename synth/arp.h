@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "../note_priority.h"
+#include "note_priority.h"
 
 
 extern uint32_t sample_clock;

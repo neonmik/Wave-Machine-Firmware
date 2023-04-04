@@ -41,14 +41,16 @@ namespace ADC {
         // wait to read - allows settling time
         asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
         
-        // IIR filter
+        // No filter
         // passes last actual sample to a buffer
         // _sample[_mux_address] = _values[_mux_address];
+        
+        // IIR filter
         // filters new sample with old sample
         _sample[_mux_address] = _sample[_mux_address] - (_sample[_mux_address]>>2) + adc_read();
 
         // moves filtered sample to the adc array
-        _values[_mux_address] = (_sample[_mux_address]>>2);  
+        _values[_mux_address] = map(_sample[_mux_address]>>2, 12, 4095, 0, 1023);
 
         // sets the index to loop
         _mux_address = (_mux_address + 1) % MAX_KNOBS;
@@ -64,6 +66,13 @@ namespace ADC {
     }
     
     uint16_t value(int knob) {
-        return (_values[knob]>>2); // downshifting for better system wide performance
+        return _values[knob]; // downshifting for better system wide performance
+    }
+
+    long map(long x, long in_min, long in_max, long out_min, long out_max) {
+        long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        if (temp > out_max) temp = out_max;
+        if (temp < out_min) temp = out_min;
+        return temp;
     }
 }
