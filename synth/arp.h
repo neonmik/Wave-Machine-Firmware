@@ -67,7 +67,7 @@ namespace ARP {
     
     void on (void);
     void off (void);
-    void set (bool state);
+    void set_state (bool state);
     bool get (void);
     void toggle (void);
 
@@ -89,6 +89,8 @@ namespace ARP {
     void add_notes (uint8_t note);
     void remove_notes (uint8_t note);
     void clear_notes (void);
+    void pass_notes(void);
+    void grab_notes(void);
     void stop_all (void);
     
     // void set_delay (uint16_t delay);

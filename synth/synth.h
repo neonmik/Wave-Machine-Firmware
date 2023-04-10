@@ -48,10 +48,10 @@ namespace SYNTH {
   extern uint16_t   _wave_vector;
   extern uint16_t   _vector_mod;
 
-  extern uint16_t   _attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
-  extern uint16_t   _decay_ms;      // decay period
+  extern uint16_t   _attack;      // attack period - moved to global as it's not needed per voice for this implementation.
+  extern uint16_t   _decay;      // decay period
   extern uint16_t   _sustain;   // sustain volume
-  extern uint16_t   _release_ms;      // release period
+  extern uint16_t   _release;      // release period
 
   extern int16_t    _vibrato;
   extern uint16_t   _tremelo;
@@ -122,13 +122,13 @@ namespace SYNTH {
 
       adsr_frame = 0;
       adsr_phase = ADSRPhase::ATTACK;
-      adsr_end_frame = (_attack_ms * _sample_rate) / 1000;
+      adsr_end_frame = (_attack * _sample_rate) / 1000;
       adsr_step = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void trigger_decay() {
       adsr_frame = 0;
       adsr_phase = ADSRPhase::DECAY;
-      adsr_end_frame = (_decay_ms * _sample_rate) / 1000;
+      adsr_end_frame = (_decay * _sample_rate) / 1000;
       adsr_step = (int32_t(_sustain << 8) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void trigger_sustain() {
@@ -140,7 +140,7 @@ namespace SYNTH {
     void trigger_release() {
       adsr_frame = 0;
       adsr_phase = ADSRPhase::RELEASE;
-      adsr_end_frame = (_release_ms * _sample_rate) / 1000;
+      adsr_end_frame = (_release * _sample_rate) / 1000;
       adsr_step = (int32_t(0) - int32_t(adsr)) / int32_t(adsr_end_frame);
     }
     void stopped() { 
@@ -158,6 +158,8 @@ namespace SYNTH {
 
   extern Voices channels[MAX_VOICES];
 
+  void voice_on (uint8_t voice, uint8_t note, uint16_t frequency);
+  void voice_off (uint8_t voice);
   
   uint16_t get_audio_frame();
   bool is_audio_playing();

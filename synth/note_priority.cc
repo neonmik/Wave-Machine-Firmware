@@ -3,25 +3,25 @@
 #include "synth.h"
 
 namespace Note_Priority {
-  // synth voice control
+
+  // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
-    // sendNoteOn(note) // put MIDI note out here
     if (!note) return; //for the ARP? meant to stop the playing of a random note when letting go.
-    SYNTH::channels[slot].note_on(note, get_freq(note));
+    // sendNoteOn(note) // put MIDI note out here
+    SYNTH::voice_on(slot, note, get_freq(note));
   }
   void voice_off(int slot, int note, int velocity) {
     // sendNoteOff(note) // put MIDI note out here
-    int _slot = slot;
-    SYNTH::channels[slot].note_off();
+    SYNTH::voice_off(slot);
   }
   void voice_clear() {
     for (int i = 0; i < 8; i++) {
-      SYNTH::channels[i].note_off();
       // sendNoteOff(SYNTH::channels[i].note) // put MIDI note out here
+      SYNTH::voice_off(i);
     }
   }
 
-  // priority control
+  // Priority Control
   void priority(int status, int note, int velocity) {
     // Note Priority system
     switch (status)  { //check which type we received
@@ -127,7 +127,7 @@ namespace Note_Priority {
     }
   }
 
-  // mpves tracked notes to the priority control
+  // transfer from Key/Midi notes to Arp/Note Priority
   void update() {
     // Used for updating the playing notes, basically a middle man between physical keys/midi/arp and the synth voices
     for (int i = 0; i < 128; i++) {
@@ -156,6 +156,7 @@ namespace Note_Priority {
     }
   }
 
+  // MIDI/Key input
   void note_on (uint8_t note) {
     _note_state[note & 127] = 1;
     inc_physical_notes();
@@ -168,8 +169,10 @@ namespace Note_Priority {
     for (int i = 0; i < 128; i++) {
       _note_state[i] = 0;
     }
+    _notes_on = 0;
   }
   uint8_t get_notes_on (void) {
     return _notes_on;
   }
+  
 }

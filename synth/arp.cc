@@ -4,17 +4,31 @@ namespace ARP {
 
     void on (void) {
         _active = true;
-        clear_notes();
+        set_state(_active);
+
     }
 
     void off (void) {
         _active = false;
+        set_state(_active);
     }
 
-    void set (bool state) {
-        _active = state;
-        clear_notes();
-        stop_all();
+    void set_state (bool state) {
+        if (state != _active) {
+            _active = state;
+
+            if (!_active) {
+                // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
+                if (!_hold) pass_notes();
+                clear_notes();
+            }
+            if (_active) {
+                stop_all();
+                // need to add some kind of function here to get notes that are currently held down...
+                // grab_notes();
+            }
+            
+        }
     }
 
     bool get (void) {
@@ -201,15 +215,23 @@ namespace ARP {
         }
     }
 
-    void clear_notes (void) {
+    void clear_notes () {
         for (int i = 0; i < max_arp; i++) {
             _notes[i] = 0;
         }
         _write_index = 0;
         _count = 0;
     }
+    void pass_notes () {
+        for (int i = 0; i < max_arp; i++) {
+            Note_Priority::voice_on(i, _notes[i], 127);
+        }
+    }
+    void grab_notes () {
+        Note_Priority::update();
+    }
 
-    void stop_all (void) {
+    void stop_all () {
         Note_Priority::voice_clear();
     }
 

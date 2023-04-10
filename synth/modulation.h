@@ -95,19 +95,23 @@ namespace MOD {
             uint16_t get_wave (void) {
                 return _values[3];
             }
+            void set_state (bool input) {
+                _active = input;
+                if (!_active) {
+                    _vibrato = 0;
+                    _trem = 0;
+                    _vector = 0;
+                    SYNTH::_vibrato = _vibrato;
+                    SYNTH::_tremelo = _trem;
+                    SYNTH::_vector_mod = _vector;
+                }
+            }
+            bool get_state (void) {
+                return _active;
+            }
 
-            
-            void start (void) {
-                _active = true;
-            }
-            void toggle (void) {
-                _active = !_active;
-            }
-            void stop (void) {
-                _active = false;
-            }
             void clear (void) {
-                stop();
+                set_state(false);
                 init();
                 _vibrato = 0;
                 _trem = 0;
@@ -153,7 +157,7 @@ namespace MOD {
             }
     };
 
-    extern Modulation MOD1;
+    extern Modulation LFO;
     // extern Modulation MOD2;
 
     void init (void);
@@ -161,6 +165,12 @@ namespace MOD {
     void update (void);
 
     void clear (void);
+
+    void set_matrix (uint16_t input);
+    void set_depth (uint16_t input);
+    void set_rate (uint16_t input);
+    void set_wave (uint16_t input);
+    void set_state (bool input);
 }
 
 

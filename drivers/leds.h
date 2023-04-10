@@ -41,11 +41,11 @@ namespace LEDS {
                 gpio_set_dir(_pin, GPIO_OUT); // set LED pin to out
             }
             void on () {
-                _state = 1;
+                _state = true;
                 Led::set(_state);
             }
             void off (){
-                _state = 0;
+                _state = false;
                 Led::set(_state);
             }
             void toggle (void) {
@@ -154,11 +154,11 @@ namespace LEDS {
             ~SR () { }
 
         void on () {
-            _state = 1;
+            _state = true;
             ShiftReg::on_bit(_pin);
         }
         void off () {
-            _state = 0;
+            _state = false;
             ShiftReg::off_bit(_pin);
         }
         void toggle () {

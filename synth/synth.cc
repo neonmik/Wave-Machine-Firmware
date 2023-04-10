@@ -4,16 +4,16 @@
 
 namespace SYNTH {
 
-  uint16_t oscillator = Oscillator::WAVETABLE; // | Waveform::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  uint16_t oscillator = Oscillator::WAVETABLE | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   uint16_t _wave_shape;
   uint16_t _wave_vector;
   uint16_t _vector_mod;
 
-  uint16_t  _attack_ms   = 10;      // attack period - moved to global as it's not needed per voice for this implementation.
-  uint16_t  _decay_ms    = 10;      // decay period
-  uint16_t  _sustain     = 0x6fff;   // sustain volume
-  uint16_t  _release_ms  = 500;      // release period
+  uint16_t  _attack   = 10;      // attack period - moved to global as it's not needed per voice for this implementation.
+  uint16_t  _decay    = 10;      // decay period
+  uint16_t  _sustain     = 0xffff;   // sustain volume
+  uint16_t  _release  = 50;      // release period
 
   int16_t   _vibrato;
   uint16_t  _tremelo;
@@ -29,10 +29,18 @@ namespace SYNTH {
 
   // float filter_epow = 1 - expf(-(1.0f / 44100.0f) * 2.0f * pi * int32_t(filter_cutoff_frequency));
 
-  uint16_t volume = 0xffff;
+  uint16_t volume = 0x6fff;
   const int16_t sine_waveform[256] = {-32768,-32758,-32729,-32679,-32610,-32522,-32413,-32286,-32138,-31972,-31786,-31581,-31357,-31114,-30853,-30572,-30274,-29957,-29622,-29269,-28899,-28511,-28106,-27684,-27246,-26791,-26320,-25833,-25330,-24812,-24279,-23732,-23170,-22595,-22006,-21403,-20788,-20160,-19520,-18868,-18205,-17531,-16846,-16151,-15447,-14733,-14010,-13279,-12540,-11793,-11039,-10279,-9512,-8740,-7962,-7180,-6393,-5602,-4808,-4011,-3212,-2411,-1608,-804,0,804,1608,2411,3212,4011,4808,5602,6393,7180,7962,8740,9512,10279,11039,11793,12540,13279,14010,14733,15447,16151,16846,17531,18205,18868,19520,20160,20788,21403,22006,22595,23170,23732,24279,24812,25330,25833,26320,26791,27246,27684,28106,28511,28899,29269,29622,29957,30274,30572,30853,31114,31357,31581,31786,31972,32138,32286,32413,32522,32610,32679,32729,32758,32767,32758,32729,32679,32610,32522,32413,32286,32138,31972,31786,31581,31357,31114,30853,30572,30274,29957,29622,29269,28899,28511,28106,27684,27246,26791,26320,25833,25330,24812,24279,23732,23170,22595,22006,21403,20788,20160,19520,18868,18205,17531,16846,16151,15447,14733,14010,13279,12540,11793,11039,10279,9512,8740,7962,7180,6393,5602,4808,4011,3212,2411,1608,804,0,-804,-1608,-2411,-3212,-4011,-4808,-5602,-6393,-7180,-7962,-8740,-9512,-10279,-11039,-11793,-12540,-13279,-14010,-14733,-15447,-16151,-16846,-17531,-18205,-18868,-19520,-20160,-20788,-21403,-22006,-22595,-23170,-23732,-24279,-24812,-25330,-25833,-26320,-26791,-27246,-27684,-28106,-28511,-28899,-29269,-29622,-29957,-30274,-30572,-30853,-31114,-31357,-31581,-31786,-31972,-32138,-32286,-32413,-32522,-32610,-32679,-32729,-32758};
 
   Voices channels[MAX_VOICES];
+
+  void voice_on (uint8_t voice, uint8_t note, uint16_t frequency) {
+    if (!note) return;
+    channels[voice].note_on(note, frequency);
+  }
+  void voice_off (uint8_t voice) {
+    channels[voice].note_off();
+  }
 
   uint32_t prng_xorshift_state = 0x32B71700;
 
@@ -239,16 +247,16 @@ namespace SYNTH {
   }
 
   void set_attack (uint16_t attack) {
-    _attack_ms = (attack<<2)+2;
+    _attack = (attack<<2)+2;
   }
   void set_decay (uint16_t decay) {
-    _decay_ms = (decay<<2)+2;
+    _decay = (decay<<2)+2;
   }
   void set_sustain (uint16_t sustain) {
     _sustain = (sustain<<5);
   }
   void set_release (uint16_t release) {
-    _release_ms = (release<<2)+2;
+    _release = (release<<2)+2;
   }
 }
 
