@@ -7,7 +7,8 @@ namespace MOD {
     Modulation LFO;
     // Modulation MOD2;
 
-    void init () {
+    void init (uint16_t sample_rate) {
+        
         LFO.init();
         // MOD2.init();
     }

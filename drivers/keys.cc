@@ -114,12 +114,13 @@ namespace KEYS {
 
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
-        Note_Priority::note_on(i+48);
+        note_on(i+48);
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
-        Note_Priority::note_off(i+48);
+        note_off(i+48);
       }
     }
+    MAILBOX::send();
 
 
     // Page
@@ -157,5 +158,23 @@ namespace KEYS {
     // store keys for next time
     Keys.set_last(keys);
     
+  }
+
+  void note_on (uint8_t note) {
+    MAILBOX::core1NoteData.note_state[note & 127] = 1;
+    inc_physical_notes();
+  }
+  void note_off (uint8_t note) {
+    MAILBOX::core1NoteData.note_state[note & 127] = 0;
+    dec_physical_notes();
+  }
+  void notes_clear (void) {
+    for (int i = 0; i < 128; i++) {
+      MAILBOX::core1NoteData.note_state[i] = 0;
+    }
+    MAILBOX::core1NoteData.notes_on = 0;
+  }
+  uint8_t get_notes_on (void) {
+    return MAILBOX ::core1NoteData.notes_on;
   }
 }

@@ -51,6 +51,7 @@ namespace ADC {
 
         // moves filtered sample to the adc array
         _values[_mux_address] = map(_sample[_mux_address]>>2, 12, 4095, 0, 1023);
+        
 
         // sets the index to loop
         _mux_address = (_mux_address + 1) % MAX_KNOBS;

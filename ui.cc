@@ -6,7 +6,7 @@
 #include "drivers/button.h"
 #include "drivers/leds.h"
 
-#include "synth/arp.h"
+// #include "synth/arp.h"
 
 
 namespace UI {
@@ -50,6 +50,13 @@ namespace UI {
     return SETTINGS::get_lfo();
   }
 
+  void toggle_test_lfo (void) {
+    LEDS::LFO.toggle();
+  }
+  void toggle_test_arp (void) {
+    LEDS::ARP.toggle();
+  }
+
   
   void toggle_arp(void) {
     LEDS::ARP.toggle();
@@ -90,7 +97,7 @@ namespace UI {
     SETTINGS::init();
     PAGINATION::init();
 
-    if (Buttons::PRESET.get(Buttons::State::SHIFT)) test(10);
+    if (Buttons::PRESET.get(Buttons::State::SHIFT)) test(30);
 
     poll_index = 0;
   }
@@ -117,6 +124,7 @@ namespace UI {
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
+                SETTINGS::save_preset();
             }
             // if (Buttons::ARP.get(Buttons::ButtonState::LONG)) {
             //     SETTINGS::toggle_hold();
@@ -124,18 +132,15 @@ namespace UI {
             // }
             break;
           case 2:
-            if (ARP::get()) ARP::update();
-            Note_Priority::update();
-          case 3:
             ADC::update();
-            break;
-          case 4:
             PAGINATION::update();
             break;
-          case 5:
+          // case 3:
+          //   break;
+          case 3:
             LEDS::update();
             break;
-          case 6:
+          case 4:
             SETTINGS::update();
             break;
           default:
@@ -144,7 +149,7 @@ namespace UI {
         }
 
         ++poll_index;
-        if (poll_index > 6) poll_index = 0;
+        if (poll_index > 4) poll_index = 0;
         break;
 
       case UI_MODE_FACTORY_TEST:

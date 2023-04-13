@@ -5,6 +5,8 @@
 
 #include "pico/stdlib.h"
 
+#include "../mailbox.h"
+
 #include "arp.h"
 
 enum class Priority {
@@ -27,15 +29,17 @@ namespace Note_Priority {
     
         Priority    _priority = Priority::LAST;
 
-        uint8_t     _note_state[128];
+        // MUTEX::note_data core0NoteData;
+
+        // uint8_t     _note_state[128];
         uint8_t     _note_state_last[128];
-        uint8_t     _notes_on        =       0;
+        // uint8_t     _notes_on        =       0;
 
         void inc_physical_notes() {
-            _notes_on++;
+            MAILBOX::core0NoteData.notes_on++;
         }
         void dec_physical_notes() {
-            if (_notes_on) _notes_on--; //checks to make sure there is a note on
+            if (MAILBOX::core0NoteData.notes_on) MAILBOX::core0NoteData.notes_on--; //checks to make sure there is a note on
         }
     }
     

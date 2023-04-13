@@ -1,6 +1,8 @@
 #include "note_priority.h"
 
+
 #include "synth.h"
+
 
 namespace Note_Priority {
 
@@ -129,11 +131,13 @@ namespace Note_Priority {
 
   // transfer from Key/Midi notes to Arp/Note Priority
   void update() {
+    // grab values from notes mutex
+
     // Used for updating the playing notes, basically a middle man between physical keys/midi/arp and the synth voices
     for (int i = 0; i < 128; i++) {
       if (!(ARP::get())) {
-        if (_note_state[i] != _note_state_last[i]) {
-          if (_note_state[i]) {
+        if (MAILBOX::core0NoteData.note_state[i] != _note_state_last[i]) {
+          if (MAILBOX::core0NoteData.note_state[i]) {
             
             priority(0x90, i, 127); // synth voice allocation
           } else {
@@ -142,8 +146,8 @@ namespace Note_Priority {
         }
       } else {
         // ARP::clear_notes();
-        if (_note_state[i] != _note_state_last[i]) {
-          if (_note_state[i]) {
+        if (MAILBOX::core0NoteData.note_state[i] != _note_state_last[i]) {
+          if (MAILBOX::core0NoteData.note_state[i]) {
             ARP::add_notes(i);
           } else {
             ARP::remove_notes(i);
@@ -152,27 +156,27 @@ namespace Note_Priority {
       }
     }
     for (int i = 0; i < 128; i++) { 
-      _note_state_last[i] = _note_state[i];
+      _note_state_last[i] = MAILBOX::core0NoteData.note_state[i];
     }
   }
 
   // MIDI/Key input
-  void note_on (uint8_t note) {
-    _note_state[note & 127] = 1;
-    inc_physical_notes();
-  }
-  void note_off (uint8_t note) {
-    _note_state[note & 127] = 0;
-    dec_physical_notes();
-  }
+  // void note_on (uint8_t note) {
+  //   _note_state[note & 127] = 1;
+  //   inc_physical_notes();
+  // }
+  // void note_off (uint8_t note) {
+  //   _note_state[note & 127] = 0;
+  //   dec_physical_notes();
+  // }
   void notes_clear (void) {
     for (int i = 0; i < 128; i++) {
-      _note_state[i] = 0;
+      MAILBOX::core0NoteData.note_state[i] = 0;
     }
-    _notes_on = 0;
+    MAILBOX::core0NoteData.notes_on = 0;
   }
   uint8_t get_notes_on (void) {
-    return _notes_on;
+    return MAILBOX::core0NoteData.notes_on;
   }
   
 }

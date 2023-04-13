@@ -9,6 +9,8 @@
 extern uint32_t sample_clock;
 extern uint32_t sample_clock_last;
 
+#define MIDI_CLOCK_TIMEOUT 20000
+
 namespace ARP {
     namespace {
         enum NoteState {
@@ -28,6 +30,14 @@ namespace ARP {
 
         NoteState note_state = IDLE;
 
+        bool _midi_clock_flag = false;
+        uint8_t _midi_start_flag;        // midi start command
+        uint8_t _midi_stop_flag;    		// midi stop command
+        uint32_t _midi_in_clock_last;   // stores the system time of the last received midi clock
+        uint8_t _midi_clock_present;  // if a midi clock is currently present
+        uint32_t _midi_clock_period;  // time in between midi clock ticks
+        uint8_t _midi_clock_tick_count;
+
         uint16_t _bpm = 120;
         uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
         uint16_t seq_tick = 0;
@@ -36,8 +46,8 @@ namespace ARP {
         bool beat_changed;
         uint16_t _ms_per_minute = 60000;
         uint16_t _samples_per_ms;
-        uint32_t _samples_per_16th;
-        uint8_t  _division = 8;
+        uint32_t _samples_per_division;
+
 
         bool _hold;
         bool _active;
@@ -52,6 +62,7 @@ namespace ARP {
         int8_t _write_index;
 
         uint16_t _rate;
+        uint8_t _division = 8;
         int8_t _range;
         int8_t _octave;
         bool note_active = false;
@@ -72,6 +83,7 @@ namespace ARP {
     void toggle (void);
 
     void tick (void);
+    void midi_tick (void);
 
     uint16_t samples_per_sixteenth_note (void);
     
@@ -104,5 +116,6 @@ namespace ARP {
     long map (long x, long in_min, long in_max, long out_min, long out_max);
     void set_rate (uint16_t rate);
     
+    void set_division (uint16_t division);
 }
 

@@ -13,6 +13,12 @@ namespace ARP {
         set_state(_active);
     }
 
+    void toggle (void) {
+        _active = !_active;
+        clear_notes();
+        stop_all();
+    }
+
     void set_state (bool state) {
         if (state != _active) {
             _active = state;
@@ -35,15 +41,11 @@ namespace ARP {
         return _active;
     }
 
-    void toggle (void) {
-        _active = !_active;
-        clear_notes();
-        stop_all();
-    }
 
     void set_bpm (uint16_t bpm) {
         _bpm = bpm;
-        _samples_per_16th = _samples_per_ms * (_ms_per_minute/_bpm)/8;
+
+        _samples_per_division = (60 * 44100 / _bpm) / _division;
     }
     
     uint8_t get_bpm () {
@@ -118,7 +120,7 @@ namespace ARP {
 
     void update (void) {
         if (_active) {
-            if ((sample_clock >= _samples_per_16th)) { //} && (sample_clock != sample_clock_last)) {
+            if ((sample_clock >= _samples_per_division)) { //} && (sample_clock != sample_clock_last)) {
                 sample_clock = 0;
                 beat++;
                 beat_changed = true;
@@ -296,5 +298,70 @@ namespace ARP {
     void set_division (uint16_t division) {
         // set the division of the bpm clock...
         // currently /8 to get a 16th note, but rename the _samples_per_16th to _samples_per_division
+        uint8_t temp = map(division, 0, 1023, 0, 9);
+        switch (temp)
+        {
+        case 0: // 1/1
+            _division = 1;
+            break;
+        case 1: // 1/2
+            _division = 2;
+            break;
+        case 2: // 1/3
+            _division = 3;
+            break;
+        case 3: // 1/4
+            _division = 4;
+            break;
+        case 4: // 1/6
+            _division = 6;
+            break;
+        case 5: // 1/8
+            _division = 8;
+            break;
+        case 6: // 1/12 
+            _division = 12;
+            break;
+        case 7: // 1/16
+            _division = 16;
+            break;
+        case 8: // 1/24
+            _division = 24;
+            break;
+        case 9: // 1/32
+            _division = 32;
+            break;
+        // case 10: // 1/48    
+        //     _division = 48;
+        //     break;
+        // case 11: // 1/64
+        //     _division = 64;
+        //     break;
+        default:
+            break;
+        }
+        _samples_per_division = (60 * 44100 / _bpm) / _division;
     }
+
+    // void midi_tick (void) {
+    //     _midi_clock_flag = true;
+
+    //     _midi_clock_period = sample_clock - _midi_in_clock_last;
+    //     _midi_in_clock_last = sample_clock;
+
+    //     _midi_clock_tick_count++;
+    //     if (_midi_clock_tick_count >= 24) {
+    //         _midi_clock_tick_count = 0;
+    //         // flash_led(40) ???
+    //     }
+
+    // }
+
+    // void check_for_midi_clock (void) {
+    //     if ((sample_clock - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT)) {
+    //         _midi_clock_present = false;
+    //     } else {
+    //         _midi_clock_present = true;
+    //     }
+    // }
 }

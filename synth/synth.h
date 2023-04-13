@@ -5,6 +5,7 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
+#include "adsr.h"
 #include "wavetable.h"
 #include "log_table.h"
 
@@ -60,6 +61,9 @@ namespace SYNTH {
 
   extern uint8_t _octave;
 
+  static bool _soft_start = true;
+  static uint8_t  _soft_start_index = 0;
+  static int16_t _soft_start_sample = -32768;
 
   // extern bool      filter_enable;
   // extern uint16_t  filter_cutoff_frequency;
@@ -67,8 +71,10 @@ namespace SYNTH {
   struct Voices {
     
     // ADSR envelope;
+    ADSREnvelope ADSR{_sample_rate, _attack, _decay, _sustain, _release};
 
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
+
 
     bool      _gate         = false;  // used for tracking a note that's released, but not finished.
     bool      _active       = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
@@ -84,13 +90,6 @@ namespace SYNTH {
 
     // int32_t   filter_last_sample;
 
-    uint32_t  adsr_frame    = 0;      // number of frames into the current ADSR phase
-    uint32_t  adsr_end_frame = 0;     // frame target at which the ADSR changes to the next phase
-    uint32_t  adsr          = 0;
-    int32_t   adsr_step     = 0;
-    ADSRPhase adsr_phase    = ADSRPhase::OFF;
-    uint64_t  adsr_activation_time = 0;
-
     uint8_t   wave_buf_pos  = 0;      //
     int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
 
@@ -103,56 +102,20 @@ namespace SYNTH {
 
       _note = note;
       _frequency = frequency;
+
       
-      trigger_attack();
+      
+      ADSR.trigger_attack();
     }
-    void note_off () {
+    void note_off (void) {
       _gate = false;
-      trigger_release();
+      ADSR.trigger_release();
     }
-    
-    void clear () {
+    void note_clear (void) {
       _active = false;
       _note = 0;
       _frequency = 0;
     }
-    
-    void trigger_attack()  {
-      adsr_activation_time = to_ms_since_boot(get_absolute_time());
-
-      adsr_frame = 0;
-      adsr_phase = ADSRPhase::ATTACK;
-      adsr_end_frame = (_attack * _sample_rate) / 1000;
-      adsr_step = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(adsr_end_frame);
-    }
-    void trigger_decay() {
-      adsr_frame = 0;
-      adsr_phase = ADSRPhase::DECAY;
-      adsr_end_frame = (_decay * _sample_rate) / 1000;
-      adsr_step = (int32_t(_sustain << 8) - int32_t(adsr)) / int32_t(adsr_end_frame);
-    }
-    void trigger_sustain() {
-      adsr_frame = 0;
-      adsr_phase = ADSRPhase::SUSTAIN;
-      adsr_end_frame = 0;
-      adsr_step = 0;
-    }
-    void trigger_release() {
-      adsr_frame = 0;
-      adsr_phase = ADSRPhase::RELEASE;
-      adsr_end_frame = (_release * _sample_rate) / 1000;
-      adsr_step = (int32_t(0) - int32_t(adsr)) / int32_t(adsr_end_frame);
-    }
-    void stopped() { 
-      clear();
-
-      adsr_activation_time = 0;
-      adsr_frame = 0;
-      adsr_phase = ADSRPhase::OFF;
-      adsr_end_frame = 0;
-      adsr_step = 0;
-    }
-    
     
   };
 

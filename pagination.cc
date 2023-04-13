@@ -2,10 +2,10 @@
 
 namespace PAGINATION {
     void init() {
-      for(int i=0; i < MAX_KNOBS; i++){
-        // knob_values[i] = ADC::value(i);
-        _states[i] = KnobState::ACTIVE;
-      }
+      // for(int i=0; i < MAX_KNOBS; i++){
+      //   // knob_values[i] = ADC::value(i);
+      //   _states[i] = KnobState::ACTIVE;
+      // }
       update();
     }
     void protect() {

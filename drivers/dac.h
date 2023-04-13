@@ -37,9 +37,7 @@ namespace DAC {
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
         uint16_t     _buffer_size    = BUFFER_SIZE;
-        uint16_t    _buffer[BUFFER_SIZE];
-
-
+        uint16_t    _buffer[BUFFER_SIZE] ;
 
         volatile uint16_t buf_a[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         volatile uint16_t buf_b[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
@@ -49,8 +47,8 @@ namespace DAC {
         int dma_chan_a, dma_chan_b;
 
         void dma_buffer(uint16_t* buf) {
-            for (int i = 0; i < _buffer_size; i++) { // Number of samples loop = 256...
-                buf[i] = (process()) | (0b0111<<12); // buffer loads the associated sample value, and masks with the transfer infor for the DAC...
+            for (int i = 0; i < _buffer_size; i++) {
+                buf[i] = (process()) | (0b0111<<12);
                 ++sample_clock;
             }
             _full = true;
@@ -99,6 +97,7 @@ namespace DAC {
             gpio_set_function(DAC_CLK, GPIO_FUNC_SPI);
             gpio_set_function(DAC_CS, GPIO_FUNC_SPI); // New CS setup - replaces next 3 lines
         }
+
         void init_dma (void) {
             
             // Get a free channel, panic() if there are none

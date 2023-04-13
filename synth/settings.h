@@ -1,51 +1,60 @@
 #pragma once
 
+#include "string.h"
 #include "pico/stdlib.h"
+#include "hardware/flash.h"
+#include "hardware/sync.h"
 
 #include "synth.h"
 #include "modulation.h"
 #include "arp.h"
 
-
-
-#define MAX_PRESETS     7
+#define MAX_PRESETS     8
 
 namespace SETTINGS {
-    struct Pre {
+    struct PRESET {
         struct Wav {
-            uint16_t shape;
-            uint16_t vector;
-            uint16_t octave;
-            uint16_t pitch;
+            uint16_t shape = 0;
+            uint16_t vector = 0;
+            uint16_t octave = 0;
+            uint16_t pitch = 511;
         };
         struct Env {
-            uint16_t attack;
-            uint16_t decay;
-            uint16_t sustain;
-            uint16_t release;
+            uint16_t attack = 10;
+            uint16_t decay = 10;
+            uint16_t sustain = 1023;
+            uint16_t release = 10;
         };
         struct Lfo {
-            bool status;
-            uint16_t matrix;
-            uint16_t rate;
-            uint16_t depth;
-            uint16_t wave;
+            bool state = false;
+            uint16_t matrix = 0;
+            uint16_t rate = 0;
+            uint16_t depth = 0;
+            uint16_t wave = 0;
         };
         struct Arp {
-            bool status;
-            uint16_t hold;
-            uint16_t rate; // division/bpm as a shift function
-            uint16_t range;
-            uint16_t direction;
+            bool state = false;
+            uint16_t hold = 0;
+            uint16_t divisisions = 511;
+            uint16_t range = 0;
+            uint16_t direction = 0;
         };
+        Wav Wave;
+        Env Envelope;
+        Lfo Modulation;
+        Arp Arpeggiator;
     };
 
     namespace {
         uint8_t _preset;
         uint8_t _page;
         bool    _changed;
+
+        uint8_t _default_preset = 0;
+
+        
     }
-    class PRESET {
+    class CONTROL {
         private:
             class Page {
                 private:
@@ -103,13 +112,13 @@ namespace SETTINGS {
             };
   
         public:
-            PRESET () { }
-            ~PRESET () { }
+            CONTROL () { }
+            ~CONTROL () { }
             
             Page    MAIN {SYNTH::set_waveshape,     SYNTH::set_wavevector,      SYNTH::set_octave,      SYNTH::set_pitch_scale};
             Page    ADSR {SYNTH::set_attack,        SYNTH::set_decay,           SYNTH::set_sustain,     SYNTH::set_release};
             Page    MOD1 {MOD::set_matrix,          MOD::set_rate,              MOD::set_depth,         MOD::set_wave,              MOD::set_state};
-            Page    ARP  {ARP::set_hold,            ARP::set_rate,              ARP::set_range,         ARP::set_direction,         ARP::set_state};
+            Page    ARP  {ARP::set_hold,            ARP::set_division,          ARP::set_range,         ARP::set_direction,         ARP::set_state};
 
             void init (void) { }
 
@@ -151,6 +160,9 @@ namespace SETTINGS {
             void toggle_lfo (void) {
                 MOD1.toggle();
             }
+            void set_lfo (bool state) {
+                MOD1.set_state(state);
+            }
             bool get_lfo (void) {
                 return MOD1.get_state();;
             }
@@ -158,16 +170,19 @@ namespace SETTINGS {
             void toggle_arp (void) {
                 ARP.toggle();
             }
+            void set_arp (bool state) {
+                ARP.set_state(state);
+            }
             bool get_arp (void) {
                 return ARP.get_state();;
             }
             
-            void fetch (void) {
-                MAIN.fetch();
-                ADSR.fetch();
-                MOD1.fetch();
-                ARP.fetch();
-            }
+            // void fetch (void) {
+            //     MAIN.fetch();
+            //     ADSR.fetch();
+            //     MOD1.fetch();
+            //     ARP.fetch();
+            // }
             void update (void) {
                 MAIN.update();
                 ADSR.update();
@@ -176,12 +191,15 @@ namespace SETTINGS {
             }
     };
     
-    extern PRESET Preset[8];
+    extern CONTROL Control;
+    extern PRESET Preset[MAX_PRESETS];
     
     void init (void);
     
     void set_preset (uint8_t preset);
     uint8_t get_preset (void);
+    void save_preset (void);
+    void load_preset (void);
 
     void set_page (uint8_t page);
     uint8_t get_page (void);
@@ -195,6 +213,5 @@ namespace SETTINGS {
     void toggle_arp (void);
     bool get_arp (void);
 
-    void fetch ();
     void update (void);
 };

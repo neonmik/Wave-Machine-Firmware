@@ -7,15 +7,9 @@
 
 #include "pagination.h"
 
-
-#define abs(x) ({ __typeof__(x) _x = (x); _x >= 0 ? _x : -_x; })
-
 #define KEYS_PRINT_OUT      0
 #define KNOBS_PRINT_OUT     0
 #define HARDWARE_TEST       0
-
-
-
 
 namespace UI {
 
@@ -54,6 +48,9 @@ namespace UI {
     void set_preset(uint8_t preset);
     void change_preset(void);
     uint8_t get_preset(void);
+
+    void toggle_test_lfo (void);
+    void toggle_test_arp (void);
 
     // ----------------------
     //        HARDWARE

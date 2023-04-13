@@ -23,6 +23,8 @@
 
 #include "../synth/note_priority.h"
 
+#include "../mailbox.h"
+
 namespace KEYS {
     class Keyboard {
         private:
@@ -70,10 +72,24 @@ namespace KEYS {
             }
 
     };
+    namespace {
+
+        void inc_physical_notes() {
+            MAILBOX::core1NoteData.notes_on++;
+        }
+        void dec_physical_notes() {
+            if (MAILBOX::core1NoteData.notes_on) MAILBOX::core1NoteData.notes_on--; //checks to make sure there is a note on
+        }
+    }
     
     extern Keyboard Keys;
 
     void init (void);
     void read (void);
     void update (void);
+
+    void note_on (uint8_t note);
+    void note_off (uint8_t note);
+    void note_clear (void);
+    uint8_t get_notes_on (void);
 }

@@ -9,6 +9,8 @@
 #include "drivers/adc.h"
 
 
+#define abs(x) ({ __typeof__(x) _x = (x); _x >= 0 ? _x : -_x; })
+
 #define MAX_PAGES         4 // the max number of pages available
 #define MAX_KNOBS         4 // the max number of knobs available
 

@@ -4,7 +4,9 @@
 
 namespace SYNTH {
 
-  uint16_t oscillator = Oscillator::WAVETABLE | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+
+
+  uint16_t oscillator = Oscillator::WAVETABLE; // | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   uint16_t _wave_shape;
   uint16_t _wave_vector;
@@ -25,7 +27,7 @@ namespace SYNTH {
   // bool      filter_enable = false;
   // uint16_t  filter_cutoff_frequency = 1;
 
-  
+
 
   // float filter_epow = 1 - expf(-(1.0f / 44100.0f) * 2.0f * pi * int32_t(filter_cutoff_frequency));
 
@@ -75,7 +77,7 @@ namespace SYNTH {
 
     bool any_channel_playing = false;
     for(int c = 0; c < MAX_VOICES; c++) {
-      if(channels[c].volume > 0 && channels[c].adsr_phase != ADSRPhase::OFF) {
+      if(channels[c].volume > 0 && !channels[c].ADSR.isActive()) {
         any_channel_playing = true;
       }
     }
@@ -84,150 +86,144 @@ namespace SYNTH {
   }
 
   uint16_t get_audio_frame() {
-    int32_t sample = 0;  // used to combine channel output
-    int16_t clipped_sample = 0;
-
-    // implemented this here so that it's set for the whole sample run...
-    uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
-    int32_t output_volume = (volume - _tremelo);
-
     
-    
-    for(int c = 0; c < MAX_VOICES; c++) {
+    if (_soft_start) {
+      _soft_start_index++;
+      if (_soft_start_index >= 2) {
+        _soft_start_index = 0;
+        _soft_start_sample += 1;
+        if (_soft_start_sample >= 0) {
+          _soft_start_sample = 0;
+          _soft_start = false;
+        }
+      }
+      return (_soft_start_sample+32767)>>4;
+    } 
 
-      auto &channel = channels[c];
+    else {
+      int32_t sample = 0;  // used to combine channel output
+      int16_t clipped_sample = 0;
+
+      // implemented this here so that it's set for the whole sample run...
+      uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
+      int32_t output_volume = (volume - _tremelo);
 
       
-      // increment the waveform position counter. this provides an
-      // Q16 fixed point value representing how far through
-      // the current waveform we are
-      channel.waveform_offset += (((((channel._frequency * _pitch_scale)>>9) << _octave) * 256) << 8) / _sample_rate;
-
-      //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
-      channel.waveform_offset += _vibrato;
-
-      if(channel.adsr_phase == ADSRPhase::OFF) {
-        continue;
-      }
-
-      if ((channel.adsr_frame >= channel.adsr_end_frame) && (channel.adsr_phase != ADSRPhase::SUSTAIN)) {
-        switch (channel.adsr_phase) {
-          case ADSRPhase::ATTACK:
-            channel.trigger_decay();
-            break;
-          case ADSRPhase::DECAY:
-            channel.trigger_sustain();
-            break;
-          case ADSRPhase::RELEASE:
-            channel.stopped();
-            break;
-          default:
-            break;
-        }
-      }
-
       
-      channel.adsr += channel.adsr_step;
-      channel.adsr_frame++;
+      for(int c = 0; c < MAX_VOICES; c++) {
 
-      if(channel.waveform_offset & 0x10000) {
-        // if the waveform offset overflows then generate a new
-        // random noise sample
-        channel.noise = prng_normal();
-      }
+        auto &channel = channels[c];
 
-      channel.waveform_offset &= 0xffff;
-
-      // check if any waveforms are active for this channel
-      if(channel._active) {
-        uint8_t waveform_count = 0;
-        int32_t channel_sample = 0;
-
-
-        if(oscillator & Oscillator::NOISE) {
-          channel_sample += channel.noise;
-          waveform_count++;
-        }
-
-        if(oscillator & Oscillator::SAW) {
-          channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
-          waveform_count++;
-        }
-
-        // creates a triangle wave of ^
-        if (oscillator & Oscillator::TRIANGLE) {
-          if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
-            channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
-          }
-          else { // final quarter up slope
-            channel_sample += int32_t(0x7fff) - ((int32_t(channel.waveform_offset) - int32_t(0x7fff)) * 2);
-          }
-          waveform_count++;
-        }
-
-        if (oscillator & Oscillator::SQUARE) {
-          channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
-          waveform_count++;
-        }
         
-        if(oscillator & Oscillator::SINE) {
-          // the sine_waveform sample contains 256 samples in
-          // total so we'll just use the most significant bits
-          // of the current waveform position to index into it
-          channel_sample += sine_waveform[(channel.waveform_offset >> 8)];
-          waveform_count++;
+        // increment the waveform position counter. this provides an
+        // Q16 fixed point value representing how far through
+        // the current waveform we are
+        channel.waveform_offset += (((((channel._frequency * _pitch_scale)>>9) << _octave) * 256) << 8) / _sample_rate;
+
+        //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
+        channel.waveform_offset += _vibrato;
+
+        channel.ADSR.update();
+
+        if(channel.waveform_offset & 0x10000) {
+          // if the waveform offset overflows then generate a new
+          // random noise sample
+          channel.noise = prng_normal();
+        }
+
+        channel.waveform_offset &= 0xffff;
+
+        // check if any waveforms are active for this channel
+        if(channel._active) {
+          uint8_t waveform_count = 0;
+          int32_t channel_sample = 0;
+
+
+          if(oscillator & Oscillator::NOISE) {
+            channel_sample += channel.noise;
+            waveform_count++;
+          }
+
+          if(oscillator & Oscillator::SAW) {
+            channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
+            waveform_count++;
+          }
+
+          // creates a triangle wave of ^
+          if (oscillator & Oscillator::TRIANGLE) {
+            if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
+              channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
+            }
+            else { // final quarter up slope
+              channel_sample += int32_t(0x7fff) - ((int32_t(channel.waveform_offset) - int32_t(0x7fff)) * 2);
+            }
+            waveform_count++;
+          }
+
+          if (oscillator & Oscillator::SQUARE) {
+            channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
+            waveform_count++;
+          }
           
-        }
+          if(oscillator & Oscillator::SINE) {
+            // the sine_waveform sample contains 256 samples in
+            // total so we'll just use the most significant bits
+            // of the current waveform position to index into it
+            channel_sample += sine_waveform[(channel.waveform_offset >> 8)];
+            waveform_count++;
+            
+          }
 
-        if(oscillator & Oscillator::WAVETABLE) {
+          if(oscillator & Oscillator::WAVETABLE) {
 
-          // the wavetable sample contains 256 samples in
-          // total so we'll just use the most significant bits
-          // of the current waveform position to index into it
-          channel_sample += wavetable[(channel.waveform_offset >> 8) + vector];
-          waveform_count++;
+            // the wavetable sample contains 256 samples in
+            // total so we'll just use the most significant bits
+            // of the current waveform position to index into it
+            channel_sample += wavetable[(channel.waveform_offset >> 8) + vector];
+            waveform_count++;
 
-          // OLD Arbitary Waveform? Not sure how it was meant to work, but it didnt...
-          // channel_sample += channel.wave_buffer[channel.wave_buf_pos];
-          // if (++channel.wave_buf_pos == 64) {
-          //   channel.wave_buf_pos = 0;
-          //   if(channel.wave_buffer_callback)
-          //       channel.wave_buffer_callback(channel);
+            // OLD Arbitary Waveform? Not sure how it was meant to work, but it didnt...
+            // channel_sample += channel.wave_buffer[channel.wave_buf_pos];
+            // if (++channel.wave_buf_pos == 64) {
+            //   channel.wave_buf_pos = 0;
+            //   if(channel.wave_buffer_callback)
+            //       channel.wave_buffer_callback(channel);
+            // }
+            // waveform_count++;
+          }
+
+          // divide the sample by the amount of waveforms - good for multi oscillator voices
+          channel_sample = channel_sample / waveform_count;
+          
+          // apply ADSR
+          channel_sample = (int64_t(channel_sample) * int32_t((channel.ADSR.get_adsr()) >> 8)) >> 16;
+
+          // apply channel volume
+          channel_sample = (int64_t(channel_sample) * int32_t(channel.volume)) >> 16;
+
+          // apply channel filter
+          
+          // if (filter_enable) {
+          //   channel_sample += (channel_sample - channel.filter_last_sample) * filter_epow;
           // }
-          // waveform_count++;
+
+          // channel.filter_last_sample = channel_sample;
+
+          sample += channel_sample;
         }
-
-        // divide the sample by the amount of waveforms - good for multi oscillator voices
-        channel_sample = channel_sample / waveform_count;
-        
-        // apply ADSR
-        channel_sample = (int64_t(channel_sample) * int32_t(channel.adsr >> 8)) >> 16;
-
-        // apply channel volume
-        channel_sample = (int64_t(channel_sample) * int32_t(channel.volume)) >> 16;
-
-        // apply channel filter
-        
-        // if (filter_enable) {
-        //   channel_sample += (channel_sample - channel.filter_last_sample) * filter_epow;
-        // }
-
-        // channel.filter_last_sample = channel_sample;
-
-        sample += channel_sample;
       }
+      
+
+      sample = (int64_t(sample) * output_volume) >> 16;
+
+      //attempt at soft clipping - doesnt work
+      // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
+
+      // clip result to 16-bit
+      sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
+      return (sample+32767)>>4;
     }
-    
 
-    sample = (int64_t(sample) * output_volume) >> 16;
-
-    //attempt at soft clipping - doesnt work
-    // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
-
-    // clip result to 16-bit
-    sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
-
-    return (sample+32767)>>4;
   }
 
   void set_waveshape (uint16_t shape) {

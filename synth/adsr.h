@@ -11,31 +11,44 @@ enum class Phase : uint8_t {
     OFF
 };
 
-class ADSR {
+class ADSREnvelope {
     public:
-        uint32_t    _sample_rate;
 
-        uint16_t    attack_ms;      // attack period - moved to global as it's not needed per voice for this implementation.
-        uint16_t    decay_ms;      // decay period
-        uint16_t    sustain;   // sustain volume
-        uint16_t    release_ms;      // release period
-
-        uint32_t    frame            = 0;      // number of frames into the current ADSR phase
-        uint32_t    end_frame        = 0;     // frame target at which the ADSR changes to the next phase
-        uint32_t    adsr              = 0;
-        int32_t     step             = 0;
-        Phase       phase            = Phase::OFF;
-
+        ADSREnvelope (uint32_t& samplerate, uint16_t& attack, uint16_t& decay, uint16_t& sustain, uint16_t& release) : _sample_rate(samplerate), _attack(attack), _decay(decay), _sustain(sustain), _release(release) { }
+        ~ADSREnvelope ( ) { }
 
         void trigger_attack();
         void trigger_decay();
         void trigger_sustain();
         void trigger_release();
+        void stopped();
         
-        void off();
-        
-        void init(uint32_t sample_rate);
-        void update();
+        // Disabled until I need per trigger ADSR...
+        // void set_attack(uint16_t attack);
+        // void set_decay(uint16_t decay);
+        // void set_sustain(uint16_t sustain);
+        // void set_release(uint16_t release);
+
+        void update(void);
+
+        bool isActive() { return _phase != Phase::OFF; }
+        bool isReleasing() { return _phase == Phase::RELEASE; }
+
+        uint32_t get_adsr() { return _adsr; }
+
+    private:
+        uint32_t&    _sample_rate;
+
+        uint16_t&   _attack;      // attack period - moved to global as it's not needed per voice for this implementation.
+        uint16_t&   _decay;      // decay period
+        uint16_t&   _sustain;   // sustain volume
+        uint16_t&   _release;      // release period
+
+        uint32_t    _frame            = 0;      // number of frames into the current ADSR phase
+        uint32_t    _end_frame        = 0;     // frame target at which the ADSR changes to the next phase
+        uint32_t    _adsr             = 0;
+        int32_t     _step             = 0;
+        Phase       _phase            = Phase::OFF;
 };
 
 
@@ -75,3 +88,7 @@ class ADSR {
   // | X  |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
   // |X   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
   // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+--->
+
+
+
+  
