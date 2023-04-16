@@ -36,7 +36,9 @@
 			"*.tcc": "cpp",
 			"cinttypes": "cpp",
 			"typeinfo": "cpp",
-			"numeric": "cpp"
+			"numeric": "cpp",
+			"__config": "cpp",
+			"__nullptr": "cpp"
 		},
 		"cortex-debug.variableUseNaturalFormat": true
 	}

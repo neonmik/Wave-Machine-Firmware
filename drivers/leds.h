@@ -42,15 +42,15 @@ namespace LEDS {
             }
             void on () {
                 _state = true;
-                Led::set(_state);
+                set(_state);
             }
             void off (){
                 _state = false;
-                Led::set(_state);
+                set(_state);
             }
             void toggle (void) {
                 _state = !_state;
-                Led::set(_state);
+                set(_state);
             }
             void flash (int repeats, int delay) {
                 for (int r = 0; r < repeats; r++) {
@@ -186,12 +186,12 @@ namespace LEDS {
     extern Led LFO;
     extern Led ARP;
     extern Rgb PRESET;
-    extern SR  KNOBS;
+    extern SR  KNOBS; // for clearing only!
     extern SR  KNOB_1;
     extern SR  KNOB_2;
     extern SR  KNOB_3;
     extern SR  KNOB_4;
-    extern SR  PAGES;
+    extern SR  PAGES; // for clearing only!
     extern SR  PAGE_1;
     extern SR  PAGE_2;
     extern SR  PAGE_3;

@@ -9,9 +9,15 @@
 #include "wavetable.h"
 #include "log_table.h"
 
+#include "../mailbox.h"
+
 
 namespace SYNTH {
+  
+  namespace {
+    MAILBOX::synth_data& SYNTH_DATA = MAILBOX::SYNTH_DATA.core0;
 
+  }
 
   #define MAX_VOICES 8
 
@@ -78,7 +84,7 @@ namespace SYNTH {
 
     bool      _gate         = false;  // used for tracking a note that's released, but not finished.
     bool      _active       = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
-    uint64_t  activation_time  = 0;
+    uint32_t  activation_time  = 0;
 
     uint8_t   _note         = 0;
     uint16_t  _frequency    = 0;    // frequency of the voice (Hz)
@@ -103,7 +109,7 @@ namespace SYNTH {
       _note = note;
       _frequency = frequency;
 
-      
+      activation_time = to_ms_since_boot(get_absolute_time());
       
       ADSR.trigger_attack();
     }
@@ -139,4 +145,5 @@ namespace SYNTH {
   void set_sustain (uint16_t sustain);
   void set_release (uint16_t release);
   
+  void update (void);
 }

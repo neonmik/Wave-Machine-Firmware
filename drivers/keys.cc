@@ -25,6 +25,11 @@ namespace KEYS {
     gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
     gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
 
+    printf("MUX_A: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_A));
+    printf("MUX_B: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_B));
+    printf("MUX_C: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_C));
+    printf("MUX_D: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_D));
+
     // initiate pins for mux output
     gpio_init(MUX_OUT_0);
     gpio_init(MUX_OUT_1);
@@ -120,7 +125,7 @@ namespace KEYS {
         note_off(i+48);
       }
     }
-    MAILBOX::send();
+    MAILBOX::NOTE_DATA.send();
 
 
     // Page
@@ -161,20 +166,20 @@ namespace KEYS {
   }
 
   void note_on (uint8_t note) {
-    MAILBOX::core1NoteData.note_state[note & 127] = 1;
+    NOTES.note_state[note & 127] = 1;
     inc_physical_notes();
   }
   void note_off (uint8_t note) {
-    MAILBOX::core1NoteData.note_state[note & 127] = 0;
+    NOTES.note_state[note & 127] = 0;
     dec_physical_notes();
   }
   void notes_clear (void) {
     for (int i = 0; i < 128; i++) {
-      MAILBOX::core1NoteData.note_state[i] = 0;
+      NOTES.note_state[i] = 0;
     }
-    MAILBOX::core1NoteData.notes_on = 0;
+    NOTES.notes_on = 0;
   }
   uint8_t get_notes_on (void) {
-    return MAILBOX ::core1NoteData.notes_on;
+    return NOTES.notes_on;
   }
 }

@@ -10,6 +10,8 @@
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
 
+#include "../synth/beat_clock.h"
+
 #define DAC_DATA        11
 #define DAC_CLK         10
 #define DAC_CS          9
@@ -50,6 +52,7 @@ namespace DAC {
             for (int i = 0; i < _buffer_size; i++) {
                 buf[i] = (process()) | (0b0111<<12);
                 ++sample_clock;
+                BEAT_CLOCK::tick();
             }
             _full = true;
         }

@@ -37,7 +37,6 @@ namespace SYNTH {
   Voices channels[MAX_VOICES];
 
   void voice_on (uint8_t voice, uint8_t note, uint16_t frequency) {
-    if (!note) return;
     channels[voice].note_on(note, frequency);
   }
   void voice_off (uint8_t voice) {
@@ -77,7 +76,7 @@ namespace SYNTH {
 
     bool any_channel_playing = false;
     for(int c = 0; c < MAX_VOICES; c++) {
-      if(channels[c].volume > 0 && !channels[c].ADSR.isActive()) {
+      if(channels[c].volume > 0 && channels[c].ADSR.isStopped()) {
         any_channel_playing = true;
       }
     }
@@ -124,6 +123,7 @@ namespace SYNTH {
         channel.waveform_offset += _vibrato;
 
         channel.ADSR.update();
+        if (channel.ADSR.isStopped()) channel.note_clear();
 
         if(channel.waveform_offset & 0x10000) {
           // if the waveform offset overflows then generate a new
@@ -253,6 +253,18 @@ namespace SYNTH {
   }
   void set_release (uint16_t release) {
     _release = (release<<2)+2;
+  }
+
+  void update () {
+    set_waveshape(SYNTH_DATA.waveshape);
+    set_wavevector(SYNTH_DATA.vector);
+    set_octave(SYNTH_DATA.octave);
+    set_pitch_scale(SYNTH_DATA.pitch);
+    
+    set_attack(SYNTH_DATA.attack);
+    set_decay(SYNTH_DATA.decay);
+    set_sustain(SYNTH_DATA.sustain);
+    set_release(SYNTH_DATA.release);
   }
 }
 

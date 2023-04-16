@@ -26,14 +26,18 @@ namespace PAGINATION {
         uint8_t current_page = 0;
         
         KnobState _states[MAX_KNOBS];
-        uint32_t last_value[MAX_KNOBS];
-        uint32_t value;
+        int16_t last_value[MAX_KNOBS];
+        uint16_t value;
         bool in_sync;
 
         uint16_t knob_protection_threshold = 10; // the amount of protection the knob gets before unlocking.
+        
+        void protect(int value);
+        void clear(int value);
+        void refresh(void);
+
     }
-    void init();
-    void protect();
-    void update();
+    void init(void);
+    void update(void);
 }
   

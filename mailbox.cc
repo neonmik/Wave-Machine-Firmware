@@ -1,56 +1,26 @@
 #include "mailbox.h"
 
 namespace MAILBOX {
-
-    note_data core0NoteData;
-    note_data core1NoteData;
-
-    note_data mail;
-
+    Mailbox<note_data> NOTE_DATA;
+    Mailbox<synth_data> SYNTH_DATA;
+    Mailbox<mod_data> MOD_DATA;
+    Mailbox<arp_data> ARP_DATA;
+    
     void init() {
-        mailbox_initialized = true;
+        NOTE_DATA.init();
+        SYNTH_DATA.init();
+        MOD_DATA.init();
+        ARP_DATA.init();
     }
-
     void send() {
-        if (!mailbox_initialized) {
-            return;
-        }
-        if (!reading) {
-            mail = core1NoteData;
-            youvegotmail = true;
-        }
-        else {
-            return;
-        }
+        SYNTH_DATA.send();
+        MOD_DATA.send();
+        ARP_DATA.send();
     }
-
     void receive() {
-        if (!mailbox_initialized) {
-            return;
-        }
-        if (youvegotmail) {
-            reading = true;
-            core0NoteData = mail;
-            youvegotmail = false;
-            reading = false;
-        }
-        else {
-            return;
-        }
+        NOTE_DATA.receive();
+        SYNTH_DATA.receive();
+        MOD_DATA.receive();
+        ARP_DATA.receive();
     }
 }
-
-
-
-
-
-
-
-    // void update() {
-    //     if (mutex_try_enter(&sharedDataMutex, NULL)) {
-    //         core0NoteData = core1NoteData;
-    //         unlock();
-    //     } else {
-    //         return;
-    //     }
-    // }

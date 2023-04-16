@@ -4,7 +4,7 @@
 #include "synth.h"
 
 
-namespace Note_Priority {
+namespace NOTE_PRIORITY {
 
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
@@ -16,7 +16,7 @@ namespace Note_Priority {
     // sendNoteOff(note) // put MIDI note out here
     SYNTH::voice_off(slot);
   }
-  void voice_clear() {
+  void voices_clear() {
     for (int i = 0; i < 8; i++) {
       // sendNoteOff(SYNTH::channels[i].note) // put MIDI note out here
       SYNTH::voice_off(i);
@@ -66,24 +66,6 @@ namespace Note_Priority {
                 break; 
               }
               case Priority::FIRST: {
-                
-                // MY code
-                // lastest note used first (keeps first held notes intact, and uses the more recent notes)
-                // uint32_t longest_released_time = 0; // for keeping track of the slot which has been held the longest
-                // uint32_t longest_active_time = 0; // for keeping track of the slot which has been held the longest
-                // for (int i = 0; i < MAX_VOICES; i++)  {
-                //   if (!SYNTH::channels[i].gate && (SYNTH::channels[i].adsr_activation_time>longest_released_time)) {
-                //     longest_released_time = SYNTH::channels[i].adsr_activation_time;
-                //     slot = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
-                //     printf("released slot %u \n", slot);
-                //   }
-                //   //still active
-                //   else if (SYNTH::channels[i].adsr_activation_time>longest_active_time) {
-                //     longest_active_time = SYNTH::channels[i].adsr_activation_time;
-                //     oldest_slot = i; // will give the oldest slot thats still being used
-                //     // printf("finding active slot %u \n", i);
-                //   }
-                // }
 
                 // AI code
                 uint32_t shortest_released_time = 0;
@@ -102,10 +84,6 @@ namespace Note_Priority {
                 break;
               }
             }
-
-            
-
-
             // is there still no free slots?
             if (slot < 0) {
               slot = oldest_slot; // if theres a note thats been released already, use the oldest one, otherwise, use the longest held note
@@ -134,49 +112,35 @@ namespace Note_Priority {
     // grab values from notes mutex
 
     // Used for updating the playing notes, basically a middle man between physical keys/midi/arp and the synth voices
-    for (int i = 0; i < 128; i++) {
-      if (!(ARP::get())) {
-        if (MAILBOX::core0NoteData.note_state[i] != _note_state_last[i]) {
-          if (MAILBOX::core0NoteData.note_state[i]) {
+    if (!(ARP::get())) {
+      for (int i = 0; i < 128; i++) {
+        if (NOTES.note_state[i] != _note_state_last[i]) {
+          if (NOTES.note_state[i]) {
             
             priority(0x90, i, 127); // synth voice allocation
           } else {
             priority(0x80, i, 0); // synth voice allocation
           }
         }
-      } else {
-        // ARP::clear_notes();
-        if (MAILBOX::core0NoteData.note_state[i] != _note_state_last[i]) {
-          if (MAILBOX::core0NoteData.note_state[i]) {
+      }
+    } 
+    else {
+      for (int i = 0; i < 128; i++) {
+        if (NOTES.note_state[i] != _note_state_last[i]) {
+          if (NOTES.note_state[i]) {
             ARP::add_notes(i);
           } else {
             ARP::remove_notes(i);
           }
         }
       }
+      ARP::organise_notes();
+      ARP::update();
     }
+      // _note_state_last[i] = NOTES.note_state[i];
     for (int i = 0; i < 128; i++) { 
-      _note_state_last[i] = MAILBOX::core0NoteData.note_state[i];
+      _note_state_last[i] = NOTES.note_state[i];
     }
-  }
-
-  // MIDI/Key input
-  // void note_on (uint8_t note) {
-  //   _note_state[note & 127] = 1;
-  //   inc_physical_notes();
-  // }
-  // void note_off (uint8_t note) {
-  //   _note_state[note & 127] = 0;
-  //   dec_physical_notes();
-  // }
-  void notes_clear (void) {
-    for (int i = 0; i < 128; i++) {
-      MAILBOX::core0NoteData.note_state[i] = 0;
-    }
-    MAILBOX::core0NoteData.notes_on = 0;
-  }
-  uint8_t get_notes_on (void) {
-    return MAILBOX::core0NoteData.notes_on;
   }
   
 }

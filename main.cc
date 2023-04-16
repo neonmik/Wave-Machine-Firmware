@@ -35,48 +35,47 @@ bool update_flag = false;
 
 
 void core1_main() {
+
   UI::init();
-  // UI::toggle_test_arp();
+
   while (true) {
-    // UI::toggle_test_arp();
+
     UI::update();
-    // UI::toggle_test_arp();
-    // printf("core1\n");
+
   }
 }
 
-int main() {
 
-  MAILBOX::init();
-
-  multicore_launch_core1(core1_main);
-  // UI::init();
+void core0_main() {
 
   SYNTH::init(SAMPLE_RATE);
   MOD::init(SAMPLE_RATE);
   ARP::init(BPM, SAMPLE_RATE);
-
-
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
 
-  // UI::toggle_test_lfo();
   while (true) {
-    // UI::toggle_test_lfo();
     // once the buffer is full, update the timing critical stuff first, then the everything else.
     if (DAC::get_state()) {
       
-      MAILBOX::receive();
-      Note_Priority::update();
+      MAILBOX::receive(); //copy the data from the mailbox to the local variables
 
-      if (ARP::get()) ARP::update();
+      NOTE_PRIORITY::update(); // update notes from the mailbox info
+      SYNTH::update(); // update the controls for the synth
       if (SETTINGS::get_lfo()) MOD::update(); // update the modulation if it is enabled
 
       DAC::clear_state();
-
-      // printf("core0\n");
     }
-    // UI::toggle_test_lfo();
+
   }
+}
+
+int main() {
+  MAILBOX::init();
+
+  multicore_launch_core1(core0_main);
+
+  core1_main();
+  
 } 
 
 

@@ -1,9 +1,11 @@
 #pragma once
 
 #include <stdio.h>
+#include <algorithm>
 #include "pico/stdlib.h"
 
 #include "note_priority.h"
+#include "beat_clock.h"
 
 
 extern uint32_t sample_clock;
@@ -12,7 +14,11 @@ extern uint32_t sample_clock_last;
 #define MIDI_CLOCK_TIMEOUT 20000
 
 namespace ARP {
+
+
     namespace {
+        MAILBOX::arp_data& ARP_DATA = MAILBOX::ARP_DATA.core0;
+        
         enum NoteState {
             IDLE,
             NOTE_ACTIVE,
@@ -38,61 +44,45 @@ namespace ARP {
         uint32_t _midi_clock_period;  // time in between midi clock ticks
         uint8_t _midi_clock_tick_count;
 
-        uint16_t _bpm = 120;
-        uint8_t max_beats = 8; // 4/4 - 4 beats in a bar
-        uint16_t seq_tick = 0;
-        uint16_t prev_beat;
-        uint16_t beat;
-        bool beat_changed;
-        uint16_t _ms_per_minute = 60000;
-        uint16_t _samples_per_ms;
-        uint32_t _samples_per_division;
-
-
         bool _hold;
-        bool _active;
+        bool& _active = MAILBOX::ARP_DATA.core0.enabled;
         
         const uint8_t max_arp = 8;
         uint8_t _notes[max_arp]; //all the notes stored in the arp sequence
         uint8_t _last_note;
         // uint8_t buffer[max_arp];
         
+        uint16_t prev_beat;
+        uint16_t beat;
+
         int8_t _play_index;
         int8_t _count;
         int8_t _write_index;
+        bool _notes_added = false;
 
-        uint16_t _rate;
-        uint8_t _division = 8;
+        
         int8_t _range;
         int8_t _octave;
         bool note_active = false;
         bool release_active = false;
 
         bool _switch = true;
-
-
-        uint16_t arp_delay = 100;
-        uint16_t arp_release = 100;
-        uint32_t arp_ms;
     }
     
-    void on (void);
-    void off (void);
-    void set_state (bool state);
+    // void on (void);
+    // void off (void);
+    // void set_state (bool state);
     bool get (void);
-    void toggle (void);
+    // void toggle (void);
 
-    void tick (void);
-    void midi_tick (void);
-
-    uint16_t samples_per_sixteenth_note (void);
+    // void tick (void);
+    // void midi_tick (void);
     
     void set_bpm (uint16_t bpm);
     uint8_t get_bpm (void);
 
     void set_samplerate (uint16_t sample_rate);
 
-    void set_hold (uint16_t hold);
 
     void init (uint8_t bpm, uint16_t sample_rate);
     
@@ -100,22 +90,21 @@ namespace ARP {
     
     void add_notes (uint8_t note);
     void remove_notes (uint8_t note);
+    void organise_notes (void);
     void clear_notes (void);
     void pass_notes(void);
     void grab_notes(void);
     void stop_all (void);
     
-    // void set_delay (uint16_t delay);
-    // void set_release (uint16_t release);
-
+    void set_hold (uint16_t hold);
+    void set_division (uint16_t division);
     void set_direction (uint16_t direction);
-
     void set_range (uint16_t range);
+
     void update_range (void);
 
-    long map (long x, long in_min, long in_max, long out_min, long out_max);
     void set_rate (uint16_t rate);
+    long map (long x, long in_min, long in_max, long out_min, long out_max);
     
-    void set_division (uint16_t division);
 }
 

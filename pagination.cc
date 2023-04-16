@@ -1,18 +1,27 @@
 #include "pagination.h"
 
 namespace PAGINATION {
+    namespace {
+      void refresh() {
+        LEDS::KNOBS.off();
+        for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
+          protect(i);
+          clear(i);
+        }
+      }
+      void protect(int value) {
+        _states[value] = KnobState::PROTECTED;
+      }
+      void clear(int value) {
+        last_value[value] = -1; //-1 so if the page/preset has changed, it's never the same value
+      }
+    }
     void init() {
       // for(int i=0; i < MAX_KNOBS; i++){
       //   // knob_values[i] = ADC::value(i);
       //   _states[i] = KnobState::ACTIVE;
       // }
       update();
-    }
-    void protect() {
-      LEDS::KNOBS.off();
-      for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
-        _states[i] = KnobState::PROTECTED;
-      }
     }
     void update(){
       if(Buttons::PAGE.get(Buttons::State::SHORT)){
@@ -32,12 +41,12 @@ namespace PAGINATION {
         if (current_page >= pages) current_page = 0;
         
         UI::set_page(current_page);
-        protect();
+        refresh();
       }
 
       if (Buttons::PRESET.get(Buttons::State::SHORT)) {
         UI::change_preset();
-        protect();
+        refresh();
       }
 
       // read knobs values, show sync with the LED, enable knob when it matches the stored value

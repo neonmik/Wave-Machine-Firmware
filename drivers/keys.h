@@ -21,11 +21,10 @@
 
 #include "button.h"
 
-#include "../synth/note_priority.h"
-
 #include "../mailbox.h"
 
 namespace KEYS {
+
     class Keyboard {
         private:
             uint32_t _history[8]    =       
@@ -47,7 +46,7 @@ namespace KEYS {
             
             
 
-            inline uint32_t reverse(uint32_t input) {
+            uint32_t reverse(uint32_t input) {
                 uint32_t output = 0;
                 for (int i = 0; i < 32; i++) {
                     if ((input & (1 << i))) output |= 1 << ((32 - 1) - i);
@@ -73,12 +72,13 @@ namespace KEYS {
 
     };
     namespace {
+        MAILBOX::note_data& NOTES = MAILBOX::NOTE_DATA.core1;
 
         void inc_physical_notes() {
-            MAILBOX::core1NoteData.notes_on++;
+            NOTES.notes_on++;
         }
         void dec_physical_notes() {
-            if (MAILBOX::core1NoteData.notes_on) MAILBOX::core1NoteData.notes_on--; //checks to make sure there is a note on
+            if (NOTES.notes_on) NOTES.notes_on--; //checks to make sure there is a note on
         }
     }
     
