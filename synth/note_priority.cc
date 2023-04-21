@@ -8,13 +8,20 @@ namespace NOTE_PRIORITY {
 
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
-    if (!note) return; //for the ARP? meant to stop the playing of a random note when letting go.
-    // sendNoteOn(note) // put MIDI note out here
-    SYNTH::voice_on(slot, note, get_freq(note));
+    if (note) {
+      SYNTH::voice_on(slot, note, get_freq(note));
+      _voice_notes[slot] = note;
+      _time_activated[slot] = sample_clock;
+      // sendNoteOn(note) // put MIDI note out here
+    } else {
+      return;
+    }
   }
   void voice_off(int slot, int note, int velocity) {
     // sendNoteOff(note) // put MIDI note out here
     SYNTH::voice_off(slot);
+    _voice_notes[slot] = 0;
+    _time_activated[slot] = 0;
   }
   void voices_clear() {
     for (int i = 0; i < 8; i++) {
@@ -29,7 +36,7 @@ namespace NOTE_PRIORITY {
     switch (status)  { //check which type we received
       case 0x90:
         if (velocity>0)  {   //is velocity 0?  if so, we want it to be thought of as note off
-          int8_t slot = -1; // means if no free voices are left, it will be -1 still
+          volatile int8_t slot = -1; // means if no free voices are left, it will be -1 still
 
           for (int i = 0; i < MAX_VOICES; i++)  {
             if (SYNTH::channels[i]._note == note && SYNTH::channels[i]._active) { 
@@ -45,7 +52,7 @@ namespace NOTE_PRIORITY {
           // should skip this is a free voice is found
           if (slot<0) {
             int8_t oldest_slot = -1;
-            uint32_t time_now = to_ms_since_boot(get_absolute_time());
+            volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
             
             switch (_priority) {
               // oldest note used first
@@ -66,8 +73,6 @@ namespace NOTE_PRIORITY {
                 break; 
               }
               case Priority::FIRST: {
-
-                // AI code
                 uint32_t shortest_released_time = 0;
                 uint32_t shortest_active_time = 0;
                 for (int i = 0; i < MAX_VOICES; i++)  {
@@ -91,6 +96,7 @@ namespace NOTE_PRIORITY {
           }
           voice_on(slot, note, velocity);
           
+          
           break;  //only breaks if velocity > 0.  otherwise, the switch just rolls onto next case, note_off.
         }
 
@@ -110,37 +116,31 @@ namespace NOTE_PRIORITY {
   // transfer from Key/Midi notes to Arp/Note Priority
   void update() {
     // grab values from notes mutex
+    bool arpEnabled = ARP::get(); // Store the value of ARP::get() in a variable
 
-    // Used for updating the playing notes, basically a middle man between physical keys/midi/arp and the synth voices
-    if (!(ARP::get())) {
-      for (int i = 0; i < 128; i++) {
-        if (NOTES.note_state[i] != _note_state_last[i]) {
+    for (int i = 0; i < 128; i++) {
+      if (NOTES.note_state[i] != _note_state_last[i]) {
+        if (!arpEnabled) { // Use the stored value of ARP::get()
           if (NOTES.note_state[i]) {
-            
             priority(0x90, i, 127); // synth voice allocation
           } else {
             priority(0x80, i, 0); // synth voice allocation
           }
-        }
-      }
-    } 
-    else {
-      for (int i = 0; i < 128; i++) {
-        if (NOTES.note_state[i] != _note_state_last[i]) {
+        } else {
           if (NOTES.note_state[i]) {
             ARP::add_notes(i);
           } else {
             ARP::remove_notes(i);
           }
         }
+        _note_state_last[i] = NOTES.note_state[i];
       }
+    }
+
+    if (arpEnabled) { // Use the stored value of ARP::get()
       ARP::organise_notes();
       ARP::update();
     }
-      // _note_state_last[i] = NOTES.note_state[i];
-    for (int i = 0; i < 128; i++) { 
-      _note_state_last[i] = NOTES.note_state[i];
-    }
   }
-  
 }
+

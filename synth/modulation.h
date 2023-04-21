@@ -3,10 +3,14 @@
 #include "pico/stdlib.h"
 
 #include "synth.h"
+#include "../mailbox.h"
 
 #include "wavetable.h"
 
+
+
 namespace MOD {
+
 
     enum Matrix : uint8_t{
         OFF = 0,
@@ -15,9 +19,12 @@ namespace MOD {
         VECTOR = 3
     };
 
+    static MAILBOX::mod_data& MOD_DATA = MAILBOX::MOD_DATA.core0;
+    
     class Modulation {
         private:
-            bool        _active;
+
+            bool&        _active = MAILBOX::MOD_DATA.core0.enabled;
 
             
             // uint16_t    _values[4];
@@ -82,28 +89,28 @@ namespace MOD {
                 _wave = ((input>>6)*256);
             }
 
-            void set_state (bool input) {
-                _active = input;
-                if (!_active) {
-                    _vibrato = 0;
-                    _trem = 0;
-                    _vector = 0;
-                    SYNTH::_vibrato = _vibrato;
-                    SYNTH::_tremelo = _trem;
-                    SYNTH::_vector_mod = _vector;
-                }
-            }
+            // void set_state (bool input) {
+            //     _active = input;
+            //     if (!_active) {
+            //         _vibrato = 0;
+            //         _trem = 0;
+            //         _vector = 0;
+            //         SYNTH::_vibrato = _vibrato;
+            //         SYNTH::_tremelo = _trem;
+            //         SYNTH::_vector_mod = _vector;
+            //     }
+            // }
             bool get_state (void) {
                 return _active;
             }
 
-            void clear (void) {
-                set_state(false);
-                init();
-                _vibrato = 0;
-                _trem = 0;
-                _vector = 0;
-            }
+            // void clear (void) {
+            //     set_state(false);
+            //     init();
+            //     _vibrato = 0;
+            //     _trem = 0;
+            //     _vector = 0;
+            // }
 
             void update (void) {
                 if (_active) {
@@ -137,6 +144,14 @@ namespace MOD {
                             _vector = 0;
                             break;
                     }
+                    SYNTH::_vibrato = _vibrato;
+                    SYNTH::_tremelo = _trem;
+                    SYNTH::_vector_mod = _vector;
+                }
+                else {
+                    _vibrato = 0;
+                    _trem = 0;
+                    _vector = 0;
                     SYNTH::_vibrato = _vibrato;
                     SYNTH::_tremelo = _trem;
                     SYNTH::_vector_mod = _vector;

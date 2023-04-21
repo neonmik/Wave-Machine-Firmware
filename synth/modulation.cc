@@ -14,13 +14,18 @@ namespace MOD {
     }
 
     void update () {
+        set_matrix(MOD_DATA.matrix);
+        set_depth(MOD_DATA.depth);
+        set_rate(MOD_DATA.rate);
+        set_wave(MOD_DATA.shape);
+        
         LFO.update();
         // MOD2.update();
     }
 
     void clear () {
-        LFO.clear();
-        // MOD2.clear();
+        // LFO.clear();
+        // // MOD2.clear();
     }
     
     void set_matrix (uint16_t input) {
@@ -36,8 +41,8 @@ namespace MOD {
         LFO.set_wave(input);
     }
     void set_state (bool input) {
-        if (LFO.get_state() != input) {
-            LFO.set_state(input);
-        }
+        // if (LFO.get_state() != input) {
+        //     LFO.set_state(input);
+        // }
     }
 }

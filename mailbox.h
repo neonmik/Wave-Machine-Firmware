@@ -91,6 +91,9 @@ namespace MAILBOX {
 
     
     void init (void);
-    void send (void);
+    void send (uint8_t index);
+    void send_synth (void);
+    void send_mod (void);
+    void send_arp (void);
     void receive (void);
 }

@@ -5,9 +5,9 @@
 #include "hardware/flash.h"
 #include "hardware/sync.h"
 
-// #include "synth.h"
-// #include "modulation.h"
-// #include "arp.h"
+#include "synth.h"
+#include "modulation.h"
+#include "arp.h"
 
 #include "../mailbox.h"
 
@@ -22,8 +22,8 @@ namespace SETTINGS {
             uint16_t pitch = 511;
         };
         struct Env {
-            uint16_t attack = 10;
-            uint16_t decay = 10;
+            uint16_t attack = 2;
+            uint16_t decay = 2;
             uint16_t sustain = 1023;
             uint16_t release = 10;
         };
@@ -63,14 +63,16 @@ namespace SETTINGS {
                     volatile bool _active = true;
                     volatile bool _changed = false;
                     uint16_t _input[4];
-                    uint16_t* _update_vars[4];
-                    bool* _toggle_state; // Optional boolean reference to toggle the state
+                    void (*_update_funcs[4])(uint16_t);
+                    void (*_toggle_func)(bool); // Optional function pointer to toggle the state
                 public:
-                    Page(uint16_t* var1, uint16_t* var2, uint16_t* var3, uint16_t* var4, bool* toggle_state = nullptr) :
-                        _update_vars{var1, var2, var3, var4},
-                        _toggle_state(toggle_state)
-                    {
-                        if (_toggle_state != nullptr) _active = false;
+                    Page(void (*func1)(uint16_t), void (*func2)(uint16_t), void (*func3)(uint16_t), void (*func4)(uint16_t), void (*toggle_func)(bool) = nullptr) {
+                        _update_funcs[0] = func1;
+                        _update_funcs[1] = func2;
+                        _update_funcs[2] = func3;
+                        _update_funcs[3] = func4;
+                        _toggle_func = toggle_func;
+                        if (_toggle_func != nullptr) _active = false;
                     }
                     ~Page() { }
                     void on() {
@@ -83,10 +85,10 @@ namespace SETTINGS {
                         set_state(!_active);
                     }
                     void set_state(bool state) {
-                        if (_toggle_state != nullptr) {
+                        if (_toggle_func != nullptr) {
                             _active = state;
-                            *_toggle_state = state;
                             _changed = true;
+                            _toggle_func(_active);
                         }
                     }
                     bool get_state() {
@@ -102,12 +104,10 @@ namespace SETTINGS {
                     void update() {
                         if (_active && _changed) {
                             for (int i = 0; i < 4; i++) {
-                                *_update_vars[i] = _input[i];
+                                _update_funcs[i](_input[i]);
                             }
                             _changed = false;
                         }
-                    }
-                    void fetch() {
                     }
             };
 
@@ -115,14 +115,18 @@ namespace SETTINGS {
             CONTROL () { }
             ~CONTROL () { }
             
-            MAILBOX::synth_data& SYNTH_DATA = MAILBOX::SYNTH_DATA.core1;
-            MAILBOX::mod_data& MOD_DATA = MAILBOX::MOD_DATA.core1;
-            MAILBOX::arp_data& ARP_DATA = MAILBOX::ARP_DATA.core1;
+            // MAILBOX::synth_data& _SYNTH = MAILBOX::SYNTH_DATA.core1;
+            // MAILBOX::mod_data& _MOD = MAILBOX::MOD_DATA.core1;
+            // MAILBOX::arp_data& _ARP = MAILBOX::ARP_DATA.core1;
 
-            Page    MAIN {&SYNTH_DATA.waveshape,     &SYNTH_DATA.vector,      &SYNTH_DATA.octave,      &SYNTH_DATA.pitch};
-            Page    ADSR {&SYNTH_DATA.attack,        &SYNTH_DATA.decay,       &SYNTH_DATA.sustain,     &SYNTH_DATA.release};
-            Page    MOD1 {&MOD_DATA.matrix,          &MOD_DATA.rate,          &MOD_DATA.depth,         &MOD_DATA.shape,              &MOD_DATA.enabled};
-            Page    ARP  {&ARP_DATA.hold,            &ARP_DATA.division,      &ARP_DATA.range,         &ARP_DATA.direction,          &ARP_DATA.enabled};
+            Page    MAIN {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,        nullptr};
+            Page    ADSR {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,            nullptr};
+            Page    MOD1 {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_wave,                 MOD::set_state};
+            Page    ARP  {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,            ARP::set_state};
+
+            // Page    ADSR {&_SYNTH.attack,        &_SYNTH.decay,       &_SYNTH.sustain,     &_SYNTH.release,          &MAILBOX::send_synth,   nullptr};
+            // Page    MOD1 {&_MOD.matrix,          &_MOD.rate,          &_MOD.depth,         &_MOD.shape,              &MAILBOX::send_mod,     &_MOD.enabled};
+            // Page    ARP  {&_ARP.hold,            &_ARP.division,      &_ARP.range,         &_ARP.direction,          &MAILBOX::send_arp,     &_ARP.enabled};
 
             void init (void) { }
 
@@ -189,7 +193,6 @@ namespace SETTINGS {
                 ADSR.update();
                 MOD1.update();
                 ARP.update();
-                MAILBOX::send();
             }
     };
     

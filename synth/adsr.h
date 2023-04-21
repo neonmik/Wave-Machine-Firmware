@@ -13,23 +13,25 @@ enum class Phase : uint8_t {
 
 class ADSREnvelope {
     private:
-        uint32_t&    _sample_rate;
-
-        uint16_t&   _attack;      // attack period - moved to global as it's not needed per voice for this implementation.
-        uint16_t&   _decay;      // decay period
-        uint16_t&   _sustain;   // sustain volume
-        uint16_t&   _release;      // release period
+        uint32_t&   _attack;
+        uint32_t&   _decay;
+        uint32_t&   _sustain;
+        uint32_t&   _release;
+        
+        bool&       _active;
+        uint8_t&    _note;
+        uint16_t&   _frequency;
 
         uint32_t    _frame            = 0;      // number of frames into the current ADSR phase
-        uint32_t    _end_frame        = 0;     // frame target at which the ADSR changes to the next phase
+        uint32_t    _end_frame        = 0;      // frame target at which the ADSR changes to the next phase
         uint32_t    _adsr             = 0;
         int32_t     _step             = 0;
         Phase       _phase            = Phase::OFF;
 
     public:
 
-        ADSREnvelope(uint32_t& samplerate, uint16_t& attack, uint16_t& decay, uint16_t& sustain, uint16_t& release) 
-        : _sample_rate(samplerate), _attack(attack), _decay(decay), _sustain(sustain), _release(release) { }
+        ADSREnvelope(uint32_t& attack, uint32_t& decay, uint32_t& sustain, uint32_t& release, bool& active, uint8_t& note, uint16_t& frequency) 
+        : _attack(attack), _decay(decay), _sustain(sustain), _release(release), _active(active), _note(note), _frequency(frequency) { }
         ~ADSREnvelope ( ) { }
 
         void trigger_attack();

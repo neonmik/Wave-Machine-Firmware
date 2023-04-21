@@ -55,10 +55,14 @@ namespace SYNTH {
   extern uint16_t   _wave_vector;
   extern uint16_t   _vector_mod;
 
-  extern uint16_t   _attack;      // attack period - moved to global as it's not needed per voice for this implementation.
-  extern uint16_t   _decay;      // decay period
-  extern uint16_t   _sustain;   // sustain volume
-  extern uint16_t   _release;      // release period
+  extern uint32_t   _attack;      // attack period - moved to global as it's not needed per voice for this implementation.
+  extern uint32_t   _decay;      // decay period
+  extern uint32_t   _sustain;   // sustain volume
+  extern uint32_t   _release;      // release period
+  extern uint16_t   _last_attack;      // attack period - moved to global as it's not needed per voice for this implementation.
+  extern uint16_t   _last_decay;      // decay period
+  extern uint16_t   _last_sustain;   // sustain volume
+  extern uint16_t   _last_release;      // release period
 
   extern int16_t    _vibrato;
   extern uint16_t   _tremelo;
@@ -75,9 +79,7 @@ namespace SYNTH {
   // extern uint16_t  filter_cutoff_frequency;
 
   struct Voices {
-    
     // ADSR envelope;
-    ADSREnvelope ADSR{_sample_rate, _attack, _decay, _sustain, _release};
 
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
 
@@ -108,21 +110,22 @@ namespace SYNTH {
 
       _note = note;
       _frequency = frequency;
-
-      activation_time = to_ms_since_boot(get_absolute_time());
       
+      activation_time = to_ms_since_boot(get_absolute_time());
+
       ADSR.trigger_attack();
     }
     void note_off (void) {
       _gate = false;
       ADSR.trigger_release();
     }
-    void note_clear (void) {
-      _active = false;
-      _note = 0;
-      _frequency = 0;
-    }
+    // void note_clear (void) {
+    //   _active = false;
+    //   _note = 0;
+    //   _frequency = 0;
+    // }
     
+    ADSREnvelope ADSR{_attack, _decay, _sustain, _release, _active, _note, _frequency};
   };
 
   extern Voices channels[MAX_VOICES];
@@ -145,5 +148,7 @@ namespace SYNTH {
   void set_sustain (uint16_t sustain);
   void set_release (uint16_t release);
   
+  uint32_t calc_end_frame (uint32_t milliseconds);
+
   void update (void);
 }

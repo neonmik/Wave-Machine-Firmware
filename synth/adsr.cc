@@ -3,13 +3,13 @@
 void ADSREnvelope::trigger_attack()  {
     _frame = 0;
     _phase = Phase::ATTACK;
-    _end_frame = (_attack * _sample_rate) / 1000;
+    _end_frame = _attack;
     _step = (int32_t(0xffffff) - int32_t(_adsr)) / int32_t(_end_frame);
 }
 void ADSREnvelope::trigger_decay() {
     _frame = 0;
     _phase = Phase::DECAY;
-    _end_frame = (_decay * _sample_rate) / 1000;
+    _end_frame = _decay;
     _step = (int32_t(_sustain << 8) - int32_t(_adsr)) / int32_t(_end_frame);
 }
 void ADSREnvelope::trigger_sustain() {
@@ -21,7 +21,7 @@ void ADSREnvelope::trigger_sustain() {
 void ADSREnvelope::trigger_release() {
     _frame = 0;
     _phase = Phase::RELEASE;
-    _end_frame = (_release * _sample_rate) / 1000;
+    _end_frame = _release;
     _step = (int32_t(0) - int32_t(_adsr)) / int32_t(_end_frame);
 }
 
@@ -30,22 +30,11 @@ void ADSREnvelope::stopped() {
     _phase = Phase::OFF;
     _end_frame = 0;
     _step = 0;
+
+    _active = false;
+    _note = 0;
+    _frequency = 0;
 }
-
-// Disabled until I need per trigger ADSR... 
-// void ADSREnvelope::set_attack(uint16_t attack) {
-//     _attack = attack;
-// }
-// void ADSREnvelope::set_decay(uint16_t decay) {
-//     _decay = decay;
-// }
-// void ADSREnvelope::set_sustain(uint16_t sustain) {
-//     _sustain = sustain;
-// }
-// void ADSREnvelope::set_release(uint16_t release) {
-//     _release = release;
-// }
-
 
 void ADSREnvelope::update() {
     if(_phase == Phase::OFF) {

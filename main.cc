@@ -37,6 +37,7 @@ bool update_flag = false;
 void core1_main() {
 
   UI::init();
+  sleep_ms(100);
 
   while (true) {
 
@@ -52,18 +53,25 @@ void core0_main() {
   MOD::init(SAMPLE_RATE);
   ARP::init(BPM, SAMPLE_RATE);
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
-
+  
+  // sleep_ms(10);
+  uint8_t index = 0;
   while (true) {
-    // once the buffer is full, update the timing critical stuff first, then the everything else.
+  
     if (DAC::get_state()) {
+      switch (index) {
+        case 0:
+          MAILBOX::receive(); //copy the data from the mailbox to the local variables
+          index++;
+          break;
+        case 1:
+          NOTE_PRIORITY::update(); // update notes from the mailbox info
+          index = 0;
+          break;
+      }
       
-      MAILBOX::receive(); //copy the data from the mailbox to the local variables
-
-      NOTE_PRIORITY::update(); // update notes from the mailbox info
-      SYNTH::update(); // update the controls for the synth
-      if (SETTINGS::get_lfo()) MOD::update(); // update the modulation if it is enabled
-
       DAC::clear_state();
+
     }
 
   }
@@ -72,9 +80,9 @@ void core0_main() {
 int main() {
   MAILBOX::init();
 
-  multicore_launch_core1(core0_main);
-
-  core1_main();
+  multicore_launch_core1(core1_main);
+  // sleep_ms(10);
+  core0_main();
   
 } 
 

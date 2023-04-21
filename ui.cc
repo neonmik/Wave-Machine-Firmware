@@ -135,8 +135,6 @@ namespace UI {
             ADC::update();
             PAGINATION::update();
             break;
-          // case 3:
-          //   break;
           case 3:
             LEDS::update();
             break;

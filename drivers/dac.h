@@ -84,10 +84,12 @@ namespace DAC {
             if(dma_hw->intr & (1u<<dma_chan_a)) { // channel a complete?
                 dma_hw->ints0=1u<<dma_chan_a; // clear the interrupt request
                 dma_buffer((uint16_t*) buf_a); // buf a transferred, so refill it
+                // return; // trying this for a flip flop effect
             }
             if(dma_hw->intr & (1u<<dma_chan_b)) { // channel b complete?
                 dma_hw->ints0=1u<<dma_chan_b; // clear the interrupt request
                 dma_buffer((uint16_t*) buf_b); // buf b transferred, so refill it
+                // return; // trying this for a flip flop effect
             }
         }
     

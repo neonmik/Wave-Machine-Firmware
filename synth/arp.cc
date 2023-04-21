@@ -38,16 +38,6 @@ namespace ARP {
         }
     }
     bool get (void) {
-        if (!_active) {
-            // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
-            if (!_hold) pass_notes();
-            clear_notes();
-        }
-        if (_active) {
-            stop_all();
-            // need to add some kind of function here to get notes that are currently held down...
-            // grab_notes();
-        }
         return _active;
     }
 
@@ -113,13 +103,9 @@ namespace ARP {
 
     void update (void) {
         if (_active) {
-            set_hold(ARP_DATA.hold);
-            set_division(ARP_DATA.division);
-            set_range(ARP_DATA.range);
-            set_direction(ARP_DATA.direction);
             
             BEAT_CLOCK::update();
-
+            
             if (BEAT_CLOCK::get_changed()) {
                 switch (note_state) {
                     case NOTE_ACTIVE:
@@ -194,18 +180,22 @@ namespace ARP {
         if (_notes_added) {
             uint8_t length      = _count;   // how many entries in the array
             uint8_t temp        = 0;        // set a temp value, never going to be more than 127, so uint8_t is fine
-
-        for (int i = 0; i < length; i++) {     
-            for (int j = i+1; j < length; j++) {     
-                if(_notes[i] > _notes[j]) {    
-                    temp = _notes[i];    
-                    _notes[i] = _notes[j];    
-                    _notes[j] = temp;    
-                }     
+            // printf("notes in: %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
+            for (int i = 0; i < length; i++) {     
+                for (int j = i+1; j < length; j++) {     
+                    if(_notes[i] > _notes[j]) {    
+                        temp = _notes[i];    
+                        _notes[i] = _notes[j];    
+                        _notes[j] = temp;    
+                    }     
+                }
             }
+            _notes_added = false;
+            // printf("notes out: %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
         }
-        _notes_added = false;    
-        }
+        // if (_notes_removed) {
+
+        // }
     }
     void clear_notes () {
         for (int i = 0; i < max_arp; i++) {
@@ -228,22 +218,38 @@ namespace ARP {
         NOTE_PRIORITY::voices_clear();
     }
     
+    void update_controls (void) {
+        set_state(ARP_DATA.enabled);
+        set_hold(ARP_DATA.hold);
+        set_division(ARP_DATA.division);
+        set_range(ARP_DATA.range);
+        set_direction(ARP_DATA.direction);
+
+    }
     void set_hold (uint16_t hold) {
+        if (hold == _last_hold) return;
         bool temp = (bool)(hold>>9);
         // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
         if (_hold) {
             if (temp != _hold) clear_notes();
         }
         _hold = temp;
+        _last_hold = hold;
+
     }
     void set_division (uint16_t division) {
+        if (division == _last_division) return;
+        _last_division = division;
         BEAT_CLOCK::set_division(division);
     }
-    void set_direction (uint16_t value) {
+    void set_direction (uint16_t direction) {
+        if (direction == _last_direction) return;
+        _last_direction = direction;
         // bitshift to get 0-3 for the Arp direction
-        switch (value>>8) {
+        switch (direction>>8) {
             case 0:
                 _direction = ArpDirection::UP;
+
                 break;
             case 1:
                 _direction =  ArpDirection::DOWN;
@@ -256,40 +262,14 @@ namespace ARP {
                 break;
         }
     }
-    void set_range (uint16_t value) {
+    void set_range (uint16_t range) {
+        if (range == _last_range) return;
+        _last_range = range;
         // bit shift to get 0-4 octaves of range for the Arp
-        _range = value>>8;
+        _range = range>>8;
     }
     
-
-
     void set_rate (uint16_t rate) {
-        // for freerunning/external clock
-        // if (!clock_external()) {
-            BEAT_CLOCK::set_bpm(map(rate, 0, 1023, 30, 350));
-        // } else {
-        //     break/leave alone
-        // }
-
+        BEAT_CLOCK::set_bpm(map(rate, 0, 1023, 30, 350));
     }
-
-
-    // void midi_tick (void) {
-    //     _midi_clock_flag = true;
-    //     _midi_clock_period = sample_clock - _midi_in_clock_last;
-    //     _midi_in_clock_last = sample_clock;
-    //     _midi_clock_tick_count++;
-    //     if (_midi_clock_tick_count >= 24) {
-    //         _midi_clock_tick_count = 0;
-    //         // flash_led(40) ???
-    //     }
-    // }
-
-    // void check_for_midi_clock (void) {
-    //     if ((sample_clock - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT)) {
-    //         _midi_clock_present = false;
-    //     } else {
-    //         _midi_clock_present = true;
-    //     }
-    // }
 }

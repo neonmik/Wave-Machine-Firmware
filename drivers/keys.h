@@ -43,6 +43,7 @@ namespace KEYS {
             uint32_t    _last            =       0xFFFFFFFF;
             
             uint8_t     history_index;
+
             
             
 
@@ -73,6 +74,8 @@ namespace KEYS {
     };
     namespace {
         MAILBOX::note_data& NOTES = MAILBOX::NOTE_DATA.core1;
+        
+        bool       _changed         =       false;
 
         void inc_physical_notes() {
             NOTES.notes_on++;

@@ -44,8 +44,8 @@ namespace ARP {
         uint32_t _midi_clock_period;  // time in between midi clock ticks
         uint8_t _midi_clock_tick_count;
 
-        bool _hold;
         bool& _active = MAILBOX::ARP_DATA.core0.enabled;
+        bool  _active_last;
         
         const uint8_t max_arp = 8;
         uint8_t _notes[max_arp]; //all the notes stored in the arp sequence
@@ -61,6 +61,12 @@ namespace ARP {
         bool _notes_added = false;
 
         
+        bool _hold;
+        uint16_t _last_hold;
+        uint16_t _last_division;
+        uint16_t _last_range;
+        uint16_t _last_direction;
+
         int8_t _range;
         int8_t _octave;
         bool note_active = false;
@@ -69,22 +75,16 @@ namespace ARP {
         bool _switch = true;
     }
     
-    // void on (void);
-    // void off (void);
-    // void set_state (bool state);
+
     bool get (void);
-    // void toggle (void);
-
-    // void tick (void);
-    // void midi_tick (void);
-    
-    void set_bpm (uint16_t bpm);
-    uint8_t get_bpm (void);
-
-    void set_samplerate (uint16_t sample_rate);
 
 
     void init (uint8_t bpm, uint16_t sample_rate);
+
+    void set_samplerate (uint16_t sample_rate);
+
+    void set_bpm (uint16_t bpm);
+    uint8_t get_bpm (void);
     
     void update(void);
     
@@ -96,12 +96,14 @@ namespace ARP {
     void grab_notes(void);
     void stop_all (void);
     
+    void set_state (bool state);
     void set_hold (uint16_t hold);
     void set_division (uint16_t division);
     void set_direction (uint16_t direction);
     void set_range (uint16_t range);
 
     void update_range (void);
+    void update_controls (void);
 
     void set_rate (uint16_t rate);
     long map (long x, long in_min, long in_max, long out_min, long out_max);

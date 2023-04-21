@@ -25,10 +25,16 @@ namespace KEYS {
     gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
     gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
 
-    printf("MUX_A: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_A));
-    printf("MUX_B: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_B));
-    printf("MUX_C: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_C));
-    printf("MUX_D: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_D));
+    // printf("MUX_A: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_A));
+    // printf("MUX_B: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_B));
+    // printf("MUX_C: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_C));
+    // printf("MUX_D: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_D));
+
+    // test lowering the drive strength
+    // gpio_set_drive_strength(MUX_SEL_A, GPIO_DRIVE_STRENGTH_2MA);
+    // gpio_set_drive_strength(MUX_SEL_B, GPIO_DRIVE_STRENGTH_2MA);
+    // gpio_set_drive_strength(MUX_SEL_C, GPIO_DRIVE_STRENGTH_2MA);
+    // gpio_set_drive_strength(MUX_SEL_D, GPIO_DRIVE_STRENGTH_2MA);
 
     // initiate pins for mux output
     gpio_init(MUX_OUT_0);
@@ -120,12 +126,14 @@ namespace KEYS {
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
         note_on(i+48);
+        _changed = true;
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
         note_off(i+48);
+        _changed = true;
       }
     }
-    MAILBOX::NOTE_DATA.send();
+    if (_changed) MAILBOX::NOTE_DATA.send();
 
 
     // Page

@@ -9,20 +9,29 @@ namespace SYNTH {
   uint16_t oscillator = Oscillator::WAVETABLE; // | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   uint16_t _wave_shape;
+  uint16_t _last_shape;
+
   uint16_t _wave_vector;
   uint16_t _vector_mod;
 
-  uint16_t  _attack   = 10;      // attack period - moved to global as it's not needed per voice for this implementation.
-  uint16_t  _decay    = 10;      // decay period
-  uint16_t  _sustain     = 0xffff;   // sustain volume
-  uint16_t  _release  = 50;      // release period
+
+  uint32_t  _attack;
+  uint32_t  _decay;
+  uint32_t  _sustain;
+  uint32_t  _release;
+  uint16_t   _last_attack;
+  uint16_t   _last_decay;
+  uint16_t   _last_sustain;
+  uint16_t   _last_release;
 
   int16_t   _vibrato;
   uint16_t  _tremelo;
 
-  uint16_t _pitch_scale = 512;
+  uint16_t _pitch_scale = 511;
+  uint16_t _last_pitch;
 
   uint8_t _octave = 0;
+  uint16_t  _last_octave;
 
   // bool      filter_enable = false;
   // uint16_t  filter_cutoff_frequency = 1;
@@ -86,20 +95,20 @@ namespace SYNTH {
 
   uint16_t get_audio_frame() {
     
-    if (_soft_start) {
-      _soft_start_index++;
-      if (_soft_start_index >= 2) {
-        _soft_start_index = 0;
-        _soft_start_sample += 1;
-        if (_soft_start_sample >= 0) {
-          _soft_start_sample = 0;
-          _soft_start = false;
-        }
-      }
-      return (_soft_start_sample+32767)>>4;
-    } 
+    // if (_soft_start) {
+    //   _soft_start_index++;
+    //   if (_soft_start_index >= 2) {
+    //     _soft_start_index = 0;
+    //     _soft_start_sample += 1;
+    //     if (_soft_start_sample >= 0) {
+    //       _soft_start_sample = 0;
+    //       _soft_start = false;
+    //     }
+    //   }
+    //   return (_soft_start_sample+32767)>>4;
+    // } 
 
-    else {
+    // else {
       int32_t sample = 0;  // used to combine channel output
       int16_t clipped_sample = 0;
 
@@ -123,13 +132,13 @@ namespace SYNTH {
         channel.waveform_offset += _vibrato;
 
         channel.ADSR.update();
-        if (channel.ADSR.isStopped()) channel.note_clear();
+        // if (channel.ADSR.isStopped()) channel.note_clear();
 
-        if(channel.waveform_offset & 0x10000) {
-          // if the waveform offset overflows then generate a new
-          // random noise sample
-          channel.noise = prng_normal();
-        }
+        // if(channel.waveform_offset & 0x10000) {
+        //   // if the waveform offset overflows then generate a new
+        //   // random noise sample
+        //   channel.noise = prng_normal();
+        // }
 
         channel.waveform_offset &= 0xffff;
 
@@ -196,10 +205,10 @@ namespace SYNTH {
           channel_sample = channel_sample / waveform_count;
           
           // apply ADSR
-          channel_sample = (int64_t(channel_sample) * int32_t((channel.ADSR.get_adsr()) >> 8)) >> 16;
+          channel_sample = (int32_t(channel_sample) * int32_t((channel.ADSR.get_adsr()) >> 8)) >> 16;
 
           // apply channel volume
-          channel_sample = (int64_t(channel_sample) * int32_t(channel.volume)) >> 16;
+          channel_sample = (int32_t(channel_sample) * int32_t(channel.volume)) >> 16;
 
           // apply channel filter
           
@@ -214,7 +223,7 @@ namespace SYNTH {
       }
       
 
-      sample = (int64_t(sample) * output_volume) >> 16;
+      sample = (int32_t(sample) * output_volume) >> 16;
 
       //attempt at soft clipping - doesnt work
       // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
@@ -222,20 +231,24 @@ namespace SYNTH {
       // clip result to 16-bit
       sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
       return (sample+32767)>>4;
-    }
+    // }
 
   }
 
   void set_waveshape (uint16_t shape) {
+    if (shape == _last_shape) return;
+    _last_shape = shape;
     _wave_shape = ((shape>>6)*256);
   }
   void set_wavevector (uint16_t vector) {
     _wave_vector = vector;
   }
   void set_octave (uint16_t octave) {
+    if (octave == _last_octave) return;
     _octave = (octave>>8);
   }
   void set_pitch_scale (uint16_t scale) {
+    if (scale == _last_pitch) return;
     _pitch_scale = get_pitch_log(scale);
   }
   uint16_t get_pitch_log (uint16_t index) {
@@ -243,28 +256,27 @@ namespace SYNTH {
   }
 
   void set_attack (uint16_t attack) {
-    _attack = (attack<<2)+2;
+    if (attack == _last_attack) return;
+    _last_attack = attack;
+    _attack = calc_end_frame((attack<<2)+2);
   }
   void set_decay (uint16_t decay) {
-    _decay = (decay<<2)+2;
+    if (decay == _last_decay) return;
+    _last_decay = decay;
+    _decay = calc_end_frame((decay<<2)+2);
   }
   void set_sustain (uint16_t sustain) {
+    if (sustain == _last_sustain) return;
+    _last_sustain = sustain;
     _sustain = (sustain<<5);
   }
   void set_release (uint16_t release) {
-    _release = (release<<2)+2;
+    if (release == _last_release) return;
+    _last_release = release;
+    _release = calc_end_frame((release<<2)+2);
   }
-
-  void update () {
-    set_waveshape(SYNTH_DATA.waveshape);
-    set_wavevector(SYNTH_DATA.vector);
-    set_octave(SYNTH_DATA.octave);
-    set_pitch_scale(SYNTH_DATA.pitch);
-    
-    set_attack(SYNTH_DATA.attack);
-    set_decay(SYNTH_DATA.decay);
-    set_sustain(SYNTH_DATA.sustain);
-    set_release(SYNTH_DATA.release);
+  uint32_t calc_end_frame (uint32_t milliseconds) {
+    return (milliseconds * _sample_rate) / 1000;
   }
 }
 

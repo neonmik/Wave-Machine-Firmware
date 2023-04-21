@@ -110,7 +110,8 @@ namespace SETTINGS {
     
     void update () {
         if (_changed) {
-             Control.update();
+            Control.update();
+            
             _changed = false;
         }
     }
