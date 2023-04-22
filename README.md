@@ -5,39 +5,37 @@ Current nightly firmware for Beep Machine Hardware.
 Things to implement:
 
 - Multicore:
-    - Need to create/reorganise layer between hardware and synth... reformat and streamline.
+    - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
-    - Make sure it only calls a para update when a values actually changed (probably need to improve the input value stabilities for this)
+    - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
-
-
 - Improve Oscillator script - current bugs include:
     - Finesse soft start code - currently takes too long to get going.
     - Add functions for all software controls (mod params)
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Improve Mod code:
-    - fix control for preset/pagination
-    - Move function calls to the synth side
-    - Move update closer to synth/dac code
+    - improve algorithm:-
+        - Make inputs tidier/more unified
+        - Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)
+    - Move update closer to synth/dac code:- could probably do with being intergrated like ADSR
 
 - Arp code:
-    - Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
-    - If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
+    - Definitely a "Remove_Notes" function issue... need to remove them and then reorganise the list at the end - just like "Add_Notes" :- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
     
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
 - Prove hardware functions:
     - MIDI
-    - EEPROM
+    - EEPROM - implimented from Settings/Controls
     - CV?
 
 - Implement USB-MIDI and MIDI:
-    - Notes
-    - CC controls
-    - Tempo
+    - Notes - MIDI IN calls the same functions to the mailbox as Keys, MIDI OUT will call from Note Priority
+    - CC controls - Should add a functionality on the controls/UI function?
+    - Tempo - BEAT_CLOCK(core0) needs to be updated from MIDI IN on core1
 
 
 
@@ -50,8 +48,6 @@ Future Implementaions and WIPs:
 - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - implemented, but not chosen functions yet.
 
 - Start-up settings (MIDI channel, other funtions?)
-
-- Multicore support (probably hadware functions on one side, oscillators on another)
 
 - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
 
@@ -78,6 +74,7 @@ Things already implemented:
 
 + Add Arp mode
 + Arp functionality bug fixes:
+    + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
     + When the range is set to anything above 0 only the first octave of the arp has proper release - think it's to do with the note_clear function in the oscillator (definitely was)
     + fix control for preset/pagination - currently persists between presets no matter of the state of the new preset.
     + currently wont play only one note...
@@ -93,5 +90,12 @@ Things already implemented:
     _- Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
 
 + Mod bug fixes:
+    + Fix control for preset/pagination
     + Make outside variable updates go through functions
     + Make every function take 0-1023 for consistancy from the hardware layer
+
++ Multicore:
+    + Setup referenced function calls for Synth/Mod/Arp controls (seemed to work way better than using the mailbox system and then calling functions on the other side)
+    + Added Mailbox for note handling
+    + Created/reorganise layer between hardware and synth.
+    + Finally added Multicore support (hadware functions on one side, synth/dac on another)
