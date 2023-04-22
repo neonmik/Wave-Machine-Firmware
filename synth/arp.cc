@@ -2,23 +2,6 @@
 
 namespace ARP {
 
-    // void on (void) {
-    //     _active = true;
-    //     set_state(_active);
-
-    // }
-
-    // void off (void) {
-    //     _active = false;
-    //     set_state(_active);
-    // }
-
-    // void toggle (void) {
-    //     _active = !_active;
-    //     clear_notes();
-    //     stop_all();
-    // }
-
     void init (uint8_t bpm, uint16_t sample_rate) {
         BEAT_CLOCK::init(bpm, sample_rate);
     }
@@ -28,6 +11,7 @@ namespace ARP {
             if (!_active) {
                 // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
                 if (!_hold) pass_notes();
+                else stop_all();
                 clear_notes();
             }
             if (_active) {
@@ -37,9 +21,15 @@ namespace ARP {
             }   
         }
     }
-    bool get (void) {
+    bool get_state (void) {
         return _active;
     }
+
+void reset () {
+    stop_all();
+    if (!_hold) pass_notes();
+    clear_notes();
+}
 
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
@@ -125,8 +115,6 @@ namespace ARP {
                         break;
                 }
 
-                
-
                 BEAT_CLOCK::set_changed(false);
             }
         }
@@ -136,7 +124,7 @@ namespace ARP {
     void add_notes (uint8_t note) {
         for (int i = 0; i < max_arp; ++i) {
             if (_notes[i] == note) {
-                _notes_added = true;
+                _notes_changed = true;
                 return;
             }
         }
@@ -151,7 +139,7 @@ namespace ARP {
         if (_write_index >= max_arp) {
             _write_index = 0;
         }
-        _notes_added = true;
+        _notes_changed = true;
     }
     void remove_notes (uint8_t note) {
         if (_hold) {
@@ -177,7 +165,7 @@ namespace ARP {
         }
     }
     void organise_notes () {
-        if (_notes_added) {
+        if (_notes_changed) {
             uint8_t length      = _count;   // how many entries in the array
             uint8_t temp        = 0;        // set a temp value, never going to be more than 127, so uint8_t is fine
             // printf("notes in: %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
@@ -190,12 +178,9 @@ namespace ARP {
                     }     
                 }
             }
-            _notes_added = false;
+            _notes_changed = false;
             // printf("notes out: %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
         }
-        // if (_notes_removed) {
-
-        // }
     }
     void clear_notes () {
         for (int i = 0; i < max_arp; i++) {
@@ -203,6 +188,8 @@ namespace ARP {
         }
         _write_index = 0;
         _count = 0;
+        _octave = 0;
+        _play_index = 0;
     }
     
     // functions for start/stop of arp
@@ -218,14 +205,6 @@ namespace ARP {
         NOTE_PRIORITY::voices_clear();
     }
     
-    void update_controls (void) {
-        set_state(ARP_DATA.enabled);
-        set_hold(ARP_DATA.hold);
-        set_division(ARP_DATA.division);
-        set_range(ARP_DATA.range);
-        set_direction(ARP_DATA.direction);
-
-    }
     void set_hold (uint16_t hold) {
         if (hold == _last_hold) return;
         bool temp = (bool)(hold>>9);

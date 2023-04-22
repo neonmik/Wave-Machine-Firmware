@@ -95,18 +95,18 @@ namespace SYNTH {
 
   uint16_t get_audio_frame() {
     
-    // if (_soft_start) {
-    //   _soft_start_index++;
-    //   if (_soft_start_index >= 2) {
-    //     _soft_start_index = 0;
-    //     _soft_start_sample += 1;
-    //     if (_soft_start_sample >= 0) {
-    //       _soft_start_sample = 0;
-    //       _soft_start = false;
-    //     }
-    //   }
-    //   return (_soft_start_sample+32767)>>4;
-    // } 
+    if (_soft_start) {
+      _soft_start_index++;
+      if (_soft_start_index >= 2) {
+        _soft_start_index = 0;
+        _soft_start_sample += 1;
+        if (_soft_start_sample >= 0) {
+          _soft_start_sample = 0;
+          _soft_start = false;
+        }
+      }
+      return (_soft_start_sample+32767)>>4;
+    } 
 
     // else {
       int32_t sample = 0;  // used to combine channel output

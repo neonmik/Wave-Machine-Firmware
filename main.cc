@@ -59,6 +59,7 @@ void core0_main() {
   while (true) {
   
     if (DAC::get_state()) {
+      MOD::update();
       switch (index) {
         case 0:
           MAILBOX::receive(); //copy the data from the mailbox to the local variables

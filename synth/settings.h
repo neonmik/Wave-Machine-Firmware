@@ -114,19 +114,11 @@ namespace SETTINGS {
         public:
             CONTROL () { }
             ~CONTROL () { }
-            
-            // MAILBOX::synth_data& _SYNTH = MAILBOX::SYNTH_DATA.core1;
-            // MAILBOX::mod_data& _MOD = MAILBOX::MOD_DATA.core1;
-            // MAILBOX::arp_data& _ARP = MAILBOX::ARP_DATA.core1;
 
             Page    MAIN {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,        nullptr};
             Page    ADSR {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,            nullptr};
-            Page    MOD1 {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_wave,                 MOD::set_state};
+            Page    MOD1 {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
             Page    ARP  {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,            ARP::set_state};
-
-            // Page    ADSR {&_SYNTH.attack,        &_SYNTH.decay,       &_SYNTH.sustain,     &_SYNTH.release,          &MAILBOX::send_synth,   nullptr};
-            // Page    MOD1 {&_MOD.matrix,          &_MOD.rate,          &_MOD.depth,         &_MOD.shape,              &MAILBOX::send_mod,     &_MOD.enabled};
-            // Page    ARP  {&_ARP.hold,            &_ARP.division,      &_ARP.range,         &_ARP.direction,          &MAILBOX::send_arp,     &_ARP.enabled};
 
             void init (void) { }
 
@@ -181,13 +173,6 @@ namespace SETTINGS {
             bool get_arp (void) {
                 return ARP.get_state();;
             }
-            
-            // void fetch (void) {
-            //     MAIN.fetch();
-            //     ADSR.fetch();
-            //     MOD1.fetch();
-            //     ARP.fetch();
-            // }
             void update (void) {
                 MAIN.update();
                 ADSR.update();
@@ -204,8 +189,10 @@ namespace SETTINGS {
     
     void set_preset (uint8_t preset);
     uint8_t get_preset (void);
-    void save_preset (void);
-    void load_preset (void);
+    void save_preset (uint8_t preset);
+    void load_preset (uint8_t preset);
+
+    void save (void);
 
     void set_page (uint8_t page);
     uint8_t get_page (void);

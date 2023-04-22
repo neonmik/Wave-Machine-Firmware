@@ -19,12 +19,12 @@ namespace MOD {
         VECTOR = 3
     };
 
-    static MAILBOX::mod_data& MOD_DATA = MAILBOX::MOD_DATA.core0;
+    // static MAILBOX::mod_data& MOD_DATA = MAILBOX::MOD_DATA.core0;
     
     class Modulation {
         private:
 
-            bool&        _active = MAILBOX::MOD_DATA.core0.enabled;
+            bool        _active; // = MAILBOX::MOD_DATA.core0.enabled;
 
             
             // uint16_t    _values[4];
@@ -89,28 +89,29 @@ namespace MOD {
                 _wave = ((input>>6)*256);
             }
 
-            // void set_state (bool input) {
-            //     _active = input;
-            //     if (!_active) {
-            //         _vibrato = 0;
-            //         _trem = 0;
-            //         _vector = 0;
-            //         SYNTH::_vibrato = _vibrato;
-            //         SYNTH::_tremelo = _trem;
-            //         SYNTH::_vector_mod = _vector;
-            //     }
-            // }
+            void set_state (bool input) {
+                _active = input;
+                if (!_active) {
+                    _vibrato = 0;
+                    _trem = 0;
+                    _vector = 0;
+                    SYNTH::_vibrato = _vibrato;
+                    SYNTH::_tremelo = _trem;
+                    SYNTH::_vector_mod = _vector;
+                }
+            }
+
             bool get_state (void) {
                 return _active;
             }
 
-            // void clear (void) {
-            //     set_state(false);
-            //     init();
-            //     _vibrato = 0;
-            //     _trem = 0;
-            //     _vector = 0;
-            // }
+            void clear (void) {
+                set_state(false);
+                init();
+                _vibrato = 0;
+                _trem = 0;
+                _vector = 0;
+            }
 
             void update (void) {
                 if (_active) {
@@ -136,7 +137,7 @@ namespace MOD {
                         case Matrix::VECTOR:
                             _vibrato = 0;
                             _trem = 0;
-                            _vector = (uint16_t(uint32_t(_sample)+32767))>>6; // (>> 8 is 0-255, >> 6 is 0-1023, >>4 is 0-4095)
+                            _vector = (uint16_t(uint32_t(_sample)+32767))>>4; // (>> 8 is 0-255, >> 6 is 0-1023, >>4 is 0-4095)
                             break;
                         default:
                             _vibrato = 0;
@@ -171,6 +172,6 @@ namespace MOD {
     void set_matrix (uint16_t input);
     void set_depth (uint16_t input);
     void set_rate (uint16_t input);
-    void set_wave (uint16_t input);
+    void set_shape (uint16_t input);
     void set_state (bool input);
 }

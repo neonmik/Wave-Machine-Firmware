@@ -116,7 +116,7 @@ namespace NOTE_PRIORITY {
   // transfer from Key/Midi notes to Arp/Note Priority
   void update() {
     // grab values from notes mutex
-    bool arpEnabled = ARP::get(); // Store the value of ARP::get() in a variable
+    bool arpEnabled = ARP::get_state(); // Store the value of ARP::get() in a variable
 
     for (int i = 0; i < 128; i++) {
       if (NOTES.note_state[i] != _note_state_last[i]) {

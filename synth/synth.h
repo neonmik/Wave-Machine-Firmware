@@ -14,10 +14,10 @@
 
 namespace SYNTH {
   
-  namespace {
-    MAILBOX::synth_data& SYNTH_DATA = MAILBOX::SYNTH_DATA.core0;
+  // namespace {
+  //   MAILBOX::synth_data& SYNTH_DATA = MAILBOX::SYNTH_DATA.core0;
 
-  }
+  // }
 
   #define MAX_VOICES 8
 
