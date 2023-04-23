@@ -33,11 +33,8 @@ namespace SYNTH {
   uint8_t _octave = 0;
   uint16_t  _last_octave;
 
-  // bool      filter_enable = false;
-  // uint16_t  filter_cutoff_frequency = 1;
-
-
-
+  // bool      filter_enable = true;
+  // uint16_t  filter_cutoff_frequency = 1000;
   // float filter_epow = 1 - expf(-(1.0f / 44100.0f) * 2.0f * pi * int32_t(filter_cutoff_frequency));
 
   uint16_t volume = 0x6fff;
@@ -52,24 +49,24 @@ namespace SYNTH {
     channels[voice].note_off();
   }
 
-  uint32_t prng_xorshift_state = 0x32B71700;
+  // uint32_t prng_xorshift_state = 0x32B71700;
 
-  uint32_t prng_xorshift_next() {
-    uint32_t x = prng_xorshift_state;
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    prng_xorshift_state = x;
-    return x;
-  }
+  // uint32_t prng_xorshift_next() {
+  //   uint32_t x = prng_xorshift_state;
+  //   x ^= x << 13;
+  //   x ^= x >> 17;
+  //   x ^= x << 5;
+  //   prng_xorshift_state = x;
+  //   return x;
+  // }
 
-  int32_t prng_normal() {
-    // rough approximation of a normal distribution
-    uint32_t r0 = prng_xorshift_next();
-    uint32_t r1 = prng_xorshift_next();
-    uint32_t n = ((r0 & 0xffff) + (r1 & 0xffff) + (r0 >> 16) + (r1 >> 16)) / 2;
-    return n - 0xffff;
-  }
+  // int32_t prng_normal() {
+  //   // rough approximation of a normal distribution
+  //   uint32_t r0 = prng_xorshift_next();
+  //   uint32_t r1 = prng_xorshift_next();
+  //   uint32_t n = ((r0 & 0xffff) + (r1 & 0xffff) + (r0 >> 16) + (r1 >> 16)) / 2;
+  //   return n - 0xffff;
+  // }
 
   uint32_t _sample_rate;
   
@@ -108,7 +105,7 @@ namespace SYNTH {
       return (_soft_start_sample+32767)>>4;
     } 
 
-    // else {
+    else {
       int32_t sample = 0;  // used to combine channel output
       int16_t clipped_sample = 0;
 
@@ -126,13 +123,12 @@ namespace SYNTH {
         // increment the waveform position counter. this provides an
         // Q16 fixed point value representing how far through
         // the current waveform we are
-        channel.waveform_offset += (((((channel._frequency * _pitch_scale)>>9) << _octave) * 256) << 8) / _sample_rate;
+        channel.waveform_offset += ( ( ((channel._frequency * _pitch_scale)>>9) << _octave) << 16) / _sample_rate; //try <<8 instead of *256... also might be easier to shift 16? check it
 
         //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
         channel.waveform_offset += _vibrato;
 
         channel.ADSR.update();
-        // if (channel.ADSR.isStopped()) channel.note_clear();
 
         // if(channel.waveform_offset & 0x10000) {
         //   // if the waveform offset overflows then generate a new
@@ -148,17 +144,16 @@ namespace SYNTH {
           int32_t channel_sample = 0;
 
 
-          if(oscillator & Oscillator::NOISE) {
+          if (oscillator & Oscillator::NOISE) {
             channel_sample += channel.noise;
             waveform_count++;
           }
 
-          if(oscillator & Oscillator::SAW) {
+          if (oscillator & Oscillator::SAW) {
             channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
             waveform_count++;
           }
 
-          // creates a triangle wave of ^
           if (oscillator & Oscillator::TRIANGLE) {
             if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
               channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
@@ -174,7 +169,7 @@ namespace SYNTH {
             waveform_count++;
           }
           
-          if(oscillator & Oscillator::SINE) {
+          if (oscillator & Oscillator::SINE) {
             // the sine_waveform sample contains 256 samples in
             // total so we'll just use the most significant bits
             // of the current waveform position to index into it
@@ -183,7 +178,7 @@ namespace SYNTH {
             
           }
 
-          if(oscillator & Oscillator::WAVETABLE) {
+          if (oscillator & Oscillator::WAVETABLE) {
 
             // the wavetable sample contains 256 samples in
             // total so we'll just use the most significant bits
@@ -222,7 +217,6 @@ namespace SYNTH {
         }
       }
       
-
       sample = (int32_t(sample) * output_volume) >> 16;
 
       //attempt at soft clipping - doesnt work
@@ -230,8 +224,9 @@ namespace SYNTH {
 
       // clip result to 16-bit
       sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
+      // sample = lowPassFilter.process(sample);
       return (sample+32767)>>4;
-    // }
+    }
 
   }
 
@@ -246,10 +241,12 @@ namespace SYNTH {
   void set_octave (uint16_t octave) {
     if (octave == _last_octave) return;
     _octave = (octave>>8);
+    _last_octave = octave;
   }
   void set_pitch_scale (uint16_t scale) {
-    if (scale == _last_pitch) return;
+    // if (scale == _last_pitch) return;
     _pitch_scale = get_pitch_log(scale);
+    _last_pitch = scale;
   }
   uint16_t get_pitch_log (uint16_t index) {
       return log_table[index];

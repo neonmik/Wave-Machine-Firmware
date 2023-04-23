@@ -7,7 +7,8 @@
 
 #include "wavetable.h"
 
-
+// Wave table size
+#define WAVE_TABLE_SIZE 256
 
 namespace MOD {
 
@@ -19,15 +20,11 @@ namespace MOD {
         VECTOR = 3
     };
 
-    // static MAILBOX::mod_data& MOD_DATA = MAILBOX::MOD_DATA.core0;
     
     class Modulation {
         private:
 
-            bool        _active; // = MAILBOX::MOD_DATA.core0.enabled;
-
-            
-            // uint16_t    _values[4];
+            bool        _active; 
 
             uint8_t              _index       = 0;
             uint32_t             _increment   = 0;
@@ -48,7 +45,8 @@ namespace MOD {
             uint16_t             _last_wave   = 0;
 
 
-            uint16_t              _sample_rate = 689; // Sample Rate (44100Hz) / 64 = 689.0625... this only gets called every 64 samples at the main loop
+            uint16_t              _sample_rate = 750;   // Sample Rate (44100Hz) / 64 = 689.0625... this only gets called every 64 samples at the main loop
+                                                        // sample Rate (48000Hz) / 64 = 750
             
         public:
             Modulation() { //uint16_t sample_rate) {
@@ -160,8 +158,48 @@ namespace MOD {
             }
     };
 
+// LFO/Modulation class
+// class Lfo {
+// public:
+//     // Constructor
+//     Lfo (float sampleRate) {
+//         // Calculate frequency increment based on sample rate
+//         frequencyIncrement = (WAVE_TABLE_SIZE / sampleRate) * (1 << 10);
+//         frequency = 0.0; // Initialize frequency to 0 Hz
+//     }
+//     // Function to calculate the modulation value
+//     int16_t process(bool isSigned) {
+//         static float phase = 0.0;
+//         int16_t output = 0;
+//         // Update phase
+//         phase += frequency * frequencyIncrement;
+//         if (phase >= WAVE_TABLE_SIZE) {
+//             phase -= WAVE_TABLE_SIZE;
+//         }
+//         // Read waveform value from wave table
+//         int8_t waveValue = wavetable[(int)phase];
+//         // Scale output to 10-bit range
+//         if (isSigned) {
+//             // If signed output, scale to -512 to +511
+//             output = (waveValue * 511) / (1 << 7);
+//         } else {
+//             // If unsigned output, scale to 0 to 1023
+//             output = ((waveValue + (1 << 7)) / 2) * 2; // Round to nearest even number
+//         }
+//         return output;
+//     }
+//     // Function to set the frequency of the LFO
+//     void set_frequency(float freq) {
+//         frequency = freq;
+//     }
+// private:
+//     float frequency;          // Frequency of the LFO
+//     float frequencyIncrement; // Frequency increment per sample
+// };
+
+
     extern Modulation LFO;
-    // extern Modulation MOD2;
+
 
     void init (uint16_t sample_rate);
 

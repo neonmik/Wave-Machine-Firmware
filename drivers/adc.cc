@@ -43,14 +43,15 @@ namespace ADC {
         
         // No filter
         // passes last actual sample to a buffer
-        // _sample[_mux_address] = _values[_mux_address];
+        // _values[_mux_address] = (adc_read()>>2);
         
         // IIR filter
         // filters new sample with old sample
         _sample[_mux_address] = _sample[_mux_address] - (_sample[_mux_address]>>2) + adc_read();
-
         // moves filtered sample to the adc array
         _values[_mux_address] = map(_sample[_mux_address]>>2, 12, 4095, 0, 1023);
+
+
         
 
         // sets the index to loop

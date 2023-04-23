@@ -8,7 +8,7 @@ Things to implement:
     - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
-    - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
+    - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
     - Finesse soft start code - currently takes too long to get going.
@@ -22,7 +22,7 @@ Things to implement:
     - Move update closer to synth/dac code:- could probably do with being intergrated like ADSR
 
 - Arp code:
-    - Definitely a "Remove_Notes" function issue... need to remove them and then reorganise the list at the end - just like "Add_Notes" :- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
+    - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
     
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)

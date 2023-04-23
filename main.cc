@@ -22,7 +22,7 @@
 
 #include "mailbox.h"
 
-#define SAMPLE_RATE     44100
+#define SAMPLE_RATE     48000
 #define MAX_VOICES      8
 #define BPM             120 // part of a function for determinding bpm ms
 
@@ -31,7 +31,7 @@ uint32_t sample_clock_last = 0;
 
 uint32_t software_index = 0;
 
-bool update_flag = false;
+
 
 
 void core1_main() {
@@ -49,40 +49,33 @@ void core1_main() {
 
 void core0_main() {
 
+
   SYNTH::init(SAMPLE_RATE);
+  DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
   MOD::init(SAMPLE_RATE);
   ARP::init(BPM, SAMPLE_RATE);
-  DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
   
-  // sleep_ms(10);
+
   uint8_t index = 0;
   while (true) {
-  
+    
     if (DAC::get_state()) {
+    
       MOD::update();
-      switch (index) {
-        case 0:
-          MAILBOX::receive(); //copy the data from the mailbox to the local variables
-          index++;
-          break;
-        case 1:
-          NOTE_PRIORITY::update(); // update notes from the mailbox info
-          index = 0;
-          break;
-      }
+      MAILBOX::receive(); //copy the data from the mailbox to the local variables
+      NOTE_PRIORITY::update(); // update notes from the mailbox info
       
       DAC::clear_state();
-
     }
-
   }
 }
+ int main() {
+  stdio_init_all(); // has to be here to allow both cores to use the UART
 
-int main() {
   MAILBOX::init();
 
   multicore_launch_core1(core1_main);
-  // sleep_ms(10);
+
   core0_main();
   
 } 

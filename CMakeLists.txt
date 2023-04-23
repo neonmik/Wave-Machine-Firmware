@@ -27,8 +27,10 @@ add_executable(${PROJECT_NAME}
     synth/adsr.cc
     synth/arp.cc
     synth/beat_clock.cc
+    synth/filter.cc
     synth/modulation.cc
     synth/note_priority.cc
+    # synth/oscillator.cc
     synth/settings.cc
     synth/synth.cc
 )

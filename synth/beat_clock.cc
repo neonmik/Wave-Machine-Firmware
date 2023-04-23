@@ -68,15 +68,15 @@ namespace BEAT_CLOCK {
 
     void tick (void) {
         ++_tick;
+        if (_tick >= _samples_per_division) { // && (_tick != _last_tick)) {
+            set_changed(true);
+            _tick = 0;
+        }
     }
     void update (void) {
-        if ((_tick >= _samples_per_division)) { //} && (sample_clock != sample_clock_last)) {
-            _tick = 0;
-            ++_beat;
-            set_changed(true);
-            if (_beat >= _max) {
-                _beat = 0;
-            }
+        ++_beat;
+        if (_beat >= _max) {
+            _beat = 0;
         }
     }
 

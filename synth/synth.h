@@ -6,6 +6,7 @@
 #include "pico/time.h"
 
 #include "adsr.h"
+#include "filter.h"
 #include "wavetable.h"
 #include "log_table.h"
 
@@ -13,11 +14,6 @@
 
 
 namespace SYNTH {
-  
-  // namespace {
-  //   MAILBOX::synth_data& SYNTH_DATA = MAILBOX::SYNTH_DATA.core0;
-
-  // }
 
   #define MAX_VOICES 8
 
@@ -37,17 +33,17 @@ namespace SYNTH {
     WAVE      = 1
   };
 
-  enum class ADSRPhase : uint8_t {
-    ATTACK,
-    DECAY,
-    SUSTAIN,
-    RELEASE,
-    OFF
-  };
+  // enum class ADSRPhase : uint8_t {
+  //   ATTACK,
+  //   DECAY,
+  //   SUSTAIN,
+  //   RELEASE,
+  //   OFF
+  // };
 
   extern uint32_t   _sample_rate;
   
-  // used oscillator types, this can use multiple oscillatros, although can't be currently adjusted by the hardware
+  // used oscillator types, this can use multiple oscillators, although can't be currently adjusted by the hardware
   extern uint16_t   _oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
 
   // variables for the wavetable oscillator
@@ -67,7 +63,7 @@ namespace SYNTH {
   extern int16_t    _vibrato;
   extern uint16_t   _tremelo;
 
-  extern uint16_t _pitch_scale;
+  extern uint16_t   _pitch_scale;
 
   extern uint8_t _octave;
 
@@ -79,7 +75,6 @@ namespace SYNTH {
   // extern uint16_t  filter_cutoff_frequency;
 
   struct Voices {
-    // ADSR envelope;
 
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
 
@@ -119,11 +114,6 @@ namespace SYNTH {
       _gate = false;
       ADSR.trigger_release();
     }
-    // void note_clear (void) {
-    //   _active = false;
-    //   _note = 0;
-    //   _frequency = 0;
-    // }
     
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release, _active, _note, _frequency};
   };

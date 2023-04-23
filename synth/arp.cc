@@ -25,11 +25,11 @@ namespace ARP {
         return _active;
     }
 
-void reset () {
-    stop_all();
-    if (!_hold) pass_notes();
-    clear_notes();
-}
+    void reset () {
+        stop_all();
+        if (!_hold) pass_notes();
+        clear_notes();
+    }
 
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
@@ -93,10 +93,8 @@ void reset () {
 
     void update (void) {
         if (_active) {
-            
-            BEAT_CLOCK::update();
-            
             if (BEAT_CLOCK::get_changed()) {
+                BEAT_CLOCK::update();
                 switch (note_state) {
                     case NOTE_ACTIVE:
                         NOTE_PRIORITY::priority(0x80, _last_note, 0);
@@ -143,6 +141,7 @@ void reset () {
     }
     void remove_notes (uint8_t note) {
         if (_hold) {
+            _notes_changed = true;
             return;
         }
         if (_count == 0) {
@@ -160,15 +159,16 @@ void reset () {
                 --_write_index;
                 if (_count < 0) _count = 0;
                 if (_write_index <= 0) _write_index = _count;
+                _notes_changed = true;
                 //don't return here in case the note is in the list more than once
             }
         }
     }
     void organise_notes () {
         if (_notes_changed) {
+            // printf("notes in:  %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
             uint8_t length      = _count;   // how many entries in the array
             uint8_t temp        = 0;        // set a temp value, never going to be more than 127, so uint8_t is fine
-            // printf("notes in: %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
             for (int i = 0; i < length; i++) {     
                 for (int j = i+1; j < length; j++) {     
                     if(_notes[i] > _notes[j]) {    
@@ -221,6 +221,12 @@ void reset () {
         _last_division = division;
         BEAT_CLOCK::set_division(division);
     }
+    void set_range (uint16_t range) {
+        if (range == _last_range) return;
+        _last_range = range;
+        // bit shift to get 0-4 octaves of range for the Arp
+        _range = range>>8;
+    }   
     void set_direction (uint16_t direction) {
         if (direction == _last_direction) return;
         _last_direction = direction;
@@ -228,7 +234,6 @@ void reset () {
         switch (direction>>8) {
             case 0:
                 _direction = ArpDirection::UP;
-
                 break;
             case 1:
                 _direction =  ArpDirection::DOWN;
@@ -241,13 +246,7 @@ void reset () {
                 break;
         }
     }
-    void set_range (uint16_t range) {
-        if (range == _last_range) return;
-        _last_range = range;
-        // bit shift to get 0-4 octaves of range for the Arp
-        _range = range>>8;
-    }
-    
+
     void set_rate (uint16_t rate) {
         BEAT_CLOCK::set_bpm(map(rate, 0, 1023, 30, 350));
     }

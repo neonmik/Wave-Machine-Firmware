@@ -87,9 +87,10 @@ namespace UI {
 
 
   void init (void) {
-    stdio_init_all();
+    // stdio_init_all();
 
-    puts("Welcome to the jungle...");
+    printf("\nWelcome to the jungle...\n");
+    printf("\ncore1 here!\n");
 
     LEDS::init();
     KEYS::init();

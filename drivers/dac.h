@@ -10,6 +10,8 @@
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
 
+#include "../ui.h"
+
 #include "../synth/beat_clock.h"
 
 #define DAC_DATA        11
@@ -27,6 +29,10 @@ typedef uint16_t (*synth_function)();
 
 extern uint32_t sample_clock;
 
+extern uint32_t hardware_index; // eventually going to be used to free some resources from the DMA ISR
+extern uint32_t software_index; // will be used to check currently timing of hardware_index
+
+
 namespace DAC {
     
 
@@ -39,7 +45,7 @@ namespace DAC {
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
         uint16_t     _buffer_size    = BUFFER_SIZE;
-        uint16_t    _buffer[BUFFER_SIZE] ;
+        uint16_t    _buffer[BUFFER_SIZE];
 
         volatile uint16_t buf_a[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         volatile uint16_t buf_b[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
