@@ -69,7 +69,8 @@ void core0_main() {
     }
   }
 }
- int main() {
+
+int main() {
   stdio_init_all(); // has to be here to allow both cores to use the UART
 
   MAILBOX::init();
