@@ -51,8 +51,8 @@ void core0_main() {
 
 
   SYNTH::init(SAMPLE_RATE);
+  MOD::init();
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
-  MOD::init(SAMPLE_RATE);
   ARP::init(BPM, SAMPLE_RATE);
   
 
@@ -61,7 +61,7 @@ void core0_main() {
     
     if (DAC::get_state()) {
     
-      MOD::update();
+      // MOD::update();
       MAILBOX::receive(); //copy the data from the mailbox to the local variables
       NOTE_PRIORITY::update(); // update notes from the mailbox info
       
@@ -71,6 +71,9 @@ void core0_main() {
 }
 
 int main() {
+
+  set_sys_clock_khz(144000, true); 
+
   stdio_init_all(); // has to be here to allow both cores to use the UART
 
   MAILBOX::init();

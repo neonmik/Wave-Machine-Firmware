@@ -4,11 +4,10 @@
 namespace MOD {
 
 
-    Modulation LFO;
+    Modulation LFO(48000);
 
-    void init (uint16_t sample_rate) {
-        
-        LFO.init();
+    void init () {
+        LFO.set_matrix(0);
     }
     void update () {
 
@@ -19,9 +18,7 @@ namespace MOD {
     }
 
     void set_state (bool input) {
-        if (LFO.get_state() != input) {
-            LFO.set_state(input);
-        }
+        LFO.set_state(input);
     }
     
     void set_matrix (uint16_t input) {

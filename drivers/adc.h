@@ -18,6 +18,7 @@
 namespace ADC {
     namespace {
         uint16_t _adc_value;
+        uint8_t  _adc_noise;
         uint16_t _values[MAX_KNOBS];
 
         uint8_t _mux_address;
@@ -28,6 +29,7 @@ namespace ADC {
     void init();
     void update();
     uint16_t value(int knob);
+    uint8_t noise();
 
     long map(long x, long in_min, long in_max, long out_min, long out_max);
 }

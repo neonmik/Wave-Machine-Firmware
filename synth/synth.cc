@@ -1,6 +1,7 @@
 #include "synth.h"
 #include <math.h>
 
+#include "modulation.h"
 
 namespace SYNTH {
 
@@ -109,10 +110,16 @@ namespace SYNTH {
       int32_t sample = 0;  // used to combine channel output
       int16_t clipped_sample = 0;
 
+      MOD::update();
+
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
       int32_t output_volume = (volume - _tremelo);
 
+      // add mod in here? saves doing it 8 times in the voice (pretty sure it couldn't handle it) 
+      // increment the LFO offset
+      // if (MOD::_active) {
+      //   _vector_mod += MOD::get_sample();
       
       
       for(int c = 0; c < MAX_VOICES; c++) {
@@ -123,7 +130,7 @@ namespace SYNTH {
         // increment the waveform position counter. this provides an
         // Q16 fixed point value representing how far through
         // the current waveform we are
-        channel.waveform_offset += ( ( ((channel._frequency * _pitch_scale)>>9) << _octave) << 16) / _sample_rate; //try <<8 instead of *256... also might be easier to shift 16? check it
+        channel.waveform_offset += (((((channel._frequency * _pitch_scale) >>9) << _octave) << 8) <<8) / _sample_rate; //try <<8 instead of *256... also might be easier to shift 16? check it
 
         //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
         channel.waveform_offset += _vibrato;
@@ -274,6 +281,16 @@ namespace SYNTH {
   }
   uint32_t calc_end_frame (uint32_t milliseconds) {
     return (milliseconds * _sample_rate) / 1000;
+  }
+
+  void modulate_vibrato (uint16_t vibrato) {
+    _vibrato = (vibrato >> 9) - 128; // takes a 16 bit value and converts it to a signed 8 bit value
+  }
+  void modulate_tremelo (uint16_t tremelo) {
+    _tremelo = tremelo; // should be a full range 16 bit uint
+  }
+  void modulate_vector (uint16_t vector_mod) {
+    _vector_mod = vector_mod >> 6; // should be a full range 10 bit uint
   }
 }
 

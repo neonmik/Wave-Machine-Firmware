@@ -16,10 +16,9 @@ Things to implement:
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Improve Mod code:
-    - improve algorithm:-
-        - Make inputs tidier/more unified
-        - Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)
-    - Move update closer to synth/dac code:- could probably do with being intergrated like ADSR
+    - Wave/Shape control currently doesnt work
+    - Vibrato doesn't settle on 0 properly causing tuning issues when switching outputs and LFO on/off
+    - Tidy up code to remove unnecessary stuff.
 
 - Arp code:
     - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
@@ -71,7 +70,11 @@ Things already implemented:
 
 + Hardware files bug fixes:
     + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
-
++ Mod bug fixes:-
+    + Improved algorithm:-
+        + Mad inputs tidier/more unified - created a struct to hold all of the config for each destination
+        + this isn't going to work, it's easier to make each input accept signed 16bit number (direct from the oscillator) _Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)_
+    + Mod is now opperated by the Synth code -> Move update closer to synth/dac code:- could probably do with being intergrated like ADSR 
 + Add Arp mode
 + Arp functionality bug fixes:
     + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 

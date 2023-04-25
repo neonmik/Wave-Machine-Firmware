@@ -19,6 +19,8 @@
 #define DAC_CS          9
 #define DAC_SPI         spi1
 
+#define DAC_CONFIG 0b0111000000000000
+
 
 #define BUFFER_SIZE     64
 
@@ -26,6 +28,7 @@
 #define size_bits log2(BUFFER_SIZE * sizeof(uint16_t))
 
 typedef uint16_t (*synth_function)();
+// typedef void (*mod_function)();
 
 extern uint32_t sample_clock;
 
@@ -39,6 +42,8 @@ namespace DAC {
     namespace {
 
         synth_function process;
+        // mod_function _mod_process;
+
 
         bool        _full;
         
@@ -54,9 +59,20 @@ namespace DAC {
         unsigned int slice_num;
         int dma_chan_a, dma_chan_b;
 
+        void dac_send (uint16_t* value) {
+            gpio_put(DAC_CS, 0);
+            spi_write16_blocking(DAC_SPI, value, 1);
+            gpio_put(DAC_CS, 1);
+            ++sample_clock;
+            ++hardware_index;
+            hardware_index &= 0xf; //loop the buffer every 15 samples
+        }
+
+
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
-                buf[i] = (process()) | (0b0111<<12);
+                buf[i] = (process()) | (DAC_CONFIG);
+                // _mod_process();
                 ++sample_clock;
                 BEAT_CLOCK::tick();
             }
@@ -106,7 +122,7 @@ namespace DAC {
             // set DAC pins
             gpio_set_function(DAC_DATA, GPIO_FUNC_SPI);
             gpio_set_function(DAC_CLK, GPIO_FUNC_SPI);
-            gpio_set_function(DAC_CS, GPIO_FUNC_SPI); // New CS setup - replaces next 3 lines
+            gpio_set_function(DAC_CS, GPIO_FUNC_SPI);
         }
 
         void init_dma (void) {

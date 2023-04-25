@@ -6,6 +6,7 @@
 #include "pico/time.h"
 
 #include "adsr.h"
+// #include "modulation.h"
 #include "filter.h"
 #include "wavetable.h"
 #include "log_table.h"
@@ -139,6 +140,10 @@ namespace SYNTH {
   void set_release (uint16_t release);
   
   uint32_t calc_end_frame (uint32_t milliseconds);
+
+  void modulate_vibrato (uint16_t vibrato);
+  void modulate_tremelo (uint16_t tremelo);
+  void modulate_vector (uint16_t vector_mod);
 
   void update (void);
 }
