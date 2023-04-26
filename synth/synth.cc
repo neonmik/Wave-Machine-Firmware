@@ -284,7 +284,9 @@ namespace SYNTH {
   }
 
   void modulate_vibrato (uint16_t vibrato) {
-    _vibrato = (vibrato >> 9) - 128; // takes a 16 bit value and converts it to a signed 8 bit value
+    volatile int32_t signedInput = vibrato;
+    signedInput -= 0x7fff;
+    _vibrato = static_cast<int8_t>(signedInput >> 8);
   }
   void modulate_tremelo (uint16_t tremelo) {
     _tremelo = tremelo; // should be a full range 16 bit uint

@@ -12,13 +12,11 @@ Things to implement:
     
 - Improve Oscillator script - current bugs include:
     - Finesse soft start code - currently takes too long to get going.
-    - Add functions for all software controls (mod params)
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Improve Mod code:
-    - Wave/Shape control currently doesnt work
-    - Vibrato doesn't settle on 0 properly causing tuning issues when switching outputs and LFO on/off
     - Tidy up code to remove unnecessary stuff.
+    - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
 
 - Arp code:
     - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
@@ -61,6 +59,7 @@ Things already implemented:
     + Keys
 
 + Oscillator bug fixes:
+    + Added functions for all software controls (mod params)
     + Added a softstart to the Oscillator code - stops it popping when turned on
     + Add functions for all hardware controls
     + Add and test functions for updating parameters, instead of accesing them directly from outside
@@ -70,11 +69,7 @@ Things already implemented:
 
 + Hardware files bug fixes:
     + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
-+ Mod bug fixes:-
-    + Improved algorithm:-
-        + Mad inputs tidier/more unified - created a struct to hold all of the config for each destination
-        + this isn't going to work, it's easier to make each input accept signed 16bit number (direct from the oscillator) _Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)_
-    + Mod is now opperated by the Synth code -> Move update closer to synth/dac code:- could probably do with being intergrated like ADSR 
+
 + Add Arp mode
 + Arp functionality bug fixes:
     + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
@@ -93,6 +88,12 @@ Things already implemented:
     _- Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
 
 + Mod bug fixes:
+    + Fixed - was down to the placement of the depth calculation. Only happens when switching between Outputs now... Vibrato doesn't settle on 0 properly causing tuning issues when switching outputs and LFO on/off
+    + Wave/Shape control currently doesnt work
+    + Improved algorithm:-
+        + Mad inputs tidier/more unified - created a struct to hold all of the config for each destination
+        + this isn't going to work, it's easier to make each input accept signed 16bit number (direct from the oscillator) _Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)_
+    + Mod is now opperated by the Synth code -> Move update closer to synth/dac code:- could probably do with being intergrated like ADSR 
     + Fix control for preset/pagination
     + Make outside variable updates go through functions
     + Make every function take 0-1023 for consistancy from the hardware layer

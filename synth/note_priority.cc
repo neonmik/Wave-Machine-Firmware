@@ -12,16 +12,34 @@ namespace NOTE_PRIORITY {
       SYNTH::voice_on(slot, note, get_freq(note));
       _voice_notes[slot] = note;
       _time_activated[slot] = sample_clock;
+      
+      // for future MOD ADSR
+      // ++_voices_active;
+      // if (_voices_active > 8) {
+      //   _voices_active = 8;
+      // }
+      // if (_voices_active) MOD::attack();
+      
+      // for future MIDI out
       // sendNoteOn(note) // put MIDI note out here
     } else {
       return;
     }
   }
   void voice_off(int slot, int note, int velocity) {
-    // sendNoteOff(note) // put MIDI note out here
     SYNTH::voice_off(slot);
     _voice_notes[slot] = 0;
     _time_activated[slot] = 0;
+    
+    // for future MOD ADSR
+    // --_voices_active;
+    // if (_voices_active < 0) {
+    //   _voices_active = 0;
+    // }
+    // if (_voices_active) MOD::release();
+
+    // for future MIDI out
+    // sendNoteOff(note) // put MIDI note out here
   }
   void voices_clear() {
     for (int i = 0; i < 8; i++) {
