@@ -61,7 +61,7 @@ namespace MOD {
             uint16_t  _wave;
 
             uint16_t prng_seed = 0;
-
+            
             OutputParams _destination[4]{
                 // pointer of what to update, type of output, offset for output table
                 {&SYNTH::modulate_vibrato, 0, Dither::FULL},
@@ -70,17 +70,17 @@ namespace MOD {
                 {&ARP::set_range, 98, Dither::OFF}
             };
 
-            int8_t int8_output (int16_t input) {
-                int8_t format = static_cast<char>((input + 32767) >> 9) - 128; // casts a signed 16 bit int to a signed 8 bit int
-                int8_t scaled = (format * _depth) >> 10; // scales the output with a 10 bit depth control
-                return scaled;
-            }
-            uint16_t uint10_output (int16_t input) {
-                // uint16_t format = ; // casts a signed 16 bit int to a unsigned 10 bit int
-                // uint16_t scaled = ; // scales the output with a 10 bit depth control
-                // return ( * _depth) >> 10;
-                return ((input + 32767) >> 6);
-            }
+            // int8_t int8_output (int16_t input) {
+            //     int8_t format = static_cast<char>((input + 32767) >> 9) - 128; // casts a signed 16 bit int to a signed 8 bit int
+            //     int8_t scaled = (format * _depth) >> 10; // scales the output with a 10 bit depth control
+            //     return scaled;
+            // }
+            // uint16_t uint10_output (int16_t input) {
+            //     // uint16_t format = ; // casts a signed 16 bit int to a unsigned 10 bit int
+            //     // uint16_t scaled = ; // scales the output with a 10 bit depth control
+            //     // return ( * _depth) >> 10;
+            //     return ((input + 32767) >> 6);
+            // }
             uint16_t uint16_output (int16_t input) {
                 return (input + 32767);
             }

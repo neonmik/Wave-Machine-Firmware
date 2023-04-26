@@ -14,8 +14,13 @@ Things to implement:
     - Finesse soft start code - currently takes too long to get going.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
+- Improve ADSR code:
+    - Needed update for future Mod ADSR - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
+    
 - Improve Mod code:
     - Tidy up code to remove unnecessary stuff.
+        - Move PRNG to its own files, keeps it tidy and also can then be used by synth side
+        - remove (or move) int8_output/uint10_output... not really needed anymore.
     - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
 
 - Arp code:
