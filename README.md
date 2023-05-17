@@ -8,6 +8,8 @@ Things to implement:
     - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
+    - Tidy EEPROM code, and make a more succinct file layout now working
+    - Rewrite lower storage code to use PRESET struct, instead of breaking it down (was down to page size I believe)
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
@@ -31,7 +33,6 @@ Things to implement:
 
 - Prove hardware functions:
     - MIDI
-    - EEPROM - implimented from Settings/Controls
     - CV?
 
 - Implement USB-MIDI and MIDI:
@@ -57,6 +58,7 @@ Future Implementaions and WIPs:
 Things already implemented:
 
 + Proven hardware functions (Pots, LEDs, Keys, Audio)
+    + EEPROM
     + LEDs
         + Test script for LEDs
             + Added function to show led test on startup if Preset button is held down
