@@ -47,20 +47,19 @@ namespace SETTINGS {
         Preset[preset].Arpeggiator.direction = Control.get(3, 3);
         
         // code here for saving preset infomation to EEPROM
-    
-        // uint8_t  preset_size = 36;
-        // uint16_t preset_address = preset * preset_size;    
-        // uint8_t buf[2];
-        // buf[0] = (preset_address >> 8);
-        // buf[1] = (preset_address & 0xFF);
-        // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buf, 2, false);
-        // sleep_ms(5); //can I remove?
-        // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, (uint8_t*)&Preset[preset], preset_size, false);
-        // sleep_ms(5); //can I remove?
 
-        uint8_t preset_size = 64;
-        uint16_t preset_address = preset * preset_size;
-        uint8_t buffer[preset_size+2];
+        // EEPROM::savePresetToEEPROM(preset, &Preset[preset], sizeof(Preset[preset]));
+        
+        printf("Saving Preset %d...\n", preset);
+
+        uint16_t preset_address = preset * PAGE_SIZE;
+        uint8_t buffer[PAGE_SIZE+2];
+
+        uint8_t buf[2];
+        buf[0] = (preset_address >> 8);
+        buf[1] = (preset_address & 0xFF);
+
+        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, (uint8_t*)&buf, 2, false);
 
         buffer[0] = (preset_address >> 8);
         buffer[1] = (preset_address & 0xFF);
@@ -102,12 +101,11 @@ namespace SETTINGS {
         buffer[34] = (Preset[preset].Arpeggiator.direction >> 8) & 0xFF;
         buffer[35] = Preset[preset].Arpeggiator.direction & 0xFF;
 
-        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, preset_size, false);
+        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, PAGE_SIZE, false);
         sleep_ms(5); //can I remove?
 
-        printf("Preset %d saved to EEPROM!\n", preset);
-        printf("Memory Location: %d\n", preset_address);
-        
+        printf("Preset saved to EEPROM at address: %d\n", preset_address);
+
         printf("Waveshape:  %d\n", Preset[preset].Wave.shape);
         printf("Vector:     %d\n", Preset[preset].Wave.vector);
         printf("Octave:     %d\n", Preset[preset].Wave.octave);
@@ -131,11 +129,11 @@ namespace SETTINGS {
         printf("shape:      %d\n\n", Preset[preset].Arpeggiator.direction);
 
     }
+
     void load_preset (uint8_t preset) {
         // code here for loading preset infomation from EEPROM
 
-        uint8_t  preset_size = 64;
-        uint16_t preset_address = preset * preset_size;
+        uint16_t preset_address = preset * PAGE_SIZE;
         
         uint8_t buf[2];
         buf[0] = (preset_address >> 8);

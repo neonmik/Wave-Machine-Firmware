@@ -73,12 +73,11 @@ void core0_main() {
  int main() {
 
   set_sys_clock_khz(144000, true); // needs to be called before UART. Not sure if this is needed to run the code, but it gives it a little headroom. 
-
   stdio_init_all(); // has to be here to allow both cores to use the UART
 
-  MAILBOX::init();
+  MAILBOX::init(); // has to be here to allow both cores access to MAILBOX
 
-  multicore_launch_core1(core1_main);
+  multicore_launch_core1(core1_main); 
 
   core0_main();
   

@@ -17,9 +17,66 @@
 
 #define MAX_ADDRESS             0x7FFF
 
+#define PAGE_SIZE               64
+
 
 namespace EEPROM {
     namespace {
+        
+        void write (uint16_t dataAddress, uint8_t dataVal) {
+            uint8_t buf[3];
+
+            buf[0] = (dataAddress >> 8);
+            buf[1] = (dataAddress & 0xFF);
+            buf[2] = dataVal;
+
+            i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buf, 3, false);
+            sleep_ms(5); //can I remove?
+        }
+        uint8_t read (uint16_t dataAddress) {
+            uint8_t buf[2];
+            buf[0] = (dataAddress >> 8);
+            buf[1] = (dataAddress & 0xFF);
+            
+            uint8_t readData = 0xFF;
+
+
+            i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buf, 2, false);
+            sleep_ms(5); //can I remove?
+            i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, &readData, 2, false);
+            sleep_ms(5); //can I remove?
+            return readData;
+        }
+        void clear (uint16_t dataAddress) {
+            write(dataAddress,0);
+        }
+        
+
+        // EEPROM test functions
+        void test (void) {
+            uint16_t address = 0;
+            uint16_t empty = 0;
+            uint16_t full = 0;
+            
+            // read value first, see what the memory holds, and then print it
+            empty = read(address);
+            printf("Current Memory: %d \n", empty);
+            
+            // clear memory address
+            clear(address);
+            
+            // read it and print it again to check its clear
+            empty = read(address);
+            printf("Empty Memory: %d \n", empty);
+            
+            // write a new number in the address
+            write(address,255);
+            
+            // read (hopefully) new number and print it
+            full = read(address);
+            printf("New Memory: %d \n", full);
+        }
+        // I2C test functions
         bool reserved_addr(uint8_t addr) {
             // I2C reserves some addresses for special purposes. We exclude these from the scan.
             // These are any addresses of the form 000 0xxx or 111 1xxx
@@ -53,60 +110,9 @@ namespace EEPROM {
             }
             printf("Done.\n");
         }
-        
-        void write (uint16_t dataAddress, uint8_t dataVal) {
-            uint8_t buf[3];
-
-            buf[0] = (dataAddress >> 8);
-            buf[1] = (dataAddress & 0xFF);
-            buf[2] = dataVal;
-
-            i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buf, 3, false);
-            sleep_ms(5); //can I remove?
-        }
-        uint8_t read (uint16_t dataAddress) {
-            uint8_t buf[2];
-            buf[0] = (dataAddress >> 8);
-            buf[1] = (dataAddress & 0xFF);
-            
-            uint8_t readData = 0xFF;
-
-
-            i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buf, 2, false);
-            sleep_ms(5); //can I remove?
-            i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, &readData, 2, false);
-            sleep_ms(5); //can I remove?
-            return readData;
-        }
-        void clear (uint16_t dataAddress) {
-            write(dataAddress,0);
-        }
-        
-        void test (void) {
-            uint16_t address = 0;
-            uint16_t empty = 0;
-            uint16_t full = 0;
-            
-            // read value first, see what the memory holds, and then print it
-            empty = read(address);
-            printf("Current Memory: %d \n", empty);
-            
-            // clear memory address
-            clear(address);
-            
-            // read it and print it again to check its clear
-            empty = read(address);
-            printf("Empty Memory: %d \n", empty);
-            
-            // write a new number in the address
-            write(address,255);
-            
-            // read (hopefully) new number and print it
-            full = read(address);
-            printf("New Memory: %d \n", full);
-        }
     }
 
     void init (void);
+    void savePresetToEEPROM(uint16_t preset, const void* data, size_t length);
 
 }

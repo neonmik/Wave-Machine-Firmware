@@ -9,6 +9,12 @@ Things to implement:
     - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
+    - Develop way of exporting presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
+    - Develop 8 cool presets.
+    - Should add a "Factory Reset" state in UI (using Mutable Instruments style system state) to allow reset of all sounds to default (currently 8 presets of standard sinewave synth, but eventually 8 cool sound presets)
+    - Tidy EEPROM code:
+        - Improve UI
+        - Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
@@ -16,25 +22,26 @@ Things to implement:
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Improve ADSR code:
-    - Bug: Clipping output signal (I believe) | When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampleed.
+    - Bug: Clipping output signal (I believe) | When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.
    
     
 - Improve Mod code:
     - Mod overflowing vector/wavetable index I think - if the mod is set slow/max depth/vector output and the actual vector control or wavetable is higher up, it overflows the table and freaks out. Constrain the wavetable indexing.
-    - Oscilaltor folds down at the top of range (can be seen at 0.1Hz on vibrato with a tuner - ewhen pressing C with depth to full, it F# to F, but does a little duck away from F at the "top")
+    - Oscilaltor folds down at the top of range (can be seen at 0.1Hz on vibrato with a tuner - when pressing C with depth to full, it F# to F, but does a little duck away from F at the "top")
     - Tidy up code to remove unnecessary stuff.
         - Move PRNG to its own files, keeps it tidy and also can then be used by synth side
     - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
     - Add a ramp down feature when switching between destinations - could be difficult. 
 
 - Arp code:
+    - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
+    - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
     - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
     
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
 - Prove hardware functions:
     - MIDI
-    - EEPROM - implimented from Settings/Controls
     - CV?
 
 - Implement USB-MIDI and MIDI:
@@ -63,6 +70,7 @@ Future Implementaions and WIPs:
 Things already implemented:
 
 + Proven hardware functions (Pots, LEDs, Keys, Audio)
+    + EEPROM
     + LEDs
         + Test script for LEDs
             + Added function to show led test on startup if Preset button is held down
