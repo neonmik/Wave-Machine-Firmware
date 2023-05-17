@@ -6,6 +6,7 @@
 #include "pico/binary_info.h" // ??? Needed/What is it?
 
 #include "../synth/settings.h"
+#include "../synth/preset.h"
 
 #include "hardware/i2c.h"
 
@@ -15,14 +16,15 @@
 #define EEPROM_I2C_CHANNEL      i2c1
 #define EEPROM_I2C_ADDRESS      0x50
 
+#define PAGE_SIZE               64
 #define MAX_ADDRESS             0x7FFF
 
-#define PAGE_SIZE               64
+
 
 
 namespace EEPROM {
     namespace {
-        
+
         void write (uint16_t dataAddress, uint8_t dataVal) {
             uint8_t buf[3];
 
@@ -113,6 +115,7 @@ namespace EEPROM {
     }
 
     void init (void);
-    void savePresetToEEPROM(uint16_t preset, const void* data, size_t length);
+    void savePreset(uint8_t slot, PRESET &preset);
+    void loadPreset (uint8_t slot, PRESET &preset);
 
 }
