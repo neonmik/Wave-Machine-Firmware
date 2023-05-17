@@ -49,6 +49,7 @@ namespace ADC {
         // filters new sample with old sample
         _adc_value = adc_read();
         _adc_noise = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
+        RANDOM::update(_adc_noise);
         _sample[_mux_address] = _sample[_mux_address] - (_sample[_mux_address]>>2) + _adc_value;
         // moves filtered sample to the adc array
         _values[_mux_address] = map(_sample[_mux_address]>>2, 12, 4095, 0, 1023);

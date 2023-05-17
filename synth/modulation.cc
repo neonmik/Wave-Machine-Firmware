@@ -10,11 +10,10 @@ namespace MOD {
         LFO.set_matrix(0);
     }
     void update () {
-
         LFO.update();
     }
     void clear () {
-        // LFO.clear();
+        LFO.clear();
     }
 
     void set_state (bool input) {
@@ -31,7 +30,6 @@ namespace MOD {
         LFO.set_rate(input);
     }
     void set_shape (uint16_t input) {
-        LFO.set_wave(input);
+        LFO.set_shape(input);
     }
-    
 }

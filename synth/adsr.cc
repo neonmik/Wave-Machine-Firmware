@@ -30,10 +30,6 @@ void ADSREnvelope::stopped() {
     _phase = Phase::OFF;
     _end_frame = 0;
     _step = 0;
-
-    _active = false;
-    _note = 0;
-    _frequency = 0;
 }
 
 void ADSREnvelope::update() {

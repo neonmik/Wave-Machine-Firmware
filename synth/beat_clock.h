@@ -28,8 +28,8 @@ namespace BEAT_CLOCK {
         // uint8_t _midi_clock_tick_count;
 
         long map(long x, long in_min, long in_max, long out_min, long out_max) {
-            volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-            return temp;
+            // volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
     }
 

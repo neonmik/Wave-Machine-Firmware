@@ -2,13 +2,14 @@
 
 #include "string.h"
 #include "pico/stdlib.h"
-#include "hardware/flash.h"
+// #include "hardware/flash.h"
 #include "hardware/sync.h"
 
 #include "synth.h"
 #include "modulation.h"
 #include "arp.h"
 
+#include "../drivers/eeprom.h"
 // #include "../mailbox.h"
 
 #define MAX_PRESETS     8

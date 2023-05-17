@@ -202,7 +202,7 @@ namespace ARP {
         NOTE_PRIORITY::update();
     }
     void stop_all () {
-        NOTE_PRIORITY::voices_clear();
+        NOTE_PRIORITY::voices_panic();
     }
     
     void set_hold (uint16_t hold) {
@@ -226,6 +226,9 @@ namespace ARP {
         _last_range = range;
         // bit shift to get 0-4 octaves of range for the Arp
         _range = range>>8;
+
+        // optional unquantized range changing:
+        // if (_octave > _range) _octave = _range; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
     }   
     void set_direction (uint16_t direction) {
         if (direction == _last_direction) return;

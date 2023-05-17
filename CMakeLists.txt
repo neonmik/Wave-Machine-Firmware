@@ -10,19 +10,21 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     main.cc
 
-    drivers/dac.cc
-
+    
     drivers/adc.cc
-    drivers/keys.cc
     drivers/button.cc
+    drivers/dac.cc
+    drivers/eeprom.cc
+    drivers/keys.cc
     drivers/leds.cc
-    drivers/shiftreg.cc
     drivers/rgb.cc
+    drivers/shiftreg.cc
 
     ui.cc
     pagination.cc
 
     mailbox.cc
+    random.cc
 
     synth/adsr.cc
     synth/arp.cc
@@ -49,5 +51,6 @@ target_link_libraries(${PROJECT_NAME}
                         hardware_dma
                         hardware_irq
                         hardware_adc
-                        hardware_flash
+                        hardware_i2c
+                        # hardware_flash
                         )

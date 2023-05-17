@@ -115,11 +115,6 @@ namespace SYNTH {
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
       int32_t output_volume = (volume - _tremelo);
-
-      // add mod in here? saves doing it 8 times in the voice (pretty sure it couldn't handle it) 
-      // increment the LFO offset
-      // if (MOD::_active) {
-      //   _vector_mod += MOD::get_sample();
       
       
       for(int c = 0; c < MAX_VOICES; c++) {
@@ -136,6 +131,7 @@ namespace SYNTH {
         channel.waveform_offset += _vibrato;
 
         channel.ADSR.update();
+        if (channel.ADSR.isStopped()) channel.note_stopped();
 
         // if(channel.waveform_offset & 0x10000) {
         //   // if the waveform offset overflows then generate a new
@@ -262,21 +258,24 @@ namespace SYNTH {
   void set_attack (uint16_t attack) {
     if (attack == _last_attack) return;
     _last_attack = attack;
+    // _attack = (attack << 2) + 2;
     _attack = calc_end_frame((attack<<2)+2);
   }
   void set_decay (uint16_t decay) {
     if (decay == _last_decay) return;
     _last_decay = decay;
+    // _decay = (decay << 2) + 2;
     _decay = calc_end_frame((decay<<2)+2);
   }
   void set_sustain (uint16_t sustain) {
     if (sustain == _last_sustain) return;
     _last_sustain = sustain;
-    _sustain = (sustain<<5);
+    _sustain = (sustain << 5);
   }
   void set_release (uint16_t release) {
     if (release == _last_release) return;
     _last_release = release;
+    // _release = (release << 2) + 2;
     _release = calc_end_frame((release<<2)+2);
   }
   uint32_t calc_end_frame (uint32_t milliseconds) {
@@ -284,19 +283,14 @@ namespace SYNTH {
   }
 
   void modulate_vibrato (uint16_t vibrato) {
-    volatile int32_t signedInput = vibrato;
+    volatile int16_t signedInput = vibrato;
     signedInput -= 0x7fff;
     _vibrato = static_cast<int8_t>(signedInput >> 8);
   }
   void modulate_tremelo (uint16_t tremelo) {
-    _tremelo = tremelo; // should be a full range 16 bit uint
+    _tremelo = tremelo;
   }
   void modulate_vector (uint16_t vector_mod) {
-    _vector_mod = vector_mod >> 6; // should be a full range 10 bit uint
+    _vector_mod = vector_mod >> 6;
   }
 }
-
-
-
-
-

@@ -115,8 +115,13 @@ namespace SYNTH {
       _gate = false;
       ADSR.trigger_release();
     }
+    void note_stopped (void) {
+      _active = false;
+      _note = 0;
+      _frequency = 0;
+    }
     
-    ADSREnvelope ADSR{_attack, _decay, _sustain, _release, _active, _note, _frequency};
+    ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
   };
 
   extern Voices channels[MAX_VOICES];

@@ -5,28 +5,31 @@ Current nightly firmware for Beep Machine Hardware.
 Things to implement:
 
 - Multicore:
+    - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
     - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
-    - Finesse soft start code - currently takes too long to get going.
+    - Finesse soft start code - currently takes too long to get going and still isnt perfect.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
 
 - Improve ADSR code:
-    - Needed update for future Mod ADSR - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
+    - Bug: Clipping output signal (I believe) | When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampleed.
+   
     
 - Improve Mod code:
+    - Mod overflowing vector/wavetable index I think - if the mod is set slow/max depth/vector output and the actual vector control or wavetable is higher up, it overflows the table and freaks out. Constrain the wavetable indexing.
+    - Oscilaltor folds down at the top of range (can be seen at 0.1Hz on vibrato with a tuner - ewhen pressing C with depth to full, it F# to F, but does a little duck away from F at the "top")
     - Tidy up code to remove unnecessary stuff.
         - Move PRNG to its own files, keeps it tidy and also can then be used by synth side
-        - remove (or move) int8_output/uint10_output... not really needed anymore.
     - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
+    - Add a ramp down feature when switching between destinations - could be difficult. 
 
 - Arp code:
     - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
     
-
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
 - Prove hardware functions:
@@ -46,6 +49,9 @@ Future Implementaions and WIPs:
 - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
+    - could use the prng function from MOD as using the dither function that uses this on the trem output added noise, that noise could also be used to make the pitch unstable at a desired amounnt?
+
+- Add a paraphonic filter - could be too much for MCU, but could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
 
 - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - implemented, but not chosen functions yet.
 
@@ -68,14 +74,12 @@ Things already implemented:
     + Added a softstart to the Oscillator code - stops it popping when turned on
     + Add functions for all hardware controls
     + Add and test functions for updating parameters, instead of accesing them directly from outside
-    + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
     + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
 
 + Hardware files bug fixes:
     + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
-+ Add Arp mode
 + Arp functionality bug fixes:
     + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
     + When the range is set to anything above 0 only the first octave of the arp has proper release - think it's to do with the note_clear function in the oscillator (definitely was)
@@ -83,16 +87,23 @@ Things already implemented:
     + currently wont play only one note...
     + Needs direction functionality
     + currently has a random low note on release of arp (noticable in high octaves)
-    + Improve ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths.
+    + Add Arp mode
 
-+ Improve Pagination handling
 + Improve Settings functionality
     + FIX - when jumping about in pages, if set to the heighest value (1023) sometimes it doen't latch when you go back to the page :- was down to storeing last value from other pages, basically couldnt call cause it was the same, even though it was a fresh page.
     + Make everything that takes an input take it from a range of 0-1023
     + Refactor to allow saving, and also to improve code functionality
+    + Improve Pagination handling
     _- Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
 
++ ADSR bug fixes:
+     + Removed any useless calls to synth voice stuff so can be used more universally (currently planning on adding to Mod) - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
+     + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
+     + Improved ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths by testing some.
+
 + Mod bug fixes:
+    + Tidy up code to remove unnecessary stuff.
+        + Removed int8_output/uint10_output... not really needed anymore.
     + Fixed - was down to the placement of the depth calculation. Only happens when switching between Outputs now... Vibrato doesn't settle on 0 properly causing tuning issues when switching outputs and LFO on/off
     + Wave/Shape control currently doesnt work
     + Improved algorithm:-
@@ -104,6 +115,7 @@ Things already implemented:
     + Make every function take 0-1023 for consistancy from the hardware layer
 
 + Multicore:
+    + Setup Note_Priority tracking system so that it can be moved back to core1
     + Setup referenced function calls for Synth/Mod/Arp controls (seemed to work way better than using the mailbox system and then calling functions on the other side)
     + Added Mailbox for note handling
     + Created/reorganise layer between hardware and synth.

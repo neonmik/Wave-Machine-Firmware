@@ -68,7 +68,7 @@ namespace UI {
 
   void change_preset(void) {
     _preset++;
-    _preset&=0x7;
+    if (_preset >= MAX_PRESETS) _preset = 0;
     SETTINGS::set_preset(_preset);
     LEDS::PRESET.preset(_preset);
 

@@ -61,7 +61,6 @@ void core0_main() {
     
     if (DAC::get_state()) {
     
-      // MOD::update();
       MAILBOX::receive(); //copy the data from the mailbox to the local variables
       NOTE_PRIORITY::update(); // update notes from the mailbox info
       
@@ -70,7 +69,8 @@ void core0_main() {
   }
 }
 
-int main() {
+
+ int main() {
 
   set_sys_clock_khz(144000, true); // needs to be called before UART. Not sure if this is needed to run the code, but it gives it a little headroom. 
 

@@ -2,16 +2,16 @@
 
 #include "pico/stdlib.h"
 
-#include "../drivers/adc.h"
+#include "../random.h"
 
 #include "synth.h"
 #include "arp.h"
 
 #include "wavetable.h"
+
+
 // Wave table size
 #define WAVE_TABLE_SIZE 256
-
-uint8_t ADC::noise();
 
 namespace MOD {
 
@@ -22,20 +22,17 @@ namespace MOD {
         OFF
     };
 
-    enum OutputTypes : uint8_t {
-        UNSIGNED_INT_10,
-        SIGNED_INT_8,
-        NOT_ASSIGNED
+    enum OutputType : uint8_t {
+        SIGNED,
+        UNSIGNED
     };
 
-    struct OutputParams {
+    struct OutputDestinations {
         void            (*variable)(uint16_t);
-        // OutputTypes     type;
-        uint8_t         offset;
+        OutputType      type;
         Dither          dither;
-        volatile uint16_t        output = 0;
+        uint16_t        output = 0;
     };
-
 
     class Modulation {
         private:
@@ -51,7 +48,7 @@ namespace MOD {
             int16_t  _sample;
 
             uint32_t _frequency;
-            const double RATE_SCALE_FACTOR = 0.01; // Define the scaling factor to convert 10-bit value to rate in Hz
+            const double RATE_SCALE_FACTOR = 0.1; // Define the scaling factor to convert 10-bit value to rate in Hz
             
             // control variables
             bool     _state = false;
@@ -59,47 +56,30 @@ namespace MOD {
             uint16_t _rate;
             uint16_t _depth;
             uint16_t  _wave;
-
-            uint16_t prng_seed = 0;
             
-            OutputParams _destination[4]{
+            OutputDestinations _destination[4]{
                 // pointer of what to update, type of output, offset for output table
-                {&SYNTH::modulate_vibrato, 0, Dither::FULL},
-                {&SYNTH::modulate_tremelo, 98, Dither::LOW},
-                {&SYNTH::modulate_vector, 98, Dither::HALF},
-                {&ARP::set_range, 98, Dither::OFF}
+                {&SYNTH::modulate_vibrato,  OutputType::SIGNED,     Dither::FULL},
+                {&SYNTH::modulate_tremelo,  OutputType::UNSIGNED,   Dither::LOW},
+                {&SYNTH::modulate_vector,   OutputType::UNSIGNED,   Dither::LOW},
+                {&ARP::set_range,           OutputType::SIGNED,   Dither::OFF} // probably want something better here, but we'll see
             };
-
-            // int8_t int8_output (int16_t input) {
-            //     int8_t format = static_cast<char>((input + 32767) >> 9) - 128; // casts a signed 16 bit int to a signed 8 bit int
-            //     int8_t scaled = (format * _depth) >> 10; // scales the output with a 10 bit depth control
-            //     return scaled;
-            // }
-            // uint16_t uint10_output (int16_t input) {
-            //     // uint16_t format = ; // casts a signed 16 bit int to a unsigned 10 bit int
-            //     // uint16_t scaled = ; // scales the output with a 10 bit depth control
-            //     // return ( * _depth) >> 10;
-            //     return ((input + 32767) >> 6);
-            // }
+            long map(long x, long in_min, long in_max, long out_min, long out_max) {
+                // volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+                return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            }
             uint16_t uint16_output (int16_t input) {
                 return (input + 32767);
             }
-            uint16_t prng() {
-                // Update the seed with the ADC::noise() value
-                prng_seed += ADC::noise();
-                // Perform some simple bitwise operations on the seed to generate a pseudo-random number
-                prng_seed ^= (prng_seed << 7);
-                prng_seed ^= (prng_seed >> 9);
-                prng_seed ^= (prng_seed << 8);
-                return prng_seed;
-            }
             void reset_destination (uint8_t index) {
-                volatile int16_t temp = 0;
-                if (index == 0) {
-                    _destination[index].variable(uint16_output(temp));
-                }
-                else {
-                    _destination[index].variable(0);
+                if (_destination[_matrix].variable != NULL) {
+                    switch (_destination[index].type) {
+                        case OutputType::UNSIGNED:
+                            _destination[index].variable(0);
+                            break;
+                        case OutputType::SIGNED:
+                            _destination[index].variable(uint16_output(0));
+                    }
                 }
             }
             void reset (void) {
@@ -124,6 +104,7 @@ namespace MOD {
             bool get_state (void) {
                 return _state;
             }
+            
             void set_matrix (uint16_t matrix) {
                 volatile uint8_t temp = (matrix>>8);
                 if (_matrix != temp) {
@@ -140,45 +121,59 @@ namespace MOD {
                 }
             }
             void set_rate (uint16_t rate) {
-                double _rate = rate * RATE_SCALE_FACTOR; // Convert 10-bit rate value to a rate between 0.01 Hz and the desired maximum frequency
+                // 0.1Hz - 100Hz
+                // 1 = 0.1Hz / 1024 = 102.4Hz
+                double _rate = (rate + 1);
+                
 
-                _increment = (65535 * _rate) / (_sample_rate * RATE_SCALE_FACTOR); // Calculate the increment based on the scaled rate
+                _increment = (65535 * _rate) / (_sample_rate); // Calculate the increment based on the scaled rate
+
                 if (_increment < 1) _increment = 1;
+                
+                // printf("Rate: %fHz\n", _rate);
             }
             void set_depth (uint16_t depth) {
                 _depth = depth; // 0-1023
             }
-            void set_wave (uint16_t wave) {
+            void set_shape (uint16_t wave) {
                 volatile uint16_t temp = ((wave>>6)*256);
                 if (_wave != temp) {
                     _wave = temp;
                 }
             }
+            
             void update () {
                 if (_state) {
 
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
-                    _index = ((_phase_accumulator >> 16) + _destination[_matrix].offset); // Calculates the 8 bit index value for the wavetable and adds the offset
+                    _index = (_phase_accumulator >> 16); // Calculates the 8 bit index value for the wavetable and adds the offset
+                    // printf("index: %d\n", _index);
                     _sample = wavetable[_index + _wave]; // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (steps of 256) values
-                    
+                    // really just for smoothing out 8 bit numbers over 0.01Hz
                     switch (_destination[_matrix].dither) {
                         case Dither::FULL:
-                            _sample += (prng()>>4); // for Vibrato adds an ADC based dither as the waves are only 8 bit so sounds wierd over 0.01Hz
+                            _sample += (RANDOM::get()>>4);
                             break;
                         case Dither::HALF:
-                            _sample += (prng()>>6); // for Vibrato adds an ADC based dither as the waves are only 8 bit so sounds wierd over 0.01Hz
+                            _sample += (RANDOM::get()>>6);
                             break;
                         case Dither::LOW:
-                            _sample += ADC::noise(); // for Tremelo/ adds a low dither to the output
+                            _sample += (RANDOM::get()>>7);
                             break;
                         case Dither::OFF:
                             break;
                     }
                     
-                    uint16_t temp = 0;
-                    if (_matrix == 0) temp = uint16_output((_sample * _depth) >> 10);   //the uint16 recast has to happen like this for pitch (centres round 0)
-                    else temp = (uint16_output(_sample) * _depth) >> 10;                // and like this for trem/vector
-                    _destination[_matrix].output = temp; // comnvert to an unsigned number apply the depth and then bit shift. gives more reliable results than bit shifting signed number
+                    
+                    // two different algoruthms for applying depth to the outputs, ensures always the number is centred round teh respective 0 mark for the destination. 
+                    switch (_destination[_matrix].type) {
+                        case OutputType::UNSIGNED:
+                            _destination[_matrix].output = (uint16_output(_sample) * _depth) >> 10;
+                            break;
+                        case OutputType::SIGNED:
+                            _destination[_matrix].output = uint16_output((_sample * _depth) >> 10);
+                            break;
+                    }
                     
                     if (_destination[_matrix].variable != NULL) 
                         _destination[_matrix].variable(_destination[_matrix].output);
@@ -189,23 +184,19 @@ namespace MOD {
             }
     };
 
-
-
-
     extern Modulation LFO;
 
     void init (void);
 
-    void update (void);
-
-    void clear (void);
+    void set_state (bool input);
 
     void set_matrix (uint16_t input);
     void set_depth (uint16_t input);
     void set_rate (uint16_t input);
     void set_shape (uint16_t input);
-    void set_state (bool input);
 
+    void update (void);
+    void clear (void);
 }
 
 

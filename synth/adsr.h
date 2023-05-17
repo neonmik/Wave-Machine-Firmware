@@ -13,15 +13,13 @@ enum class Phase : uint8_t {
 
 class ADSREnvelope {
     private:
+        // uint32_t&   _sample_rate;
+
         uint32_t&   _attack;
         uint32_t&   _decay;
         uint32_t&   _sustain;
         uint32_t&   _release;
         
-        bool&       _active;
-        uint8_t&    _note;
-        uint16_t&   _frequency;
-
         uint32_t    _frame            = 0;      // number of frames into the current ADSR phase
         uint32_t    _end_frame        = 0;      // frame target at which the ADSR changes to the next phase
         uint32_t    _adsr             = 0;
@@ -30,8 +28,8 @@ class ADSREnvelope {
 
     public:
 
-        ADSREnvelope(uint32_t& attack, uint32_t& decay, uint32_t& sustain, uint32_t& release, bool& active, uint8_t& note, uint16_t& frequency) 
-        : _attack(attack), _decay(decay), _sustain(sustain), _release(release), _active(active), _note(note), _frequency(frequency) { }
+        ADSREnvelope(uint32_t& attack, uint32_t& decay, uint32_t& sustain, uint32_t& release) 
+        : _attack(attack), _decay(decay), _sustain(sustain), _release(release) { }
         ~ADSREnvelope ( ) { }
 
         void trigger_attack();
@@ -40,12 +38,6 @@ class ADSREnvelope {
         void trigger_release();
         void stopped();
         
-        // Disabled until I need per trigger ADSR...
-        // void set_attack(uint16_t attack);
-        // void set_decay(uint16_t decay);
-        // void set_sustain(uint16_t sustain);
-        // void set_release(uint16_t release);
-
         void update(void);
 
         bool isStopped() { return _phase == Phase::OFF; }

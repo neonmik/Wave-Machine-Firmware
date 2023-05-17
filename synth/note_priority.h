@@ -8,7 +8,7 @@
 #include "../mailbox.h"
 
 #include "arp.h"
-// #include "modulation.h"
+
 
 enum class Priority {
     FIRST,      // First/oldest notes stay the longest
@@ -35,14 +35,16 @@ namespace NOTE_PRIORITY {
         
         uint8_t     _voice_notes[MAX_VOICES];
         uint32_t    _time_activated[MAX_VOICES];
+        bool        _active_voice[MAX_VOICES];
+        bool        _released_voice[MAX_VOICES];
 
-        uint8_t     _voices_active = 0;
+        int8_t     _voices_active = 0;
     }
     
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);
     void voice_off(int slot, int note, int velocity);
-    void voices_clear(void);
+    void voices_panic(void);
 
     // Note priority detection
     void priority(int status, int note, int velocity);

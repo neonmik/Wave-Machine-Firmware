@@ -10,10 +10,12 @@
 #define MAX_KNOBS       4
 
 #include "pico/stdlib.h"
-#include "stdio.h"
+// #include "stdio.h" //shouldnt need this?
 
 #include "hardware/adc.h"
 #include "hardware/dma.h"
+
+#include "../random.h"
 
 namespace ADC {
     namespace {
