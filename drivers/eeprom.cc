@@ -181,8 +181,8 @@ namespace EEPROM {
         printf("EEPROM address: %d\n", factory_preset_address);
         
         // Commented while I check the code
-        // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, factory_address_buffer, ADDRESS_SIZE, false);
-        // i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, transfer_buffer, sizeof(PRESET), false);
+        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, factory_address_buffer, ADDRESS_SIZE, false);
+        i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, transfer_buffer, sizeof(PRESET), false);
         
         printf("Loaded into buffer!\n");
         // 
@@ -200,8 +200,8 @@ namespace EEPROM {
         printf("EEPROM address: %d\n", output_address);
 
         // Commented while I check the code
-        // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, output_buffer, PAGE_SIZE + 2, false);
-        printf("Successfully restored Preset %d to factory settings!\n");
+        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, output_buffer, PAGE_SIZE + 2, false);
+        printf("Successfully restored Preset %d to factory settings!\n", slot);
         //
     }
 }

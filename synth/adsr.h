@@ -3,6 +3,7 @@
 #include "pico/stdlib.h"
 
 #define MAX_ATTACK  0xFFFFFF
+
 enum class Phase : uint8_t {
     ATTACK,
     DECAY,

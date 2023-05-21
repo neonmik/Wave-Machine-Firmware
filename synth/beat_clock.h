@@ -31,6 +31,9 @@ namespace BEAT_CLOCK {
             // volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
             return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
+        void calculate_division (void) {
+            _samples_per_division = (60 * _samples_rate / _bpm) / _division;
+        }
     }
 
     void init (uint8_t bpm, uint16_t sample_rate);

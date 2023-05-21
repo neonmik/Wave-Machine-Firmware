@@ -3,17 +3,19 @@
 namespace BEAT_CLOCK {
 
     void init (uint8_t bpm, uint16_t sample_rate) {
-        set_samplerate(sample_rate);
-        set_bpm(bpm);
+        _samples_rate = sample_rate;
+        _bpm = bpm;
+        calculate_division();
     }
 
     void set_samplerate (uint16_t sample_rate) {
         _samples_rate = sample_rate;
+        calculate_division();
     } 
 
     void set_bpm (uint16_t bpm) {
         _bpm = bpm;
-        _samples_per_division = (60 * _samples_rate / _bpm) / _division;
+        calculate_division();
     }
     uint8_t get_bpm () {
         return _bpm;
@@ -63,7 +65,7 @@ namespace BEAT_CLOCK {
             default:
                 break;
         }
-        _samples_per_division = (60 * _samples_rate / _bpm) / _division;
+        calculate_division();
     }
 
     void tick (void) {

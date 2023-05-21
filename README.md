@@ -9,17 +9,13 @@ Things to implement:
     - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
-    - Test Factory Restore function!
     - Develop way of exporting presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
     - Finesse soft start code - currently takes too long to get going and still isnt perfect.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
-
-- Improve ADSR code:
-    - Think this is fixed, Test it! (This was down to values being all over the place in the ADSR and Synth code, I've now made sure everything is aligned:- Bug: Clipping output signal (I believe) | When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.)
-   
+  
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
@@ -28,11 +24,21 @@ Things to implement:
     - CV?
 
 
+
+
+
 Future Implementaions and WIPs:
 
+- Add hardware controls for:
+    - Factory Reset
+    - Setting BPM
+
+- Improve ADSR code:
+   - Make the code more portable:- currently the calculations for ADSR times are done in the synth module, but would be good to move them into the ADSR module. I need global controls, but to be able to trigger phases of each voice seperately.
+ 
 - Improve Mod code:
-    - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
     - Add a ramp down feature when switching between destinations - could be difficult. 
+    - _currently_ impossible due to over extending the processor... Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
 
 - Implement USB-MIDI and MIDI:
     - Notes - MIDI IN calls the same functions to the mailbox as Keys, MIDI OUT will call from Note Priority
@@ -44,7 +50,6 @@ Future Implementaions and WIPs:
     - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
     - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
     
-- Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
     - could use the prng function from MOD as using the dither function that uses this on the trem output added noise, that noise could also be used to make the pitch unstable at a desired amount?
@@ -55,7 +60,12 @@ Future Implementaions and WIPs:
 
 - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
 
+
 - Add a paraphonic filter - _is_ could be too much for MCU at the minute, but could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
+
+- Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
+
+
 
 Things already implemented:
 
@@ -89,6 +99,7 @@ Things already implemented:
     + Add Arp mode
 
 + Improve Settings functionality
+    + Factory Restore function working, just need to implement in controls
     + Load Current Factory Presets to Factory Space
     + Should add a "Factory Reset" state in UI (using Mutable Instruments style system state) to allow reset of all sounds to default (currently 8 presets of standard sinewave synth, but eventually 8 cool sound presets)
     + Develop 8 cool presets.
@@ -99,6 +110,7 @@ Things already implemented:
     _- Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
 
 + ADSR bug fixes:
+    + Fixed an overflow issue with multiple notes being in an extended Decay phase causing the output sample to be limitied cause audio artifacts:- Bug: Clipping output signal - When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.)
      + Removed any useless calls to synth voice stuff so can be used more universally (currently planning on adding to Mod) - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
      + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
      + Improved ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths by testing some.

@@ -160,6 +160,8 @@ namespace SETTINGS {
     uint8_t get_preset (void);
     void save_preset (uint8_t preset);
     void load_preset (uint8_t preset);
+    void export_presets (void);
+    void factory_restore (void);
 
     void save (void);
 
