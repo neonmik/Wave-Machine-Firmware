@@ -1,5 +1,5 @@
 /**
- *            Beep Machine Firmware v0.25
+ *            Beep Machine Firmware v0.26
  * 
  * Copyright (c) 2022 Nick Allott Musical Services (NAMS)
  *  
@@ -13,7 +13,6 @@
 
 #include "config.h"
 
-// #include "synth/modulation.h"
 #include "synth/arp.h"
 #include "synth/note_priority.h"
 #include "synth/synth.h"
