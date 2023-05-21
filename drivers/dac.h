@@ -19,16 +19,15 @@
 #define DAC_CS          9
 #define DAC_SPI         spi1
 
-#define DAC_CONFIG 0b0111000000000000
+#define DAC_CONFIG      0b0111000000000000
 
 
 #define BUFFER_SIZE     64
 
 
-#define size_bits log2(BUFFER_SIZE * sizeof(uint16_t))
+#define size_bits       log2(BUFFER_SIZE * sizeof(uint16_t))
 
 typedef uint16_t (*synth_function)();
-// typedef void (*mod_function)();
 
 extern uint32_t sample_clock;
 
@@ -42,8 +41,6 @@ namespace DAC {
     namespace {
 
         synth_function process;
-        // mod_function _mod_process;
-
 
         bool        _full;
         
@@ -72,7 +69,6 @@ namespace DAC {
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
                 buf[i] = (process()) | (DAC_CONFIG);
-                // _mod_process();
                 ++sample_clock;
                 BEAT_CLOCK::tick();
             }

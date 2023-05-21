@@ -12,6 +12,7 @@ namespace SETTINGS {
     }
 
     void set_preset (uint8_t preset) {
+        // this is commented because I don't want it to save the preset setting without us doing it on purpose
         // save_preset();
         _preset = preset;
         load_preset(_preset);
@@ -41,16 +42,13 @@ namespace SETTINGS {
 
         Preset[preset].Arpeggiator.state = Control.get_arp();
         Preset[preset].Arpeggiator.hold = Control.get(3, 0);
-        Preset[preset].Arpeggiator.divisisions = Control.get(3, 1);
+        Preset[preset].Arpeggiator.divisions = Control.get(3, 1);
         Preset[preset].Arpeggiator.range = Control.get(3, 2);
         Preset[preset].Arpeggiator.direction = Control.get(3, 3);
         
-        // code here for saving preset infomation to EEPROM
         EEPROM::savePreset(preset, Preset[preset]);
     }
-
     void load_preset (uint8_t preset) {
-        // code here for loading preset infomation from EEPROM
 
         EEPROM::loadPreset(preset, Preset[preset]);
 
@@ -72,14 +70,34 @@ namespace SETTINGS {
 
         Control.set_arp(Preset[preset].Arpeggiator.state);
         Control.set(3, 0, Preset[preset].Arpeggiator.hold);
-        Control.set(3, 1, Preset[preset].Arpeggiator.divisisions);
+        Control.set(3, 1, Preset[preset].Arpeggiator.divisions);
         Control.set(3, 2, Preset[preset].Arpeggiator.range);
         Control.set(3, 3, Preset[preset].Arpeggiator.direction);
 
         _changed = true;
     
     }
+    void export_presets(void) {
+        PRESET export_buffer[MAX_PRESETS];
 
+        for (int i = 0; i < MAX_PRESETS; i++) {
+            EEPROM::loadPreset(i, export_buffer[i]);
+        }
+
+        // send export_buffer somewhere?    - maybe save as a file that can be accessed in USB?
+        //                                  - send over MIDI
+    }
+    void factory_restore (void) {
+
+        printf("Factory Restore in progress!\n");
+        
+        for (int i = 0; i < MAX_PRESETS; i++) {
+            EEPROM::restorePreset(i);
+        }
+        printf("Factory Settings restored!\n");
+        
+        set_preset(_preset); // not sure if this needs to be here? just needs to make sure it updates the settings right after factory restore, seems like the safest way to do it
+    }
     void save () {
         save_preset(_preset);
     }
@@ -99,8 +117,7 @@ namespace SETTINGS {
     uint16_t get_value (uint8_t page, uint8_t control) {
         return Control.get(page, control);
     }
-    
-    
+       
     void toggle_lfo () {
         _changed = true;
         Control.toggle_lfo();

@@ -36,7 +36,6 @@ namespace UI {
     }
     
     void set_page (uint8_t page);
-    void set_page_flag(uint8_t value);
     uint8_t get_page_flag(void);
 
     void toggle_lfo(void);
@@ -45,7 +44,6 @@ namespace UI {
     void toggle_arp(void);
     uint8_t get_arp(void);
 
-    void set_preset(uint8_t preset);
     void change_preset(void);
     uint8_t get_preset(void);
 

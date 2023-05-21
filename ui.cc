@@ -1,37 +1,30 @@
 #include "ui.h"
 
-
 #include "drivers/adc.h"
 #include "drivers/keys.h"
 #include "drivers/button.h"
 #include "drivers/leds.h"
 
-// #include "synth/arp.h"
-
-
 namespace UI {
 
   void set_page (uint8_t value) {
     // using a switch here so that I can easily change the LEDs... find a better way?
-    switch (value) {
+    _page = value;
+    switch (_page) {
       case 0:
-        _page = 0;
         LEDS::PAGES.off();
         SETTINGS::set_page(_page);
         break;
       case 1:
-        _page = 1;
         LEDS::PAGE_1.toggle();
         SETTINGS::set_page(_page);
         break;
       case 2:
-        _page = 2;
         LEDS::PAGE_1.toggle();
         LEDS::PAGE_2.toggle();
         SETTINGS::set_page(_page);
         break;
       case 3:
-        _page = 3;
         LEDS::PAGE_2.toggle();
         LEDS::PAGE_3.toggle();
         SETTINGS::set_page(_page);
@@ -90,7 +83,7 @@ namespace UI {
     // stdio_init_all();
 
     printf("\nWelcome to the jungle...\n");
-    printf("\ncore1 here!\n");
+    // printf("\ncore1 here!\n");
 
     LEDS::init();
     KEYS::init();
@@ -104,7 +97,6 @@ namespace UI {
   }
 
   void test (int delay) {
-    
     LEDS::test(delay);
   }
 

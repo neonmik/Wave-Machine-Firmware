@@ -41,7 +41,7 @@
 			"__nullptr": "cpp",
 			"chrono": "cpp"
 		},
-		"cortex-debug.variableUseNaturalFormat": false,
+		"cortex-debug.variableUseNaturalFormat": true,
 		"cortex-debug.registerUseNaturalFormat": true
 	}
 }

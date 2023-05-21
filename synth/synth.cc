@@ -38,7 +38,7 @@ namespace SYNTH {
   // uint16_t  filter_cutoff_frequency = 1000;
   // float filter_epow = 1 - expf(-(1.0f / 44100.0f) * 2.0f * pi * int32_t(filter_cutoff_frequency));
 
-  uint16_t volume = 0x6fff;
+  uint16_t volume = 0xFFFF;
   const int16_t sine_waveform[256] = {-32768,-32758,-32729,-32679,-32610,-32522,-32413,-32286,-32138,-31972,-31786,-31581,-31357,-31114,-30853,-30572,-30274,-29957,-29622,-29269,-28899,-28511,-28106,-27684,-27246,-26791,-26320,-25833,-25330,-24812,-24279,-23732,-23170,-22595,-22006,-21403,-20788,-20160,-19520,-18868,-18205,-17531,-16846,-16151,-15447,-14733,-14010,-13279,-12540,-11793,-11039,-10279,-9512,-8740,-7962,-7180,-6393,-5602,-4808,-4011,-3212,-2411,-1608,-804,0,804,1608,2411,3212,4011,4808,5602,6393,7180,7962,8740,9512,10279,11039,11793,12540,13279,14010,14733,15447,16151,16846,17531,18205,18868,19520,20160,20788,21403,22006,22595,23170,23732,24279,24812,25330,25833,26320,26791,27246,27684,28106,28511,28899,29269,29622,29957,30274,30572,30853,31114,31357,31581,31786,31972,32138,32286,32413,32522,32610,32679,32729,32758,32767,32758,32729,32679,32610,32522,32413,32286,32138,31972,31786,31581,31357,31114,30853,30572,30274,29957,29622,29269,28899,28511,28106,27684,27246,26791,26320,25833,25330,24812,24279,23732,23170,22595,22006,21403,20788,20160,19520,18868,18205,17531,16846,16151,15447,14733,14010,13279,12540,11793,11039,10279,9512,8740,7962,7180,6393,5602,4808,4011,3212,2411,1608,804,0,-804,-1608,-2411,-3212,-4011,-4808,-5602,-6393,-7180,-7962,-8740,-9512,-10279,-11039,-11793,-12540,-13279,-14010,-14733,-15447,-16151,-16846,-17531,-18205,-18868,-19520,-20160,-20788,-21403,-22006,-22595,-23170,-23732,-24279,-24812,-25330,-25833,-26320,-26791,-27246,-27684,-28106,-28511,-28899,-29269,-29622,-29957,-30274,-30572,-30853,-31114,-31357,-31581,-31786,-31972,-32138,-32286,-32413,-32522,-32610,-32679,-32729,-32758};
 
   Voices channels[MAX_VOICES];
@@ -73,6 +73,8 @@ namespace SYNTH {
   
   void init (uint32_t sample_rate) {
     _sample_rate = sample_rate;
+
+    MOD::init();
   }
 
   
@@ -114,7 +116,12 @@ namespace SYNTH {
 
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
-      int32_t output_volume = (volume - _tremelo);
+      uint16_t output_volume = (volume - _tremelo);
+      if (volume - _tremelo < 0 || volume - _tremelo > 0xFFFF) {
+        DEBUG::overflow();
+        printf("Master Volume overflow!");
+        DEBUG::breakpoint();
+      }
       
       
       for(int c = 0; c < MAX_VOICES; c++) {
@@ -147,56 +154,58 @@ namespace SYNTH {
           int32_t channel_sample = 0;
 
 
-          if (oscillator & Oscillator::NOISE) {
-            channel_sample += channel.noise;
-            waveform_count++;
-          }
+          // if (oscillator & Oscillator::NOISE) {
+          //   channel_sample += channel.noise;
+          //   waveform_count++;
+          // }
 
-          if (oscillator & Oscillator::SAW) {
-            channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
-            waveform_count++;
-          }
+          // if (oscillator & Oscillator::SAW) {
+          //   channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
+          //   waveform_count++;
+          // }
 
-          if (oscillator & Oscillator::TRIANGLE) {
-            if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
-              channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
-            }
-            else { // final quarter up slope
-              channel_sample += int32_t(0x7fff) - ((int32_t(channel.waveform_offset) - int32_t(0x7fff)) * 2);
-            }
-            waveform_count++;
-          }
+          // if (oscillator & Oscillator::TRIANGLE) {
+          //   if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
+          //     channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
+          //   }
+          //   else { // final quarter up slope
+          //     channel_sample += int32_t(0x7fff) - ((int32_t(channel.waveform_offset) - int32_t(0x7fff)) * 2);
+          //   }
+          //   waveform_count++;
+          // }
 
-          if (oscillator & Oscillator::SQUARE) {
-            channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
-            waveform_count++;
-          }
+          // if (oscillator & Oscillator::SQUARE) {
+          //   channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
+          //   waveform_count++;
+          // }
           
-          if (oscillator & Oscillator::SINE) {
-            // the sine_waveform sample contains 256 samples in
-            // total so we'll just use the most significant bits
-            // of the current waveform position to index into it
-            channel_sample += sine_waveform[(channel.waveform_offset >> 8)];
-            waveform_count++;
-            
-          }
+          // if (oscillator & Oscillator::SINE) {
+          //   // the sine_waveform sample contains 256 samples in
+          //   // total so we'll just use the most significant bits
+          //   // of the current waveform position to index into it
+          //   channel_sample += sine_waveform[(channel.waveform_offset >> 8)];
+          //   waveform_count++;
+          // }
 
+          // if (oscillator & Oscillator::ARBITARY) {
+          //   // OLD Arbitary Waveform? Not sure how it was meant to work, but it didnt...
+          //   // channel_sample += channel.wave_buffer[channel.wave_buf_pos];
+          //   // if (++channel.wave_buf_pos == 64) {
+          //   //   channel.wave_buf_pos = 0;
+          //   //   if(channel.wave_buffer_callback)
+          //   //       channel.wave_buffer_callback(channel);
+          //   // }
+          //   // waveform_count++;
+          // }
           if (oscillator & Oscillator::WAVETABLE) {
 
             // the wavetable sample contains 256 samples in
             // total so we'll just use the most significant bits
             // of the current waveform position to index into it
-            channel_sample += wavetable[(channel.waveform_offset >> 8) + vector];
+            channel_sample += get_wavetable((channel.waveform_offset >> 8) + vector);
             waveform_count++;
 
-            // OLD Arbitary Waveform? Not sure how it was meant to work, but it didnt...
-            // channel_sample += channel.wave_buffer[channel.wave_buf_pos];
-            // if (++channel.wave_buf_pos == 64) {
-            //   channel.wave_buf_pos = 0;
-            //   if(channel.wave_buffer_callback)
-            //       channel.wave_buffer_callback(channel);
-            // }
-            // waveform_count++;
+            
           }
 
           // divide the sample by the amount of waveforms - good for multi oscillator voices
@@ -219,16 +228,15 @@ namespace SYNTH {
           sample += channel_sample;
         }
       }
-      
-      sample = (int32_t(sample) * output_volume) >> 16;
+      sample = (int32_t(sample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       //attempt at soft clipping - doesnt work
       // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
 
       // clip result to 16-bit
       sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
-      // sample = lowPassFilter.process(sample);
-      return (sample+32767)>>4;
+      // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
+      return (sample - INT16_MIN)>>4;
     }
 
   }
@@ -270,7 +278,7 @@ namespace SYNTH {
   void set_sustain (uint16_t sustain) {
     if (sustain == _last_sustain) return;
     _last_sustain = sustain;
-    _sustain = (sustain << 5);
+    _sustain = (sustain << 6);
   }
   void set_release (uint16_t release) {
     if (release == _last_release) return;

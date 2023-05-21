@@ -69,10 +69,10 @@ namespace MOD {
                 return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
             }
             uint16_t uint16_output (int16_t input) {
-                return (input + 32767);
+                return input - INT16_MIN; // Using modular arithmatic!
             }
             void reset_destination (uint8_t index) {
-                if (_destination[_matrix].variable != NULL) {
+                if (_destination[index].variable != NULL) {
                     switch (_destination[index].type) {
                         case OutputType::UNSIGNED:
                             _destination[index].variable(0);
@@ -85,6 +85,7 @@ namespace MOD {
             void reset (void) {
                 _index = 0;
                 _phase_accumulator = 0;
+                _sample = 0;
 
                 for (int i = 0; i < 3; i++) {
                     reset_destination(i);
@@ -136,7 +137,7 @@ namespace MOD {
                 _depth = depth; // 0-1023
             }
             void set_shape (uint16_t wave) {
-                volatile uint16_t temp = ((wave>>6)*256);
+                volatile uint16_t temp = ((map(wave, 0, 1023, 0, 5))*256);
                 if (_wave != temp) {
                     _wave = temp;
                 }
@@ -148,34 +149,42 @@ namespace MOD {
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
                     _index = (_phase_accumulator >> 16); // Calculates the 8 bit index value for the wavetable and adds the offset
                     // printf("index: %d\n", _index);
-                    _sample = wavetable[_index + _wave]; // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (steps of 256) values
+                    _sample = get_mod_wavetable(_index + _wave); // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (steps of 256) values
                     // really just for smoothing out 8 bit numbers over 0.01Hz
+
                     switch (_destination[_matrix].dither) {
                         case Dither::FULL:
-                            _sample += (RANDOM::get()>>4);
+                            if (_sample > 0) _sample -= (RANDOM::get()>>4);
+                            else _sample += (RANDOM::get()>>4);
                             break;
                         case Dither::HALF:
-                            _sample += (RANDOM::get()>>6);
+                            if (_sample > 0) _sample -= (RANDOM::get()>>6);
+                            else _sample += (RANDOM::get()>>6);
                             break;
                         case Dither::LOW:
-                            _sample += (RANDOM::get()>>7);
+                            if (_sample > 0) _sample -= (RANDOM::get()>>7);
+                            else _sample += (RANDOM::get()>>7);
                             break;
                         case Dither::OFF:
                             break;
                     }
                     
-                    
+
                     // two different algoruthms for applying depth to the outputs, ensures always the number is centred round teh respective 0 mark for the destination. 
                     switch (_destination[_matrix].type) {
                         case OutputType::UNSIGNED:
+                        {
                             _destination[_matrix].output = (uint16_output(_sample) * _depth) >> 10;
                             break;
+                        }
                         case OutputType::SIGNED:
+                        {
                             _destination[_matrix].output = uint16_output((_sample * _depth) >> 10);
                             break;
+                        }
                     }
-                    
-                    if (_destination[_matrix].variable != NULL) 
+
+                    if (_destination[_matrix].variable != NULL)     
                         _destination[_matrix].variable(_destination[_matrix].output);
                 }
             }

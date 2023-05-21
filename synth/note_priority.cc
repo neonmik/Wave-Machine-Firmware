@@ -4,6 +4,21 @@
 #include "synth.h"
 // #include "modulation.h"
 
+// aiming to use this class to pass back and forward between cores, that or jsut simple messages of need content.
+// easiest would be to have a mailbox set up to transfer all of the data for all of the slots in one go, and back again (the return is mostly for release info)
+
+// basically how it is now for note_state, but with voice_state[8](core1) = voice_state[8](core0)
+
+// could get confused sending all note info back and forth... might need to only return release? 
+// basically check the note hasnt changed, between core0 reciving it and send it back? 
+struct voice_class {
+  bool      active; // used to show if the note is in any state of play - to be returned from core0
+  bool      gate; // used to show if the note is physically being played
+  uint8_t   note; // midi number of the note
+  // uint16_t  freq; // possibly needed to calc the note frequency on this core
+  uint32_t  time_activated;
+};
+
 namespace NOTE_PRIORITY {
 
   // Synth Note Control
@@ -79,10 +94,12 @@ namespace NOTE_PRIORITY {
           volatile int8_t slot = -1; // means if no free voices are left, it will be -1 still
 
           for (int i = 0; i < MAX_VOICES; i++)  {
+            // if (voice[i].note == note && voice.active) {
             if (SYNTH::channels[i]._note == note && SYNTH::channels[i]._gate) { 
               slot = i;
               break;  // breaks for loop as a free slot has been found
             }
+            // if (voice.active) {
             if (!SYNTH::channels[i]._active) {
               slot = i;
               break;

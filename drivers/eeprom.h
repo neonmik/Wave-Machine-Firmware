@@ -10,15 +10,19 @@
 
 #include "hardware/i2c.h"
 
-#define EEPROM_SDA_PIN          2
-#define EEPROM_SCL_PIN          3
+constexpr   uint8_t     EEPROM_SDA_PIN          =       2;
+constexpr   uint8_t     EEPROM_SCL_PIN          =       3;
 
-#define EEPROM_I2C_CHANNEL      i2c1
-#define EEPROM_I2C_ADDRESS      0x50
+constexpr   i2c_inst_t* EEPROM_I2C_CHANNEL      =       i2c1;
+constexpr   uint8_t     EEPROM_I2C_ADDRESS      =       0x50;
 
-#define PAGE_SIZE               64
-#define MAX_ADDRESS             0x7FFF
+constexpr   uint8_t     ADDRESS_SIZE            =       2;
+constexpr   uint8_t     PAGE_SIZE               =       64;
+constexpr   uint16_t    MAX_ADDRESS             =       0x7FFF;
 
+constexpr   uint16_t    PRESET_ADDRESS          =       0x0;
+constexpr   uint16_t    FACTORY_PRESET_ADDRESS  =       0x200;
+constexpr   uint16_t    FREE_ADDRESS            =       0x400;
 
 
 
@@ -56,7 +60,7 @@ namespace EEPROM {
 
         // EEPROM test functions
         void test (void) {
-            uint16_t address = 0;
+            uint16_t address = FREE_ADDRESS;
             uint16_t empty = 0;
             uint16_t full = 0;
             
@@ -117,5 +121,5 @@ namespace EEPROM {
     void init (void);
     void savePreset(uint8_t slot, PRESET &preset);
     void loadPreset (uint8_t slot, PRESET &preset);
-
+    void restorePreset (uint8_t slot);
 }

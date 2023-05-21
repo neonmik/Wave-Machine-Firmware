@@ -11,7 +11,9 @@
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 
-#include "synth/modulation.h"
+#include "config.h"
+
+// #include "synth/modulation.h"
 #include "synth/arp.h"
 #include "synth/note_priority.h"
 #include "synth/synth.h"
@@ -21,15 +23,6 @@
 #include "ui.h"
 
 #include "mailbox.h"
-
-#define SAMPLE_RATE     48000
-#define MAX_VOICES      8
-#define BPM             120 // part of a function for determinding bpm ms
-
-uint32_t sample_clock = 0;
-uint32_t sample_clock_last = 0;
-
-uint32_t software_index = 0;
 
 
 
@@ -51,12 +44,9 @@ void core0_main() {
 
 
   SYNTH::init(SAMPLE_RATE);
-  MOD::init();
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
-  ARP::init(BPM, SAMPLE_RATE);
+  ARP::init(DEFAULT_BPM, SAMPLE_RATE);
   
-
-  uint8_t index = 0;
   while (true) {
     
     if (DAC::get_state()) {
@@ -71,7 +61,7 @@ void core0_main() {
 
 int main() {
 
-  set_sys_clock_khz(144000, true); // needs to be called before UART. Not sure if the extra speed is needed to run the code, but it gives it a little headroom.
+  set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Not sure if the extra speed is needed to run the code, but it gives it a little headroom.
   stdio_init_all(); // has to be here to allow both cores to use the UART
 
   MAILBOX::init(); // has to be here to allow both cores access to MAILBOX

@@ -25,7 +25,7 @@ struct PRESET {
     struct Arp {
         bool state = false;
         uint16_t hold = 0;
-        uint16_t divisisions = 511;
+        uint16_t divisions = 511;
         uint16_t range = 0;
         uint16_t direction = 0;
     };

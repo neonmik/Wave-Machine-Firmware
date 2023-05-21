@@ -58,30 +58,10 @@ namespace MAILBOX {
         uint8_t     note_state[128];
         uint8_t     notes_on        =       0;
     };
-    // struct arp_data {
-    //     bool        enabled = false;
-    //     uint16_t    hold;
-    //     uint16_t    division;
-    //     uint16_t    range;
-    //     uint16_t    direction;
-    // };
-    // struct synth_data {
-    //     uint16_t    waveshape;
-    //     uint16_t    vector;
-    //     uint16_t    octave;
-    //     uint16_t    pitch;
-    //     uint16_t    attack;
-    //     uint16_t    decay;
-    //     uint16_t    sustain;
-    //     uint16_t    release;
-    // };
-    // struct mod_data {
-    //     bool        enabled;
-    //     uint16_t    matrix;
-    //     uint16_t    rate;
-    //     uint16_t    depth;
-    //     uint16_t    shape;
-    // };
+
+    struct voice_data {
+
+    };
     
     extern Mailbox<note_data> NOTE_DATA;
     // extern Mailbox<synth_data> SYNTH_DATA;

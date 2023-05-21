@@ -20,20 +20,18 @@ namespace EEPROM {
     }
 
     void savePreset(uint8_t slot, PRESET &preset) {
-        uint8_t     buffer[sizeof(preset) + 2];
-        uint16_t    address = 0;
-
-        if (slot >= MAX_PRESETS || slot < 0) {
-            printf("ERROR! Outside of Preset storage range!/n");
+        if (slot >= MAX_PRESETS) {
+            printf("ERROR! Outside of Preset storage range!\n");
             return;
         }
-        else {
-            address = slot * PAGE_SIZE;
-            printf("Saving Preset %d...\n", slot);
-        }
-        
-        buffer[0] = (address >> 8);
-        buffer[1] = (address & 0xFF);
+
+        uint16_t address = slot * PAGE_SIZE;
+        printf("Saving Preset %d...\n", slot);
+
+        uint8_t buffer[ADDRESS_SIZE + PAGE_SIZE] = {0};
+        buffer[0] = (address >> 8) & 0xFF;
+        buffer[1] = address & 0xFF;
+
 
         buffer[2] = (preset.Wave.shape >> 8) & 0xFF;
         buffer[3] = preset.Wave.shape & 0xFF;
@@ -63,12 +61,17 @@ namespace EEPROM {
         buffer[27] = preset.Arpeggiator.state;
         buffer[28] = (preset.Arpeggiator.hold >> 8) & 0xFF;
         buffer[29] = preset.Arpeggiator.hold & 0xFF;
-        buffer[30] = (preset.Arpeggiator.divisisions >> 8) & 0xFF;
-        buffer[31] = preset.Arpeggiator.divisisions & 0xFF;
+        buffer[30] = (preset.Arpeggiator.divisions >> 8) & 0xFF;
+        buffer[31] = preset.Arpeggiator.divisions & 0xFF;
         buffer[32] = (preset.Arpeggiator.range >> 8) & 0xFF;
         buffer[33] = preset.Arpeggiator.range & 0xFF;
         buffer[34] = (preset.Arpeggiator.direction >> 8) & 0xFF;
         buffer[35] = preset.Arpeggiator.direction & 0xFF;
+        // maybe add some sort of padding here? 
+        // 0xAF = After
+        // 0xBE = Before
+        // buffer[36] = 0xAF;
+        // buffer[37] = 0xAF;
 
         i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, PAGE_SIZE + 2, false);
 
@@ -92,70 +95,113 @@ namespace EEPROM {
         
         printf("ARP state:  %d\n",      preset.Arpeggiator.state);
         printf("matrix:     %d\n",      preset.Arpeggiator.hold);
-        printf("rate:       %d\n",      preset.Arpeggiator.divisisions);
+        printf("rate:       %d\n",      preset.Arpeggiator.divisions);
         printf("depth:      %d\n",      preset.Arpeggiator.range);
         printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
     }
-
     void loadPreset (uint8_t slot, PRESET &preset) {
+        if (slot >= MAX_PRESETS) {
+            printf("ERROR! Outside of Preset storage range!\n");
+            return;
+        }
+        
         uint16_t preset_address = slot * PAGE_SIZE;
+
+        uint8_t address_buffer[ADDRESS_SIZE];
+
+        address_buffer[0] = ((preset_address >> 8) & 0xFF);
+        address_buffer[1] = (preset_address & 0xFF);
+
+        uint8_t preset_buffer[sizeof(PRESET)] = {0};
+
+        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, address_buffer, ADDRESS_SIZE, false);
+        i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, preset_buffer, sizeof(PRESET), false);
+
+        preset.Wave.shape = (preset_buffer[0] << 8) | preset_buffer[1];
+        preset.Wave.vector = (preset_buffer[2] << 8) | preset_buffer[3];
+        preset.Wave.octave = (preset_buffer[4] << 8) | preset_buffer[5];
+        preset.Wave.pitch = (preset_buffer[6] << 8) | preset_buffer[7];
+
+        preset.Envelope.attack = (preset_buffer[8] << 8) | preset_buffer[9];
+        preset.Envelope.decay = (preset_buffer[10] << 8) | preset_buffer[11];
+        preset.Envelope.sustain = (preset_buffer[12] << 8) | preset_buffer[13];
+        preset.Envelope.release = (preset_buffer[14] << 8) | preset_buffer[15];
+
+        preset.Modulation.state = preset_buffer[16];
+        preset.Modulation.matrix = (preset_buffer[17] << 8) | preset_buffer[18];
+        preset.Modulation.rate = (preset_buffer[19] << 8) | preset_buffer[20];
+        preset.Modulation.depth = (preset_buffer[21] << 8) | preset_buffer[22];
+        preset.Modulation.wave = (preset_buffer[23] << 8) | preset_buffer[24];
+
+        preset.Arpeggiator.state = preset_buffer[25];
+        preset.Arpeggiator.hold = (preset_buffer[26] << 8) | preset_buffer[27];
+        preset.Arpeggiator.divisions = (preset_buffer[28] << 8) | preset_buffer[29];
+        preset.Arpeggiator.range = (preset_buffer[30] << 8) | preset_buffer[31];
+        preset.Arpeggiator.direction = (preset_buffer[32] << 8) | preset_buffer[33];
         
-        uint8_t buf[2];
-        buf[0] = (preset_address >> 8);
-        buf[1] = (preset_address & 0xFF);
-
-        uint8_t buffer[sizeof(PRESET)];
-
-        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, (uint8_t*)&buf, 2, false);
-        sleep_ms(5); //can I remove?
-        i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, sizeof(PRESET), false);
-        sleep_ms(5); //can I remove?
-
-        preset.Wave.shape = (buffer[0] << 8) | buffer[1];
-        preset.Wave.vector = (buffer[2] << 8) | buffer[3];
-        preset.Wave.octave = (buffer[4] << 8) | buffer[5];
-        preset.Wave.pitch = (buffer[6] << 8) | buffer[7];
-
-        preset.Envelope.attack = (buffer[8] << 8) | buffer[9];
-        preset.Envelope.decay = (buffer[10] << 8) | buffer[11];
-        preset.Envelope.sustain = (buffer[12] << 8) | buffer[13];
-        preset.Envelope.release = (buffer[14] << 8) | buffer[15];
-
-        preset.Modulation.state = buffer[16];
-        preset.Modulation.matrix = (buffer[17] << 8) | buffer[18];
-        preset.Modulation.rate = (buffer[19] << 8) | buffer[20];
-        preset.Modulation.depth = (buffer[21] << 8) | buffer[22];
-        preset.Modulation.wave = (buffer[23] << 8) | buffer[24];
-
-        preset.Arpeggiator.state = buffer[25];
-        preset.Arpeggiator.hold = (buffer[26] << 8) | buffer[27];
-        preset.Arpeggiator.divisisions = (buffer[28] << 8) | buffer[29];
-        preset.Arpeggiator.range = (buffer[30] << 8) | buffer[31];
-        preset.Arpeggiator.direction = (buffer[32] << 8) | buffer[33];
-        
-        printf("Preset %d read from EEPROM!\n", preset);
+        printf("Preset %d read from EEPROM!\n", slot);
         printf("Memory Location: %d\n\n", preset_address);
 
-        printf("Waveshape:  %d\n", preset.Wave.shape);
-        printf("Vector:     %d\n", preset.Wave.vector);
-        printf("Octave:     %d\n", preset.Wave.octave);
-        printf("Pitch:      %d\n\n", preset.Wave.pitch);
+        printf("Waveshape:      %d\n", preset.Wave.shape);
+        printf("Vector:         %d\n", preset.Wave.vector);
+        printf("Octave:         %d\n", preset.Wave.octave);
+        printf("Pitch:          %d\n\n", preset.Wave.pitch);
         
-        printf("Attack:     %d\n", preset.Envelope.attack);
-        printf("Decay:      %d\n", preset.Envelope.decay);
-        printf("Sustain:    %d\n", preset.Envelope.sustain);
-        printf("Release:    %d\n\n", preset.Envelope.release);
+        printf("Attack:         %d\n", preset.Envelope.attack);
+        printf("Decay:          %d\n", preset.Envelope.decay);
+        printf("Sustain:        %d\n", preset.Envelope.sustain);
+        printf("Release:        %d\n\n", preset.Envelope.release);
 
-        printf("LFO state:  %d\n", preset.Modulation.state);
-        printf("matriix:    %d\n", preset.Modulation.matrix);
-        printf("rate:       %d\n", preset.Modulation.rate);
-        printf("depth:      %d\n", preset.Modulation.depth);
-        printf("shape:      %d\n\n", preset.Modulation.wave);
+        printf("LFO state:      %d\n", preset.Modulation.state);
+        printf("Destination:    %d\n", preset.Modulation.matrix);
+        printf("Rate:           %d\n", preset.Modulation.rate);
+        printf("Depth:          %d\n", preset.Modulation.depth);
+        printf("Shape:          %d\n\n", preset.Modulation.wave);
         
-        printf("ARP state:  %d\n", preset.Arpeggiator.state);
-        printf("matrix:     %d\n", preset.Arpeggiator.hold);
-        printf("rate:       %d\n", preset.Arpeggiator.divisisions);
-        printf("depth:      %d\n", preset.Arpeggiator.range);
-        printf("shape:      %d\n\n", preset.Arpeggiator.direction);
+        printf("ARP state:      %d\n", preset.Arpeggiator.state);
+        printf("Hold:           %d\n", preset.Arpeggiator.hold);
+        printf("Division:       %d\n", preset.Arpeggiator.divisions);
+        printf("Range:          %d\n", preset.Arpeggiator.range);
+        printf("Direction:      %d\n\n", preset.Arpeggiator.direction);
+    }
+
+    void restorePreset (uint8_t slot) {
+        if (slot >= MAX_PRESETS) {
+            printf("ERROR! Outside of Factory Preset storage range!\n");
+            return;
+        }
+        // load Factory Preset from EEPROM into buffer
+        uint16_t factory_preset_address = (slot * PAGE_SIZE) | (FACTORY_PRESET_ADDRESS);
+        uint8_t factory_address_buffer[ADDRESS_SIZE];
+        factory_address_buffer[0] = ((factory_preset_address >> 8) & 0xFF);
+        factory_address_buffer[1] = (factory_preset_address & 0xFF);
+
+        uint8_t transfer_buffer[PAGE_SIZE] = {0};
+        printf("Loading Factory Preset %d...\n", slot);
+        printf("EEPROM address: %d\n", factory_preset_address);
+        
+        // Commented while I check the code
+        // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, factory_address_buffer, ADDRESS_SIZE, false);
+        // i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, transfer_buffer, sizeof(PRESET), false);
+        
+        printf("Loaded into buffer!\n");
+        // 
+
+        // save Factory Preset into normal Preset range
+        uint16_t output_address = slot * PAGE_SIZE;
+        uint8_t output_buffer[ADDRESS_SIZE + PAGE_SIZE] = {0};
+        output_buffer[0] = (output_address >> 8) & 0xFF;
+        output_buffer[1] = output_address & 0xFF;
+        for (int i = 0; i < PAGE_SIZE; i++) {
+            output_buffer[i + ADDRESS_SIZE] = transfer_buffer[i];
+        }
+
+        printf("Saving over Preset %d\n", slot);
+        printf("EEPROM address: %d\n", output_address);
+
+        // Commented while I check the code
+        // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, output_buffer, PAGE_SIZE + 2, false);
+        printf("Successfully restored Preset %d to factory settings!\n");
+        //
     }
 }

@@ -5,6 +5,9 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
+#include "../debug.h"
+
+
 #include "adsr.h"
 // #include "modulation.h"
 #include "filter.h"
@@ -101,18 +104,18 @@ namespace SYNTH {
     void (*wave_buffer_callback)(Voices &channel);
 
     void note_on (uint8_t note, uint16_t frequency) {
-      _gate = true;
+      _gate = true; // wouldn't be needed if core moved
       _active = true;
 
       _note = note;
       _frequency = frequency;
       
-      activation_time = to_ms_since_boot(get_absolute_time());
+      activation_time = to_ms_since_boot(get_absolute_time()); // wouldn't be needed if core moved
 
       ADSR.trigger_attack();
     }
     void note_off (void) {
-      _gate = false;
+      _gate = false; // wouldn't be needed if core moved
       ADSR.trigger_release();
     }
     void note_stopped (void) {
