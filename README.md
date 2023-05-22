@@ -6,7 +6,7 @@ Things to implement:
 
 - Multicore:
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
-    - Think about adding MIDI capability, as it IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
+    - Think about adding MIDI capability, as it is, IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
 - Improve Settings funtionality:
     - Develop way of exporting presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
@@ -38,6 +38,7 @@ Future Implementaions and WIPs:
  
 - Improve Mod code:
     - Add a ramp down feature when switching between destinations - could be difficult. 
+    - Add a temp sync function.
     - _currently_ impossible due to over extending the processor... Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
 
 - Implement USB-MIDI and MIDI:

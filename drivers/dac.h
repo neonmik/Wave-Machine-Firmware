@@ -92,8 +92,8 @@ namespace DAC {
             dma_channel_configure(
                 dma_chan,             		// Channel to be configured
                 &cfg,                 		// The configuration we just created
-                &spi_get_hw(DAC_SPI)->dr, 	// write address
-                buf,                  		// The initial read address
+                &spi_get_hw(DAC_SPI)->dr, 	// Destination - SPI write address
+                buf,                  		// Source - The initial read address for the buffer
                 _buffer_size,          		// Number of transfers
                 false                 		// Start immediately?
             );

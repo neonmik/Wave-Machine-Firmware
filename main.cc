@@ -41,7 +41,6 @@ void core1_main() {
 
 void core0_main() {
 
-
   SYNTH::init(SAMPLE_RATE);
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
   ARP::init(DEFAULT_BPM, SAMPLE_RATE);
