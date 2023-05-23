@@ -1,46 +1,46 @@
 #pragma once
 
 #include "pico/stdlib.h"
+#include "../config.h"
 #include <math.h>
 
 
 
 class LowPassFilter {
-    public:
-    LowPassFilter(int32_t cutoffFrequency, int32_t sampleRate) {
-        // Convert cutoff frequency and sample rate to fixed-point representation
-        int64_t cutoffFrequencyFixed = static_cast<int64_t>(cutoffFrequency) << kQ;
-        int64_t sampleRateFixed = static_cast<int64_t>(sampleRate) << kQ;
-
-        // Calculate filter coefficient in fixed-point representation
-        alpha_ = static_cast<int32_t>((2LL * M_PI * cutoffFrequencyFixed) / sampleRateFixed);
-        // alpha_ = static_cast<int32_t>((6.283185307179586476925286766559 * cutoffFrequencyFixed) / sampleRateFixed);
-
-
-        output_ = 0;
-    }
-
-    int32_t process(int32_t input) {
-        // Perform fixed-point multiplication and division
-        volatile int64_t inputFixed = static_cast<int64_t>(input) << kQ;
-        volatile int64_t outputFixed = (alpha_ * (inputFixed - output_)) >> kQ;
-        output_ += static_cast<int32_t>(outputFixed);
-
-        // Perform saturation to prevent overflow
-        if (output_ > kMaxOutput) {
-            output_ = kMaxOutput;
-        } else if (output_ < kMinOutput) {
-            output_ = kMinOutput;
-        }
-
-        return output_;
-    }
-
     private:
-    static constexpr int32_t kQ = 20; // Number of fractional bits
-    static constexpr int32_t kMaxOutput = INT32_MAX; // Maximum output value
-    static constexpr int32_t kMinOutput = INT32_MIN; // Minimum output value
-    int32_t alpha_;
-    int32_t output_;
+    double sampleRate;
+    double cutoff;
+    double prevOutput;
+    double RC;
+    double dt;
+
+public:
+    LowPassFilter(double cutoff) {
+        this->sampleRate = SAMPLE_RATE;
+        setCutoff(cutoff);
+        prevOutput = 0.0;
+        double RC = 1.0 / (2.0 * M_PI * cutoff);
+        double dt = 1.0 / sampleRate;
+    }
+
+    void setCutoff(double cutoff) {
+        if (cutoff < 0.0)
+            cutoff = 0.0;
+        else if (cutoff > sampleRate / 2.0)
+            cutoff = sampleRate / 2.0;
+
+        this->cutoff = cutoff;
+    }
+
+    double process(double input) {
+        double inputNormalized = static_cast<double>(input) / INT16_MAX;
+    
+        double alpha = dt / (dt + RC);
+
+        double outputNormalized = alpha * inputNormalized + (1.0 - alpha) * prevOutput;
+        prevOutput = outputNormalized;
+
+        return static_cast<int16_t>(outputNormalized * INT16_MAX);
+    }
 };
 

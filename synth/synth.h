@@ -6,11 +6,12 @@
 #include "pico/time.h"
 
 #include "../debug.h"
+#include "../config.h"               
 
 
 #include "adsr.h"
 // #include "modulation.h"
-#include "filter.h"
+
 #include "wavetable.h"
 #include "log_table.h"
 
@@ -19,13 +20,7 @@
 
 namespace SYNTH {
 
-  #define MAX_VOICES 8
-
-  // constexpr float pi = 3.14159265358979323846f;
-
   extern uint16_t volume;
-
-
 
   enum Oscillator {
     WAVETABLE = 256,
@@ -36,14 +31,6 @@ namespace SYNTH {
     SINE      = 8,
     WAVE      = 1
   };
-
-  // enum class ADSRPhase : uint8_t {
-  //   ATTACK,
-  //   DECAY,
-  //   SUSTAIN,
-  //   RELEASE,
-  //   OFF
-  // };
 
   extern uint32_t   _sample_rate;
   
@@ -75,8 +62,8 @@ namespace SYNTH {
   static uint8_t  _soft_start_index = 0;
   static int16_t _soft_start_sample = -32768;
 
-  // extern bool      filter_enable;
-  // extern uint16_t  filter_cutoff_frequency;
+  extern bool      filter_enable;
+  extern uint16_t  filter_cutoff_frequency;
 
   struct Voices {
 
@@ -94,8 +81,6 @@ namespace SYNTH {
     int16_t   noise         = 0;      // current noise value
 
     uint32_t  waveform_offset  = 0;   // voice offset (Q8)
-
-    // int32_t   filter_last_sample;
 
     uint8_t   wave_buf_pos  = 0;      //
     int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
@@ -153,5 +138,4 @@ namespace SYNTH {
   void modulate_tremelo (uint16_t tremelo);
   void modulate_vector (uint16_t vector_mod);
 
-  void update (void);
 }

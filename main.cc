@@ -1,7 +1,7 @@
 /**
- *            Beep Machine Firmware v0.26
+ *                Beep Machine Firmware v0.26
  * 
- * Copyright (c) 2022 Nick Allott Musical Services (NAMS)
+ * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  
  */
 
@@ -46,13 +46,13 @@ void core0_main() {
   ARP::init(DEFAULT_BPM, SAMPLE_RATE);
   
   while (true) {
-    
     if (DAC::get_state()) {
     
       MAILBOX::receive(); //copy the data from the mailbox to the local variables
       NOTE_PRIORITY::update(); // update notes from the mailbox info
       
       DAC::clear_state();
+      
     }
   }
 }

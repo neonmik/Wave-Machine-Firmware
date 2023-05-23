@@ -13,6 +13,7 @@ Things to implement:
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
+    - Improve tuning - currenlty theres a drift in tuning, more than likely down to using interger instead of floating point numbers for the MIDI2Freq calculations, most apparent on Preset 5 due to the fact that it's pitched down with the octave setting and pitch shift.
     - Finesse soft start code - currently takes too long to get going and still isnt perfect.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
@@ -51,6 +52,7 @@ Future Implementaions and WIPs:
     - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
     - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
     
+- Add Portomento Mode
 
 - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
     - could use the prng function from MOD as using the dither function that uses this on the trem output added noise, that noise could also be used to make the pitch unstable at a desired amount?
@@ -117,6 +119,7 @@ Things already implemented:
      + Improved ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths by testing some.
 
 + Mod bug fixes:
+    + Added a linear to exponential curve for the Rate function. Can now rate between 0.1Hz and 5000Hz with the lower end of the range being finest, and the higher end coarsest.
     + This was due to a fault wavetable for the Mod code (had an overflow in the sine wave):- Mod overflowing vector/wavetable index I think - if the mod is set slow/max depth/vector output and the actual vector control or wavetable is higher up, it overflows the table and freaks out. Constrain the wavetable indexing.
     + This was due to the output overflowing when the depth was applied, effectivaly doubling the output frequency, but unevenly:- Oscilaltor folds down at the top of range (can be seen at 0.1Hz on vibrato with a tuner - when pressing C with depth to full, it F# to F, but does a little duck away from F at the "top")
     + Tidy up code to remove unnecessary stuff.

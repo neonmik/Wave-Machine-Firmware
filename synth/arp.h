@@ -4,6 +4,8 @@
 #include <algorithm>
 #include "pico/stdlib.h"
 
+#include "../functions.h"
+
 #include "note_priority.h"
 #include "beat_clock.h"
 
@@ -89,7 +91,7 @@ namespace ARP {
     void update_controls (void);
 
     void set_rate (uint16_t rate);
-    long map (long x, long in_min, long in_max, long out_min, long out_max);
+    // long map (long x, long in_min, long in_max, long out_min, long out_max);
     
 }
 

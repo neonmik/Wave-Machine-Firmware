@@ -1,8 +1,11 @@
 #pragma once
 
 #include "pico/stdlib.h"
+#include <math.h>
 
 #include "../random.h"
+
+#include "../functions.h"
 
 #include "synth.h"
 #include "arp.h"
@@ -64,10 +67,6 @@ namespace MOD {
                 {&SYNTH::modulate_vector,   OutputType::UNSIGNED,   Dither::LOW},
                 {&ARP::set_range,           OutputType::SIGNED,   Dither::OFF} // probably want something better here, but we'll see
             };
-            long map(long x, long in_min, long in_max, long out_min, long out_max) {
-                // volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-                return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-            }
             uint16_t uint16_output (int16_t input) {
                 return input - INT16_MIN; // Using modular arithmatic!
             }
@@ -124,7 +123,9 @@ namespace MOD {
             void set_rate (uint16_t rate) {
                 // 0.1Hz - 100Hz
                 // 1 = 0.1Hz / 1024 = 102.4Hz
-                double _rate = (rate + 1);
+                
+                _rate = (map_exp(rate, 0, 1023, 1, 5000));
+                
                 
 
                 _increment = (65535 * _rate) / (_sample_rate); // Calculate the increment based on the scaled rate

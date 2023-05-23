@@ -52,10 +52,7 @@ namespace ADC {
         RANDOM::update(_adc_noise);
         _sample[_mux_address] = _sample[_mux_address] - (_sample[_mux_address]>>2) + _adc_value;
         // moves filtered sample to the adc array
-        _values[_mux_address] = map(_sample[_mux_address]>>2, 12, 4095, 0, 1023);
-
-
-        
+        _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 12, 4095, 0, 1023);
 
         // sets the index to loop
         _mux_address = (_mux_address + 1) % MAX_KNOBS;
@@ -75,12 +72,5 @@ namespace ADC {
     }
     uint8_t noise() {
         return _adc_noise;
-    }
-
-    long map(long x, long in_min, long in_max, long out_min, long out_max) {
-        long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-        if (temp > out_max) temp = out_max;
-        if (temp < out_min) temp = out_min;
-        return temp;
     }
 }

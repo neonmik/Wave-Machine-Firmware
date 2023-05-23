@@ -1,11 +1,9 @@
 #pragma once
 
-#define NOTE_DEBUG 0
-#define MAX_VOICES 8
-
 #include "pico/stdlib.h"
 
 #include "../mailbox.h"
+#include "../config.h"
 
 #include "arp.h"
 

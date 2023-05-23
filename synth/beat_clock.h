@@ -2,6 +2,9 @@
 
 #include "pico/stdlib.h"
 
+#include "../config.h"
+#include "../functions.h"
+
 namespace BEAT_CLOCK {
 
 
@@ -27,17 +30,17 @@ namespace BEAT_CLOCK {
         // uint32_t _midi_clock_period;  // time in between midi clock ticks
         // uint8_t _midi_clock_tick_count;
 
-        long map(long x, long in_min, long in_max, long out_min, long out_max) {
-            // volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-        }
+        // long map(long x, long in_min, long in_max, long out_min, long out_max) {
+        //     // volatile long temp = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        //     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        // }
         void calculate_division (void) {
             _samples_per_division = (60 * _samples_rate / _bpm) / _division;
         }
     }
 
     void init (uint8_t bpm, uint16_t sample_rate);
-    void set_samplerate (uint16_t sample_rate);
+    void set_samplerate (uint16_t sample_rate = SAMPLE_RATE);
     void set_bpm (uint16_t bpm);
     uint8_t get_bpm ();
     void set_division (uint16_t division);

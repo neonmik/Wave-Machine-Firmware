@@ -29,7 +29,6 @@
 
 typedef uint16_t (*synth_function)();
 
-extern uint32_t sample_clock;
 
 extern uint32_t hardware_index; // eventually going to be used to free some resources from the DMA ISR
 extern uint32_t software_index; // will be used to check currently timing of hardware_index
@@ -39,7 +38,8 @@ namespace DAC {
     
 
     namespace {
-
+        uint32_t sample_clock;
+        
         synth_function process;
 
         bool        _full;

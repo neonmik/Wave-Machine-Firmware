@@ -113,6 +113,7 @@ namespace EEPROM {
         address_buffer[1] = (preset_address & 0xFF);
 
         uint8_t preset_buffer[sizeof(PRESET)] = {0};
+        // uint8_t preset_buffer[PAGE_SIZE] = {0};
 
         i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, address_buffer, ADDRESS_SIZE, false);
         i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, preset_buffer, sizeof(PRESET), false);

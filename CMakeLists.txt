@@ -25,6 +25,7 @@ add_executable(${PROJECT_NAME}
 
     mailbox.cc
     random.cc
+    functions.cc
 
     synth/adsr.cc
     synth/arp.cc
