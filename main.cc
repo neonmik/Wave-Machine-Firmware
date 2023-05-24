@@ -23,7 +23,7 @@
 
 #include "mailbox.h"
 
-
+#include "midi.h"
 
 
 void core1_main() {

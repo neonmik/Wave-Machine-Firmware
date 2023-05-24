@@ -151,6 +151,7 @@ namespace ARP {
             if (_notes[i] == note) {
                 // Shift all the notes after the removed note back by one
                 for (int j = i; j < _count + 1; ++j) {
+                    if ((j + 1) > MAX_VOICES) return; // check whether this is correct, or whether need to remove + 1 from _count max
                     _notes[j] = _notes[j + 1];
                     _notes[j + 1] = 0;
                 }

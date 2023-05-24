@@ -17,6 +17,10 @@ Things to implement:
     - Finesse soft start code - currently takes too long to get going and still isnt perfect.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
+- MIDI:
+    - Confirm message handling to be working...
+    - Add USB-MIDI
+    
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 

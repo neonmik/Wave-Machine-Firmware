@@ -52,7 +52,7 @@ namespace BEAT_CLOCK {
     bool get_changed (void);
     uint8_t get_beat (void);
 
-   
+   void midi_tick (void);
 
 }
 

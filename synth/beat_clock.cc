@@ -92,16 +92,16 @@ namespace BEAT_CLOCK {
         return _beat;
     }
    
-    // void midi_tick (void) {
-    //     _midi_clock_flag = true;
-    //     _midi_clock_period = sample_clock - _midi_in_clock_last;
-    //     _midi_in_clock_last = sample_clock;
-    //     _midi_clock_tick_count++;
-    //     if (_midi_clock_tick_count >= 24) {
-    //         _midi_clock_tick_count = 0;
-    //         // flash_led(40) ???
-    //     }
-    // }
+    void midi_tick (void) {
+        // _midi_clock_flag = true;
+        // _midi_clock_period = sample_clock - _midi_in_clock_last;
+        // _midi_in_clock_last = sample_clock;
+        // _midi_clock_tick_count++;
+        // if (_midi_clock_tick_count >= 24) {
+        //     _midi_clock_tick_count = 0;
+        //     // flash_led(40) ???
+        // }
+    }
 
     // void check_for_midi_clock (void) {
     //     if ((sample_clock - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT)) {
