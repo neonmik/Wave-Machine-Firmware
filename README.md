@@ -4,7 +4,7 @@ Current nightly firmware for Beep Machine Hardware.
 
 Things to implement:
 
-- Multicore:
+- Updates and Bugfixes:
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
     - Think about adding MIDI capability, as it is, IN will be handled on core1 and priority/arp is handled on core0... may need a mialbox back? or a midi message queue...
 
@@ -17,9 +17,13 @@ Things to implement:
     - Finesse soft start code - currently takes too long to get going and still isnt perfect.
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
-- MIDI:
-    - Confirm message handling to be working...
-    - Add USB-MIDI
+- USB MIDI/MIDI:
+    - Add midi_task() alongside usb_midi_task(). 
+    - Tidy up MIDI processing code, could be more efficient.
+    - Map more CC values and check they're working. Map vakues to 10 bit, and possibly add a layer to make sure lock (like pagination) is effective on CC values and Controls alike. 
+    - Create BEAT_CLOCK sync:- pretty sure Clock is getting in, just need to implement the actual clock syncing. 
+    - Add MIDI channel assignment to start up
+
     
 
 - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
@@ -43,7 +47,7 @@ Future Implementaions and WIPs:
  
 - Improve Mod code:
     - Add a ramp down feature when switching between destinations - could be difficult. 
-    - Add a temp sync function.
+    - Add a tempo sync function.
     - _currently_ impossible due to over extending the processor... Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
 
 - Implement USB-MIDI and MIDI:
@@ -145,3 +149,7 @@ Things already implemented:
     + Added Mailbox for note handling
     + Created/reorganise layer between hardware and synth.
     + Finally added Multicore support (hadware functions on one side, synth/dac on another)
+
++ USB MIDI/MIDI:
+    + Added basic functions for testing (Note On, Note Off and Clock) all proven. 
+    + USB-MIDI is now functional! 
