@@ -23,6 +23,8 @@
 
 #include "../mailbox.h"
 
+#include "../midi.h"
+
 namespace KEYS {
 
     class Keyboard {

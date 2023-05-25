@@ -10,4 +10,6 @@ constexpr   uint32_t    SAMPLE_RATE     =       48000;
 constexpr   uint8_t     MAX_VOICES      =       8;
 constexpr   uint8_t     DEFAULT_BPM     =       120;
 
+constexpr   uint8_t     MIDI_CHANNEL    =       0;
+
 // uint32_t                sample_clock    =       0;

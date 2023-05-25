@@ -77,27 +77,27 @@ namespace EEPROM {
 
         printf("Preset saved to EEPROM at address: %d\n", address);
 
-        printf("Waveshape:  %d\n",      preset.Wave.shape);
-        printf("Vector:     %d\n",      preset.Wave.vector);
-        printf("Octave:     %d\n",      preset.Wave.octave);
-        printf("Pitch:      %d\n\n",    preset.Wave.pitch);
+        // printf("Waveshape:  %d\n",      preset.Wave.shape);
+        // printf("Vector:     %d\n",      preset.Wave.vector);
+        // printf("Octave:     %d\n",      preset.Wave.octave);
+        // printf("Pitch:      %d\n\n",    preset.Wave.pitch);
         
-        printf("Attack:     %d\n",      preset.Envelope.attack);
-        printf("Decay:      %d\n",      preset.Envelope.decay);
-        printf("Sustain:    %d\n",      preset.Envelope.sustain);
-        printf("Release:    %d\n\n",    preset.Envelope.release);
+        // printf("Attack:     %d\n",      preset.Envelope.attack);
+        // printf("Decay:      %d\n",      preset.Envelope.decay);
+        // printf("Sustain:    %d\n",      preset.Envelope.sustain);
+        // printf("Release:    %d\n\n",    preset.Envelope.release);
 
-        printf("LFO state:  %d\n",      preset.Modulation.state);
-        printf("matriix:    %d\n",      preset.Modulation.matrix);
-        printf("rate:       %d\n",      preset.Modulation.rate);
-        printf("depth:      %d\n",      preset.Modulation.depth);
-        printf("shape:      %d\n\n",    preset.Modulation.wave);
+        // printf("LFO state:  %d\n",      preset.Modulation.state);
+        // printf("matriix:    %d\n",      preset.Modulation.matrix);
+        // printf("rate:       %d\n",      preset.Modulation.rate);
+        // printf("depth:      %d\n",      preset.Modulation.depth);
+        // printf("shape:      %d\n\n",    preset.Modulation.wave);
         
-        printf("ARP state:  %d\n",      preset.Arpeggiator.state);
-        printf("matrix:     %d\n",      preset.Arpeggiator.hold);
-        printf("rate:       %d\n",      preset.Arpeggiator.divisions);
-        printf("depth:      %d\n",      preset.Arpeggiator.range);
-        printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
+        // printf("ARP state:  %d\n",      preset.Arpeggiator.state);
+        // printf("matrix:     %d\n",      preset.Arpeggiator.hold);
+        // printf("rate:       %d\n",      preset.Arpeggiator.divisions);
+        // printf("depth:      %d\n",      preset.Arpeggiator.range);
+        // printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
     }
     void loadPreset (uint8_t slot, PRESET &preset) {
         if (slot >= MAX_PRESETS) {
@@ -140,30 +140,30 @@ namespace EEPROM {
         preset.Arpeggiator.range = (preset_buffer[30] << 8) | preset_buffer[31];
         preset.Arpeggiator.direction = (preset_buffer[32] << 8) | preset_buffer[33];
         
-        printf("Preset %d read from EEPROM!\n", slot);
-        printf("Memory Location: %d\n\n", preset_address);
+        // printf("Preset %d read from EEPROM!\n", slot);
+        // printf("Memory Location: %d\n\n", preset_address);
 
-        printf("Waveshape:      %d\n", preset.Wave.shape);
-        printf("Vector:         %d\n", preset.Wave.vector);
-        printf("Octave:         %d\n", preset.Wave.octave);
-        printf("Pitch:          %d\n\n", preset.Wave.pitch);
+        // printf("Waveshape:      %d\n", preset.Wave.shape);
+        // printf("Vector:         %d\n", preset.Wave.vector);
+        // printf("Octave:         %d\n", preset.Wave.octave);
+        // printf("Pitch:          %d\n\n", preset.Wave.pitch);
         
-        printf("Attack:         %d\n", preset.Envelope.attack);
-        printf("Decay:          %d\n", preset.Envelope.decay);
-        printf("Sustain:        %d\n", preset.Envelope.sustain);
-        printf("Release:        %d\n\n", preset.Envelope.release);
+        // printf("Attack:         %d\n", preset.Envelope.attack);
+        // printf("Decay:          %d\n", preset.Envelope.decay);
+        // printf("Sustain:        %d\n", preset.Envelope.sustain);
+        // printf("Release:        %d\n\n", preset.Envelope.release);
 
-        printf("LFO state:      %d\n", preset.Modulation.state);
-        printf("Destination:    %d\n", preset.Modulation.matrix);
-        printf("Rate:           %d\n", preset.Modulation.rate);
-        printf("Depth:          %d\n", preset.Modulation.depth);
-        printf("Shape:          %d\n\n", preset.Modulation.wave);
+        // printf("LFO state:      %d\n", preset.Modulation.state);
+        // printf("Destination:    %d\n", preset.Modulation.matrix);
+        // printf("Rate:           %d\n", preset.Modulation.rate);
+        // printf("Depth:          %d\n", preset.Modulation.depth);
+        // printf("Shape:          %d\n\n", preset.Modulation.wave);
         
-        printf("ARP state:      %d\n", preset.Arpeggiator.state);
-        printf("Hold:           %d\n", preset.Arpeggiator.hold);
-        printf("Division:       %d\n", preset.Arpeggiator.divisions);
-        printf("Range:          %d\n", preset.Arpeggiator.range);
-        printf("Direction:      %d\n\n", preset.Arpeggiator.direction);
+        // printf("ARP state:      %d\n", preset.Arpeggiator.state);
+        // printf("Hold:           %d\n", preset.Arpeggiator.hold);
+        // printf("Division:       %d\n", preset.Arpeggiator.divisions);
+        // printf("Range:          %d\n", preset.Arpeggiator.range);
+        // printf("Direction:      %d\n\n", preset.Arpeggiator.direction);
     }
 
     void restorePreset (uint8_t slot) {

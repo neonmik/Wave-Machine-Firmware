@@ -39,7 +39,17 @@
 			"numeric": "cpp",
 			"__config": "cpp",
 			"__nullptr": "cpp",
-			"chrono": "cpp"
+			"chrono": "cpp",
+			"usb_descriptors.c": "cpp",
+			"optional": "cpp",
+			"ostream": "cpp",
+			"ratio": "cpp",
+			"system_error": "cpp",
+			"array": "cpp",
+			"functional": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp",
+			"variant": "cpp"
 		},
 		"cortex-debug.variableUseNaturalFormat": true,
 		"cortex-debug.registerUseNaturalFormat": true

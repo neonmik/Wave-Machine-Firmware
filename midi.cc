@@ -2,171 +2,90 @@
 
 namespace MIDI {
     
-    void recvByte(uint8_t &byte) {
-        int tmp;
-        int channel;
-        int bigval;           /*  temp 14-bit value for pitch, song pos */
-
-
-        // if (recvMode_ & MODE_PROPRIETARY && byte != STATUS_END_PROPRIETARY) {
-        //     /* If proprietary handling compiled in, just pass all data received
-        //     *  after a START_PROPRIETARY event to proprietary_decode
-        //     *  until get an END_PROPRIETARY event
-        //     */
-        //     #ifdef CONFIG_MIDI_PROPRIETARY
-        //             proprietaryDecode(byte);
-        //     #endif
-        //     return;
-        // }
-
-        if (byte & 0x80) {
-
-            /* All < 0xf0 events get at least 1 arg byte so
-            *  it's ok to mask off the low 4 bits to figure
-            *  out how to handle the event for < 0xf0 events.
-            */
-
-            tmp = byte;
-
-            if (tmp < 0xf0)
-                tmp &= 0xf0;
-
-                switch (tmp) {
-                    /* These status events take 2 bytes as arguments */
-                    case MidiType::NOTE_OFF:
-                    case MidiType::NOTE_ON:
-                    case MidiType::AFTERTOUCH_POLY:
-                    case MidiType::CONTROL_CHANGE:
-                    case MidiType::PITCH_BEND:
-                    case MidiType::SONG_POSITION:
-                        recvBytesNeeded_ = 2;
-                        recvByteCount_ = 0;
-                        recvEvent_ = byte;
-                        break;
-
-                    /* 1 byte arguments */
-                    case MidiType::PROGRAM_CHANGE:
-                    case MidiType::AFTERTOUCH_CHANNEL:
-                    case MidiType::SONG_SELECT:
-                        recvBytesNeeded_ = 1;
-                        recvByteCount_ = 0;
-                        recvEvent_ = byte;
-                        return;
-
-                    /* No arguments ( > 0xf0 events) */
-                    // case STATUS_START_PROPRIETARY:
-                    //     recvMode_ |= MODE_PROPRIETARY;
-                    //     #ifdef CONFIG_MIDI_PROPRIETARY
-                    //                     proprietaryDecodeStart();
-                    //     #endif
-                    //     break;
-                    // case STATUS_END_PROPRIETARY:
-                    //     recvMode_ &= ~MODE_PROPRIETARY;
-                    //     #ifdef CONFIG_MIDI_PROPRIETARY
-                    //                     proprietaryDecodeEnd();
-                    //     #endif
-                    //     break;
-                    case MidiType::TUNE_REQUEST:
-                        handleTuneRequest();
-                        break;
-                    case MidiType::CLOCK:
-                        handleClock();
-                        break;
-                    case MidiType::START:
-                        handleStart();
-                        break;
-                    case MidiType::CONTINUE:
-                        handleContinue();
-                        break;
-                    case MidiType::STOP:
-                        handleStop();
-                        break;
-                    case MidiType::ACTIVE_SENSING:
-                        handleActiveSense();
-                        break;
-                    case MidiType::SYSTEM_RESET:
-                        handleReset();
-                        break;
-                }
-
-            return;
+    void processMidiMessage(uint8_t msg[4]) {
+        uint8_t midiType, channel, data1, data2;
+        if (msg[1] >= 0xF0) { // check if SYS EX, as they use the lower half of the status byte
+            midiType = msg[1]; // Extract the MIDI type
+            data1 = msg[2]; // Extract the first data byte
+            data2 = msg[3]; // Extract the second data byte
+        } else { // everything else uses it for channel data
+            midiType = msg[1] & 0xF0; // Extract the MIDI type
+            channel = msg[1] & 0x0F; // Extract the channel from the status byte
+            data1 = msg[2]; // Extract the first data byte
+            data2 = msg[3]; // Extract the second data byte
         }
 
-        if (++recvByteCount_ == recvBytesNeeded_) {
-            /* Copy out the channel (if applicable; in some cases this will be meaningless,
-            *  but in those cases the value will be ignored)
-            */
-            channel = (recvEvent_ & 0x0f) + 1;
-
-            tmp = recvEvent_;
-            if (tmp < 0xf0) {
-                tmp &= 0xf0;
-            }
-
-            /* See if this event matches our MIDI channel
-            *  (or we're accepting for all channels)
-            */
-            if (!channel_ || (channel == channel_) || (tmp >= 0xf0)){
-                switch (tmp) {
-                    case MidiType::NOTE_ON:
-                        /* If velocity is 0, it's actually a note off & should fall thru
-                        *  to the note off case
-                        */
-                        if (byte) {
-                            handleNoteOn(channel, recvArg0_, byte);
-                            break;
-                        }
-
-                    case MidiType::NOTE_OFF:
-                        handleNoteOff(channel, recvArg0_, byte);
-                        break;
-                    case MidiType::AFTERTOUCH_POLY:
-                        handleVelocityChange(channel, recvArg0_, byte);
-                        break;
-                    case MidiType::CONTROL_CHANGE:
-                        handleControlChange(channel, recvArg0_, byte);
-                        break;
-                    case MidiType::PROGRAM_CHANGE:
-                        handleProgramChange(channel, byte);
-                        break;
-                    case MidiType::AFTERTOUCH_CHANNEL:
-                        handleAfterTouch(channel, byte);
-                        break;
-                    case MidiType::PITCH_BEND:
-                        bigval = (byte << 7) | recvArg0_;
-                        handlePitchBend(bigval);
-                        break;
-                    case MidiType::SONG_POSITION:
-                        bigval = (byte << 7) | recvArg0_;
-                        handleSongPosition(bigval);
-                        break;
-                    case MidiType::SONG_SELECT:
-                        handleSongSelect(byte);
-                        break;
-                }
-            }
-
-            /* Just reset the byte count; keep the same event -- might get more messages
-                trailing from current event.
-            */
-            recvByteCount_ = 0;
+        switch (midiType) {
+            // case MidiType::INVALID_TYPE:
+            //     printf("Invalid MIDI Message type!\n");
+            //     break;
+            case MidiType::NOTE_OFF:
+                handleNoteOff(channel, data1, data2);
+                break;
+            case MidiType::NOTE_ON:
+                handleNoteOn(channel, data1, data2);
+                break;
+            case MidiType::AFTERTOUCH_POLY:
+                // Handle Polyphonic AfterTouch message
+                // Call the corresponding handler function
+                break;
+            case MidiType::CONTROL_CHANGE:
+                // handleControlChange(channel, data1, data2);
+                break;
+            case MidiType::PROGRAM_CHANGE:
+                // Handle Program Change message
+                // Call the corresponding handler function
+                break;
+            case MidiType::AFTERTOUCH_CHANNEL:
+                break;
+            case MidiType::PITCH_BEND:
+            case MidiType::SYS_EX:
+                break;
+            case MidiType::SONG_POSITION:
+                break;
+            case MidiType::SONG_SELECT:
+                break;
+            case MidiType::TUNE_REQUEST:
+                // handleTuneRequest();
+                break;
+            case MidiType::CLOCK:
+                handleClock();
+                break;
+            case MidiType::START:
+                // handleStart();
+                break;
+            case MidiType::CONTINUE:
+                // handleContinue();
+                break;
+            case MidiType::STOP:
+                // handleStop();
+                break;
+            case MidiType::ACTIVE_SENSING:
+                // handleActiveSense();
+                break;
+            case MidiType::SYSTEM_RESET:
+                // handleReset();
+                break;
+            // Handle other MIDI types
+            default:
+                break;
         }
-
-        recvArg0_ = byte;
     }
 
         //  MIDI Callbacks
-    void handleNoteOff(unsigned int channel, unsigned int note, unsigned int velocity) {
-        KEYS::note_on(note);
+    void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+        // printf("MIDI IN: NOTE OFF!\n");
+        if (channel == MIDI_CHANNEL) KEYS::note_off(note);
     }
 
-    void handleNoteOn(unsigned int channel, unsigned int note, unsigned int velocity) {
-        KEYS::note_off(note);
+    void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+        // printf("MIDI IN: NOTE ON!\n");
+        if (channel == MIDI_CHANNEL && velocity > 0) KEYS::note_on(note);
     }
 
     void handleClock(void) {
+        // printf("MIDI IN: CLOCK!\n");
         BEAT_CLOCK::midi_tick();
-        // pp6_midi_clock_tick();
     }
 
     void handleStart(void) {
@@ -178,19 +97,101 @@ namespace MIDI {
     }
 
 
-    void handleVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity) {}
+    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {}
 
-    void handleControlChange(unsigned int channel, unsigned int controller, unsigned int value) {
+    void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value) {
         //midi_cc[(controller - 10) & 0x7] = (float32_t)value / 127.f;
     }
 
-    void handleProgramChange(unsigned int channel, unsigned int program) {}
-    void handleAfterTouch(unsigned int channel, unsigned int velocity) {}
-    void handlePitchChange(unsigned int pitch) {}
-    void handleSongPosition(unsigned int position) {}
-    void handleSongSelect(unsigned int song) {}
+    void handleProgramChange(uint8_t channel, uint8_t program) {}
+    void handleAfterTouch(uint8_t channel, uint8_t velocity) {}
+    void handlePitchBend(uint8_t pitch) {}
+    void handleSongPosition(uint8_t position) {}
+    void handleSongSelect(uint8_t song) {}
     void handleTuneRequest(void) {}
     void handleContinue(void) {}
     void handleActiveSense(void) {}
     void handleReset(void) {}
+
+    void sendNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
+        printf("MIDI OUT: NOTE OFF!\n");
+        uint8_t msg[3] = { (MidiType::NOTE_OFF | channel), note, 0};
+        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
+    }
+    void sendNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
+        printf("MIDI OUT: NOTE ON!\n");
+        uint8_t msg[3] = { MidiType::NOTE_ON | channel, note, 127};
+        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
+    }
+
+    void init () {
+
+        tusb_init();
+        printf("\nMIDI INIT\n");
+    }
+
+    void usb_midi_task (void) {
+        if (!tud_midi_available()) return;
+
+        uint8_t packet[4];
+        tud_midi_packet_read(packet);
+        processMidiMessage(packet);
+    }
+
+    void update () {
+        tud_task(); // tinyusb device task
+        usb_midi_task();
+    }
+
+    //--------------------------------------------------------------------+
+    // MIDI Task
+    //--------------------------------------------------------------------+
+
+    // Variable that holds the current position in the sequence.
+    uint32_t note_pos = 0;
+
+    // Store example melody as an array of note values
+    uint8_t note_sequence[] =
+    {
+    74,78,81,86,90,93,98,102,57,61,66,69,73,78,81,85,88,92,97,100,97,92,88,85,81,78,
+    74,69,66,62,57,62,66,69,74,78,81,86,90,93,97,102,97,93,90,85,81,78,73,68,64,61,
+    56,61,64,68,74,78,81,86,90,93,98,102
+    };
+
+    void midi_player () {
+        static uint32_t start_ms = 0;
+
+        uint8_t const channel   = 0; // 0 for channel 1
+
+        // The MIDI interface always creates input and output port/jack descriptors
+        // regardless of these being used or not. Therefore incoming traffic should be read
+        // (possibly just discarded) to avoid the sender blocking in IO
+        uint8_t packet[4];
+        while ( tud_midi_available() ) tud_midi_packet_read(packet);
+
+        // send note periodically
+        if (board_millis() - start_ms < 286) return; // not enough time
+        start_ms += 286;
+
+        // Previous positions in the note sequence.
+        int previous = (int) (note_pos - 1);
+
+        // If we currently are at position 0, set the
+        // previous position to the last note in the sequence.
+        if (previous < 0) previous = sizeof(note_sequence) - 1;
+
+        // Send Note On for current position at full velocity (127) on channel 1.
+        uint8_t note_on[3] = { 0x90 | channel, note_sequence[note_pos], 127 };
+        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, note_on, 3);
+
+        // Send Note Off for previous note.
+        uint8_t note_off[3] = { 0x80 | channel, note_sequence[previous], 0};
+        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, note_off, 3);
+
+        // Increment position
+        note_pos++;
+
+        // If we are at the end of the sequence, start over.
+        if (note_pos >= sizeof(note_sequence)) note_pos = 0;
+    }
 }

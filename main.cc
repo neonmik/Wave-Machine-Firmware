@@ -26,10 +26,9 @@
 #include "midi.h"
 
 
-void core1_main() {
-
+void core0_main() {
+  
   UI::init();
-  sleep_ms(100);
 
   while (true) {
 
@@ -39,14 +38,14 @@ void core1_main() {
 }
 
 
-void core0_main() {
+void core1_main() {
 
   SYNTH::init(SAMPLE_RATE);
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
   ARP::init(DEFAULT_BPM, SAMPLE_RATE);
   
   while (true) {
-    if (DAC::get_state()) {
+     if (DAC::get_state()) {
     
       MAILBOX::receive(); //copy the data from the mailbox to the local variables
       NOTE_PRIORITY::update(); // update notes from the mailbox info
@@ -60,14 +59,14 @@ void core0_main() {
 int main() {
 
   set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Not sure if the extra speed is needed to run the code, but it gives it a little headroom.
+
   stdio_init_all(); // has to be here to allow both cores to use the UART
-
+  
   MAILBOX::init(); // has to be here to allow both cores access to MAILBOX
-
+  
   multicore_launch_core1(core1_main); 
 
   core0_main();
-  
-} 
 
+} 
 

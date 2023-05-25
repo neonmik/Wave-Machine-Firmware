@@ -2,11 +2,18 @@
 
 #include "pico/stdlib.h"
 
+#include "bsp/board.h"
+#include "tusb.h"
+
 #include "drivers/keys.h"
 #include "synth/beat_clock.h"
 
+#include "mailbox.h"
 
-typedef uint8_t byte;
+#include "debug.h"
+
+#include "config.h"
+
 
 namespace MIDI {
 
@@ -17,10 +24,12 @@ namespace MIDI {
     constexpr   uint16_t    MIDI_PITCHBEND_MIN =    -8192;
     constexpr   uint16_t    MIDI_PITCHBEND_MAX =    8191;
 
-    typedef byte StatusByte;
-    typedef byte DataByte;
-    typedef byte Channel;
-    typedef byte FilterMode;
+    constexpr   uint8_t     USB_MIDI_CABLE_NUMBER = 0;
+
+    // typedef byte StatusByte;
+    // typedef byte DataByte;
+    // typedef byte Channel;
+    // typedef byte FilterMode;
 
     namespace {
         uint8_t channel_;
@@ -32,7 +41,7 @@ namespace MIDI {
         int recvBytesNeeded_;
         int lastStatusSent_;
     }
-    enum MidiType
+    enum MidiType : uint8_t
     {
         INVALID_TYPE            = 0x00,    ///< For notifying errors
         NOTE_OFF                = 0x80,    ///< Note Off
@@ -129,40 +138,17 @@ namespace MIDI {
         POLY_MODE_ON                    = 127
     };
 
-    // void usb_midi_task() {
-    //     if (tud_midi_available() < 4) return;
-
-    //     uint8_t buff[4];
-
-    //     if (tud_midi_packet_read(buff)) {
-    //         if (buff[1] == (0x90 | (MIDI_CHANNEL-1))) {
-    //             if (buff[3] > 0) {
-    //                 note_priority(buff[1], buff[2], buff[3]);
-    //             } 
-    //         }
-
-    //         if (buff[1] == (0x80 | (MIDI_CHANNEL-1))) {
-    //             note_priority(buff[1], buff[2], 0); // (0 on the end as velocity is off)
-    //         }
-
-    //         if (buff[1] == (0xE0 | (MIDI_CHANNEL-1))) {
-    //             midi_pitch_bend = buff[2] | (buff[3]<<7);
-    //         }
-    //     }
-    // }
-
-    
 
     // Functions for MIDI out
-    void sendNoteOff(unsigned int channel, unsigned int note, unsigned int velocity);
-    void sendNoteOn(unsigned int channel, unsigned int note, unsigned int velocity);
-    void sendVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity);
-    void sendControlChange(unsigned int channel, unsigned int controller, unsigned int value);
-    void sendProgramChange(unsigned int channel, unsigned int program);
-    void sendAfterTouch(unsigned int channel, unsigned int velocity);
-    void sendPitchBend(unsigned int pitch);
-    void sendSongPosition(unsigned int position);
-    void sendSongSelect(unsigned int song);
+    void sendNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+    void sendNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+    void sendVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity);
+    void sendControlChange(uint8_t channel, uint8_t controller, uint8_t value);
+    void sendProgramChange(uint8_t channel, uint8_t program);
+    void sendAfterTouch(uint8_t channel, uint8_t velocity);
+    void sendPitchBend(uint8_t pitch);
+    void sendSongPosition(uint8_t position);
+    void sendSongSelect(uint8_t song);
     void sendTuneRequest(void);
     void sendClock(void);
     void sendStart(void);
@@ -172,15 +158,15 @@ namespace MIDI {
     void sendReset(void);
 
     // Functions for MIDI in
-    void handleNoteOff(unsigned int channel, unsigned int note, unsigned int velocity);
-    void handleNoteOn(unsigned int channel, unsigned int note, unsigned int velocity);
-    void handleVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity);
-    void handleControlChange(unsigned int channel, unsigned int controller, unsigned int value);
-    void handleProgramChange(unsigned int channel, unsigned int program);
-    void handleAfterTouch(unsigned int channel, unsigned int velocity);
-    void handlePitchBend(unsigned int pitch);
-    void handleSongPosition(unsigned int position);
-    void handleSongSelect(unsigned int song);
+    void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+    void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity);
+    void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value);
+    void handleProgramChange(uint8_t channel, uint8_t program);
+    void handleAfterTouch(uint8_t channel, uint8_t velocity);
+    void handlePitchBend(uint8_t pitch);
+    void handleSongPosition(uint8_t position);
+    void handleSongSelect(uint8_t song);
     void handleTuneRequest(void);
     void handleClock(void);
     void handleStart(void);
@@ -189,5 +175,8 @@ namespace MIDI {
     void handleActiveSense(void);
     void handleReset(void);
 
+    void init(void);
+    void update(void);
+    void midi_player(void);
 
 }

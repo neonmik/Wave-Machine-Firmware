@@ -84,6 +84,7 @@ namespace UI {
 
     printf("\nWelcome to the jungle...\n");
     // printf("\ncore1 here!\n");
+    MIDI::init();
 
     LEDS::init();
     KEYS::init();
@@ -126,21 +127,24 @@ namespace UI {
             break;
           case 2:
             ADC::update();
+          case 3:
             PAGINATION::update();
             break;
-          case 3:
+          case 4:
             LEDS::update();
             break;
-          case 4:
+          case 5:
             SETTINGS::update();
             break;
+          case 6:
+            MIDI::update();
           default:
             // do nothing
             break;
         }
 
         ++poll_index;
-        if (poll_index > 4) poll_index = 0;
+        if (poll_index > 6) poll_index = 0;
         break;
 
       case UI_MODE_FACTORY_TEST:
