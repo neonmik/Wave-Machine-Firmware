@@ -100,7 +100,7 @@ namespace MIDI {
     void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {}
 
     void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value) {
-        uint16_t temp = (value << 3)
+        uint16_t temp = (value << 3);
         switch (controller) {
             case 1: // Modulation wheel
                 break;
