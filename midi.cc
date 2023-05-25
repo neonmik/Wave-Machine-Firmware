@@ -30,7 +30,7 @@ namespace MIDI {
                 // Call the corresponding handler function
                 break;
             case MidiType::CONTROL_CHANGE:
-                // handleControlChange(channel, data1, data2);
+                handleControlChange(channel, data1, data2);
                 break;
             case MidiType::PROGRAM_CHANGE:
                 // Handle Program Change message
@@ -100,6 +100,30 @@ namespace MIDI {
     void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {}
 
     void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value) {
+        uint16_t temp = (value << 3)
+        switch (controller) {
+            case 1: // Modulation wheel
+                break;
+            case 7: // Volume
+                break;
+            case 70: // Wavetable
+                // SETTINGS::Control.set(0 , 0, temp);
+                break;
+            case 71: // Vector
+                // SETTINGS::Control.set(0 , 1, temp);
+                break;
+            case 72: // Release
+                // SETTINGS::Control.set(1 , 3, temp);
+                break;
+            case 73: // Attack
+                // SETTINGS::Control.set(1 , 0, temp);
+                break;
+            case 75: // Decay
+                // SETTINGS::Control.set(1 , 1, temp);
+                break;
+
+
+        }
         //midi_cc[(controller - 10) & 0x7] = (float32_t)value / 127.f;
     }
 

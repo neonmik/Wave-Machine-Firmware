@@ -7,12 +7,14 @@
 
 #include "drivers/keys.h"
 #include "synth/beat_clock.h"
+#include "synth/settings.h"
 
 #include "mailbox.h"
 
 #include "debug.h"
 
 #include "config.h"
+#include "functions.h"
 
 
 namespace MIDI {
@@ -105,7 +107,7 @@ namespace MIDI {
         HOLD                            = 69,
 
         // Low resolution continuous controllers -----------------------------------
-        SOUND_CONTROLLER_1              = 70,   ///< Synth: Sound Variation   FX: Exciter On/Off
+        SOUND_CONTROLLER_1              = 70,   ///< Synth: Sound Variation   FX: Exciter On/Off 
         SOUND_CONTROLLER_2              = 71,   ///< Synth: Harmonic Content  FX: Compressor On/Off
         SOUND_CONTROLLER_3              = 72,   ///< Synth: Release Time      FX: Distortion On/Off
         SOUND_CONTROLLER_4              = 73,   ///< Synth: Attack Time       FX: EQ On/Off
