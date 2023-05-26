@@ -17,10 +17,6 @@ namespace PAGINATION {
       }
     }
     void init() {
-      // for(int i=0; i < MAX_KNOBS; i++){
-      //   // knob_values[i] = ADC::value(i);
-      //   _states[i] = KnobState::ACTIVE;
-      // }
       update();
     }
     void update(){
@@ -60,21 +56,10 @@ namespace PAGINATION {
             last_value[i] = value;
         }
       
-        // if knob is moving, show if it's active or not
-        //  if(abs(value - knob_values[i]) > 5){
-        //       // if knob is active, blink LED
-        //       if(knob_states[i] == ACTIVE){
-        //         Leds::KNOB_select(i, 1);
-        //         continue;
-        //       } else {
-        //         Leds::KNOB_select(i, 0);
-        //       }
-        //  }
-        // knob_values[i] = value;
-
         // if enabled then mirror the real time knob value
         if(_states[i] == KnobState::ACTIVE){
           LEDS::KNOB_select(i, 1);
+          // this could be where you set the level for KNOB LED's faux PWM output
           SETTINGS::set_value(current_page, i, value);
         }
       }

@@ -1,5 +1,5 @@
 /**
- *                Beep Machine Firmware v0.26
+ *                Beep Machine Firmware v0.27
  * 
  * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  
@@ -24,6 +24,7 @@
 #include "mailbox.h"
 
 #include "midi.h"
+
 
 
 void core0_main() {

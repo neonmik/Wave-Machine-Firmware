@@ -6,6 +6,7 @@ Current nightly firmware for Beep Machine Hardware.
 Updates and Bugfixes:
 
 - Multicore
+    - Test swapping the cores back now I've proved 15~ voices on core0.
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
 
 - Improve Settings funtionality:
@@ -56,7 +57,7 @@ Future Implementaions and WIPs:
 - Improve Mod code:
     - Add a ramp down feature when switching between destinations - could be difficult. 
     - Add a temp sync function.
-    - _currently_ impossible due to over extending the processor... Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
+    - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
 
 - Arp code:
     - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
@@ -75,7 +76,7 @@ Future Implementaions and WIPs:
 - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
 
 
-- Add a paraphonic filter for MOD and possibly wave - could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
+- Add a paraphonic filter for MOD and possibly wave or future Filter - could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
 
 - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
@@ -84,6 +85,8 @@ Future Implementaions and WIPs:
 Things already implemented:
 
 + Proven hardware functions (Pots, LEDs, Keys, Audio)
+    + USB-MIDI
+        + Finally added and tested
     + EEPROM
         + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
     + LEDs

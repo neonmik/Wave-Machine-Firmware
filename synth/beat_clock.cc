@@ -76,6 +76,18 @@ namespace BEAT_CLOCK {
         }
     }
     void update (void) {
+        // do something with midi tick... not sure what though.
+        // check_for_midi_clock();
+        // if (midi_clock_present()) {
+        //     if (get_midi_clock_tick) {
+        //         // tick();
+
+        //         clear_midi_clock_tick();
+        //     }
+        //     else {
+        //         // tick();
+        //     }
+        // }
         ++_beat;
         if (_beat >= _max) {
             _beat = 0;
@@ -93,21 +105,44 @@ namespace BEAT_CLOCK {
     }
    
     void midi_tick (void) {
-        // _midi_clock_flag = true;
-        // _midi_clock_period = sample_clock - _midi_in_clock_last;
-        // _midi_in_clock_last = sample_clock;
-        // _midi_clock_tick_count++;
-        // if (_midi_clock_tick_count >= 24) {
-        //     _midi_clock_tick_count = 0;
-        //     // flash_led(40) ???
-        // }
+        _midi_clock_flag = true;
+        _midi_clock_period = sample_clock - _midi_in_clock_last;
+        _midi_in_clock_last = sample_clock;
+        _midi_clock_tick_count++;
+        if (_midi_clock_tick_count >= 24) {
+            _midi_clock_tick_count = 0;
+        }
     }
 
-    // void check_for_midi_clock (void) {
-    //     if ((sample_clock - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT)) {
-    //         _midi_clock_present = false;
-    //     } else {
-    //         _midi_clock_present = true;
-    //     }
-    // }
+    void check_for_midi_clock (void) {
+        if ((sample_clock - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT) {
+            _midi_clock_present = false;
+        } else {
+            _midi_clock_present = true;
+        }
+    }
+    uint8_t get_midi_clock_tick(void) {
+        return _midi_clock_flag;
+    }
+    void clear_midi_clock_tick(void){
+        _midi_clock_flag = 0;
+    }
+
+    void pp6_check_for_midi_clock(void) {
+        // check for presence of midi clock signal
+        if ((sample_clock - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT) {
+            _midi_clock_present = 0;
+        }
+        else {
+            _midi_clock_present = 1;
+        }
+    }
+
+    uint8_t midi_clock_present(void) {
+        return _midi_clock_present;
+    }
+
+    uint32_t get_midi_clock_period(void) {
+        return _midi_clock_period;
+    }
 }

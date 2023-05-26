@@ -30,15 +30,15 @@
 typedef uint16_t (*synth_function)();
 
 
-extern uint32_t hardware_index; // eventually going to be used to free some resources from the DMA ISR
-extern uint32_t software_index; // will be used to check currently timing of hardware_index
+// extern uint32_t hardware_index; // eventually going to be used to free some resources from the DMA ISR
+// extern uint32_t software_index; // will be used to check currently timing of hardware_index
 
 
 namespace DAC {
     
+    // uint32_t sample_clock;
 
     namespace {
-        uint32_t sample_clock;
         
         synth_function process;
 
@@ -61,8 +61,8 @@ namespace DAC {
             spi_write16_blocking(DAC_SPI, value, 1);
             gpio_put(DAC_CS, 1);
             ++sample_clock;
-            ++hardware_index;
-            hardware_index &= 0xf; //loop the buffer every 15 samples
+            // ++hardware_index;
+            // hardware_index &= 0xf; //loop the buffer every 15 samples
         }
 
 

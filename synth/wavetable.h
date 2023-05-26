@@ -1,4 +1,10 @@
 #pragma once
+
+constexpr   uint16_t    WAVETABLE_SIZE  =       256;
+
+constexpr   uint8_t     MAX_MOD_WAVES =         6;
+constexpr   uint8_t     MAX_WAVES =             16;
+
 // new wavetable data to be used soon.
 // const int16_t sine_table[] = {
 //                       0,                    804,                   1607,                   2410,                   3211,                   4011,                   4807,                   5601,

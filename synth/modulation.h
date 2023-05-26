@@ -12,10 +12,6 @@
 
 #include "wavetable.h"
 
-
-// Wave table size
-#define WAVE_TABLE_SIZE 256
-
 namespace MOD {
 
     enum Dither : uint8_t {
@@ -121,26 +117,24 @@ namespace MOD {
                 }
             }
             void set_rate (uint16_t rate) {
-                // 0.1Hz - 100Hz
-                // 1 = 0.1Hz / 1024 = 102.4Hz
-                
+                // uses map_exp to map the 10 bit knob values to an exponetial 0.1Hz to 500Hz
                 _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 5000));
                 
-                
+                // Calculate the increment based on the scaled rate
+                _increment = (65535 * _rate) / (_sample_rate);
 
-                _increment = (65535 * _rate) / (_sample_rate); // Calculate the increment based on the scaled rate
-
+                // don't want the increment dropping below 1, as it will stop the oscillation/cause weird behaviour
                 if (_increment < 1) _increment = 1;
-                
-                // printf("Rate: %fHz\n", _rate);
             }
             void set_depth (uint16_t depth) {
-                _depth = depth; // 0-1023
+                // 10 bit depth setting
+                _depth = depth;
             }
             void set_shape (uint16_t wave) {
-                volatile uint16_t temp = ((map(wave, KNOB_MIN, KNOB_MAX, 0, 5))*256);
-                if (_wave != temp) {
-                    _wave = temp;
+                // map the 10 bit knob value to 0-5 (the amount of waveforms) and then map it to the wavetable size.
+                volatile uint16_t mapped_wave = (map(wave, KNOB_MIN, KNOB_MAX, 0, (MAX_MOD_WAVES - 1)) * WAVETABLE_SIZE);
+                if (_wave != mapped_wave) {
+                    _wave = mapped_wave;
                 }
             }
             
@@ -173,13 +167,11 @@ namespace MOD {
 
                     // two different algoruthms for applying depth to the outputs, ensures always the number is centred round teh respective 0 mark for the destination. 
                     switch (_destination[_matrix].type) {
-                        case OutputType::UNSIGNED:
-                        {
+                        case OutputType::UNSIGNED: {
                             _destination[_matrix].output = (uint16_output(_sample) * _depth) >> 10;
                             break;
                         }
-                        case OutputType::SIGNED:
-                        {
+                        case OutputType::SIGNED: {
                             _destination[_matrix].output = uint16_output((_sample * _depth) >> 10);
                             break;
                         }
