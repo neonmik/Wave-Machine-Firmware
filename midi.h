@@ -16,22 +16,28 @@
 #include "config.h"
 #include "functions.h"
 
-
+typedef uint8_t byte;
 namespace MIDI {
 
-    constexpr   uint8_t     MIDI_CHANNEL_OMNI =     0;
-    constexpr   uint8_t     MIDI_CHANNEL_OFF =      17; // and over
+    constexpr   uint8_t     MIDI_CHANNEL_OMNI =             0;
+    constexpr   uint8_t     MIDI_CHANNEL_OFF =              17; // and over
     
-    // I think this is because MIDI pitchbend is a 14 bit number?
-    constexpr   uint16_t    MIDI_PITCHBEND_MIN =    -8192;
-    constexpr   uint16_t    MIDI_PITCHBEND_MAX =    8191;
+    // This is because MIDI pitchbend is a 14 bit number
+    constexpr   uint16_t    MIDI_PITCHBEND_MIN =            -8192;
+    constexpr   uint16_t    MIDI_PITCHBEND_MAX =            8191;
 
-    constexpr   uint8_t     USB_MIDI_CABLE_NUMBER = 0;
+    // this is because general MIDI CC messages are 7 bit numbers 
+    constexpr   uint8_t     CONTROL_CHANGE_MIN =            0;
+    constexpr   uint8_t     CONTROL_CHANGE_MAX =            127;
 
-    // typedef byte StatusByte;
-    // typedef byte DataByte;
-    // typedef byte Channel;
-    // typedef byte FilterMode;
+    constexpr   uint16_t    EXTENDED_CONTROL_CHANGE_MAX =   16384;
+
+    constexpr   uint8_t     USB_MIDI_CABLE_NUMBER =         0;
+
+    typedef byte StatusByte;
+    typedef byte DataByte;
+    typedef byte Channel;
+    typedef byte FilterMode;
 
     namespace {
         uint8_t channel_;
@@ -43,8 +49,7 @@ namespace MIDI {
         int recvBytesNeeded_;
         int lastStatusSent_;
     }
-    enum MidiType : uint8_t
-    {
+    enum MidiType {
         INVALID_TYPE            = 0x00,    ///< For notifying errors
         NOTE_OFF                = 0x80,    ///< Note Off
         NOTE_ON                 = 0x90,    ///< Note On
@@ -140,6 +145,11 @@ namespace MIDI {
         POLY_MODE_ON                    = 127
     };
 
+    void init(void);
+    void update(void);
+    void midi_player(void);
+
+    void processMidiMessage(uint8_t msg[4]);
 
     // Functions for MIDI out
     void sendNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
@@ -166,7 +176,7 @@ namespace MIDI {
     void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value);
     void handleProgramChange(uint8_t channel, uint8_t program);
     void handleAfterTouch(uint8_t channel, uint8_t velocity);
-    void handlePitchBend(uint8_t pitch);
+    void handlePitchBend(uint16_t pitch);
     void handleSongPosition(uint8_t position);
     void handleSongSelect(uint8_t song);
     void handleTuneRequest(void);
@@ -177,8 +187,6 @@ namespace MIDI {
     void handleActiveSense(void);
     void handleReset(void);
 
-    void init(void);
-    void update(void);
-    void midi_player(void);
+    
 
 }

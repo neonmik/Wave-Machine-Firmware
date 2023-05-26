@@ -16,9 +16,6 @@ namespace MIDI {
         }
 
         switch (midiType) {
-            // case MidiType::INVALID_TYPE:
-            //     printf("Invalid MIDI Message type!\n");
-            //     break;
             case MidiType::NOTE_OFF:
                 handleNoteOff(channel, data1, data2);
                 break;
@@ -39,9 +36,11 @@ namespace MIDI {
             case MidiType::AFTERTOUCH_CHANNEL:
                 break;
             case MidiType::PITCH_BEND:
+                 handlePitchBend((data2 << 7) | (data1));
+                break;
             case MidiType::SYS_EX:
                 break;
-            case MidiType::SONG_POSITION:
+            case MidiType::SONG_POSITION: 
                 break;
             case MidiType::SONG_SELECT:
                 break;
@@ -66,25 +65,25 @@ namespace MIDI {
             case MidiType::SYSTEM_RESET:
                 // handleReset();
                 break;
-            // Handle other MIDI types
+            case MidiType::INVALID_TYPE:
+                // shouldn't happen very often, if at all. 
+                printf("Invalid MIDI Message type!\n");
+                break;
             default:
                 break;
         }
     }
 
-        //  MIDI Callbacks
+    //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-        // printf("MIDI IN: NOTE OFF!\n");
         if (channel == MIDI_CHANNEL) KEYS::note_off(note);
     }
 
     void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-        // printf("MIDI IN: NOTE ON!\n");
         if (channel == MIDI_CHANNEL && velocity > 0) KEYS::note_on(note);
     }
 
     void handleClock(void) {
-        // printf("MIDI IN: CLOCK!\n");
         BEAT_CLOCK::midi_tick();
     }
 
@@ -100,36 +99,51 @@ namespace MIDI {
     void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {}
 
     void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value) {
-        uint16_t temp = (value << 3);
+        // add 14-bit midi handling code here too...
+        // if ((CC < 64) && ((CC + 32)>0)) 14bit_mode = true;
+        // if (14bit_mode) uint16_t temp = map(value, CONTROL_CHANGE_MIN, EXTENDED_CONTROL_CHANGE_MAX, KNOB_MIN, KNOB_MAX);
+        uint16_t temp = map(value, CONTROL_CHANGE_MIN, CONTROL_CHANGE_MAX, KNOB_MIN, KNOB_MAX);
         switch (controller) {
             case 1: // Modulation wheel
+                printf("MIDI IN: Modulation Wheel - %d\n", temp);
                 break;
             case 7: // Volume
+                printf("MIDI IN: Volume - %d\n", temp);
                 break;
             case 70: // Wavetable
-                // SETTINGS::Control.set(0 , 0, temp);
+                // printf("MIDI IN: Wavetable - %d\n", temp);
+                SETTINGS::set_value(0 , 0, temp);
                 break;
             case 71: // Vector
-                // SETTINGS::Control.set(0 , 1, temp);
+                // printf("MIDI IN: Vector - %d\n", temp);
+                SETTINGS::set_value(0 , 1, temp);
                 break;
             case 72: // Release
-                // SETTINGS::Control.set(1 , 3, temp);
+                // printf("MIDI IN: Release - %d\n", temp);
+                SETTINGS::set_value(1 , 3, temp);
                 break;
             case 73: // Attack
-                // SETTINGS::Control.set(1 , 0, temp);
+                // printf("MIDI IN: Attack - %d\n", temp);
+                SETTINGS::set_value(1 , 0, temp);
                 break;
             case 75: // Decay
-                // SETTINGS::Control.set(1 , 1, temp);
+                // printf("MIDI IN: Decay - %d\n", temp);
+                SETTINGS::set_value(1 , 1, temp);
+                break;
+            default:
                 break;
 
-
         }
-        //midi_cc[(controller - 10) & 0x7] = (float32_t)value / 127.f;
     }
 
     void handleProgramChange(uint8_t channel, uint8_t program) {}
     void handleAfterTouch(uint8_t channel, uint8_t velocity) {}
-    void handlePitchBend(uint8_t pitch) {}
+    void handlePitchBend(uint16_t pitch) {
+        // printf("MIDI IN: Pitch Bend - %d\n", pitch);
+        uint16_t temp = map(pitch, 0, EXTENDED_CONTROL_CHANGE_MAX, 0, 1023);
+        printf("MIDI IN: Pitch Bend (mapped) - %d\n", temp);
+        SETTINGS::set_value(0, 3, temp);
+    }
     void handleSongPosition(uint8_t position) {}
     void handleSongSelect(uint8_t song) {}
     void handleTuneRequest(void) {}
@@ -138,20 +152,17 @@ namespace MIDI {
     void handleReset(void) {}
 
     void sendNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-        printf("MIDI OUT: NOTE OFF!\n");
         uint8_t msg[3] = { (MidiType::NOTE_OFF | channel), note, 0};
         tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
     }
     void sendNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-        printf("MIDI OUT: NOTE ON!\n");
         uint8_t msg[3] = { MidiType::NOTE_ON | channel, note, 127};
         tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
     }
 
     void init () {
-
         tusb_init();
-        printf("\nMIDI INIT\n");
+        // UART::init(); // eventual places for MIDI via UART initiation
     }
 
     void usb_midi_task (void) {
@@ -165,6 +176,7 @@ namespace MIDI {
     void update () {
         tud_task(); // tinyusb device task
         usb_midi_task();
+        // midi_task();
     }
 
     //--------------------------------------------------------------------+

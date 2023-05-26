@@ -12,4 +12,11 @@ constexpr   uint8_t     DEFAULT_BPM     =       120;
 
 constexpr   uint8_t     MIDI_CHANNEL    =       0;
 
+constexpr   uint16_t    KNOB_MIN        =       0;
+constexpr   uint16_t    KNOB_MAX        =       1023;
+
 // uint32_t                sample_clock    =       0;
+
+struct MidiSettings {
+    uint8_t     channel;
+};
