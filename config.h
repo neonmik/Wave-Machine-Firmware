@@ -7,7 +7,8 @@
 constexpr   uint32_t    CORE_SPEED      =       144000;
 
 constexpr   uint32_t    SAMPLE_RATE     =       48000;
-constexpr   uint8_t     MAX_VOICES      =       8;
+constexpr   uint8_t     MAX_VOICES      =       15; // 8 is the "standard" value, it can currently (in release mode) run up to 15. Crashes on 16. 
+                                                    // going to use the processing power from the "spare" voices for 
 constexpr   uint8_t     DEFAULT_BPM     =       120;
 
 constexpr   uint8_t     MIDI_CHANNEL    =       0;
