@@ -124,7 +124,7 @@ namespace MOD {
                 // 0.1Hz - 100Hz
                 // 1 = 0.1Hz / 1024 = 102.4Hz
                 
-                _rate = (map_exp(rate, 0, 1023, 1, 5000));
+                _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 5000));
                 
                 
 
@@ -138,7 +138,7 @@ namespace MOD {
                 _depth = depth; // 0-1023
             }
             void set_shape (uint16_t wave) {
-                volatile uint16_t temp = ((map(wave, 0, 1023, 0, 5))*256);
+                volatile uint16_t temp = ((map(wave, KNOB_MIN, KNOB_MAX, 0, 5))*256);
                 if (_wave != temp) {
                     _wave = temp;
                 }

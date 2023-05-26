@@ -150,15 +150,14 @@ namespace ARP {
         for (int i = 0; i <= _count; ++i) {
             if (_notes[i] == note) {
                 // Shift all the notes after the removed note back by one
-                for (int j = i; j < _count + 1; ++j) {
-                    if ((j + 1) > MAX_VOICES) return; // check whether this is correct, or whether need to remove + 1 from _count max
+                for (int j = i; j < _count; ++j) {
                     _notes[j] = _notes[j + 1];
                     _notes[j + 1] = 0;
                 }
-                // Decrement arp_count
+                // Decrement _count
                 --_count;
                 --_write_index;
-                if (_count < 0) _count = 0;
+                if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
                 if (_write_index <= 0) _write_index = _count;
                 _notes_changed = true;
                 //don't return here in case the note is in the list more than once
@@ -250,8 +249,7 @@ namespace ARP {
                 break;
         }
     }
-
     void set_rate (uint16_t rate) {
-        BEAT_CLOCK::set_bpm(map(rate, 0, 1023, 30, 350));
+        BEAT_CLOCK::set_bpm(map(rate, KNOB_MIN, KNOB_MAX, 30, 350));
     }
 }

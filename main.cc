@@ -51,7 +51,6 @@ void core1_main() {
       NOTE_PRIORITY::update(); // update notes from the mailbox info
       
       DAC::clear_state();
-      
     }
   }
 }

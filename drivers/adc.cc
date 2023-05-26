@@ -52,7 +52,7 @@ namespace ADC {
         RANDOM::update(_adc_noise);
         _sample[_mux_address] = _sample[_mux_address] - (_sample[_mux_address]>>2) + _adc_value;
         // moves filtered sample to the adc array
-        _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 12, 4095, 0, 1023);
+        _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 12, 4095, KNOB_MIN, KNOB_MAX);
 
         // sets the index to loop
         _mux_address = (_mux_address + 1) % MAX_KNOBS;

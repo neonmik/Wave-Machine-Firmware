@@ -14,6 +14,7 @@
 #include "hardware/adc.h"
 #include "hardware/dma.h"
 
+#include "../config.h"
 #include "../functions.h"
 
 #include "../random.h"

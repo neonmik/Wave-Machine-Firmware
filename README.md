@@ -104,6 +104,7 @@ Things already implemented:
     + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
 + Arp functionality bug fixes:
+    + Bugfix: fixed bug in Arp noter removal logic that cause strange behaviour and a comile warning.
     + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
     + When the range is set to anything above 0 only the first octave of the arp has proper release - think it's to do with the note_clear function in the oscillator (definitely was)
     + fix control for preset/pagination - currently persists between presets no matter of the state of the new preset.

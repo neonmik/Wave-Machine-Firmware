@@ -1,10 +1,11 @@
 #pragma once
 
-#include <stdio.h>
-#include <algorithm>
+// #include <stdio.h>
+// #include <algorithm>
 #include "pico/stdlib.h"
 
 #include "../functions.h"
+#include "../config.h"
 
 #include "note_priority.h"
 #include "beat_clock.h"
@@ -41,7 +42,7 @@ namespace ARP {
         bool  _active;
         bool  _active_last;
         
-        const uint8_t max_arp = 8;
+        constexpr uint8_t max_arp = 8;
         uint8_t _notes[max_arp]; //all the notes stored in the arp sequence
         uint8_t _last_note;
 
@@ -91,7 +92,5 @@ namespace ARP {
     void update_controls (void);
 
     void set_rate (uint16_t rate);
-    // long map (long x, long in_min, long in_max, long out_min, long out_max);
-    
 }
 
