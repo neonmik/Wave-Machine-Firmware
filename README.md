@@ -75,7 +75,7 @@ Future Implementaions and WIPs:
 - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
 
 
-- Add a paraphonic filter - _is_ could be too much for MCU at the minute, but could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
+- Add a paraphonic filter for MOD and possibly wave - could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
 
 - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
