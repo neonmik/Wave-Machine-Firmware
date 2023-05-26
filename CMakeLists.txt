@@ -9,10 +9,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
+
+
 add_executable(${PROJECT_NAME}
     main.cc
 
     usb_descriptors.c
+    drivers/usb.cc
     
     drivers/adc.cc
     drivers/button.cc
@@ -22,6 +25,7 @@ add_executable(${PROJECT_NAME}
     drivers/leds.cc
     drivers/rgb.cc
     drivers/shiftreg.cc
+    
     
     ui.cc
     pagination.cc
@@ -56,6 +60,8 @@ pico_enable_stdio_uart(${PROJECT_NAME} 1)
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
+
+
 target_link_libraries(${PROJECT_NAME} 
                         pico_stdlib
                         pico_bootrom
@@ -74,3 +80,5 @@ target_link_libraries(${PROJECT_NAME}
                         tinyusb_device
                         tinyusb_board
                         )
+
+# add_compile_options(-CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/drivers/tusb_config.h)

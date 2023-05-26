@@ -2,8 +2,10 @@
 
 #include "pico/stdlib.h"
 
-#include "bsp/board.h"
-#include "tusb.h"
+// #include "bsp/board.h"
+// #include "tusb.h"
+
+#include "drivers/usb.h"
 
 #include "drivers/keys.h"
 #include "synth/beat_clock.h"
@@ -16,7 +18,6 @@
 #include "config.h"
 #include "functions.h"
 
-typedef uint8_t byte;
 namespace MIDI {
 
     constexpr   uint8_t     MIDI_CHANNEL_OMNI =             0;
@@ -32,12 +33,6 @@ namespace MIDI {
 
     constexpr   uint16_t    EXTENDED_CONTROL_CHANGE_MAX =   16384;
 
-    constexpr   uint8_t     USB_MIDI_CABLE_NUMBER =         0;
-
-    typedef byte StatusByte;
-    typedef byte DataByte;
-    typedef byte Channel;
-    typedef byte FilterMode;
 
     namespace {
         uint8_t channel_;
@@ -145,20 +140,41 @@ namespace MIDI {
         POLY_MODE_ON                    = 127
     };
 
+    
     void init(void);
     void update(void);
     void midi_player(void);
 
-    void processMidiMessage(uint8_t msg[4]);
+    void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2);
+    void handleMidiMessage(uint8_t msg[4]);
 
     // Functions for MIDI out
-    void sendNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-    void sendNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-    void sendVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity);
-    void sendControlChange(uint8_t channel, uint8_t controller, uint8_t value);
-    void sendProgramChange(uint8_t channel, uint8_t program);
-    void sendAfterTouch(uint8_t channel, uint8_t velocity);
-    void sendPitchBend(uint8_t pitch);
+    void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
+    void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
+    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity);
+    void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value);
+    void handleProgramChange(uint8_t channel, uint8_t program);
+    void handleAfterTouch(uint8_t channel, uint8_t velocity);
+    void handlePitchBend(uint8_t channel, uint16_t pitch);
+    void handleSongPosition(uint8_t position_msb, uint8_t position_lsb);
+    void handleSongSelect(uint8_t song);
+    void handleTuneRequest(void);
+    void handleClock(void);
+    void handleStart(void);
+    void handleStop(void);
+    void handleContinue(void);
+    void handleActiveSense(void);
+    void handleReset(void);
+
+    // MIDI Out
+    // None of these functions have a MIDI channel input as that is controlled at the system level
+    void sendNoteOff(uint8_t note, uint8_t velocity);
+    void sendNoteOn(uint8_t note, uint8_t velocity);
+    void sendVelocityChange(uint8_t note, uint8_t velocity);
+    void sendControlChange(uint8_t controller, uint8_t value);
+    void sendProgramChange(uint8_t program);
+    void sendAfterTouch(uint8_t velocity);
+    void sendPitchBend(uint16_t pitch);
     void sendSongPosition(uint8_t position);
     void sendSongSelect(uint8_t song);
     void sendTuneRequest(void);
@@ -168,24 +184,6 @@ namespace MIDI {
     void sendStop(void);
     void sendActiveSense(void);
     void sendReset(void);
-
-    // Functions for MIDI in
-    void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-    void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity);
-    void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value);
-    void handleProgramChange(uint8_t channel, uint8_t program);
-    void handleAfterTouch(uint8_t channel, uint8_t velocity);
-    void handlePitchBend(uint16_t pitch);
-    void handleSongPosition(uint8_t position);
-    void handleSongSelect(uint8_t song);
-    void handleTuneRequest(void);
-    void handleClock(void);
-    void handleStart(void);
-    void handleContinue(void);
-    void handleStop(void);
-    void handleActiveSense(void);
-    void handleReset(void);
 
     
 

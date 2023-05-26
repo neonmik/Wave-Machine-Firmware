@@ -1,8 +1,8 @@
 #include "midi.h"
 
 namespace MIDI {
-    
-    void processMidiMessage(uint8_t msg[4]) {
+
+    void handleMidiMessage(uint8_t msg[4]) {
         uint8_t midiType, channel, data1, data2;
         if (msg[1] >= 0xF0) { // check if SYS EX, as they use the lower half of the status byte
             midiType = msg[1]; // Extract the MIDI type
@@ -23,47 +23,48 @@ namespace MIDI {
                 handleNoteOn(channel, data1, data2);
                 break;
             case MidiType::AFTERTOUCH_POLY:
-                // Handle Polyphonic AfterTouch message
-                // Call the corresponding handler function
+                handleVelocityChange(channel, data1, data2);
                 break;
             case MidiType::CONTROL_CHANGE:
                 handleControlChange(channel, data1, data2);
                 break;
             case MidiType::PROGRAM_CHANGE:
-                // Handle Program Change message
-                // Call the corresponding handler function
+                handleProgramChange(channel, data1);
                 break;
             case MidiType::AFTERTOUCH_CHANNEL:
+                handleAfterTouch(channel, data1);
                 break;
             case MidiType::PITCH_BEND:
-                 handlePitchBend((data2 << 7) | (data1));
+                 handlePitchBend(channel, ((data2 << 7) | (data1)));
                 break;
             case MidiType::SYS_EX:
                 break;
             case MidiType::SONG_POSITION: 
+                handleSongPosition(data1, data2);
                 break;
             case MidiType::SONG_SELECT:
+                handleSongSelect(data1);
                 break;
             case MidiType::TUNE_REQUEST:
-                // handleTuneRequest();
+                handleTuneRequest();
                 break;
             case MidiType::CLOCK:
                 handleClock();
                 break;
             case MidiType::START:
-                // handleStart();
+                handleStart();
                 break;
             case MidiType::CONTINUE:
-                // handleContinue();
+                handleContinue();
                 break;
             case MidiType::STOP:
-                // handleStop();
+                handleStop();
                 break;
             case MidiType::ACTIVE_SENSING:
-                // handleActiveSense();
+                handleActiveSense();
                 break;
             case MidiType::SYSTEM_RESET:
-                // handleReset();
+                handleReset();
                 break;
             case MidiType::INVALID_TYPE:
                 // shouldn't happen very often, if at all. 
@@ -73,32 +74,25 @@ namespace MIDI {
                 break;
         }
     }
-
+    void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2) {
+        uint8_t status = (type | channel);
+        uint8_t msg[3] = { status, data1, data2 };
+        // tud_midi_stream_write(0, msg, 3);
+        USB::MIDI::send(msg);
+        // midi.send(msg);
+    }
     //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
         if (channel == MIDI_CHANNEL) KEYS::note_off(note);
     }
-
     void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
         if (channel == MIDI_CHANNEL && velocity > 0) KEYS::note_on(note);
     }
-
-    void handleClock(void) {
-        BEAT_CLOCK::midi_tick();
+    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {
+        if (channel != MIDI_CHANNEL) return;
     }
-
-    void handleStart(void) {
-        // pp6_set_midi_start();
-    }
-
-    void handleStop(void) {
-        // pp6_set_midi_stop();
-    }
-
-
-    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {}
-
     void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value) {
+        if (channel != MIDI_CHANNEL) return;
         // add 14-bit midi handling code here too...
         // if ((CC < 64) && ((CC + 32)>0)) 14bit_mode = true;
         // if (14bit_mode) uint16_t temp = map(value, CONTROL_CHANGE_MIN, EXTENDED_CONTROL_CHANGE_MAX, KNOB_MIN, KNOB_MAX);
@@ -135,46 +129,97 @@ namespace MIDI {
 
         }
     }
-
-    void handleProgramChange(uint8_t channel, uint8_t program) {}
-    void handleAfterTouch(uint8_t channel, uint8_t velocity) {}
-    void handlePitchBend(uint16_t pitch) {
+    void handleProgramChange(uint8_t channel, uint8_t program) {
+        if (channel != MIDI_CHANNEL) return;
+    }
+    void handleAfterTouch(uint8_t channel, uint8_t velocity) {
+        if (channel != MIDI_CHANNEL) return;
+    }
+    void handlePitchBend(uint8_t channel, uint16_t pitch) {
+        if (channel != MIDI_CHANNEL) return;
         // printf("MIDI IN: Pitch Bend - %d\n", pitch);
         uint16_t temp = map(pitch, 0, EXTENDED_CONTROL_CHANGE_MAX, 0, 1023);
         printf("MIDI IN: Pitch Bend (mapped) - %d\n", temp);
         SETTINGS::set_value(0, 3, temp);
     }
-    void handleSongPosition(uint8_t position) {}
+    void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {}
     void handleSongSelect(uint8_t song) {}
     void handleTuneRequest(void) {}
+    void handleClock(void) {
+        BEAT_CLOCK::midi_tick();
+    }
+    void handleStart(void) {
+        // pp6_set_midi_start();
+    }
+    void handleStop(void) {
+        // pp6_set_midi_stop();
+    }
     void handleContinue(void) {}
     void handleActiveSense(void) {}
     void handleReset(void) {}
 
-    void sendNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-        uint8_t msg[3] = { (MidiType::NOTE_OFF | channel), note, 0};
-        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
+    // None of these functions have a MIDI channel input as that is controlled at the system level
+    void sendNoteOff(uint8_t note, uint8_t velocity) {
+        sendMidiMessage(MidiType::NOTE_OFF, MIDI_CHANNEL, note, velocity);
     }
-    void sendNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-        uint8_t msg[3] = { MidiType::NOTE_ON | channel, note, 127};
-        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
+    void sendNoteOn(uint8_t note, uint8_t velocity) {
+        sendMidiMessage(MidiType::NOTE_ON, MIDI_CHANNEL, note, velocity);
     }
+    void sendVelocityChange(uint8_t note, uint8_t velocity) {
+        sendMidiMessage(MidiType::AFTERTOUCH_POLY, MIDI_CHANNEL, note, velocity);
+    }
+    void sendControlChange(uint8_t controller, uint8_t value){
+        sendMidiMessage(MidiType::CONTROL_CHANGE, MIDI_CHANNEL, controller, value);
+    }
+    void sendProgramChange(uint8_t program) {
+        sendMidiMessage(MidiType::PROGRAM_CHANGE, MIDI_CHANNEL, program, 0);
+    }
+    void sendAfterTouch(uint8_t velocity) {
+        sendMidiMessage(MidiType::AFTERTOUCH_CHANNEL, MIDI_CHANNEL, velocity, 0);
+    }
+    void sendPitchBend(uint16_t pitch) {
+        uint16_t temp = map(pitch, 0, 1023, 0, EXTENDED_CONTROL_CHANGE_MAX);
+        sendMidiMessage(MidiType::PITCH_BEND, MIDI_CHANNEL, (temp >> 7), (temp & 0xFF));
+    }
+    void sendSongPosition(uint8_t position) {}
+    void sendSongSelect(uint8_t song) {}
+    void sendTuneRequest(void) {}
+    void sendClock(void) {
+        sendMidiMessage(MidiType::CLOCK, 0, 0, 0);
+    }
+    void sendStart(void) {}
+    void sendContinue(void) {}
+    void sendStop(void) {}
+    void sendActiveSense(void) {}
+    void sendReset(void) {}
 
     void init () {
-        tusb_init();
+        USB::init();
+        // tusb_init();
+        printf("\nMIDI INIT\n");
         // UART::init(); // eventual places for MIDI via UART initiation
     }
 
     void usb_midi_task (void) {
-        if (!tud_midi_available()) return;
+        // tud_task(); // tinyusb device task
 
-        uint8_t packet[4];
-        tud_midi_packet_read(packet);
-        processMidiMessage(packet);
+        // if (!tud_midi_available()) return;
+
+        // uint8_t packet[4];
+        // tud_midi_packet_read(packet);
+        // handleMidiMessage(packet);
+
+        // printf("\nMIDI UPDATE\n");
+        if (USB::MIDI::available) {
+            // printf("\nMIDI AVAILABLE\n");
+            uint8_t packet[4];
+            USB::MIDI::get(packet);
+            handleMidiMessage(packet);
+        }
     }
 
     void update () {
-        tud_task(); // tinyusb device task
+        USB::update();
         usb_midi_task();
         // midi_task();
     }
@@ -184,50 +229,50 @@ namespace MIDI {
     //--------------------------------------------------------------------+
 
     // Variable that holds the current position in the sequence.
-    uint32_t note_pos = 0;
+//     uint32_t note_pos = 0;
 
-    // Store example melody as an array of note values
-    uint8_t note_sequence[] =
-    {
-    74,78,81,86,90,93,98,102,57,61,66,69,73,78,81,85,88,92,97,100,97,92,88,85,81,78,
-    74,69,66,62,57,62,66,69,74,78,81,86,90,93,97,102,97,93,90,85,81,78,73,68,64,61,
-    56,61,64,68,74,78,81,86,90,93,98,102
-    };
+//     // Store example melody as an array of note values
+//     uint8_t note_sequence[] =
+//     {
+//     74,78,81,86,90,93,98,102,57,61,66,69,73,78,81,85,88,92,97,100,97,92,88,85,81,78,
+//     74,69,66,62,57,62,66,69,74,78,81,86,90,93,97,102,97,93,90,85,81,78,73,68,64,61,
+//     56,61,64,68,74,78,81,86,90,93,98,102
+//     };
 
-    void midi_player () {
-        static uint32_t start_ms = 0;
+//     void midi_player () {
+//         static uint32_t start_ms = 0;
 
-        uint8_t const channel   = 0; // 0 for channel 1
+//         uint8_t const channel   = 0; // 0 for channel 1
 
-        // The MIDI interface always creates input and output port/jack descriptors
-        // regardless of these being used or not. Therefore incoming traffic should be read
-        // (possibly just discarded) to avoid the sender blocking in IO
-        uint8_t packet[4];
-        while ( tud_midi_available() ) tud_midi_packet_read(packet);
+//         // The MIDI interface always creates input and output port/jack descriptors
+//         // regardless of these being used or not. Therefore incoming traffic should be read
+//         // (possibly just discarded) to avoid the sender blocking in IO
+//         uint8_t packet[4];
+//         while ( tud_midi_available() ) tud_midi_packet_read(packet);
 
-        // send note periodically
-        if (board_millis() - start_ms < 286) return; // not enough time
-        start_ms += 286;
+//         // send note periodically
+//         if (board_millis() - start_ms < 286) return; // not enough time
+//         start_ms += 286;
 
-        // Previous positions in the note sequence.
-        int previous = (int) (note_pos - 1);
+//         // Previous positions in the note sequence.
+//         int previous = (int) (note_pos - 1);
 
-        // If we currently are at position 0, set the
-        // previous position to the last note in the sequence.
-        if (previous < 0) previous = sizeof(note_sequence) - 1;
+//         // If we currently are at position 0, set the
+//         // previous position to the last note in the sequence.
+//         if (previous < 0) previous = sizeof(note_sequence) - 1;
 
-        // Send Note On for current position at full velocity (127) on channel 1.
-        uint8_t note_on[3] = { 0x90 | channel, note_sequence[note_pos], 127 };
-        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, note_on, 3);
+//         // Send Note On for current position at full velocity (127) on channel 1.
+//         uint8_t note_on[3] = { 0x90 | channel, note_sequence[note_pos], 127 };
+//         tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, note_on, 3);
 
-        // Send Note Off for previous note.
-        uint8_t note_off[3] = { 0x80 | channel, note_sequence[previous], 0};
-        tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, note_off, 3);
+//         // Send Note Off for previous note.
+//         uint8_t note_off[3] = { 0x80 | channel, note_sequence[previous], 0};
+//         tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, note_off, 3);
 
-        // Increment position
-        note_pos++;
+//         // Increment position
+//         note_pos++;
 
-        // If we are at the end of the sequence, start over.
-        if (note_pos >= sizeof(note_sequence)) note_pos = 0;
-    }
+//         // If we are at the end of the sequence, start over.
+//         if (note_pos >= sizeof(note_sequence)) note_pos = 0;
+//     }
 }
