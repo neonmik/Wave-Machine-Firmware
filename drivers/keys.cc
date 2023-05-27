@@ -126,13 +126,13 @@ namespace KEYS {
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
         note_on(i+48);
+        // here for now while I figure multicore setup.
         MIDI::sendNoteOn(i+48, 127);
-        _changed = true;
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
         note_off(i+48);
+        // here for now while I figure multicore setup.
         MIDI::sendNoteOff(i+48, 0);
-        _changed = true;
       }
     }
     if (_changed) MAILBOX::NOTE_DATA.send();
@@ -178,16 +178,19 @@ namespace KEYS {
   void note_on (uint8_t note) {
     NOTES.note_state[note & 127] = 1;
     inc_physical_notes();
+    _changed = true;
   }
   void note_off (uint8_t note) {
     NOTES.note_state[note & 127] = 0;
     dec_physical_notes();
+    _changed = true;
   }
   void notes_clear (void) {
     for (int i = 0; i < 128; i++) {
       NOTES.note_state[i] = 0;
     }
     NOTES.notes_on = 0;
+    _changed = true;
   }
   uint8_t get_notes_on (void) {
     return NOTES.notes_on;

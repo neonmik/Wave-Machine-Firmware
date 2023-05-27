@@ -18,7 +18,6 @@ namespace ARP {
 
 
     namespace {
-        // MAILBOX::arp_data& ARP_DATA = MAILBOX::ARP_DATA.core0;
         
         enum NoteState {
             IDLE,

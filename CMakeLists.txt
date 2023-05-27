@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
     ui.cc
     pagination.cc
     
+    settings.cc
     functions.cc
     mailbox.cc
     

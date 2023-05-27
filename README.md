@@ -11,9 +11,9 @@ Updates and Bugfixes:
 
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
 
-- Improve Settings funtionality:
+- Improve Contorls funtionality:
     
-    - Develop way of exporting presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
+    - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
 
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
@@ -26,10 +26,6 @@ Updates and Bugfixes:
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
 - Improve USB MIDI/ Implement MIDI hardware:
-    
-    - Add dynamic setting of MIDI timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
-    
-    - Bugfix: quantize arp? so it always starts right, especially between changing divisions
 
 
     - Add midi_task() alongside usb_midi_task(). 
@@ -47,9 +43,12 @@ Updates and Bugfixes:
     - Add a MIDI settings structure and a way of saving persistant data (via EEPROM)
 
 
-    - Fix MIDI in note calls (currently need a key press first to allow midi) - implement a way to interface note calls directly to the MAILBOX. (maybe a kind of shared _changed flag inside the mailbox, set able from both MIDI and KEYS for now)
 
     - Fix MIDI in CC calls (currently get stuck if page is open on hardware controls) - find a way to interface MIDI messages and hardware messages and find a way to assign different locks.
+    
+    - Add dynamic setting of MIDI timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
+    
+    - Bugfix: quantize arp? so it always starts right, especially between changing divisions
 
     
 
@@ -176,6 +175,8 @@ Things already implemented:
     + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
 + USB MIDI/MIDI:
+    + Bugfix: MIDI in note calls would fire if keybaord hadnt been pressed. changed the way they're called.
+    + MIDI Clock can handle both Clock stopping and Clock drop out (Not ideal, but should be ok for most uses)
     + MIDI Clock can recieve any tempo in the range of 20-999 BPM
     + Updated USB-MIDI data collection. It now checks how many message there are and collects all of them from the TinyUSB MIDI buffer every time round. This is to improve the jitter of the MIDI Clock, but is also good practice.
     + Added and refined MIDI Clock sync

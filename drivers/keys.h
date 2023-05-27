@@ -95,6 +95,6 @@ namespace KEYS {
 
     void note_on (uint8_t note);
     void note_off (uint8_t note);
-    void note_clear (void);
+    void notes_clear (void);
     uint8_t get_notes_on (void);
 }

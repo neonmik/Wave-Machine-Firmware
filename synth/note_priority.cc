@@ -2,34 +2,15 @@
 
 
 #include "synth.h"
+
+#include "../midi.h"
 // #include "modulation.h"
-
-// aiming to use this class to pass back and forward between cores, that or jsut simple messages of need content.
-// easiest would be to have a mailbox set up to transfer all of the data for all of the slots in one go, and back again (the return is mostly for release info)
-
-// basically how it is now for note_state, but with voice_state[8](core1) = voice_state[8](core0)
-
-// could get confused sending all note info back and forth... might need to only return release? 
-// basically check the note hasnt changed, between core0 reciving it and send it back? 
-struct voice_class {
-  bool      active; // used to show if the note is in any state of play - to be returned from core0
-  bool      gate; // used to show if the note is physically being played
-  uint8_t   note; // midi number of the note
-  // uint16_t  freq; // possibly needed to calc the note frequency on this core
-  uint32_t  time_activated;
-};
 
 namespace NOTE_PRIORITY {
 
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
     if (note) {
-
-      // _voice_notes[slot] = note;
-      // _active_voice[slot] = true;
-      // _released_voice[slot] = false;
-      // _time_activated[slot] = to_ms_since_boot(get_absolute_time());
-      
       // for future MOD/Filter ADSR
       ++_voices_active;
       if (_voices_active > 8) {
@@ -37,15 +18,12 @@ namespace NOTE_PRIORITY {
       }
       // if (_voices_active) {
       //   MOD::trigger_attack();
-      //   FILTER::trigger_attack();
+      //   // FILTER::trigger_attack();
       // }
 
-      // printf("Voice On:       %d\n", slot);
-      // printf("Note:           %d\n", note);
-      // printf("Voices active:  %d\n", _voices_active);
+      // for MIDI Out use: - here so that the arp can output MIDI
+      // MIDI::sendNoteOn(note, velocity); // Needs reworking for multcore
 
-      // for future MIDI out
-      // sendNoteOn(note) // put MIDI note out here
 
       SYNTH::voice_on(slot, note, get_freq(note));
     } else {
@@ -53,12 +31,6 @@ namespace NOTE_PRIORITY {
     }
   }
   void voice_off(int slot, int note, int velocity) {
-
-    // _voice_notes[slot] = 0;
-    // _active_voice[slot] = false;
-    // don't think is needed as will always grab the last note and will be reset on new not down anyway
-    // _time_activated[slot] = 0; 
-    
     // for future MOD/Filter ADSR
     --_voices_active;
     if (_voices_active < 0) {
@@ -66,15 +38,15 @@ namespace NOTE_PRIORITY {
     }
     // if (_voices_active) {
     //   MOD::trigger_release();
-    //   FILTER::trigger_release();
+    //   // FILTER::trigger_release();
     // }
 
     // printf("Voice Off:      %d\n", slot);
     // printf("Note:           %d\n", note);
     // printf("Voices active:  %d\n", _voices_active);
     
-    // for future MIDI out
-    // sendNoteOff(note) // put MIDI note out here
+    // for MIDI Out use: - here so that the arp can output MIDI
+    // MIDI::sendNoteOff(note, velocity); // Needs reworking for multcore
 
     SYNTH::voice_off(slot);
   }

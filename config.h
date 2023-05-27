@@ -17,7 +17,3 @@ constexpr   uint16_t    KNOB_MIN        =       0;
 constexpr   uint16_t    KNOB_MAX        =       1023;
 
 static      uint32_t    sample_clock;
-
-struct MidiSettings {
-    uint8_t     channel;
-};

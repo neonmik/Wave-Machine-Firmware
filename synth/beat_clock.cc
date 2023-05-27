@@ -127,11 +127,11 @@ namespace BEAT_CLOCK {
     void stop_midi_clock (void) {
         // maybe add some handling here to differentiate between drop out and stop. 
         _midi_clock_present =  false;
-        set_changed(true);
+        set_changed(true); 
     }
 
     void check_for_midi_clock (void) {
-        // if (!_midi_clock_present) return; // check to see if the function still works if I use this. Just want it to not do this if it's already stopped. 
+        if (!_midi_clock_present) return; // check to see if the function still works if I use this. Just want it to not do this if it's already stopped. 
         uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
         if ((_current_time - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT) {
             _midi_clock_present = false;

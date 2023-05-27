@@ -112,7 +112,6 @@ namespace ARP {
                         }
                         break;
                 }
-
                 BEAT_CLOCK::set_changed(false);
             }
         }
