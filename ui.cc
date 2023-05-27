@@ -13,21 +13,21 @@ namespace UI {
     switch (_page) {
       case 0:
         LEDS::PAGES.off();
-        SETTINGS::set_page(_page);
+        CONTROLS::set_page(_page);
         break;
       case 1:
         LEDS::PAGE_1.toggle();
-        SETTINGS::set_page(_page);
+        CONTROLS::set_page(_page);
         break;
       case 2:
         LEDS::PAGE_1.toggle();
         LEDS::PAGE_2.toggle();
-        SETTINGS::set_page(_page);
+        CONTROLS::set_page(_page);
         break;
       case 3:
         LEDS::PAGE_2.toggle();
         LEDS::PAGE_3.toggle();
-        SETTINGS::set_page(_page);
+        CONTROLS::set_page(_page);
         break;
     }
   }
@@ -37,10 +37,10 @@ namespace UI {
  
   void toggle_lfo(void) {
     LEDS::LFO.toggle();
-    SETTINGS::toggle_lfo();
+    CONTROLS::toggle_lfo();
   }
   uint8_t get_lfo(void) {
-    return SETTINGS::get_lfo();
+    return CONTROLS::get_lfo();
   }
 
   void toggle_test_lfo (void) {
@@ -53,22 +53,22 @@ namespace UI {
   
   void toggle_arp(void) {
     LEDS::ARP.toggle();
-    SETTINGS::toggle_arp();
+    CONTROLS::toggle_arp();
   }
   uint8_t get_arp(void) {
-    return SETTINGS::get_arp();
+    return CONTROLS::get_arp();
   }
 
   void change_preset(void) {
     _preset++;
     if (_preset >= MAX_PRESETS) _preset = 0;
-    SETTINGS::set_preset(_preset);
+    CONTROLS::set_preset(_preset);
     LEDS::PRESET.preset(_preset);
 
     LEDS::ARP.off();
     LEDS::LFO.off();
-    if (SETTINGS::get_arp()) LEDS::ARP.on();
-    if (SETTINGS::get_lfo()) LEDS::LFO.on();
+    if (CONTROLS::get_arp()) LEDS::ARP.on();
+    if (CONTROLS::get_lfo()) LEDS::LFO.on();
   }
   uint8_t get_preset(void) {
     return _preset;
@@ -89,7 +89,7 @@ namespace UI {
     LEDS::init();
     KEYS::init();
     ADC::init();
-    SETTINGS::init();
+    CONTROLS::init();
     PAGINATION::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) test(30);
@@ -119,10 +119,10 @@ namespace UI {
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
-                SETTINGS::save();
+                CONTROLS::save();
             }
             // if (Buttons::ARP.get(Buttons::ButtonState::LONG)) {
-            //     SETTINGS::toggle_hold();
+            //     CONTROLS::toggle_hold();
             //     LEDS::ARP.flash(2,50);
             // }
             break;
@@ -135,7 +135,7 @@ namespace UI {
             LEDS::update();
             break;
           case 5:
-            SETTINGS::update();
+            CONTROLS::update();
             break;
           case 6:
             MIDI::update();

@@ -1,6 +1,6 @@
-#include "settings.h"
+#include "controls.h"
 
-namespace SETTINGS {
+namespace CONTROLS {
     CONTROL Control;
     PRESET Preset[MAX_PRESETS];
 

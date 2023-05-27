@@ -5,7 +5,7 @@
 
 #include "midi.h"
 
-#include "synth/settings.h"
+#include "synth/controls.h"
 
 #include "pagination.h"
 

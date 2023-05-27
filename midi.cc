@@ -107,23 +107,23 @@ namespace MIDI {
                 break;
             case 70: // Wavetable
                 // printf("MIDI IN: Wavetable - %d\n", temp);
-                SETTINGS::set_value(0 , 0, temp);
+                CONTROLS::set_value(0 , 0, temp);
                 break;
             case 71: // Vector
                 // printf("MIDI IN: Vector - %d\n", temp);
-                SETTINGS::set_value(0 , 1, temp);
+                CONTROLS::set_value(0 , 1, temp);
                 break;
             case 72: // Release
                 // printf("MIDI IN: Release - %d\n", temp);
-                SETTINGS::set_value(1 , 3, temp);
+                CONTROLS::set_value(1 , 3, temp);
                 break;
             case 73: // Attack
                 // printf("MIDI IN: Attack - %d\n", temp);
-                SETTINGS::set_value(1 , 0, temp);
+                CONTROLS::set_value(1 , 0, temp);
                 break;
             case 75: // Decay
                 // printf("MIDI IN: Decay - %d\n", temp);
-                SETTINGS::set_value(1 , 1, temp);
+                CONTROLS::set_value(1 , 1, temp);
                 break;
             default:
                 break;
@@ -141,7 +141,7 @@ namespace MIDI {
         // printf("MIDI IN: Pitch Bend - %d\n", pitch);
         uint16_t temp = map(pitch, 0, EXTENDED_CONTROL_CHANGE_MAX, 0, 1023);
         printf("MIDI IN: Pitch Bend (mapped) - %d\n", temp);
-        SETTINGS::set_value(0, 3, temp);
+        CONTROLS::set_value(0, 3, temp);
     }
     void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {}
     void handleSongSelect(uint8_t song) {}

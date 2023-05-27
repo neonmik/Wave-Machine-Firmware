@@ -42,7 +42,7 @@ add_executable(${PROJECT_NAME}
     synth/beat_clock.cc
     synth/modulation.cc
     synth/note_priority.cc
-    synth/settings.cc
+    synth/controls.cc
     synth/synth.cc
     
     # synth/filter.cc

@@ -6,32 +6,49 @@ Current nightly firmware for Beep Machine Hardware.
 Updates and Bugfixes:
 
 - Multicore
+    
     - Test swapping the cores back now I've proved 15~ voices on core0.
+
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
 
 - Improve Settings funtionality:
+    
     - Develop way of exporting presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
+
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
+
     - Improve tuning - currently theres a drift in tuning, more than likely down to using interger instead of floating point numbers for the MIDI2Freq calculations, most apparent on Preset 5 due to the fact that it's pitched down with the octave setting and pitch shift.
+
     - Finesse soft start code - currently takes too long to get going and still isnt perfect.
+
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
 - Improve USB MIDI/ Implement MIDI hardware:
+    
     - Add dynamic setting of MIDI timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
+    
     - Bugfix: quantize arp? so it always starts right, especially between changing divisions
 
+
     - Add midi_task() alongside usb_midi_task(). 
+
     - Write MIDI hardware code.
 
+
     - Tidy up MIDI processing code, could be more efficient.
+
     - Map more CC values and check they're working. 
 
+
     - Add MIDI channel assignment to start up
+
     - Add a MIDI settings structure and a way of saving persistant data (via EEPROM)
 
+
     - Fix MIDI in note calls (currently need a key press first to allow midi) - implement a way to interface note calls directly to the MAILBOX. (maybe a kind of shared _changed flag inside the mailbox, set able from both MIDI and KEYS for now)
+
     - Fix MIDI in CC calls (currently get stuck if page is open on hardware controls) - find a way to interface MIDI messages and hardware messages and find a way to assign different locks.
 
     

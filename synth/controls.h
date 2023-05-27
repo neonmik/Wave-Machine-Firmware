@@ -15,7 +15,7 @@
 
 #define MAX_PRESETS     8
 
-namespace SETTINGS {
+namespace CONTROLS {
     namespace {
         uint8_t _preset;
         uint8_t _page;

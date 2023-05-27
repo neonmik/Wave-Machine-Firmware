@@ -48,7 +48,7 @@ namespace PAGINATION {
       // read knobs values, show sync with the LED, enable knob when it matches the stored value
       for (int i = 0; i < MAX_KNOBS; i++){
         value = ADC::value(i);
-        in_sync = abs(value - SETTINGS::get_value(current_page, i)) < knob_protection_threshold;
+        in_sync = abs(value - CONTROLS::get_value(current_page, i)) < knob_protection_threshold;
 
         // enable knob when it matches the stored value
         if (in_sync && value != last_value[i]) {
@@ -60,7 +60,7 @@ namespace PAGINATION {
         if(_states[i] == KnobState::ACTIVE){
           LEDS::KNOB_select(i, 1);
           // this could be where you set the level for KNOB LED's faux PWM output
-          SETTINGS::set_value(current_page, i, value);
+          CONTROLS::set_value(current_page, i, value);
         }
       }
     }

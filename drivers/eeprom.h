@@ -5,7 +5,7 @@
 #include "pico/stdlib.h"
 #include "pico/binary_info.h" // ??? Needed/What is it?
 
-#include "../synth/settings.h"
+#include "../synth/controls.h"
 #include "../synth/preset.h"
 
 #include "hardware/i2c.h"

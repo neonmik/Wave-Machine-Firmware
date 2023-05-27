@@ -9,7 +9,7 @@
 
 #include "drivers/keys.h"
 #include "synth/beat_clock.h"
-#include "synth/settings.h"
+#include "synth/controls.h"
 
 #include "mailbox.h"
 
