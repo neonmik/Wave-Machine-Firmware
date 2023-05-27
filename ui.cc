@@ -102,6 +102,7 @@ namespace UI {
   }
 
   void update (void) {
+    
     switch (_mode) {
       case UI_MODE_NORMAL:
         switch(poll_index) {
@@ -138,6 +139,7 @@ namespace UI {
             break;
           case 6:
             MIDI::update();
+            break;
           default:
             // do nothing
             break;

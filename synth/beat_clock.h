@@ -5,7 +5,7 @@
 #include "../config.h"
 #include "../functions.h"
 
-#define MIDI_CLOCK_TIMEOUT 20000
+#define MIDI_CLOCK_TIMEOUT 670000 // time in us for 1 pulse at 24ppqn
 
 namespace BEAT_CLOCK {
 
@@ -24,13 +24,17 @@ namespace BEAT_CLOCK {
         uint16_t _bpm = 120;
         uint8_t _division = 8;
 
-        bool _midi_clock_flag = false;
+        bool _midi_clock_present = false;
+        uint8_t midi_division = 24;
+
         uint8_t _midi_start_flag;        // midi start command
         uint8_t _midi_stop_flag;    		// midi stop command
         uint32_t _midi_in_clock_last;   // stores the system time of the last received midi clock
-        uint8_t _midi_clock_present;  // if a midi clock is currently present
         uint32_t _midi_clock_period;  // time in between midi clock ticks
         uint8_t _midi_clock_tick_count;
+
+        uint32_t _delta;
+        bool _delta_flag = 0;
 
         void calculate_division (void) {
             _samples_per_division = (60 * _samples_rate / _bpm) / _division;
@@ -50,7 +54,10 @@ namespace BEAT_CLOCK {
     bool get_changed (void);
     uint8_t get_beat (void);
 
-   void midi_tick (void);
+    void midi_tick (void);
+    void start_midi_clock (void);
+    void stop_midi_clock (void);
+    void check_for_midi_clock (void);
 
 }
 

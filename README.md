@@ -19,13 +19,14 @@ Updates and Bugfixes:
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
 - Improve USB MIDI/ Implement MIDI hardware:
+    - Bugfix: Lag between stopping midi clock and picking up internal clock... defineitly somethi ng to do with MIDI_CLOCK_TIMEOUT... maybe make it dynamic somehow? definitely hard as you want to be able to change tempo and it not time out, be able to go down to 20/30BPM
+    - Bugfix: quantize arp? so it always starts right, especially between changing divisions
+
     - Add midi_task() alongside usb_midi_task(). 
     - Write MIDI hardware code.
 
     - Tidy up MIDI processing code, could be more efficient.
     - Map more CC values and check they're working. 
-
-    - Create BEAT_CLOCK sync:- pretty sure Clock is getting in, just need to implement the actual clock syncing. 
 
     - Add MIDI channel assignment to start up
     - Add a MIDI settings structure and a way of saving persistant data (via EEPROM)
@@ -158,6 +159,9 @@ Things already implemented:
     + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
 + USB MIDI/MIDI:
+    + MIDI Clock can recieve any tempo in the range of 20-999 BPM
+    + Updated USB-MIDI data collection. It now checks how many message there are and collects all of them from the TinyUSB MIDI buffer every time round. This is to improve the jitter of the MIDI Clock, but is also good practice.
+    + Added and refined MIDI Clock sync
     + MIDI Pitchbend is working.
     + MIDI CC inputs and values are working:
         + Mod Wheel (CC2)

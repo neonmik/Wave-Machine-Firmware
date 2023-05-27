@@ -93,8 +93,8 @@ namespace ARP {
 
     void update (void) {
         if (_active) {
+            BEAT_CLOCK::update();
             if (BEAT_CLOCK::get_changed()) {
-                BEAT_CLOCK::update();
                 switch (note_state) {
                     case NOTE_ACTIVE:
                         NOTE_PRIORITY::priority(0x80, _last_note, 0);

@@ -16,6 +16,20 @@ namespace MIDI {
         }
 
         switch (midiType) {
+            // at the top to give priority for timing
+            case MidiType::CLOCK:
+                handleClock();
+                break;
+            case MidiType::START:
+                handleStart();
+                break;
+            case MidiType::CONTINUE:
+                handleContinue();
+                break;
+            case MidiType::STOP:
+                handleStop();
+                break;
+            
             case MidiType::NOTE_OFF:
                 handleNoteOff(channel, data1, data2);
                 break;
@@ -47,18 +61,6 @@ namespace MIDI {
                 break;
             case MidiType::TUNE_REQUEST:
                 handleTuneRequest();
-                break;
-            case MidiType::CLOCK:
-                handleClock();
-                break;
-            case MidiType::START:
-                handleStart();
-                break;
-            case MidiType::CONTINUE:
-                handleContinue();
-                break;
-            case MidiType::STOP:
-                handleStop();
                 break;
             case MidiType::ACTIVE_SENSING:
                 handleActiveSense();
@@ -148,10 +150,10 @@ namespace MIDI {
         BEAT_CLOCK::midi_tick();
     }
     void handleStart(void) {
-        // pp6_set_midi_start();
+        BEAT_CLOCK::start_midi_clock();
     }
     void handleStop(void) {
-        // pp6_set_midi_stop();
+        BEAT_CLOCK::stop_midi_clock();
     }
     void handleContinue(void) {}
     void handleActiveSense(void) {}
@@ -199,10 +201,15 @@ namespace MIDI {
 
     void usb_midi_task (void) {
         if (USB::MIDI::available) {
-            uint8_t packet[4];
-            USB::MIDI::get(packet);
-            handleMidiMessage(packet);
+            uint32_t buffer_length = USB::MIDI::buffer_size();
+            for (int i = 0; i < buffer_length; i++) {
+                uint8_t packet[4];
+                USB::MIDI::get(packet);
+                handleMidiMessage(packet);
+            }
         }
+
+
     }
 
     void midi_task () {

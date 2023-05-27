@@ -14,8 +14,6 @@
 extern uint32_t sample_clock;
 extern uint32_t sample_clock_last;
 
-#define MIDI_CLOCK_TIMEOUT 20000
-
 namespace ARP {
 
 
