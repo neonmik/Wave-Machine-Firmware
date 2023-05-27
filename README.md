@@ -19,7 +19,7 @@ Updates and Bugfixes:
     - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
   
 - Improve USB MIDI/ Implement MIDI hardware:
-    - Bugfix: Lag between stopping midi clock and picking up internal clock... defineitly somethi ng to do with MIDI_CLOCK_TIMEOUT... maybe make it dynamic somehow? definitely hard as you want to be able to change tempo and it not time out, be able to go down to 20/30BPM
+    - Add dynamic setting of MIDI timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
     - Bugfix: quantize arp? so it always starts right, especially between changing divisions
 
     - Add midi_task() alongside usb_midi_task(). 
