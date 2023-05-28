@@ -29,8 +29,16 @@ struct PRESET {
         uint16_t range = 0;
         uint16_t direction = 0;
     };
+    struct Flt {
+        bool state = true;
+        uint16_t cutoff = 1023;
+        uint16_t resonance = 0;
+        uint16_t punch = 0;
+        uint16_t type = 0;
+    };
     Wav Wave;
     Env Envelope;
     Lfo Modulation;
     Arp Arpeggiator;
+    Flt Filter;
 };

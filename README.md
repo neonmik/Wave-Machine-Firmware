@@ -6,15 +6,16 @@ Current nightly firmware for Beep Machine Hardware.
 Updates and Bugfixes:
 
 - Filter:
+    - Write new Cutoff LUT as half the range is wasted on the same value. 
     - Add ADSR functions.
     - Add modulation inputs for controls.
-    - Bigfix: fix inputs for controls (Cutoff, Resonance, Type, Punch):- needs the ranges fixing at the minute. 
+    - Bugfix: fix inputs for controls (Cutoff, Resonance, Type, Punch):- needs the ranges fixing at the minute. 
 
 
 - Multicore
     
-    - Test swapping the cores back now I've proved 15~ voices on core0.
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
+    - ???? Test swapping the cores back now I've proved 15~ voices on core0.
 
 - Improve Contorls funtionality:
     - Time to add shift functions!
@@ -56,6 +57,8 @@ Updates and Bugfixes:
     - Add dynamic setting of MIDI timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
     
     - Bugfix: quantize arp? so it always starts right, especially between changing divisions
+
+    - Add MIDI Clock out. Needs to be 24ppqn, and have high priority timing wise, and obvs be in sync with the synth... (last bit might be more tricky).
 
     
 
@@ -200,6 +203,7 @@ Things already implemented:
     + USB-MIDI is now functional! 
 
 + Filter:
+    + Controls are now all there (Cutoff, Resonance, Punch, Type) currently accessable by holding shift on the main page.
     + Started adding controls for inputs.
     + Filter is now functional!
     + Added a rough working filter! Didn't think it was possible, so very excited. Thanks to pichenettes. 

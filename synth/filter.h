@@ -37,7 +37,7 @@ namespace FILTER {
         4485,   4751,   5033,   5332,
         5648,   5983,   6337,   6713,
         7111,   7532,   7978,   8449,
-        8949,   9477,  10037,  10628,
+        8949,   9477,   10037,  10628,
         11254,  11916,  12616,  13356,
         14138,  14964,  15837,  16758,
         17730,  18756,  19837,  20975,
@@ -145,6 +145,7 @@ namespace FILTER {
     };
     
     enum FilterType {
+        Off,
         LowPass,
         BandPass,
         HighPass
@@ -191,7 +192,7 @@ namespace FILTER {
     void set_frequency(uint16_t frequency);
     void set_resonance(uint16_t resonance);
     void set_punch(uint16_t punch);
-    void set_mode(FilterType mode);
+    void set_mode(uint16_t mode);
     int32_t process(int32_t input);
 
     void trigger (void);

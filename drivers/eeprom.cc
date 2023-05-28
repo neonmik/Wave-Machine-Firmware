@@ -67,13 +67,22 @@ namespace EEPROM {
         buffer[33] = preset.Arpeggiator.range & 0xFF;
         buffer[34] = (preset.Arpeggiator.direction >> 8) & 0xFF;
         buffer[35] = preset.Arpeggiator.direction & 0xFF;
+        buffer[36] = preset.Filter.state;
+        buffer[37] = (preset.Filter.cutoff >> 8) & 0xFF;
+        buffer[38] = preset.Filter.cutoff & 0xFF;
+        buffer[39] = (preset.Filter.resonance >> 8) & 0xFF;
+        buffer[40] = preset.Filter.resonance & 0xFF;
+        buffer[41] = (preset.Filter.punch >> 8) & 0xFF;
+        buffer[42] = preset.Filter.punch & 0xFF;
+        buffer[43] = (preset.Filter.type >> 8) & 0xFF;
+        buffer[44] = preset.Filter.type & 0xFF;
         // maybe add some sort of padding here? 
         // 0xAF = After
         // 0xBE = Before
         // buffer[36] = 0xAF;
         // buffer[37] = 0xAF;
 
-        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, PAGE_SIZE + 2, false);
+        i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + PAGE_SIZE, false);
 
         printf("Preset saved to EEPROM at address: %d\n", address);
 
@@ -112,11 +121,11 @@ namespace EEPROM {
         address_buffer[0] = ((preset_address >> 8) & 0xFF);
         address_buffer[1] = (preset_address & 0xFF);
 
-        uint8_t preset_buffer[sizeof(PRESET)] = {0};
+        uint8_t preset_buffer[PAGE_SIZE] = {0};
         // uint8_t preset_buffer[PAGE_SIZE] = {0};
 
         i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, address_buffer, ADDRESS_SIZE, false);
-        i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, preset_buffer, sizeof(PRESET), false);
+        i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, preset_buffer, PAGE_SIZE, false);
 
         preset.Wave.shape = (preset_buffer[0] << 8) | preset_buffer[1];
         preset.Wave.vector = (preset_buffer[2] << 8) | preset_buffer[3];
@@ -139,6 +148,12 @@ namespace EEPROM {
         preset.Arpeggiator.divisions = (preset_buffer[28] << 8) | preset_buffer[29];
         preset.Arpeggiator.range = (preset_buffer[30] << 8) | preset_buffer[31];
         preset.Arpeggiator.direction = (preset_buffer[32] << 8) | preset_buffer[33];
+
+        preset.Filter.state = preset_buffer[34];
+        preset.Filter.cutoff = (preset_buffer[35] << 8) | preset_buffer[36];
+        preset.Filter.resonance = (preset_buffer[37] << 8) | preset_buffer[38];
+        preset.Filter.punch = (preset_buffer[39] << 8) | preset_buffer[40];
+        preset.Filter.type = (preset_buffer[41] << 8) | preset_buffer[42];
         
         // printf("Preset %d read from EEPROM!\n", slot);
         // printf("Memory Location: %d\n\n", preset_address);

@@ -74,6 +74,13 @@ namespace UI {
     return _preset;
   }
 
+void set_shift (bool shift) {
+  if (_shift != shift) {
+    CONTROLS::toggle_shift();
+    _shift = shift;
+  }
+}
+
   // ----------------------
   //        HARDWARE
   // ----------------------
@@ -117,6 +124,8 @@ namespace UI {
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
                 toggle_lfo();
             }
+            set_shift(Buttons::PRESET.get(Buttons::State::SHIFT));
+
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();

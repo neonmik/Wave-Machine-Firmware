@@ -45,6 +45,11 @@ namespace CONTROLS {
         Preset[preset].Arpeggiator.divisions = Control.get(3, 1);
         Preset[preset].Arpeggiator.range = Control.get(3, 2);
         Preset[preset].Arpeggiator.direction = Control.get(3, 3);
+
+        Preset[preset].Filter.cutoff = Control.get(4,0);
+        Preset[preset].Filter.resonance = Control.get(4,1);
+        Preset[preset].Filter.punch = Control.get(4,2);
+        Preset[preset].Filter.type = Control.get(4,3);
         
         EEPROM::savePreset(preset, Preset[preset]);
     }
@@ -73,6 +78,12 @@ namespace CONTROLS {
         Control.set(3, 1, Preset[preset].Arpeggiator.divisions);
         Control.set(3, 2, Preset[preset].Arpeggiator.range);
         Control.set(3, 3, Preset[preset].Arpeggiator.direction);
+
+        // Control.set_filter(Preset[preset].Filter.state);
+        Control.set(4, 0, Preset[preset].Filter.cutoff);
+        Control.set(4, 1, Preset[preset].Filter.resonance);
+        Control.set(4, 2, Preset[preset].Filter.punch);
+        Control.set(4, 3, Preset[preset].Filter.type);
 
         _changed = true;
     
@@ -132,6 +143,14 @@ namespace CONTROLS {
     }
     bool get_arp () {
         return Control.get_arp();
+    }
+
+    void toggle_shift (void) {
+        _changed = true;
+        _shift != _shift;
+    }
+    bool get_shift (void) {
+        return _shift;
     }
     
     void update () {

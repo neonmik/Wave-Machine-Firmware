@@ -4,21 +4,21 @@ namespace FILTER {
     void init() {
         lp_ = 0;
         bp_ = 0;
-        frequency_ = 33 << 7;
-        resonance_ = 16384;
+        frequency_ = 0 << 7;
+        resonance_ = 0;
         dirty_ = true;
         punch_ = 0;
         mode_ = LowPass;
     }
 
     void set_frequency(uint16_t frequency) {
-        int16_t temp = map_exp(frequency, KNOB_MIN, KNOB_MAX, 1, 10000); // seems 0-16000 is functional range...
+        int16_t temp = (frequency << 4); // uses a lut on the other side - need tp rework to expand range
         dirty_ = dirty_ || (frequency_ != temp);
         frequency_ = temp;
     }
 
     void set_resonance(uint16_t resonance) {
-        int temp = map(resonance, KNOB_MIN, KNOB_MAX, 0, INT16_MAX);
+        int16_t temp = map(resonance, KNOB_MIN, KNOB_MAX, 0, INT16_MAX);
         resonance_ = temp;
         dirty_ = true;
     }
@@ -28,8 +28,24 @@ namespace FILTER {
         punch_ = (punch >> 4);
     }
 
-    void set_mode(FilterType mode) {
-        mode_ = mode;
+    void set_mode(uint16_t mode) {
+        uint8_t index = (mode>>8);
+        switch (index) {
+        case 0:
+            mode_ = FilterType::Off;
+            break;
+        case 1:
+            mode_ = FilterType::LowPass;
+            break;
+        case 2:
+            mode_ = FilterType::BandPass;
+            break;
+        case 3:
+            mode_ = FilterType::HighPass;
+            break;
+        default:
+            break;
+        }
     }
 
     int32_t process(int32_t input) {
@@ -53,7 +69,18 @@ namespace FILTER {
         int32_t hp = notch - lp_;
         bp_ += f * hp >> 15;
         CLIP(bp_)
-        return mode_ == BandPass ? bp_ : (mode_ == HighPass ? hp : lp_);
+        switch (mode_) {
+            case Off:
+                return input;
+            case LowPass:
+                return lp_;
+            case BandPass:
+                return bp_;
+            case HighPass:
+                return hp;
+            default:
+                return input;
+        }
     }
 
 
