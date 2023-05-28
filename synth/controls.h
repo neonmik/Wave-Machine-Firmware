@@ -7,6 +7,7 @@
 #include "preset.h"
 
 #include "synth.h"
+#include "filter.h"
 #include "modulation.h"
 #include "arp.h"
 
@@ -85,6 +86,7 @@ namespace CONTROLS {
             ~CONTROL () { }
 
             Page    MAIN {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,        nullptr};
+            // Page    MAIN {&FILTER::set_frequency,    &FILTER::set_resonance,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,        nullptr};
             Page    ADSR {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,            nullptr};
             Page    MOD1 {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
             Page    ARP  {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,            ARP::set_state};

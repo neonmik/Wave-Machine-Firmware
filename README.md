@@ -5,16 +5,23 @@ Current nightly firmware for Beep Machine Hardware.
 
 Updates and Bugfixes:
 
+- Filter:
+    - Add ADSR functions.
+    - Add modulation inputs for controls.
+    - Bigfix: fix inputs for controls (Cutoff, Resonance, Type, Punch):- needs the ranges fixing at the minute. 
+
+
 - Multicore
     
     - Test swapping the cores back now I've proved 15~ voices on core0.
-
     - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
 
 - Improve Contorls funtionality:
-    
-    - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
+    - Time to add shift functions!
+        - Add in functions for MOD (ADSR via shift?)  
+        - Add in functions for Filter (with its ADSR via shift?)
 
+    - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
     - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
     
 - Improve Oscillator script - current bugs include:
@@ -191,3 +198,8 @@ Things already implemented:
         + Decay (CC75)
     + Added basic functions for testing (Note On, Note Off and Clock) all proven. 
     + USB-MIDI is now functional! 
+
++ Filter:
+    + Started adding controls for inputs.
+    + Filter is now functional!
+    + Added a rough working filter! Didn't think it was possible, so very excited. Thanks to pichenettes. 

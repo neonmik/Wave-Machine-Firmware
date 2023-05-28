@@ -52,7 +52,8 @@ namespace NOTE_PRIORITY {
   }
   void voices_panic() {
     for (int i = 0; i < 8; i++) {
-      // sendNoteOff(SYNTH::channels[i].note) // put MIDI note out here
+      // for MIDI Out use:-
+      // MIDI::sendNoteOff(SYNTH::channels[i].note, 0); // Needs reworking for multcore
       SYNTH::voice_off(i);
     }
   }

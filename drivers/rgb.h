@@ -23,6 +23,9 @@ namespace RGB_LED {
                 
                 pwm_set_gpio_level(pin, 0);
                 pwm_set_enabled(slice_num, true);
+
+                gpio_set_slew_rate(pin, gpio_slew_rate::GPIO_SLEW_RATE_SLOW);
+                gpio_set_drive_strength(pin, GPIO_DRIVE_STRENGTH_2MA);
             }
             void pwm_output_polarity (void) {
                 uint slice_num0 = pwm_gpio_to_slice_num(_pin[0]);

@@ -41,6 +41,7 @@ namespace SYNTH {
 
   Voices channels[MAX_VOICES];
 
+
   void voice_on (uint8_t voice, uint8_t note, uint16_t frequency) {
     channels[voice].note_on(note, frequency);
   }
@@ -54,6 +55,7 @@ namespace SYNTH {
     _sample_rate = sample_rate;
 
     MOD::init();
+    FILTER::init();
   }
 
   
@@ -196,23 +198,22 @@ namespace SYNTH {
           // apply channel volume
           channel_sample = (int32_t(channel_sample) * int32_t(channel.volume)) >> 16;
 
-          // apply channel filter
-          // if (filter_enable) {
-          //   channel_sample += (channel_sample - channel.filter_last_sample) * filter_epow;
-          // }
-
-          // channel.filter_last_sample = channel_sample;
-
           sample += channel_sample;
         }
       }
+
+
+
       sample = (int32_t(sample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
-      //attempt at soft clipping - doesnt work
-      // sample = ((sample + (sample>>1))-10) * sample - ((sample>>1)-10) * sample * sample * sample;
+      // working filter, have to define controls.
+      // sample = (FILTER::process(sample));
 
-      // clip result to 16-bit
+      // add soft soft clipping?
+
+      // hard clipping to 16-bit
       sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
+      
       // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
       return (sample - INT16_MIN)>>4;
     }
