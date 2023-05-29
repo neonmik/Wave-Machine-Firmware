@@ -831,12 +831,12 @@ const int16_t* const lfo_wavetable[] = {
     sawtooth_down_lfo_table,
     square_lfo_table,
     triangle_lfo_table,
-    random_lfo_table,
+    random_lfo_table
 };
 
 
 inline int16_t get_mod_wavetable  (uint16_t index) {
-    if (index >= 1536) index -= 1536;
+    if (index >= 1536) index -= 1536; 
     uint16_t tableIndex = index / 256;  // Determine the index of the table in wavetable
     uint16_t elementIndex = index % 256; // Determine the index within the table
 

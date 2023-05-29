@@ -49,7 +49,8 @@
 			"functional": "cpp",
 			"tuple": "cpp",
 			"utility": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"algorithm": "cpp"
 		},
 		"cortex-debug.variableUseNaturalFormat": true,
 		"cortex-debug.registerUseNaturalFormat": true

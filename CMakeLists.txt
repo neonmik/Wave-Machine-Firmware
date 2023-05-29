@@ -46,6 +46,7 @@ add_executable(${PROJECT_NAME}
     synth/controls.cc
     synth/synth.cc
     
+    synth/fx.cc
     synth/filter.cc
     
     # synth/oscillator.cc

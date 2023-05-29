@@ -48,7 +48,7 @@ namespace FILTER {
         }
     }
 
-    int32_t process(int32_t input) {
+    void process(int32_t &sample) {
         
         if (dirty_) {
             f_ = Interpolate824(lut_svf_cutoff, frequency_ << 17);
@@ -63,7 +63,7 @@ namespace FILTER {
             damp += ((punch_signal - 2048) >> 3);
         }
 
-        int32_t notch = input - (bp_ * damp >> 15);
+        int32_t notch = sample - (bp_ * damp >> 15);
         lp_ += f * bp_ >> 15;
         CLIP(lp_)
         int32_t hp = notch - lp_;
@@ -71,15 +71,20 @@ namespace FILTER {
         CLIP(bp_)
         switch (mode_) {
             case Off:
-                return input;
+                sample = sample;
+                break;
             case LowPass:
-                return lp_;
+                sample = lp_;
+                break;
             case BandPass:
-                return bp_;
+                sample = bp_;
+                break;
             case HighPass:
-                return hp;
+                sample = hp;
+                break;
             default:
-                return input;
+                sample = sample;
+                break;
         }
     }
 

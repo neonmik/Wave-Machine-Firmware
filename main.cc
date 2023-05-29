@@ -56,7 +56,7 @@ void core1_main() {
   }
 }
 
-int main() {
+ int main() {
 
   set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Not sure if the extra speed is needed to run the code, but it gives it a little headroom.
 

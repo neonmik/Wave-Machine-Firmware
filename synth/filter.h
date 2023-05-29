@@ -193,7 +193,7 @@ namespace FILTER {
     void set_resonance(uint16_t resonance);
     void set_punch(uint16_t punch);
     void set_mode(uint16_t mode);
-    int32_t process(int32_t input);
+    void process(int32_t &sample);
 
     void trigger (void);
     void release (void);

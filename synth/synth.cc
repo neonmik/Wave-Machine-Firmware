@@ -3,6 +3,7 @@
 
 #include "modulation.h"
 #include "filter.h"
+#include "fx.h"
 
 namespace SYNTH {
 
@@ -104,6 +105,7 @@ namespace SYNTH {
         DEBUG::breakpoint();
       }
       
+      // uint8_t voice_count = 0;
       
       for(int c = 0; c < MAX_VOICES; c++) {
 
@@ -111,7 +113,7 @@ namespace SYNTH {
 
         // check if any waveforms are active for this channel
         if(channel._active) {
-        
+          // voice_count++;
           // increment the waveform position counter. this provides an
           // Q16 fixed point value representing how far through
           // the current waveform we are
@@ -202,17 +204,20 @@ namespace SYNTH {
         }
       }
 
-
+      // Atempt at normalising the volume when theres less than 8 voices, currently is just quiest and then gets louder.
+      // if (!voice_count) voice_count = 1;
+      // sample = sample / voice_count;
 
       sample = (int32_t(sample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       // working filter, have to define controls.
-      sample = (FILTER::process(sample));
+      FILTER::process(sample);
 
       // add soft soft clipping?
+      FX::SOFTCLIP::process(sample);
 
       // hard clipping to 16-bit
-      sample = sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
+      FX::HARDCLIP::process(sample);
       
       // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
       return (sample - INT16_MIN)>>4;
@@ -280,4 +285,9 @@ namespace SYNTH {
   void modulate_vector (uint16_t vector_mod) {
     _vector_mod = vector_mod >> 6;
   }
+
 }
+
+
+
+    
