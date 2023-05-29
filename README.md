@@ -123,6 +123,7 @@ Things already implemented:
     + Keys
 
 + Oscillator bug fixes:
+    + Added soft clipping with adjustable (yet to be assigned) gain control.
     + Added functions for all software controls (mod params)
     + Added a softstart to the Oscillator code - stops it popping when turned on
     + Add functions for all hardware controls
