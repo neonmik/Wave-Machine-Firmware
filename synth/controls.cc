@@ -9,6 +9,7 @@ namespace CONTROLS {
 
         _preset = _default_preset;
         load_preset(_preset);
+        
     }
 
     void set_preset (uint8_t preset) {

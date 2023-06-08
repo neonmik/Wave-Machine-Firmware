@@ -28,6 +28,46 @@ namespace ADC {
         uint8_t _mux_address;
         uint32_t _sample[MAX_KNOBS];
         uint32_t _output;
+
+        inline void NO_filter (uint16_t reading, uint8_t index) {
+            _sample[index] = (reading >> 2);
+        }
+        inline void IIR_filter (uint16_t reading, uint8_t index) {
+            _sample[index] = _sample[index] - (_sample[index]>>2) + reading;
+        }
+        inline void FIR_filter (uint16_t reading, uint8_t index) {
+            // nothing to report yet...
+            // just do no filter for now and fire an error
+            NO_filter(reading, index);
+            printf("There is no FIR filter implemented yet! Saving as RAW data. Go check the ADC...");
+        }
+        inline void increment_mux_address (void) {
+            // sets the index to loop
+            _mux_address = (_mux_address + 1) % MAX_KNOBS;
+        }
+        void read_mux (void) {
+            gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
+
+            // sets mux pins
+            gpio_put(MUX_SEL_A, _mux_address & 1); 
+            gpio_put(MUX_SEL_B, (_mux_address >> 1) & 1);
+            gpio_put(MUX_SEL_C, (_mux_address >> 2) & 1);
+            gpio_put(MUX_SEL_D, (_mux_address >> 3) & 1);
+
+            // wait to read - allows settling time
+            asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+            
+            _adc_value = adc_read();
+
+            // puts SMPS back into PWM mode
+            gpio_put(23, 0); 
+
+            // zeros mux for keys
+            gpio_put(MUX_SEL_A, 0);
+            gpio_put(MUX_SEL_B, 0);
+            gpio_put(MUX_SEL_C, 0);
+            gpio_put(MUX_SEL_D, 0);
+        }
     }
     
     void init();

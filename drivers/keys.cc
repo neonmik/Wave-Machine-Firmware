@@ -25,16 +25,11 @@ namespace KEYS {
     gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
     gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
 
-    // printf("MUX_A: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_A));
-    // printf("MUX_B: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_B));
-    // printf("MUX_C: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_C));
-    // printf("MUX_D: %u\n", (uint8_t)gpio_get_drive_strength(MUX_SEL_D));
-
     // test lowering the drive strength
-    // gpio_set_drive_strength(MUX_SEL_A, GPIO_DRIVE_STRENGTH_2MA);
-    // gpio_set_drive_strength(MUX_SEL_B, GPIO_DRIVE_STRENGTH_2MA);
-    // gpio_set_drive_strength(MUX_SEL_C, GPIO_DRIVE_STRENGTH_2MA);
-    // gpio_set_drive_strength(MUX_SEL_D, GPIO_DRIVE_STRENGTH_2MA);
+    gpio_set_drive_strength(MUX_SEL_A, GPIO_DRIVE_STRENGTH_2MA);
+    gpio_set_drive_strength(MUX_SEL_B, GPIO_DRIVE_STRENGTH_2MA);
+    gpio_set_drive_strength(MUX_SEL_C, GPIO_DRIVE_STRENGTH_2MA);
+    gpio_set_drive_strength(MUX_SEL_D, GPIO_DRIVE_STRENGTH_2MA);
 
     // initiate pins for mux output
     gpio_init(MUX_OUT_0);
@@ -63,7 +58,6 @@ namespace KEYS {
     for (int i = 0; i < 16; i++) {
 
       // nop needed to stop the processor reading too quickly, the mux cant keep up...
-
       asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
       gpio_put(MUX_SEL_A, i & 1); 
       asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");

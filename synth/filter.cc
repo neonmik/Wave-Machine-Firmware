@@ -12,15 +12,16 @@ namespace FILTER {
     }
 
     void set_frequency(uint16_t frequency) {
-        int16_t temp = (frequency << 4); // uses a lut on the other side - need tp rework to expand range
-        dirty_ = dirty_ || (frequency_ != temp);
-        frequency_ = temp;
+        frequency_ = map_exp(frequency, KNOB_MIN, KNOB_MAX, 15, 10000);
     }
 
     void set_resonance(uint16_t resonance) {
-        int16_t temp = map(resonance, KNOB_MIN, KNOB_MAX, 0, INT16_MAX);
-        resonance_ = temp;
+        resonance_ = map(resonance, KNOB_MIN, KNOB_MAX, 0, INT16_MAX);
         dirty_ = true;
+    }
+
+    void modulate_cutoff(uint16_t cutoff) {
+        _mod = (cutoff >> 2);
     }
 
     void set_punch(uint16_t punch) {
@@ -51,11 +52,13 @@ namespace FILTER {
     void process(int32_t &sample) {
         
         if (dirty_) {
-            f_ = Interpolate824(lut_svf_cutoff, frequency_ << 17);
+            // f_ = Interpolate824(lut_svf_cutoff, frequency_ << 17);
+            // f_ = frequency_;
             damp_ = Interpolate824(lut_svf_damp, resonance_ << 17);
             dirty_ = false;
         }
-        int32_t f = f_;
+        int32_t f = frequency_ - _mod;
+        if (f <= 15) f = 15;
         int32_t damp = damp_;
         if (punch_) {
             int32_t punch_signal = lp_ > 4096 ? lp_ : 2048;
@@ -65,10 +68,14 @@ namespace FILTER {
 
         int32_t notch = sample - (bp_ * damp >> 15);
         lp_ += f * bp_ >> 15;
-        CLIP(lp_)
+        FX::HARDCLIP::process(lp_);
+        // FX::SOFTCLIP::process(lp_);
+        // CLIP(lp_)
         int32_t hp = notch - lp_;
         bp_ += f * hp >> 15;
-        CLIP(bp_)
+        FX::HARDCLIP::process(bp_);
+        // FX::SOFTCLIP::process(bp_);
+        // CLIP(bp_)
         switch (mode_) {
             case Off:
                 sample = sample;

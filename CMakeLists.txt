@@ -78,7 +78,7 @@ target_link_libraries(${PROJECT_NAME}
                         hardware_i2c
                         hardware_pio
                         hardware_timer
-                        hardware_flash
+                        # hardware_flash
 
                         tinyusb_device
                         tinyusb_board

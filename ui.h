@@ -39,13 +39,13 @@ namespace UI {
     }
     
     void set_page (uint8_t page);
-    uint8_t get_page_flag(void);
+    bool get_page_flag(void);
 
     void toggle_lfo(void);
-    uint8_t get_lfo(void);
+    bool get_lfo(void);
 
     void toggle_arp(void);
-    uint8_t get_arp(void);
+    bool get_arp(void);
 
     void change_preset(void);
     uint8_t get_preset(void);

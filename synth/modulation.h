@@ -9,6 +9,7 @@
 
 #include "synth.h"
 #include "arp.h"
+#include "filter.h"
 
 #include "wavetable.h"
 
@@ -61,7 +62,7 @@ namespace MOD {
                 {&SYNTH::modulate_vibrato,  OutputType::SIGNED,     Dither::FULL},
                 {&SYNTH::modulate_tremelo,  OutputType::UNSIGNED,   Dither::LOW},
                 {&SYNTH::modulate_vector,   OutputType::UNSIGNED,   Dither::LOW},
-                {&ARP::set_range,           OutputType::SIGNED,   Dither::OFF} // probably want something better here, but we'll see
+                {&FILTER::modulate_cutoff,  OutputType::UNSIGNED,   Dither::OFF} // probably want something better here, but we'll see
             };
             uint16_t uint16_output (int16_t input) {
                 return input - INT16_MIN; // Using modular arithmatic!
@@ -117,8 +118,8 @@ namespace MOD {
                 }
             }
             void set_rate (uint16_t rate) {
-                // uses map_exp to map the 10 bit knob values to an exponetial 0.1Hz to 500Hz
-                _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 5000));
+                // uses map_exp to map the 10 bit knob values to an exponetial 0.1Hz to 1000Hz
+                _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 10000));
                 
                 // Calculate the increment based on the scaled rate
                 _increment = (65535 * _rate) / (_sample_rate);
@@ -127,8 +128,10 @@ namespace MOD {
                 if (_increment < 1) _increment = 1;
             }
             void set_depth (uint16_t depth) {
-                // 10 bit depth setting
-                _depth = depth;
+                if (_depth != depth) {
+                    // 10 bit depth setting
+                    _depth = depth;
+                }
             }
             void set_shape (uint16_t wave) {
                 // map the 10 bit knob value to 0-5 (the amount of waveforms) and then map it to the wavetable size.
@@ -140,7 +143,6 @@ namespace MOD {
             
             void update () {
                 if (_state) {
-
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
                     _index = (_phase_accumulator >> 16); // Calculates the 8 bit index value for the wavetable and adds the offset
                     // printf("index: %d\n", _index);

@@ -50,7 +50,8 @@
 			"tuple": "cpp",
 			"utility": "cpp",
 			"variant": "cpp",
-			"algorithm": "cpp"
+			"algorithm": "cpp",
+			"unordered_map": "cpp"
 		},
 		"cortex-debug.variableUseNaturalFormat": true,
 		"cortex-debug.registerUseNaturalFormat": true

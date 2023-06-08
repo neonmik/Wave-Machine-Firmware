@@ -26,7 +26,7 @@ namespace LEDS {
             uint8_t     _pin;
             bool        _state;
 
-            void set (bool state) {
+            void put (bool state) {
                 gpio_put(_pin, state);
             }
 
@@ -42,15 +42,19 @@ namespace LEDS {
             }
             void on () {
                 _state = true;
-                set(_state);
+                put(_state);
             }
             void off (){
                 _state = false;
-                set(_state);
+                put(_state);
             }
             void toggle (void) {
                 _state = !_state;
-                set(_state);
+                put(_state);
+            }
+            void set (bool state) {
+                _state = state;
+                put(_state);
             }
             void flash (int repeats, int delay) {
                 for (int r = 0; r < repeats; r++) {
@@ -105,6 +109,11 @@ namespace LEDS {
             }
             void toggle (void) {
                 _state = !_state;
+                if (_state) on();
+                if (!_state) off();
+            }
+            void set (bool state) {
+                _state = state;
                 if (_state) on();
                 if (!_state) off();
             }

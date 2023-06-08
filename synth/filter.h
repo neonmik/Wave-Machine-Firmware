@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pico/stdlib.h"
 
 #include <math.h>
@@ -5,8 +7,9 @@
 #include "../config.h"
 #include "../functions.h"
 #include "resources.h"
+#include "fx.h"
 
-#define CLIP(x) if (x < -32767) x = -32767; if (x > 32767) x = 32767;
+// #define CLIP(x) if (x < -32767) x = -32767; if (x > 32767) x = 32767;
 namespace FILTER {
 
     const uint16_t lut_svf_cutoff[] = {
@@ -152,11 +155,12 @@ namespace FILTER {
     };
 
     namespace {
-
         bool dirty_;
 
         int16_t frequency_;
         int16_t resonance_;
+
+        uint16_t _mod;
 
         int32_t punch_;
         int32_t f_;
@@ -169,7 +173,7 @@ namespace FILTER {
         int32_t bpOutput;
         int32_t hpOutput;
 
-        int32_t feedback_ = 1;
+        // int32_t feedback_ = 1;
 
         FilterType mode_;
 

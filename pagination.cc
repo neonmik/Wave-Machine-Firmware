@@ -50,7 +50,7 @@ namespace PAGINATION {
         refresh();
       }
 
-      if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
+      if (Buttons::PAGE.get(Buttons::State::SHIFT)) {
         temp_page = (current_page + 4);
         refresh();
       } else {

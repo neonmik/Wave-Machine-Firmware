@@ -17,6 +17,11 @@ namespace ADC {
         gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
         gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
 
+        gpio_set_drive_strength(MUX_SEL_A, GPIO_DRIVE_STRENGTH_2MA);
+        gpio_set_drive_strength(MUX_SEL_B, GPIO_DRIVE_STRENGTH_2MA);
+        gpio_set_drive_strength(MUX_SEL_C, GPIO_DRIVE_STRENGTH_2MA);
+        gpio_set_drive_strength(MUX_SEL_D, GPIO_DRIVE_STRENGTH_2MA);
+
         // adc pin setup
         adc_gpio_init(MUX_OUT_ADC);
         adc_init();
@@ -30,41 +35,27 @@ namespace ADC {
         }
     }
     void update() {
-        gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
-
-        // sets mux pins
-        gpio_put(MUX_SEL_A, _mux_address & 1); 
-        gpio_put(MUX_SEL_B, (_mux_address >> 1) & 1);
-        gpio_put(MUX_SEL_C, (_mux_address >> 2) & 1);
-        gpio_put(MUX_SEL_D, (_mux_address >> 3) & 1);
-
-        // wait to read - allows settling time
-        asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
+        
+        read_mux();
         
         // No filter
         // passes last actual sample to a buffer
-        // _values[_mux_address] = (adc_read()>>2);
+        // NO_filter(_adc_value, _mux_address);
         
         // IIR filter
         // filters new sample with old sample
-        _adc_value = adc_read();
-        _adc_noise = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
-        RANDOM::update(_adc_noise);
-        _sample[_mux_address] = _sample[_mux_address] - (_sample[_mux_address]>>2) + _adc_value;
+        IIR_filter(_adc_value, _mux_address);
+
+        // FIR filter - to Be Imlpemented
+        // FIR_filter(_adc_value, _mux_address);
+        
         // moves filtered sample to the adc array
         _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 12, 4095, KNOB_MIN, KNOB_MAX);
+        
+        _adc_noise = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
+        RANDOM::update(_adc_noise);
 
-        // sets the index to loop
-        _mux_address = (_mux_address + 1) % MAX_KNOBS;
-
-        // puts SMPS back into PWM mode
-        gpio_put(23, 0); 
-
-        // zeros mux for keys
-        gpio_put(MUX_SEL_A, 0);
-        gpio_put(MUX_SEL_B, 0);
-        gpio_put(MUX_SEL_C, 0);
-        gpio_put(MUX_SEL_D, 0);
+        increment_mux_address();
     }
     
     uint16_t value(int knob) {

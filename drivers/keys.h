@@ -46,8 +46,13 @@ namespace KEYS {
             
             uint8_t     history_index;
 
+            uint8_t _mux_address;
+
             
-            
+            inline void increment_mux_address (void) {
+                // sets the index to loop
+                _mux_address = (_mux_address + 1) % 16;
+            }
 
             uint32_t reverse(uint32_t input) {
                 uint32_t output = 0;

@@ -36,10 +36,10 @@ namespace UI {
   }
  
   void toggle_lfo(void) {
-    LEDS::LFO.toggle();
     CONTROLS::toggle_lfo();
+    LEDS::LFO.set(CONTROLS::get_lfo());
   }
-  uint8_t get_lfo(void) {
+  bool get_lfo(void) {
     return CONTROLS::get_lfo();
   }
 
@@ -52,10 +52,10 @@ namespace UI {
 
   
   void toggle_arp(void) {
-    LEDS::ARP.toggle();
     CONTROLS::toggle_arp();
+    LEDS::ARP.set(CONTROLS::get_arp());
   }
-  uint8_t get_arp(void) {
+  bool get_arp(void) {
     return CONTROLS::get_arp();
   }
 
@@ -101,6 +101,9 @@ void set_shift (bool shift) {
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) test(30);
 
+    LEDS::LFO.set(get_lfo());
+    LEDS::ARP.set(get_arp());
+
     poll_index = 0;
   }
 
@@ -124,7 +127,7 @@ void set_shift (bool shift) {
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
                 toggle_lfo();
             }
-            set_shift(Buttons::PRESET.get(Buttons::State::SHIFT));
+            set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
 
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);

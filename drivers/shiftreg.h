@@ -18,10 +18,6 @@ enum SRPins : uint8_t {
         SR_LATCH    = 20,
         SR_DATA_WIDTH = 8
 };
-#define SR_DATA_WIDTH   8
-#define SR_DATA         18
-#define SR_CLK          19
-#define SR_LATCH        20
 
 enum Pins : uint8_t {
         ALL     = 255,
@@ -39,7 +35,6 @@ enum Pins : uint8_t {
 };
 
 
-
 namespace ShiftReg {
     namespace {
         uint8_t     _buffer[8];
@@ -54,8 +49,6 @@ namespace ShiftReg {
     }
 
     void init();
-    // ShiftReg::update(); call to shift out, but without any data handling, just taking the buffer and pushing it out the door...
-    // can be used to update the shiftregister so many times a second (for fauxPWM or to reduce load on MCU), or whenever needed.
     void update (void);
     void set (Pins pins);
     void on (void);

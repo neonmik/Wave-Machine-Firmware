@@ -4,6 +4,14 @@
 
 namespace ShiftReg {
     void init() {
+        gpio_set_drive_strength(SRPins::SR_CLK, GPIO_DRIVE_STRENGTH_2MA);
+        gpio_set_drive_strength(SRPins::SR_DATA, GPIO_DRIVE_STRENGTH_2MA);
+        gpio_set_drive_strength(SRPins::SR_LATCH, GPIO_DRIVE_STRENGTH_2MA);
+
+        gpio_set_slew_rate(SRPins::SR_CLK, GPIO_SLEW_RATE_SLOW);
+        gpio_set_slew_rate(SRPins::SR_DATA, GPIO_SLEW_RATE_SLOW);
+        gpio_set_slew_rate(SRPins::SR_LATCH, GPIO_SLEW_RATE_SLOW);
+
         sn74595::shiftreg_init();
     }
     void update() {

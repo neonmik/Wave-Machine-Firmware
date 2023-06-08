@@ -2,7 +2,7 @@
 
 #include "string.h"
 #include "pico/stdlib.h"
-#include "hardware/sync.h"
+// #include "hardware/sync.h"
 
 #include "preset.h"
 
@@ -12,7 +12,6 @@
 #include "arp.h"
 
 #include "../drivers/eeprom.h"
-// #include "../mailbox.h"
 
 #define MAX_PRESETS     8
 
