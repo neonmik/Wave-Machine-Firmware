@@ -6,7 +6,10 @@
 
 #include "../config.h"
 #include "../functions.h"
+
 #include "resources.h"
+
+#include "adsr.h"
 #include "fx.h"
 
 // #define CLIP(x) if (x < -32767) x = -32767; if (x > 32767) x = 32767;
@@ -173,6 +176,15 @@ namespace FILTER {
         int32_t bpOutput;
         int32_t hpOutput;
 
+        uint32_t   _attack;
+        uint32_t   _decay;
+        uint32_t   _sustain;
+        uint32_t   _release;
+        uint16_t   _last_attack = 1024;
+        uint16_t   _last_decay = 1024;
+        uint16_t   _last_sustain = 1024;
+        uint16_t   _last_release = 1024;
+
         // int32_t feedback_ = 1;
 
         FilterType mode_;
@@ -189,9 +201,17 @@ namespace FILTER {
             return (a << 8) + \
                 ((b - a) * static_cast<int32_t>(phase & 0xffffff) >> 16) - 32768;
         }
-        
+
+        uint32_t calc_end_frame (uint32_t milliseconds) {
+            return (milliseconds * SAMPLE_RATE) / 1000;
+        }
+
+
     }
     
+
+    extern ADSREnvelope ADSR;
+
     void init();
     void set_frequency(uint16_t frequency);
     void set_resonance(uint16_t resonance);
@@ -199,8 +219,13 @@ namespace FILTER {
     void set_mode(uint16_t mode);
     void process(int32_t &sample);
 
-    void trigger (void);
-    void release (void);
+    void set_attack (uint16_t attack);
+    void set_decay (uint16_t decay);
+    void set_sustain (uint16_t sustain);
+    void set_release (uint16_t release);
+
+    void trigger_attack (void);
+    void trigger_release (void);
 
     void modulate_cutoff(uint16_t cutoff);
     void modulate_resonance(uint16_t resonance);

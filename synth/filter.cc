@@ -1,6 +1,9 @@
 #include "filter.h"
 
 namespace FILTER {
+
+    ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
+
     void init() {
         lp_ = 0;
         bp_ = 0;
@@ -49,7 +52,37 @@ namespace FILTER {
         }
     }
 
+    void set_attack (uint16_t attack) {
+        if (attack == _last_attack) return;
+        _last_attack = attack;
+        _attack = calc_end_frame((attack<<2)+2);
+    }
+    void set_decay (uint16_t decay) {
+        if (decay == _last_decay) return;
+        _last_decay = decay;
+        _decay = calc_end_frame((decay<<2)+2);
+    }
+    void set_sustain (uint16_t sustain) {
+        if (sustain == _last_sustain) return;
+        _last_sustain = sustain;
+        _sustain = (sustain << 6);
+    }
+    void set_release (uint16_t release) {
+        if (release == _last_release) return;
+        _last_release = release;
+        _release = calc_end_frame((release<<2)+2);
+    }
+
+    void trigger_attack (void) {
+        ADSR.trigger_attack();
+    }
+    void trigger_release (void) {
+        ADSR.trigger_release();
+    }
+
     void process(int32_t &sample) {
+        ADSR.update();
+        //   if (ADSR.isStopped());
         
         if (dirty_) {
             // f_ = Interpolate824(lut_svf_cutoff, frequency_ << 17);
@@ -57,8 +90,10 @@ namespace FILTER {
             damp_ = Interpolate824(lut_svf_damp, resonance_ << 17);
             dirty_ = false;
         }
-        int32_t f = frequency_ - _mod;
-        if (f <= 15) f = 15;
+        volatile int32_t f;
+        f = (int32_t(frequency_) * int32_t(ADSR.get_adsr() >> 8)) >> 16;
+        
+        // if (f <= 15) f = 15;
         int32_t damp = damp_;
         if (punch_) {
             int32_t punch_signal = lp_ > 4096 ? lp_ : 2048;

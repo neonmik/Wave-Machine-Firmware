@@ -90,7 +90,7 @@ namespace CONTROLS {
             Page    MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
             Page    ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
             Page    FILT    {&FILTER::set_frequency,   &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
-            // Page    mADSR   {&FILTER::set_frequency,   &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
+            Page    fADSR   {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
 
             void init (void) { }
 
@@ -111,6 +111,9 @@ namespace CONTROLS {
                     case 4:
                         FILT.set(control, input);
                         break;
+                    case 5:
+                        fADSR.set(control, input);
+                        break;
                 }
             }
             uint16_t get (uint8_t page, uint16_t control) {
@@ -126,6 +129,9 @@ namespace CONTROLS {
                         return ARP.get(control);
                     case 4:
                         return FILT.get(control);
+                    case 5:
+                        return fADSR.get(control);
+                        break;
                     default:
                         return 0;
                 }
@@ -156,6 +162,7 @@ namespace CONTROLS {
                 MOD1.update();
                 ARP.update();
                 FILT.update();
+                fADSR.update();
             }
     };
     

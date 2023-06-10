@@ -16,10 +16,10 @@ namespace NOTE_PRIORITY {
       if (_voices_active > 8) {
         _voices_active = 8;
       }
-      // if (_voices_active) {
-      //   MOD::trigger_attack();
-      //   // FILTER::trigger_attack();
-      // }
+      if (_voices_active) { // re-triggers on every new note
+        // MOD::trigger_attack();
+        FILTER::trigger_attack();
+      }
 
       // for MIDI Out use: - here so that the arp can output MIDI
       // MIDI::sendNoteOn(note, velocity); // Needs reworking for multcore
@@ -33,13 +33,10 @@ namespace NOTE_PRIORITY {
   void voice_off(int slot, int note, int velocity) {
     // for future MOD/Filter ADSR
     --_voices_active;
-    if (_voices_active < 0) {
+    if (_voices_active <= 0) {
       _voices_active = 0;
+      FILTER::trigger_release();
     }
-    // if (_voices_active) {
-    //   MOD::trigger_release();
-    //   // FILTER::trigger_release();
-    // }
 
     // printf("Voice Off:      %d\n", slot);
     // printf("Note:           %d\n", note);

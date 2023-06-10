@@ -4,7 +4,7 @@
 namespace MOD {
 
 
-    Modulation LFO(48000);
+    Modulation LFO(SAMPLE_RATE);
 
     void init () {
         LFO.set_matrix(0);
@@ -32,4 +32,6 @@ namespace MOD {
     void set_shape (uint16_t input) {
         LFO.set_shape(input);
     }
+
+
 }
