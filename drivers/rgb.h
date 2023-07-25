@@ -9,6 +9,9 @@
 #define    LEDG_PIN        7
 #define    LEDB_PIN        8
 
+#define    PWM_BIT_DEPTH   255 // or 65535
+
+
 namespace RGB_LED {
     
     class rgb {
@@ -18,14 +21,16 @@ namespace RGB_LED {
             bool        _state;
 
             void pwm_pin_init (int pin) {
-                gpio_set_function(pin, GPIO_FUNC_PWM);
                 uint slice_num = pwm_gpio_to_slice_num(pin);
-                
-                pwm_set_gpio_level(pin, 0);
-                pwm_set_enabled(slice_num, true);
 
+                gpio_set_function(pin, GPIO_FUNC_PWM);
                 gpio_set_slew_rate(pin, gpio_slew_rate::GPIO_SLEW_RATE_SLOW);
                 gpio_set_drive_strength(pin, GPIO_DRIVE_STRENGTH_2MA);
+                
+                pwm_set_gpio_level(pin, 0);
+                pwm_set_wrap(slice_num, PWM_BIT_DEPTH);
+                pwm_set_clkdiv(slice_num, 256.0f); // should be about 2.2KHz...  144MHz (core speed) / 256 (wrap) / 256 (clkdiv) = 2197.27
+                pwm_set_enabled(slice_num, true);
             }
             void pwm_output_polarity (void) {
                 uint slice_num0 = pwm_gpio_to_slice_num(_pin[0]);
@@ -48,11 +53,15 @@ namespace RGB_LED {
             ~rgb () { }
 
             void init (void) {
+
+
                 pwm_pin_init(_pin[0]);
                 pwm_pin_init(_pin[1]);
                 pwm_pin_init(_pin[2]);
 
-                pwm_output_polarity ();
+                pwm_output_polarity();
+
+
                 
                 clear_buffer();
                 set();

@@ -36,37 +36,42 @@ namespace MOD {
 
     class Modulation {
         private:
-            // main info
-            uint32_t _sample_rate;
+            // Remove:
+            // uint16_t _phase_fractional;
+            // uint32_t _frequency;
+            // const double RATE_SCALE_FACTOR = 0.1; // Define the scaling factor to convert 10-bit value to rate in Hz
+
 
             // oscillator variables
-        
-            uint32_t _increment;
-            uint32_t _phase_accumulator;
-            uint16_t _phase_fractional;
-            uint8_t _index;
-            int16_t  _sample;
 
-            uint32_t _frequency;
-            const double RATE_SCALE_FACTOR = 0.1; // Define the scaling factor to convert 10-bit value to rate in Hz
+            uint32_t    _sample_rate;
+
+            uint32_t    _increment;
+            uint32_t    _phase_accumulator;
+            uint8_t     _index;
+            int16_t     _sample;
+
             
             // control variables
-            bool     _state = false;
-            uint8_t  _matrix;
-            uint16_t _rate;
-            uint16_t _depth;
-            uint16_t  _wave;
+
+            bool        _state = false;
+            uint8_t     _matrix;
+            uint16_t    _rate;
+            uint16_t    _depth;
+            uint16_t    _wave;
             
             OutputDestinations _destination[4]{
                 // pointer of what to update, type of output, offset for output table
                 {&SYNTH::modulate_vibrato,  OutputType::SIGNED,     Dither::FULL},
                 {&SYNTH::modulate_tremelo,  OutputType::UNSIGNED,   Dither::LOW},
                 {&SYNTH::modulate_vector,   OutputType::UNSIGNED,   Dither::LOW},
-                {&FILTER::modulate_cutoff,  OutputType::UNSIGNED,   Dither::OFF} // probably want something better here, but we'll see
+                {nullptr,                   OutputType::UNSIGNED,   Dither::OFF} // probably want something ? here, but we'll see...
             };
+
             uint16_t uint16_output (int16_t input) {
                 return input - INT16_MIN; // Using modular arithmatic!
             }
+
             void reset_destination (uint8_t index) {
                 if (_destination[index].variable != NULL) {
                     switch (_destination[index].type) {
@@ -78,6 +83,7 @@ namespace MOD {
                     }
                 }
             }
+
             void reset (void) {
                 _index = 0;
                 _phase_accumulator = 0;
@@ -87,6 +93,7 @@ namespace MOD {
                     reset_destination(i);
                 }
             }
+            
         public:
             Modulation (uint32_t sample_rate) : _sample_rate(sample_rate) { }
             ~Modulation( ) { }
@@ -118,8 +125,12 @@ namespace MOD {
                 }
             }
             void set_rate (uint16_t rate) {
+                // uses a LUT for expoentially mapping 0-1023 to 1-10000 - giving us 0.1Hz to 1000Hz freq control. this saves a chunk of processing from calculating every time.
+                // so far, the measured response is 0.0028Hz - 
+                _rate = exp_freq(rate);
+
                 // uses map_exp to map the 10 bit knob values to an exponetial 0.1Hz to 1000Hz
-                _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 10000));
+                // _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 10000)); // gettng rid/swapping to LUT saved a ton of power...
                 
                 // Calculate the increment based on the scaled rate
                 _increment = (65535 * _rate) / (_sample_rate);
@@ -146,9 +157,9 @@ namespace MOD {
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
                     _index = (_phase_accumulator >> 16); // Calculates the 8 bit index value for the wavetable and adds the offset
                     // printf("index: %d\n", _index);
-                    _sample = get_mod_wavetable(_index + _wave); // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (steps of 256) values
-                    // really just for smoothing out 8 bit numbers over 0.01Hz
-
+                    _sample = get_mod_wavetable(_index + _wave); // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (chunks of 256) values
+                    
+                    // Applies a certain dither to the output - really just for smoothing out 8 bit numbers over 0.01Hz, but interesting for effects.
                     switch (_destination[_matrix].dither) {
                         case Dither::FULL:
                             if (_sample > 0) _sample -= (RANDOM::get()>>4);
@@ -167,7 +178,7 @@ namespace MOD {
                     }
                     
 
-                    // two different algoruthms for applying depth to the outputs, ensures always the number is centred round teh respective 0 mark for the destination. 
+                    // two different algoruthms for applying depth to the outputs, ensures always the number is centred round the appropriate 0 mark for the destination. 
                     switch (_destination[_matrix].type) {
                         case OutputType::UNSIGNED: {
                             _destination[_matrix].output = (uint16_output(_sample) * _depth) >> 10;

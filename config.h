@@ -13,6 +13,9 @@ constexpr   uint8_t     MAX_VOICES      =       8; // 8 is the "standard" value,
 constexpr   uint8_t     DEFAULT_BPM     =       120;
 
 constexpr   uint8_t     MIDI_CHANNEL    =       0;
+
+constexpr   uint8_t     DEFAULT_KEY     =       48;
+
 constexpr   uint16_t    KNOB_MIN        =       0;
 constexpr   uint16_t    KNOB_MAX        =       1023;
 

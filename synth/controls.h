@@ -24,7 +24,16 @@ namespace CONTROLS {
 
         uint8_t _default_preset = 0;
 
-        
+        enum Controls {
+            MAIN = 0,
+            ADSR = 1,
+            MOD  = 2,
+            ARP  = 3,
+            SHFT = 4,
+            fENV = 5,
+            FILT = 6
+        };
+           
     }
     class CONTROL {
         private:
@@ -74,7 +83,7 @@ namespace CONTROLS {
                     void update() {
                         if (_active && _changed) {
                             for (int i = 0; i < 4; i++) {
-                                _update_funcs[i](_input[i]);
+                                if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
                             }
                             _changed = false;
                         }
@@ -85,12 +94,21 @@ namespace CONTROLS {
             CONTROL () { }
             ~CONTROL () { }
 
-            Page    MAIN    {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,         nullptr};
-            Page    ADSR    {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,             nullptr};
-            Page    MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
-            Page    ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-            Page    FILT    {&FILTER::set_frequency,   &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
-            Page    fADSR   {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
+            Page        MAIN    {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,         nullptr};
+                // Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
+            
+            Page        ADSR    {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,             nullptr};
+                // Page    fENV    {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
+            
+            Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
+                Page    SHFT    {&FX::SOFTCLIP::set_gain,  nullptr,                    nullptr,                    nullptr,                         nullptr};
+            
+            Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
+                // Page    SHFT    {nullptr,                nullptr,                    nullptr,                    nullptr,                        nullptr};
+            
+            
+            
+            
 
             void init (void) { }
 
@@ -109,10 +127,13 @@ namespace CONTROLS {
                         ARP.set(control, input);
                         break;
                     case 4:
-                        FILT.set(control, input);
+                        // FILT.set(control, input);
                         break;
                     case 5:
-                        fADSR.set(control, input);
+                        // fENV.set(control, input);
+                        break;
+                    case 6:
+                        SHFT.set(control, input);
                         break;
                 }
             }
@@ -128,10 +149,11 @@ namespace CONTROLS {
                     case 3:
                         return ARP.get(control);
                     case 4:
-                        return FILT.get(control);
+                        // return FILT.get(control);
                     case 5:
-                        return fADSR.get(control);
-                        break;
+                        // return fENV.get(control);
+                    case 6:
+                        return SHFT.get(control);
                     default:
                         return 0;
                 }
@@ -161,8 +183,9 @@ namespace CONTROLS {
                 ADSR.update();
                 MOD1.update();
                 ARP.update();
-                FILT.update();
-                fADSR.update();
+                // FILT.update();
+                // fENV.update();
+                SHFT.update();
             }
     };
     

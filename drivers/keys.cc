@@ -1,7 +1,7 @@
 #include "keys.h"
 
 
-#include "../synth/arp.h"
+// #include "../synth/arp.h"
 
 
 namespace KEYS {
@@ -119,18 +119,25 @@ namespace KEYS {
 
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
-        note_on(i+48);
-        // here for now while I figure multicore setup.
-        MIDI::sendNoteOn(i+48, 127);
+        // To be removed
+        note_on(i + DEFAULT_KEY);
+        MIDI::sendNoteOn(i + DEFAULT_KEY, 127);
+        //
+
+        // NOTE_PRIORITY::note_on(i+48);
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
-        note_off(i+48);
-        // here for now while I figure multicore setup.
-        MIDI::sendNoteOff(i+48, 0);
+        // To be removed
+        note_off(i + DEFAULT_KEY);
+        MIDI::sendNoteOff(i + DEFAULT_KEY, 0);
+        //
+
+        // NOTE_PRIORITY::note_off(i+48);
       }
     }
+    // To be removed
     if (_changed) MAILBOX::NOTE_DATA.send();
-
+    //
 
     // Page
     if ( (!((keys>>PAGE_KEY) & 1)) &&  (((keys_last>>PAGE_KEY) & 1)) ){

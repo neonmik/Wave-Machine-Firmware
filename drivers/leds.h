@@ -68,16 +68,27 @@ namespace LEDS {
     };
     class Rgb {
 
-        uint16_t colours[24] = {
-            65534, 0, 0,          // Red
-            19018, 0, 46517,      // Purple
-            65535, 0, 8995,       // Pink
-            0, 29555, 38550,      // Teal
-            2570, 0, 65534,       // Blue
-            65534, 10023, 0,      // Orange
-            3855, 65535, 0,       // Green
-            65534, 25700, 23130   // Tutti Fruity
+        // uint16_t colours[24] = {
+        //     65534, 0, 0,          // Red
+        //     19018, 0, 46517,      // Purple
+        //     65535, 0, 8995,       // Pink
+        //     0, 29555, 38550,      // Teal
+        //     2570, 0, 65534,       // Blue
+        //     65534, 10023, 0,      // Orange
+        //     3855, 65535, 0,       // Green
+        //     65534, 25700, 23130   // Tutti Fruity
+        // };
+        uint8_t colours[24] = {
+            255,    0,      0,          // Red
+            74,     0,      181,         // Purple
+            255,    0,      35,         // Pink
+            0,      115,    150,        // Teal
+            10,     0,      255,         // Blue
+            255,    59,     0,         // Orange
+            15,     255,    0,         // Green
+            255,    100,    90        // Tutti Fruity
         };
+
         private:
             uint8_t _pins[3];
             uint16_t _colour[3];
@@ -126,8 +137,8 @@ namespace LEDS {
                 }  
             }
             void cycle (int speed) {  
-                // reset array to red incase wer'ee on a different colour
-                _colour[0] = 65535;
+                // reset array to red incase we're on a different colour
+                _colour[0] = PWM_BIT_DEPTH;
                 _colour[1] = 0;
                 _colour[2] = 0;  
 
@@ -136,7 +147,7 @@ namespace LEDS {
                     volatile int incColour = decColour == 2 ? 0 : decColour + 1;
 
                     // cross-fade the two colours.
-                    for(int i = 0; i < 65535; i += 1) {
+                    for(int i = 0; i < PWM_BIT_DEPTH; i += 1) {
                     _colour[decColour] -= 1;
                     _colour[incColour] += 1;
                     

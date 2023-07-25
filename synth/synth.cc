@@ -32,18 +32,19 @@ namespace SYNTH {
   uint16_t  _tremelo;
 
   uint16_t _pitch_scale = 511;
+  int16_t   _pitch_bend;
   uint16_t _last_pitch;
 
   uint8_t _octave = 0;
   uint16_t  _last_octave;
 
   uint16_t volume = 0xFFFF;
-  const int16_t sine_waveform[256] = {-32768,-32758,-32729,-32679,-32610,-32522,-32413,-32286,-32138,-31972,-31786,-31581,-31357,-31114,-30853,-30572,-30274,-29957,-29622,-29269,-28899,-28511,-28106,-27684,-27246,-26791,-26320,-25833,-25330,-24812,-24279,-23732,-23170,-22595,-22006,-21403,-20788,-20160,-19520,-18868,-18205,-17531,-16846,-16151,-15447,-14733,-14010,-13279,-12540,-11793,-11039,-10279,-9512,-8740,-7962,-7180,-6393,-5602,-4808,-4011,-3212,-2411,-1608,-804,0,804,1608,2411,3212,4011,4808,5602,6393,7180,7962,8740,9512,10279,11039,11793,12540,13279,14010,14733,15447,16151,16846,17531,18205,18868,19520,20160,20788,21403,22006,22595,23170,23732,24279,24812,25330,25833,26320,26791,27246,27684,28106,28511,28899,29269,29622,29957,30274,30572,30853,31114,31357,31581,31786,31972,32138,32286,32413,32522,32610,32679,32729,32758,32767,32758,32729,32679,32610,32522,32413,32286,32138,31972,31786,31581,31357,31114,30853,30572,30274,29957,29622,29269,28899,28511,28106,27684,27246,26791,26320,25833,25330,24812,24279,23732,23170,22595,22006,21403,20788,20160,19520,18868,18205,17531,16846,16151,15447,14733,14010,13279,12540,11793,11039,10279,9512,8740,7962,7180,6393,5602,4808,4011,3212,2411,1608,804,0,-804,-1608,-2411,-3212,-4011,-4808,-5602,-6393,-7180,-7962,-8740,-9512,-10279,-11039,-11793,-12540,-13279,-14010,-14733,-15447,-16151,-16846,-17531,-18205,-18868,-19520,-20160,-20788,-21403,-22006,-22595,-23170,-23732,-24279,-24812,-25330,-25833,-26320,-26791,-27246,-27684,-28106,-28511,-28899,-29269,-29622,-29957,-30274,-30572,-30853,-31114,-31357,-31581,-31786,-31972,-32138,-32286,-32413,-32522,-32610,-32679,-32729,-32758};
+  // const int16_t sine_waveform[256] = {-32768,-32758,-32729,-32679,-32610,-32522,-32413,-32286,-32138,-31972,-31786,-31581,-31357,-31114,-30853,-30572,-30274,-29957,-29622,-29269,-28899,-28511,-28106,-27684,-27246,-26791,-26320,-25833,-25330,-24812,-24279,-23732,-23170,-22595,-22006,-21403,-20788,-20160,-19520,-18868,-18205,-17531,-16846,-16151,-15447,-14733,-14010,-13279,-12540,-11793,-11039,-10279,-9512,-8740,-7962,-7180,-6393,-5602,-4808,-4011,-3212,-2411,-1608,-804,0,804,1608,2411,3212,4011,4808,5602,6393,7180,7962,8740,9512,10279,11039,11793,12540,13279,14010,14733,15447,16151,16846,17531,18205,18868,19520,20160,20788,21403,22006,22595,23170,23732,24279,24812,25330,25833,26320,26791,27246,27684,28106,28511,28899,29269,29622,29957,30274,30572,30853,31114,31357,31581,31786,31972,32138,32286,32413,32522,32610,32679,32729,32758,32767,32758,32729,32679,32610,32522,32413,32286,32138,31972,31786,31581,31357,31114,30853,30572,30274,29957,29622,29269,28899,28511,28106,27684,27246,26791,26320,25833,25330,24812,24279,23732,23170,22595,22006,21403,20788,20160,19520,18868,18205,17531,16846,16151,15447,14733,14010,13279,12540,11793,11039,10279,9512,8740,7962,7180,6393,5602,4808,4011,3212,2411,1608,804,0,-804,-1608,-2411,-3212,-4011,-4808,-5602,-6393,-7180,-7962,-8740,-9512,-10279,-11039,-11793,-12540,-13279,-14010,-14733,-15447,-16151,-16846,-17531,-18205,-18868,-19520,-20160,-20788,-21403,-22006,-22595,-23170,-23732,-24279,-24812,-25330,-25833,-26320,-26791,-27246,-27684,-28106,-28511,-28899,-29269,-29622,-29957,-30274,-30572,-30853,-31114,-31357,-31581,-31786,-31972,-32138,-32286,-32413,-32522,-32610,-32679,-32729,-32758};
 
-  Voices channels[MAX_VOICES];
+  Oscillators channels[MAX_VOICES];
 
 
-  void voice_on (uint8_t voice, uint8_t note, uint16_t frequency) {
+  void voice_on (uint8_t voice, uint8_t note, uint32_t frequency) {
     channels[voice].note_on(note, frequency);
   }
   void voice_off (uint8_t voice) {
@@ -99,25 +100,16 @@ namespace SYNTH {
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
       uint16_t output_volume = (volume - _tremelo);
-      if (output_volume < 0 || output_volume > 0xFFFF) {
-        DEBUG::overflow();
-        printf("Master Volume overflow!");
-        DEBUG::breakpoint();
-      }
-      
-      // uint8_t voice_count = 0;
       
       for(int c = 0; c < MAX_VOICES; c++) {
 
         auto &channel = channels[c];
-
         // check if any waveforms are active for this channel
         if(channel._active) {
-          // voice_count++;
-          // increment the waveform position counter. this provides an
-          // Q16 fixed point value representing how far through
-          // the current waveform we are
-          channel.waveform_offset += (((((channel._frequency * _pitch_scale) >>9) << _octave) << 8) <<8) / _sample_rate; //try <<8 instead of *256... also might be easier to shift 16? check it
+
+          // increment the waveform position counter.
+          channel.waveform_offset += (((((uint64_t)channel._frequency * _pitch_scale) >> 9) << _octave)) / _sample_rate;
+          // channel.waveform_offset += channel._frequency / _sample_rate;
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
           channel.waveform_offset += _vibrato;
@@ -180,6 +172,7 @@ namespace SYNTH {
           //   // }
           //   // waveform_count++;
           // }
+          
           if (oscillator & Oscillator::WAVETABLE) {
 
             // the wavetable sample contains 256 samples in
@@ -208,10 +201,10 @@ namespace SYNTH {
       // if (!voice_count) voice_count = 1;
       // sample = sample / voice_count;
 
-      sample = (int32_t(sample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
+      sample = (int32_t(sample >> 2) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       // working filter, have to define controls.
-      FILTER::process(sample);
+      // FILTER::process(sample);
 
       // add soft soft clipping?
       FX::SOFTCLIP::process(sample);
@@ -239,7 +232,7 @@ namespace SYNTH {
     _last_octave = octave;
   }
   void set_pitch_scale (uint16_t scale) {
-    // if (scale == _last_pitch) return;
+    if (scale == _last_pitch) return;
     _pitch_scale = get_pitch_log(scale);
     _last_pitch = scale;
   }

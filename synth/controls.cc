@@ -25,32 +25,41 @@ namespace CONTROLS {
     }
     void save_preset (uint8_t preset) {
 
-        Preset[preset].Wave.shape = Control.get(0, 0);
-        Preset[preset].Wave.vector = Control.get(0, 1);
-        Preset[preset].Wave.octave = Control.get(0, 2);
-        Preset[preset].Wave.pitch = Control.get(0, 3);
+        Preset[preset].Wave.shape = Control.get(Controls::MAIN, 0);
+        Preset[preset].Wave.vector = Control.get(Controls::MAIN, 1);
+        Preset[preset].Wave.octave = Control.get(Controls::MAIN, 2);
+        Preset[preset].Wave.pitch = Control.get(Controls::MAIN, 3);
 
-        Preset[preset].Envelope.attack = Control.get(1, 0);
-        Preset[preset].Envelope.decay = Control.get(1, 1);
-        Preset[preset].Envelope.sustain = Control.get(1, 2);
-        Preset[preset].Envelope.release = Control.get(1, 3);
+        Preset[preset].Envelope.attack = Control.get(Controls::ADSR, 0);
+        Preset[preset].Envelope.decay = Control.get(Controls::ADSR, 1);
+        Preset[preset].Envelope.sustain = Control.get(Controls::ADSR, 2);
+        Preset[preset].Envelope.release = Control.get(Controls::ADSR, 3);
 
         Preset[preset].Modulation.state = Control.get_lfo();
-        Preset[preset].Modulation.matrix = Control.get(2, 0);
-        Preset[preset].Modulation.rate = Control.get(2, 1);
-        Preset[preset].Modulation.depth = Control.get(2, 2);
-        Preset[preset].Modulation.wave = Control.get(2, 3);
+        Preset[preset].Modulation.matrix = Control.get(Controls::MOD, 0);
+        Preset[preset].Modulation.rate = Control.get(Controls::MOD, 1);
+        Preset[preset].Modulation.depth = Control.get(Controls::MOD, 2);
+        Preset[preset].Modulation.wave = Control.get(Controls::MOD, 3);
 
         Preset[preset].Arpeggiator.state = Control.get_arp();
-        Preset[preset].Arpeggiator.hold = Control.get(3, 0);
-        Preset[preset].Arpeggiator.divisions = Control.get(3, 1);
-        Preset[preset].Arpeggiator.range = Control.get(3, 2);
-        Preset[preset].Arpeggiator.direction = Control.get(3, 3);
+        Preset[preset].Arpeggiator.hold = Control.get(Controls::ARP, 0);
+        Preset[preset].Arpeggiator.divisions = Control.get(Controls::ARP, 1);
+        Preset[preset].Arpeggiator.range = Control.get(Controls::ARP, 2);
+        Preset[preset].Arpeggiator.direction = Control.get(Controls::ARP, 3);
 
-        Preset[preset].Filter.cutoff = Control.get(4,0);
-        Preset[preset].Filter.resonance = Control.get(4,1);
-        Preset[preset].Filter.punch = Control.get(4,2);
-        Preset[preset].Filter.type = Control.get(4,3);
+        Preset[preset].Filter.cutoff = Control.get(Controls::FILT, 0);
+        Preset[preset].Filter.resonance = Control.get(Controls::FILT, 1);
+        Preset[preset].Filter.punch = Control.get(Controls::FILT, 2);
+        Preset[preset].Filter.type = Control.get(Controls::FILT, 3);
+
+        Preset[preset].Filter.attack = Control.get(Controls::fENV, 0);
+        Preset[preset].Filter.decay = Control.get(Controls::fENV, 1);
+        Preset[preset].Filter.sustain = Control.get(Controls::fENV, 2);
+        Preset[preset].Filter.release = Control.get(Controls::fENV, 3);
+
+        Preset[preset].Effects.gain = Control.get(Controls::SHFT, 3);
+
+
         
         EEPROM::savePreset(preset, Preset[preset]);
     }
@@ -58,33 +67,43 @@ namespace CONTROLS {
 
         EEPROM::loadPreset(preset, Preset[preset]);
 
-        Control.set(0, 0, Preset[preset].Wave.shape);
-        Control.set(0, 1, Preset[preset].Wave.vector);
-        Control.set(0, 2, Preset[preset].Wave.octave);
-        Control.set(0, 3, Preset[preset].Wave.pitch);
+        Control.set(Controls::MAIN, 0, Preset[preset].Wave.shape);
+        Control.set(Controls::MAIN, 1, Preset[preset].Wave.vector);
+        Control.set(Controls::MAIN, 2, Preset[preset].Wave.octave);
+        Control.set(Controls::MAIN, 3, Preset[preset].Wave.pitch);
 
-        Control.set(1, 0, Preset[preset].Envelope.attack);
-        Control.set(1, 1, Preset[preset].Envelope.decay);
-        Control.set(1, 2, Preset[preset].Envelope.sustain);
-        Control.set(1, 3, Preset[preset].Envelope.release);
+        Control.set(Controls::ADSR, 0, Preset[preset].Envelope.attack);
+        Control.set(Controls::ADSR, 1, Preset[preset].Envelope.decay);
+        Control.set(Controls::ADSR, 2, Preset[preset].Envelope.sustain);
+        Control.set(Controls::ADSR, 3, Preset[preset].Envelope.release);
 
         Control.set_lfo(Preset[preset].Modulation.state);
-        Control.set(2, 0, Preset[preset].Modulation.matrix);
-        Control.set(2, 1, Preset[preset].Modulation.rate);
-        Control.set(2, 2, Preset[preset].Modulation.depth);
-        Control.set(2, 3, Preset[preset].Modulation.wave);
+        Control.set(Controls::MOD, 0, Preset[preset].Modulation.matrix);
+        Control.set(Controls::MOD, 1, Preset[preset].Modulation.rate);
+        Control.set(Controls::MOD, 2, Preset[preset].Modulation.depth);
+        Control.set(Controls::MOD, 3, Preset[preset].Modulation.wave);
 
         Control.set_arp(Preset[preset].Arpeggiator.state);
-        Control.set(3, 0, Preset[preset].Arpeggiator.hold);
-        Control.set(3, 1, Preset[preset].Arpeggiator.divisions);
-        Control.set(3, 2, Preset[preset].Arpeggiator.range);
-        Control.set(3, 3, Preset[preset].Arpeggiator.direction);
+        Control.set(Controls::ARP, 0, Preset[preset].Arpeggiator.hold);
+        Control.set(Controls::ARP, 1, Preset[preset].Arpeggiator.divisions);
+        Control.set(Controls::ARP, 2, Preset[preset].Arpeggiator.range);
+        Control.set(Controls::ARP, 3, Preset[preset].Arpeggiator.direction);
 
         // Control.set_filter(Preset[preset].Filter.state);
-        Control.set(4, 0, Preset[preset].Filter.cutoff);
-        Control.set(4, 1, Preset[preset].Filter.resonance);
-        Control.set(4, 2, Preset[preset].Filter.punch);
-        Control.set(4, 3, Preset[preset].Filter.type);
+        Control.set(Controls::FILT, 0, Preset[preset].Filter.cutoff);
+        Control.set(Controls::FILT, 1, Preset[preset].Filter.resonance);
+        Control.set(Controls::FILT, 2, Preset[preset].Filter.punch);
+        Control.set(Controls::FILT, 3, Preset[preset].Filter.type);
+
+        Control.set(Controls::fENV, 0, Preset[preset].Filter.attack);
+        Control.set(Controls::fENV, 1, Preset[preset].Filter.decay);
+        Control.set(Controls::fENV, 2, Preset[preset].Filter.sustain);
+        Control.set(Controls::fENV, 3, Preset[preset].Filter.release);
+
+        Control.set(Controls::SHFT, 0, 0);
+        Control.set(Controls::SHFT, 1, 0);
+        Control.set(Controls::SHFT, 2, Preset[preset].Effects.gain);
+        Control.set(Controls::SHFT, 3, 0);
 
         _changed = true;
     

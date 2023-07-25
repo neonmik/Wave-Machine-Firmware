@@ -1,4 +1,5 @@
 #include "functions.h"
+#include "synth/log_table.h"
 
 #include <math.h>
 
@@ -12,9 +13,13 @@ long map_constrained(long x, long in_min, long in_max, long out_min, long out_ma
         return temp;
 }
 long map_exp(long x, long in_min, long in_max, long out_min, long out_max) {
+
     // double scaled_value = exponential_scaling(x, in_min, in_max);
     double scaled_value = double_log((double)x / 1023.0);
     return map(static_cast<long>(scaled_value * 1023), 0, 1023, out_min, out_max);
+}
+uint16_t exp_freq(uint16_t index) {
+    return exp_freq_lut[index];
 }
 double exponential_scaling(long x, long in_min, long in_max) {
     double in_scaled = static_cast<double>(x - in_min) / static_cast<double>(in_max - in_min);

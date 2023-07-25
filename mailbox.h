@@ -53,20 +53,13 @@ namespace MAILBOX {
                 bool youvegotmail;
         };
 
-
     struct note_data {
         uint8_t     note_state[128];
         uint8_t     notes_on        =       0;
     };
-
-    struct voice_data {
-
-    };
-    
+        
     extern Mailbox<note_data> NOTE_DATA;
-    // extern Mailbox<synth_data> SYNTH_DATA;
-    // extern Mailbox<mod_data> MOD_DATA;
-    // extern Mailbox<arp_data> ARP_DATA;
+
 
     
     void init (void);

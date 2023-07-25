@@ -64,7 +64,7 @@ namespace SYNTH {
   extern bool      filter_enable;
   extern uint16_t  filter_cutoff_frequency;
 
-  struct Voices {
+  struct Oscillators {
 
     uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
 
@@ -74,7 +74,7 @@ namespace SYNTH {
     uint32_t  activation_time  = 0;
 
     uint8_t   _note         = 0;
-    uint16_t  _frequency    = 0;    // frequency of the voice (Hz)
+    uint32_t  _frequency    = 0;    // frequency of the voice (Hz)
 
     uint16_t  pulse_width   = 0x7fff; // duty cycle of square wave (default 50%)
     int16_t   noise         = 0;      // current noise value
@@ -85,9 +85,9 @@ namespace SYNTH {
     int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
 
     void *user_data = nullptr;
-    void (*wave_buffer_callback)(Voices &channel);
+    void (*wave_buffer_callback)(Oscillator &channel);
 
-    void note_on (uint8_t note, uint16_t frequency) {
+    void note_on (uint8_t note, uint32_t frequency) {
       _gate = true; // wouldn't be needed if core moved
       _active = true;
 
@@ -111,9 +111,9 @@ namespace SYNTH {
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
   };
 
-  extern Voices channels[MAX_VOICES];
+  extern Oscillators channels[MAX_VOICES];
 
-  void voice_on (uint8_t voice, uint8_t note, uint16_t frequency);
+  void voice_on (uint8_t voice, uint8_t note, uint32_t frequency);
   void voice_off (uint8_t voice);
   
   uint16_t get_audio_frame();

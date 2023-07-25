@@ -35,10 +35,18 @@ struct PRESET {
         uint16_t resonance = 0;
         uint16_t punch = 0;
         uint16_t type = 0;
+        uint16_t attack = 2;
+        uint16_t decay = 2;
+        uint16_t sustain = 1023;
+        uint16_t release = 1023;
+    };
+    struct Fx {
+        uint16_t gain = 0;
     };
     Wav Wave;
     Env Envelope;
     Lfo Modulation;
     Arp Arpeggiator;
     Flt Filter;
+    Fx  Effects;
 };

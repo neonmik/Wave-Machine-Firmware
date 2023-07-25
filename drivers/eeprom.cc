@@ -41,6 +41,7 @@ namespace EEPROM {
         buffer[7] = preset.Wave.octave & 0xFF;
         buffer[8] = (preset.Wave.pitch >> 8) & 0xFF;
         buffer[9] = preset.Wave.pitch & 0xFF;
+
         buffer[10] = (preset.Envelope.attack >> 8) & 0xFF;
         buffer[11] = preset.Envelope.attack & 0xFF;
         buffer[12] = (preset.Envelope.decay >> 8) & 0xFF;
@@ -49,6 +50,7 @@ namespace EEPROM {
         buffer[15] = preset.Envelope.sustain & 0xFF;
         buffer[16] = (preset.Envelope.release >> 8) & 0xFF;
         buffer[17] = preset.Envelope.release & 0xFF;
+
         buffer[18] = preset.Modulation.state;
         buffer[19] = (preset.Modulation.matrix >> 8) & 0xFF;
         buffer[20] = preset.Modulation.matrix & 0xFF;
@@ -58,6 +60,7 @@ namespace EEPROM {
         buffer[24] = preset.Modulation.depth & 0xFF;
         buffer[25] = (preset.Modulation.wave >> 8) & 0xFF;
         buffer[26] = preset.Modulation.wave & 0xFF;
+
         buffer[27] = preset.Arpeggiator.state;
         buffer[28] = (preset.Arpeggiator.hold >> 8) & 0xFF;
         buffer[29] = preset.Arpeggiator.hold & 0xFF;
@@ -67,6 +70,7 @@ namespace EEPROM {
         buffer[33] = preset.Arpeggiator.range & 0xFF;
         buffer[34] = (preset.Arpeggiator.direction >> 8) & 0xFF;
         buffer[35] = preset.Arpeggiator.direction & 0xFF;
+
         buffer[36] = preset.Filter.state;
         buffer[37] = (preset.Filter.cutoff >> 8) & 0xFF;
         buffer[38] = preset.Filter.cutoff & 0xFF;
@@ -76,11 +80,34 @@ namespace EEPROM {
         buffer[42] = preset.Filter.punch & 0xFF;
         buffer[43] = (preset.Filter.type >> 8) & 0xFF;
         buffer[44] = preset.Filter.type & 0xFF;
+
+        buffer[45] = (preset.Filter.attack >> 8) & 0xFF;
+        buffer[46] = preset.Filter.attack & 0xFF;
+        buffer[47] = (preset.Filter.decay >> 8) & 0xFF;
+        buffer[48] = preset.Filter.decay & 0xFF;
+        buffer[49] = (preset.Filter.sustain >> 8) & 0xFF;
+        buffer[50] = preset.Filter.sustain & 0xFF;
+        buffer[51] = (preset.Filter.release >> 8) & 0xFF;
+        buffer[52] = preset.Filter.release & 0xFF;
+
+        buffer[53] = (preset.Effects.gain >> 8) & 0xFF;
+        buffer[54] = preset.Effects.gain & 0xFF;
+        buffer[55] = 0;
+        buffer[56] = 0;
+        buffer[57] = 0;
+        buffer[58] = 0;
+        buffer[59] = 0;
+        buffer[60] = 0;
+        buffer[61] = 0;
+        buffer[62] = 0;
+
+        buffer[63] = 0;
+        buffer[64] = 0;
+        buffer[65] = 0xAF;
+
         // maybe add some sort of padding here? 
         // 0xAF = After
         // 0xBE = Before
-        // buffer[36] = 0xAF;
-        // buffer[37] = 0xAF;
 
         i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + PAGE_SIZE, false);
 
@@ -113,6 +140,13 @@ namespace EEPROM {
         printf("Resonance:  %d\n",      preset.Filter.resonance);
         printf("Punch:      %d\n",      preset.Filter.punch);
         printf("Type:       %d\n\n",    preset.Filter.type);
+
+        printf("Attack:     %d\n",      preset.Filter.attack);
+        printf("Decay:      %d\n",      preset.Filter.decay);
+        printf("Sustain:    %d\n",      preset.Filter.sustain);
+        printf("Release:    %d\n\n",    preset.Filter.release);
+
+        printf("Gain:       %d\n",      preset.Effects.gain);
     }
     void loadPreset (uint8_t slot, PRESET &preset) {
         if (slot >= MAX_PRESETS) {
@@ -160,6 +194,13 @@ namespace EEPROM {
         preset.Filter.resonance = (preset_buffer[37] << 8) | preset_buffer[38];
         preset.Filter.punch = (preset_buffer[39] << 8) | preset_buffer[40];
         preset.Filter.type = (preset_buffer[41] << 8) | preset_buffer[42];
+
+        preset.Filter.attack = (preset_buffer[43] << 8) | preset_buffer[44];
+        preset.Filter.decay = (preset_buffer[45] << 8) | preset_buffer[46];
+        preset.Filter.sustain = (preset_buffer[47] << 8) | preset_buffer[48];
+        preset.Filter.release = (preset_buffer[49] << 8) | preset_buffer[50];
+
+        preset.Effects.gain = (preset_buffer[51] << 8) | preset_buffer[52];
         
         printf("Preset %d read from EEPROM!\n", slot);
         printf("Memory Location: %d\n\n", preset_address);
@@ -191,6 +232,13 @@ namespace EEPROM {
         printf("Resonance:      %d\n",       preset.Filter.resonance);
         printf("Punch:          %d\n",       preset.Filter.punch);
         printf("Type:           %d\n\n",     preset.Filter.type);
+
+        printf("Attack:         %d\n",      preset.Filter.attack);
+        printf("Decay:          %d\n",      preset.Filter.decay);
+        printf("Sustain:        %d\n",      preset.Filter.sustain);
+        printf("Release:        %d\n\n",    preset.Filter.release);
+
+        printf("Gain:           %d\n",      preset.Effects.gain);
     }
 
     void restorePreset (uint8_t slot) {

@@ -12,7 +12,6 @@
 #include "adsr.h"
 #include "fx.h"
 
-// #define CLIP(x) if (x < -32767) x = -32767; if (x > 32767) x = 32767;
 namespace FILTER {
 
     const uint16_t lut_svf_cutoff[] = {
@@ -160,21 +159,17 @@ namespace FILTER {
     namespace {
         bool dirty_;
 
-        int16_t frequency_;
+        int16_t cutoff_;
         int16_t resonance_;
 
-        uint16_t _mod;
+        uint16_t mod_;
 
         int32_t punch_;
         int32_t f_;
         int32_t damp_;
 
-        int32_t lp_;
-        int32_t bp_;
-
-        int32_t lpOutput;
-        int32_t bpOutput;
-        int32_t hpOutput;
+        int32_t lowpass_;
+        int32_t bandpass_;
 
         uint32_t   _attack;
         uint32_t   _decay;
@@ -213,7 +208,7 @@ namespace FILTER {
     extern ADSREnvelope ADSR;
 
     void init();
-    void set_frequency(uint16_t frequency);
+    void set_cutoff(uint16_t frequency);
     void set_resonance(uint16_t resonance);
     void set_punch(uint16_t punch);
     void set_mode(uint16_t mode);

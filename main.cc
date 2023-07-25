@@ -23,9 +23,6 @@
 
 #include "mailbox.h"
 
-// #include "midi.h"
-
-
 
 void core0_main() {
   
@@ -61,7 +58,7 @@ void core1_main() {
   set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Not sure if the extra speed is needed to run the code, but it gives it a little headroom.
 
   stdio_init_all(); // has to be here to allow both cores to use the UART
-  
+
   MAILBOX::init(); // has to be here to allow both cores access to MAILBOX
   
   multicore_launch_core1(core1_main); 

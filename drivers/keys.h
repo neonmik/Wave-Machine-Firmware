@@ -19,10 +19,14 @@
 
 #include "pico/stdlib.h"
 
+#include "../config.h"
+
+
 #include "button.h"
 
-#include "../mailbox.h"
+// #include "../synth/note_priority.h"
 
+#include "../mailbox.h"
 #include "../midi.h"
 
 namespace KEYS {

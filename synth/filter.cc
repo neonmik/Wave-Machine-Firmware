@@ -5,17 +5,17 @@ namespace FILTER {
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
 
     void init() {
-        lp_ = 0;
-        bp_ = 0;
-        frequency_ = 0 << 7;
+        lowpass_ = 0;
+        bandpass_ = 0;
+        cutoff_ = 0 << 7;
         resonance_ = 0;
         dirty_ = true;
         punch_ = 0;
         mode_ = LowPass;
     }
 
-    void set_frequency(uint16_t frequency) {
-        frequency_ = map_exp(frequency, KNOB_MIN, KNOB_MAX, 15, 10000);
+    void set_cutoff(uint16_t cutoff) {
+        cutoff_ = exp_freq(cutoff);
     }
 
     void set_resonance(uint16_t resonance) {
@@ -24,12 +24,12 @@ namespace FILTER {
     }
 
     void modulate_cutoff(uint16_t cutoff) {
-        _mod = (cutoff >> 2);
+        mod_ = (cutoff >> 2);
     }
 
     void set_punch(uint16_t punch) {
         // punch_ = (static_cast<uint32_t>(punch) * punch) >> 24;
-        punch_ = (punch >> 4);
+        punch_ = (punch);
     }
 
     void set_mode(uint16_t mode) {
@@ -82,47 +82,50 @@ namespace FILTER {
 
     void process(int32_t &sample) {
         ADSR.update();
-        //   if (ADSR.isStopped());
+        // if (ADSR.isStopped()) return;
         
+        // dirty is/was for taking a simple input number and using a lookup table to calculate a smooth frequency input.
         if (dirty_) {
             // f_ = Interpolate824(lut_svf_cutoff, frequency_ << 17);
             // f_ = frequency_;
             damp_ = Interpolate824(lut_svf_damp, resonance_ << 17);
             dirty_ = false;
         }
-        volatile int32_t f;
-        f = (int32_t(frequency_) * int32_t(ADSR.get_adsr() >> 8)) >> 16;
+
+
+        volatile int32_t _frequency;
+        _frequency = (int32_t(cutoff_) * int32_t(ADSR.get_adsr() >> 8)) >> 16;
         
         // if (f <= 15) f = 15;
         int32_t damp = damp_;
         if (punch_) {
-            int32_t punch_signal = lp_ > 4096 ? lp_ : 2048;
-            f += ((punch_signal >> 4) * punch_) >> 9;
+            int32_t punch_signal = lowpass_ > 4096 ? lowpass_ : 2048;
+            _frequency += ((punch_signal >> 4) * punch_) >> 9;
             damp += ((punch_signal - 2048) >> 3);
         }
 
-        int32_t notch = sample - (bp_ * damp >> 15);
-        lp_ += f * bp_ >> 15;
-        FX::HARDCLIP::process(lp_);
-        // FX::SOFTCLIP::process(lp_);
-        // CLIP(lp_)
-        int32_t hp = notch - lp_;
-        bp_ += f * hp >> 15;
-        FX::HARDCLIP::process(bp_);
-        // FX::SOFTCLIP::process(bp_);
-        // CLIP(bp_)
+        int32_t notch = sample - (bandpass_ * damp >> 15);
+        lowpass_ += _frequency * bandpass_ >> 15;
+        FX::HARDCLIP::process(lowpass_);
+        // FX::SOFTCLIP::process(lowpass_); // this makes the signal super hot... not sure why.
+        
+        int32_t highpass_ = notch - lowpass_;
+        bandpass_ += _frequency * highpass_ >> 15;
+        FX::HARDCLIP::process(bandpass_);
+        // FX::SOFTCLIP::process(bandpass_); // this makes the signal super hot... not sure why.
+
         switch (mode_) {
             case Off:
                 sample = sample;
                 break;
             case LowPass:
-                sample = lp_;
+                sample = lowpass_;
                 break;
             case BandPass:
-                sample = bp_;
+                sample = bandpass_;
                 break;
             case HighPass:
-                sample = hp;
+                sample = highpass_;
                 break;
             default:
                 sample = sample;
@@ -144,18 +147,18 @@ namespace FILTER {
 //     for (int i = 0; i < 4; i++) {
 //         // Gives a bump in the low end, disable by setting punch_ = 0 for now.
 //         if (punch_) {
-//             int32_t punch_signal = lp_ > 4096 ? lp_ : 2048;
+//             int32_t punch_signal = lowpass_ > 4096 ? lowpass_ : 2048;
 //             f += ((punch_signal >> 4) * punch_) >> 9;
 //             damp += ((punch_signal - 2048) >> 3);
 //         }
-//         int32_t notch = input - (bp_ * damp >> 15); 
-//         lp_ += f * bp_ >> 15; 
-//         CLIP(lp_)
-//         int32_t hp = notch - lp_;
-//         bp_ += f * hp >> 15;
-//         CLIP(bp_)
-//         lpOutput = (lpOutput >> 1) + lp_;
-//         bpOutput = (bpOutput >> 1) + bp_;
+//         int32_t notch = input - (bandpass_ * damp >> 15); 
+//         lowpass_ += f * bandpass_ >> 15; 
+//         CLIP(lowpass_)
+//         int32_t hp = notch - lowpass_;
+//         bandpass_ += f * hp >> 15;
+//         CLIP(bandpass_)
+//         lpOutput = (lpOutput >> 1) + lowpass_;
+//         bpOutput = (bpOutput >> 1) + bandpass_;
 //         hpOutput = (hpOutput >> 1) + hp;
 //     }
 //     CLIP(lpOutput);
