@@ -24,7 +24,7 @@
 #include "mailbox.h"
 
 
-void core0_main() {
+void core1_main() {
   
   UI::init();
 
@@ -36,15 +36,16 @@ void core0_main() {
 }
 
 
-void core1_main() {
+void core0_main() {
 
   SYNTH::init(SAMPLE_RATE);
   DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
   ARP::init(DEFAULT_BPM, SAMPLE_RATE);
   
+  int index = 0;
   while (true) {
      if (DAC::get_state()) {
-    
+      
       MAILBOX::receive(); //copy the data from the mailbox to the local variables
       NOTE_PRIORITY::update(); // update notes from the mailbox info
       

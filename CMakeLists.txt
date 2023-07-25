@@ -45,6 +45,7 @@ add_executable(${PROJECT_NAME}
     synth/note_priority.cc
     synth/controls.cc
     synth/synth.cc
+    synth/resources.cc
     
     synth/fx.cc
     synth/filter.cc
@@ -78,7 +79,6 @@ target_link_libraries(${PROJECT_NAME}
                         hardware_i2c
                         hardware_pio
                         hardware_timer
-                        # hardware_flash
 
                         tinyusb_device
                         tinyusb_board

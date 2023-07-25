@@ -29,7 +29,7 @@ namespace RGB_LED {
                 
                 pwm_set_gpio_level(pin, 0);
                 pwm_set_wrap(slice_num, PWM_BIT_DEPTH);
-                pwm_set_clkdiv(slice_num, 256.0f); // should be about 2.2KHz...  144MHz (core speed) / 256 (wrap) / 256 (clkdiv) = 2197.27
+                pwm_set_clkdiv(slice_num, 256.0f); // should be about 2.2KHz?...  144MHz (core speed) / 256 (wrap) / 256 (clkdiv) = 2197.27
                 pwm_set_enabled(slice_num, true);
             }
             void pwm_output_polarity (void) {

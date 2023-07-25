@@ -36,12 +36,6 @@ namespace MOD {
 
     class Modulation {
         private:
-            // Remove:
-            // uint16_t _phase_fractional;
-            // uint32_t _frequency;
-            // const double RATE_SCALE_FACTOR = 0.1; // Define the scaling factor to convert 10-bit value to rate in Hz
-
-
             // oscillator variables
 
             uint32_t    _sample_rate;
@@ -49,6 +43,7 @@ namespace MOD {
             uint32_t    _increment;
             uint32_t    _phase_accumulator;
             uint8_t     _index;
+
             int16_t     _sample;
 
             
@@ -68,7 +63,7 @@ namespace MOD {
                 {nullptr,                   OutputType::UNSIGNED,   Dither::OFF} // probably want something ? here, but we'll see...
             };
 
-            uint16_t uint16_output (int16_t input) {
+            inline uint16_t uint16_output (int16_t input) {
                 return input - INT16_MIN; // Using modular arithmatic!
             }
 
@@ -126,14 +121,11 @@ namespace MOD {
             }
             void set_rate (uint16_t rate) {
                 // uses a LUT for expoentially mapping 0-1023 to 1-10000 - giving us 0.1Hz to 1000Hz freq control. this saves a chunk of processing from calculating every time.
-                // so far, the measured response is 0.0028Hz - 
+                // so far, the measured response is 0.0028Hz - 48Hz I think! maybe need to adjust this. 
                 _rate = exp_freq(rate);
-
-                // uses map_exp to map the 10 bit knob values to an exponetial 0.1Hz to 1000Hz
-                // _rate = (map_exp(rate, KNOB_MIN, KNOB_MAX, 1, 10000)); // gettng rid/swapping to LUT saved a ton of power...
                 
                 // Calculate the increment based on the scaled rate
-                _increment = (65535 * _rate) / (_sample_rate);
+                _increment = (65535 * (uint32_t)_rate) / _sample_rate;
 
                 // don't want the increment dropping below 1, as it will stop the oscillation/cause weird behaviour
                 if (_increment < 1) _increment = 1;
@@ -155,8 +147,7 @@ namespace MOD {
             void update () {
                 if (_state) {
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
-                    _index = (_phase_accumulator >> 16); // Calculates the 8 bit index value for the wavetable and adds the offset
-                    // printf("index: %d\n", _index);
+                    _index = (_phase_accumulator >> LFO_SPEED::SLOW);    // Calculates the 8 bit index value for the wavetable. the bit shift creates diffeing results... see LFO_SPEED table
                     _sample = get_mod_wavetable(_index + _wave); // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (chunks of 256) values
                     
                     // Applies a certain dither to the output - really just for smoothing out 8 bit numbers over 0.01Hz, but interesting for effects.
@@ -178,7 +169,7 @@ namespace MOD {
                     }
                     
 
-                    // two different algoruthms for applying depth to the outputs, ensures always the number is centred round the appropriate 0 mark for the destination. 
+                    // two different algorithms for applying depth to the outputs, ensures always the number is centred round the appropriate 0 mark for the destination. 
                     switch (_destination[_matrix].type) {
                         case OutputType::UNSIGNED: {
                             _destination[_matrix].output = (uint16_output(_sample) * _depth) >> 10;
@@ -190,8 +181,8 @@ namespace MOD {
                         }
                     }
 
-                    if (_destination[_matrix].variable != NULL)     
-                        _destination[_matrix].variable(_destination[_matrix].output);
+                    if (_destination[_matrix].variable != NULL)
+                            if (_depth) _destination[_matrix].variable(_destination[_matrix].output);
                 }
             }
             void clear (void) {

@@ -89,7 +89,7 @@ void set_shift (bool shift) {
   void init (void) {
     // stdio_init_all();
 
-    printf("\nWelcome to the jungle...\n");
+    printf("\nWelcome to the jungle...\n\n");
     // printf("\ncore1 here!\n");
     MIDI::init();
 
@@ -99,20 +99,16 @@ void set_shift (bool shift) {
     CONTROLS::init();
     PAGINATION::init();
 
-    if (Buttons::PRESET.get(Buttons::State::SHIFT)) test(30);
-
+    if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
+      _mode = UI_MODE_FACTORY_TEST;
+    }
     LEDS::LFO.set(get_lfo());
     LEDS::ARP.set(get_arp());
 
     poll_index = 0;
   }
 
-  void test (int delay) {
-    LEDS::test(delay);
-  }
-
-  void update (void) {
-    
+  void update (void) { 
     switch (_mode) {
       case UI_MODE_NORMAL:
         switch(poll_index) {
@@ -133,10 +129,10 @@ void set_shift (bool shift) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
             }
-            // if (Buttons::ARP.get(Buttons::ButtonState::LONG)) {
-            //     CONTROLS::toggle_hold();
-            //     LEDS::ARP.flash(2,50);
-            // }
+              if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
+                  // CONTROLS::toggle_hold();
+                  // LEDS::ARP.flash(2,50);
+              }
             break;
           case 2:
             ADC::update();
@@ -162,7 +158,7 @@ void set_shift (bool shift) {
         break;
 
       case UI_MODE_FACTORY_TEST:
-        hardware_debug();
+        debug();
         break;
 
       case UI_MODE_CALIBRATION:
@@ -173,7 +169,68 @@ void set_shift (bool shift) {
         break;
     }
   }
+
+  void debug (void) {
+
+    LEDS::test(30);
+
+    sleep_ms(1000);
+    printf("\n\n");
+    printf(" _______________________________________________________________________________\n");
+    printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
+    printf("|-------------------------------------------------------------------------------|\n");
+    printf("|										|\n");
+    printf("|				Beep Machine Prototype				|\n");
+    printf("|				      2020-2023					|\n");
+    printf("|										|\n");
+    printf("|		      Made by Nick Allott Musical Services (NAMS)		|\n");
+    printf("|										|\n");
+    printf("|-------------------------------------------------------------------------------|\n");
+    printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
+    printf("|_______________________________________________________________________________|\n\n");
+    printf("Welcome to Factory Debug!\n\n");
+    sleep_ms(300);
+    printf("We will now test the hardware");
+    ADC::update();
+    sleep_ms(300);
+
+    printf(".");
+    sleep_ms(300);
+    printf(".");
+    sleep_ms(300);
+    printf(".");
+    sleep_ms(300);
+    printf("\n\n");
+
+    LEDS::KNOBS_off();
+
+    for (int i = 0; i < 4; i++) {
+      printf("Please turn Knob %d to 0%\n", i);
+      while (ADC::value(i) != 0) {
+        sleep_ms(1);
+        ADC::update();
+      }
+      LEDS::KNOB_select(i, 1);
+      LEDS::update();
+
+      printf("Now turn Knob %d to 100%\n", i);
+      
+      while (ADC::value(i) != 1023) {
+        sleep_ms(1);
+        ADC::update();
+      }
+      LEDS::KNOB_select(i, 0);
+      LEDS::update();
+      printf("Knob %d check is complete!\n", i);
+    }
+    printf("All Knobs working correctly!\n\n");
+
+    LEDS::test(30);
+
+    _mode = UI_MODE_NORMAL;
+  }
 }
+
 
 
     

@@ -8,11 +8,11 @@
 
 namespace NOTE_PRIORITY {
 
-  voice_data VOICES [8];
+  // voice_data VOICES [MAX_VOICES];
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
     if (note) {
-      // filter_on();
+      filter_on();
       // for MIDI Out use: - here so that the arp can output MIDI
       // MIDI::sendNoteOn(note, velocity); // Needs reworking for multcore
 
@@ -22,14 +22,14 @@ namespace NOTE_PRIORITY {
     }
   }
   void voice_off(int slot, int note, int velocity) {
-    // filter_off();
+    filter_off( );
     // for MIDI Out use: - here so that the arp can output MIDI
     // MIDI::sendNoteOff(note, velocity); // Needs reworking for multcore
 
     SYNTH::voice_off(slot);
   }
   void voices_panic() {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < MAX_VOICES; i++) {
       // for MIDI Out use:-
       // MIDI::sendNoteOff(SYNTH::channels[i].note, 0); // Needs reworking for multcore
       SYNTH::voice_off(i);
@@ -39,8 +39,8 @@ namespace NOTE_PRIORITY {
   void filter_on(void) {
     // for future MOD/Filter ADSR
       ++_voices_active;
-      if (_voices_active > 8) {
-        _voices_active = 8;
+      if (_voices_active > MAX_VOICES) {
+        _voices_active = MAX_VOICES;
       }
       if (_voices_active) { // re-triggers on every new note - needs reworking to allow releasing multiple notes
         // MOD::trigger_attack();
@@ -52,6 +52,7 @@ namespace NOTE_PRIORITY {
     --_voices_active;
     if (_voices_active <= 0) {
       _voices_active = 0;
+      // MOD::trigger_attack();
       FILTER::trigger_release();
     }
 

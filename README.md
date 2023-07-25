@@ -3,31 +3,18 @@
 Current nightly firmware for Beep Machine Hardware.
 
 
+- Alpha Release bugfixes:
+
+    - Mod makes noise when on. figure out. 
+
 - Updates and Bugfixes:
 
-    - Filter:
-        - Write new Cutoff LUT as half the range is wasted on the same value. 
-        - Add ADSR functions.
-        - Add modulation inputs for controls.
-        - Bugfix: fix inputs for controls (Cutoff, Resonance, Type, Punch):- needs the ranges fixing at the minute. 
-
-
-
     - Improve Contorls funtionality:
-        - Time to add shift functions!
-            - Add in functions for MOD (ADSR via shift?)  
-            - Add in functions for Filter (with its ADSR via shift?)
-
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
         
     - Improve Oscillator script - current bugs include:
-
-        - Improve tuning - currently theres a drift in tuning, more than likely down to using interger instead of floating point numbers for the MIDI2Freq calculations, most apparent on Preset 5 due to the fact that it's pitched down with the octave setting and pitch shift.
-
         - Finesse soft start code - currently takes too long to get going and still isnt perfect.
-
-        - Add logarithmic compression or soft clipping algorithm to the output sample (instead of hard cliping, but keep the option) to allow a better volume output/use more of the 12 bit output
     
     - Improve USB MIDI/ Implement MIDI hardware:
 
@@ -58,11 +45,8 @@ Current nightly firmware for Beep Machine Hardware.
 
         
     - Multicore
-        
         - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
         - ???? Test swapping the cores back now I've proved 15~ voices on core0.
-
-    - Create a test script for hardware (ongoing with the use of DEBUG defines for printf, need to have a global debug level)
 
     - Prove hardware functions:
         - MIDI
@@ -79,12 +63,15 @@ Current nightly firmware for Beep Machine Hardware.
         - Setting BPM
 
     - Improve ADSR code:
-    - Make the code more portable:- currently the calculations for ADSR times are done in the synth module, but would be good to move them into the ADSR module. I need global controls, but to be able to trigger phases of each voice seperately.
+        - Make the code more portable:- currently the calculations for ADSR times are done in the synth module, but would be good to move them into the ADSR module. I need global controls, but to be able to trigger phases of each voice seperately.
     
     - Improve Mod code:
         - Add a ramp down feature when switching between destinations - could be difficult. 
         - Add a temp sync function.
         - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
+    
+    - Improve Filter code: 
+        - Improve modulation inputs for controls.
 
     - Arp code:
         - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
@@ -103,7 +90,7 @@ Current nightly firmware for Beep Machine Hardware.
     - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
 
 
-    - Add a paraphonic filter for MOD and possibly wave or future Filter - could be done similar to mod with adjustable ADSR, just need to reconfigure UI layout really...
+    
 
     - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
@@ -123,6 +110,8 @@ Things already implemented:
         + Keys
 
     + Oscillator bug fixes:
+        + Added soft clip controls
+        + Slighty improved tuning - There was anoticable drift in tuning between octaves/pitch shifts... I've imporved note code to be Q16 to improve accuracy, but still issues.
         + Added soft clipping with adjustable (yet to be assigned) gain control.
         + Added functions for all software controls (mod params)
         + Added a softstart to the Oscillator code - stops it popping when turned on
@@ -130,8 +119,11 @@ Things already implemented:
         + Add and test functions for updating parameters, instead of accesing them directly from outside
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
+    + Note Handling:
+        + Added a the bones of a paraphonic filter for Modulation and/or Filter. This is currently unstable, but will possibly be used in future pending some UI testing.
 
     + Hardware files bug fixes:
+        + Added a basic debug test function to test the pots and cycle for LEDs on start up - can currently be accessed by holding down preset/shift while powering up.
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
     + Arp functionality bug fixes:
@@ -145,6 +137,9 @@ Things already implemented:
         + Add Arp mode
 
     + Settings Bugfixes:
+        - Added starting shift functions:
+            - Added in functions for Modulation  
+            - Added in functions for Filter (Shift on Main) and its ADSR (Shift on ADSR) - currently disabled due to processing power.
         + Issues when first starting, LFO was active but UI didnt reflect it.
         + Factory Restore function working, just need to implement in controls
         + Load Current Factory Presets to Factory Space
@@ -205,7 +200,12 @@ Things already implemented:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Added a modulation input, but needs adjusting. Going on the back burner till the Filter and Mod can opperate together.
+        + Fixed the inputs using the map_exp functions - now using LUT for speed.
+        - Bugfix: fixed the inputs for controls (Cutoff, Resonance, Type, Punch):- needed the ranges fixing but now can happily take 10bit controls. 
+        + Added ADSR functions.
         + Controls are now all there (Cutoff, Resonance, Punch, Type) currently accessable by holding shift on the main page.
         + Started adding controls for inputs.
         + Filter is now functional!
         + Added a rough working filter! Didn't think it was possible, so very excited. Thanks to pichenettes. 
+

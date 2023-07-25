@@ -2,10 +2,10 @@
 
 namespace LEDS {
 
-    Led PICO(Leds::LED_PICO_PIN);
-    Led LFO(Leds::LED_LFO_PIN);
-    Led ARP(Leds::LED_ARP_PIN);
-    Rgb PRESET;
+    GPIO PICO(Leds::LED_PICO_PIN);
+    GPIO LFO(Leds::LED_LFO_PIN);
+    GPIO ARP(Leds::LED_ARP_PIN);
+    RGB PRESET;
     SR  KNOBS(Pins::KNOBS);
     SR  KNOB_1(Pins::KNOB_1);
     SR  KNOB_2(Pins::KNOB_2);
@@ -106,7 +106,7 @@ namespace LEDS {
         LFO.flash(1, delay);
         ARP.flash(1, delay);
 
-        PRESET.cycle(delay/8);
+        PRESET.cycle(delay/64);
 
         // Down
         ARP.flash(1, delay);
@@ -123,6 +123,5 @@ namespace LEDS {
     
     void update() {
         ShiftReg::update();
-        // RGB_LED::update();
     }
 }

@@ -58,7 +58,6 @@ namespace UI {
     // ----------------------
 
     void init (void);
-    void test (int delay);
     void update (void);
-    void hardware_debug (void);
+    void debug (void);
 }

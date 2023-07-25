@@ -204,7 +204,7 @@ namespace SYNTH {
       sample = (int32_t(sample >> 2) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       // working filter, have to define controls.
-      // FILTER::process(sample);
+      FILTER::process(sample);
 
       // add soft soft clipping?
       FX::SOFTCLIP::process(sample);

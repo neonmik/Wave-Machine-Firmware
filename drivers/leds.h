@@ -21,7 +21,7 @@ enum Leds : uint8_t {
 
 namespace LEDS {
     
-    class Led {
+    class GPIO {
         private:
             uint8_t     _pin;
             bool        _state;
@@ -31,10 +31,10 @@ namespace LEDS {
             }
 
         public:
-            Led (uint8_t pin) {
+            GPIO (uint8_t pin) {
                 _pin = pin;
             }
-            ~Led () { }
+            ~GPIO () { }
 
             void init(){
                 gpio_init(_pin); // set LED pin
@@ -66,27 +66,17 @@ namespace LEDS {
             }
         
     };
-    class Rgb {
-
-        // uint16_t colours[24] = {
-        //     65534, 0, 0,          // Red
-        //     19018, 0, 46517,      // Purple
-        //     65535, 0, 8995,       // Pink
-        //     0, 29555, 38550,      // Teal
-        //     2570, 0, 65534,       // Blue
-        //     65534, 10023, 0,      // Orange
-        //     3855, 65535, 0,       // Green
-        //     65534, 25700, 23130   // Tutti Fruity
-        // };
+    class RGB {
         uint8_t colours[24] = {
             255,    0,      0,          // Red
-            74,     0,      181,         // Purple
+            74,     0,      181,        // Purple
             255,    0,      35,         // Pink
             0,      115,    150,        // Teal
-            10,     0,      255,         // Blue
-            255,    59,     0,         // Orange
-            15,     255,    0,         // Green
-            255,    100,    90        // Tutti Fruity
+            10,     0,      255,        // Blue
+            255,    59,     0,          // Orange
+            15,     255,    0,          // Green
+            255,    100,    90,         // Tutti Fruity
+            // 0,      0,      0,          // Black/off
         };
 
         private:
@@ -95,8 +85,8 @@ namespace LEDS {
             bool    _state;
 
         public:
-            Rgb () { }
-            ~Rgb () { }
+            RGB () { }
+            ~RGB () { }
 
             void init (void) {
                 RGB_LED::init();
@@ -152,7 +142,7 @@ namespace LEDS {
                     _colour[incColour] += 1;
                     
                     colour(_colour[0],_colour[1],_colour[2]);
-                    sleep_us(speed);
+                    sleep_ms(speed/16);
                     }
                 }
             }
@@ -202,10 +192,10 @@ namespace LEDS {
     };
     
     
-    extern Led PICO;
-    extern Led LFO;
-    extern Led ARP;
-    extern Rgb PRESET;
+    extern GPIO PICO;
+    extern GPIO LFO;
+    extern GPIO ARP;
+    extern RGB PRESET;
     extern SR  KNOBS; // for clearing only!
     extern SR  KNOB_1;
     extern SR  KNOB_2;
