@@ -50,12 +50,8 @@ namespace SYNTH {
   void voice_off (uint8_t voice) {
     channels[voice].note_off();
   }
-
-  uint32_t _sample_rate;
   
-  void init (uint32_t sample_rate) {
-    _sample_rate = sample_rate;
-
+  void init () {
     MOD::init();
     FILTER::init();
   }
@@ -108,8 +104,8 @@ namespace SYNTH {
         if(channel._active) {
 
           // increment the waveform position counter.
-          channel.waveform_offset += (((((uint64_t)channel._frequency * _pitch_scale) >> 9) << _octave)) / _sample_rate;
-          // channel.waveform_offset += channel._frequency / _sample_rate;
+          channel.waveform_offset += (((((uint64_t)channel._frequency * _pitch_scale) >> 9) << _octave)) / SAMPLE_RATE;
+          // channel.waveform_offset += channel._frequency / SAMPLE_RATE;
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
           channel.waveform_offset += _vibrato;
@@ -264,7 +260,7 @@ namespace SYNTH {
     _release = calc_end_frame((release<<2)+2);
   }
   uint32_t calc_end_frame (uint32_t milliseconds) {
-    return (milliseconds * _sample_rate) / 1000;
+    return (milliseconds * SAMPLE_RATE) / 1000;
   }
 
   void modulate_vibrato (uint16_t vibrato) {

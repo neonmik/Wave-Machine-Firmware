@@ -2,8 +2,8 @@
 
 namespace ARP {
 
-    void init (uint8_t bpm, uint16_t sample_rate) {
-        BEAT_CLOCK::init(bpm, sample_rate);
+    void init () {
+        BEAT_CLOCK::init();
     }
     void set_state (bool state) {
         if (state != _active) {

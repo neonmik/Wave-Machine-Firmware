@@ -10,6 +10,8 @@
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
 
+#include "../config.h"
+
 #include "../ui.h"
 
 #include "../synth/beat_clock.h"
@@ -21,23 +23,10 @@
 
 #define DAC_CONFIG      0b0111000000000000
 
-
-#define BUFFER_SIZE     64
-
-
 #define size_bits       log2(BUFFER_SIZE * sizeof(uint16_t))
 
 typedef uint16_t (*synth_function)();
-
-
-// extern uint32_t hardware_index; // eventually going to be used to free some resources from the DMA ISR
-// extern uint32_t software_index; // will be used to check currently timing of hardware_index
-
-
 namespace DAC {
-    
-    // uint32_t sample_clock;
-
     namespace {
         
         synth_function process;
@@ -55,16 +44,6 @@ namespace DAC {
         float       _divider;
         unsigned int slice_num;
         int dma_chan_a, dma_chan_b;
-
-        void dac_send (uint16_t* value) {
-            gpio_put(DAC_CS, 0);
-            spi_write16_blocking(DAC_SPI, value, 1);
-            gpio_put(DAC_CS, 1);
-            ++sample_clock;
-            // ++hardware_index;
-            // hardware_index &= 0xf; //loop the buffer every 15 samples
-        }
-
 
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
@@ -102,16 +81,14 @@ namespace DAC {
             if(dma_hw->intr & (1u<<dma_chan_a)) { // channel a complete?
                 dma_hw->ints0=1u<<dma_chan_a; // clear the interrupt request
                 dma_buffer((uint16_t*) buf_a); // buf a transferred, so refill it
-                // return; // trying this for a flip flop effect
             }
             if(dma_hw->intr & (1u<<dma_chan_b)) { // channel b complete?
                 dma_hw->ints0=1u<<dma_chan_b; // clear the interrupt request
                 dma_buffer((uint16_t*) buf_b); // buf b transferred, so refill it
-                // return; // trying this for a flip flop effect
             }
         }
     
-        void init_spi (uint16_t sample_rate) {
+        void init_spi (void) {
             spi_init(DAC_SPI, 20000000); 
             spi_set_format(DAC_SPI, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST); // New SPI setup
 
@@ -145,7 +122,7 @@ namespace DAC {
         
     }
 
-    void init (uint16_t sample_rate, synth_function audio_process);
+    void init (synth_function audio_process);
     void clear_state (void);
     bool get_state (void);
 }

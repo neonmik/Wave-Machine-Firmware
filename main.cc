@@ -1,5 +1,5 @@
 /**
- *                Beep Machine Firmware v0.27
+ *                Beep Machine Firmware v0.28
  * 
  * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  
@@ -38,11 +38,10 @@ void core1_main() {
 
 void core0_main() {
 
-  SYNTH::init(SAMPLE_RATE);
-  DAC::init(SAMPLE_RATE, SYNTH::get_audio_frame);
-  ARP::init(DEFAULT_BPM, SAMPLE_RATE);
+  SYNTH::init();
+  DAC::init(SYNTH::get_audio_frame);
+  ARP::init();
   
-  int index = 0;
   while (true) {
      if (DAC::get_state()) {
       
@@ -56,7 +55,7 @@ void core0_main() {
 
  int main() {
 
-  set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Not sure if the extra speed is needed to run the code, but it gives it a little headroom.
+  set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Extra speed is needed to run the code.
 
   stdio_init_all(); // has to be here to allow both cores to use the UART
 

@@ -30,8 +30,6 @@ namespace SYNTH {
     SINE      = 8,
     WAVE      = 1
   };
-
-  extern uint32_t   _sample_rate;
   
   // used oscillator types, this can use multiple oscillators, although can't be currently adjusted by the hardware
   extern uint16_t   _oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
@@ -118,7 +116,7 @@ namespace SYNTH {
   
   uint16_t get_audio_frame();
   bool is_audio_playing();
-  void init (uint32_t _sample_rate);
+  void init ();
 
   void set_waveshape (uint16_t shape);
   void set_wavevector (uint16_t vector);

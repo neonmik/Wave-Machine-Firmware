@@ -20,7 +20,7 @@ namespace BEAT_CLOCK {
         bool _changed;
         uint32_t _samples_per_division;
 
-        uint32_t _samples_rate;
+        uint32_t _sample_rate;
         uint16_t _bpm = 120;
         uint8_t _division = 8;
 
@@ -37,12 +37,12 @@ namespace BEAT_CLOCK {
         bool _delta_flag = 0;
 
         void calculate_division (void) {
-            _samples_per_division = (60 * _samples_rate / _bpm) / _division;
+            _samples_per_division = (60 * _sample_rate / _bpm) / _division;
         }
     }
 
-    void init (uint8_t bpm, uint16_t sample_rate);
-    void set_samplerate (uint16_t sample_rate = SAMPLE_RATE);
+    void init (void);
+    void set_samplerate (uint16_t sample_rate = SAMPLE_RATE); // provides a default sample_rate linked to the global sample rate... this could be useful for sample rate updatings in the future.
     void set_bpm (uint16_t bpm);
     uint8_t get_bpm ();
     void set_division (uint16_t division);

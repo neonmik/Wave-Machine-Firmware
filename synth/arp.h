@@ -60,12 +60,8 @@ namespace ARP {
 
         bool _switch = true;
     }
-    
 
-    bool get (void);
-
-
-    void init (uint8_t bpm, uint16_t sample_rate);
+    void init (void);
     
     void update(void);
     

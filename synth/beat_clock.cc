@@ -2,14 +2,14 @@
 
 namespace BEAT_CLOCK {
 
-    void init (uint8_t bpm, uint16_t sample_rate) {
-        _samples_rate = sample_rate;
-        _bpm = bpm;
+    void init () {
+        _sample_rate = SAMPLE_RATE;
+        _bpm = DEFAULT_BPM;
         calculate_division();
     }
 
     void set_samplerate (uint16_t sample_rate) {
-        _samples_rate = sample_rate;
+        _sample_rate = sample_rate;
         calculate_division();
     } 
 
