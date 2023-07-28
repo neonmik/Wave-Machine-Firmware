@@ -45,8 +45,21 @@ void core0_main() {
   while (true) {
      if (DAC::get_state()) {
       
-      MAILBOX::receive(); //copy the data from the mailbox to the local variables
-      NOTE_PRIORITY::update(); // update notes from the mailbox info
+      // MAILBOX::receive(); //copy the data from the mailbox to the local variables
+      // NOTE_PRIORITY::update(); // update notes from the mailbox info
+      uint8_t temp = MAILBOX::trigger_check_queue();
+      if (temp) {
+        for (int i = 0; i < temp; i++){
+          uint8_t slot_ = 0;
+          uint8_t note_ = 0;
+          bool gate_ = false;
+
+          MAILBOX::trigger_receive(slot_, note_, gate_);
+
+          if (gate_) SYNTH::voice_on(slot_, note_);
+          if (!gate_) SYNTH::voice_off(slot_);
+        }
+      }
       
       DAC::clear_state();
     }

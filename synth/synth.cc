@@ -44,8 +44,8 @@ namespace SYNTH {
   Oscillators channels[MAX_VOICES];
 
 
-  void voice_on (uint8_t voice, uint8_t note, uint32_t frequency) {
-    channels[voice].note_on(note, frequency);
+  void voice_on (uint8_t voice, uint8_t note) {
+    channels[voice].note_on(note);
   }
   void voice_off (uint8_t voice) {
     channels[voice].note_off();
@@ -111,7 +111,10 @@ namespace SYNTH {
           channel.waveform_offset += _vibrato;
 
           channel.ADSR.update();
-          if (channel.ADSR.isStopped()) channel.note_stopped();
+          if (channel.ADSR.isStopped()) {
+            channel.note_stopped();
+            MAILBOX::release_send(c);
+          }
 
           // if(channel.waveform_offset & 0x10000) {
           //   // if the waveform offset overflows then generate a new

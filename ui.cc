@@ -124,7 +124,6 @@ void set_shift (bool shift) {
                 toggle_lfo();
             }
             set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
-
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
@@ -135,17 +134,19 @@ void set_shift (bool shift) {
             }
             break;
           case 2:
-            ADC::update();
+            NOTE_PRIORITY::update();
           case 3:
+            ADC::update();
+          case 4:
             PAGINATION::update();
             break;
-          case 4:
+          case 5:
             LEDS::update();
             break;
-          case 5:
+          case 6:
             CONTROLS::update();
             break;
-          case 6:
+          case 7:
             MIDI::update();
             break;
           default:
@@ -154,7 +155,7 @@ void set_shift (bool shift) {
         }
         
         poll_index++;
-        if (poll_index > 6) poll_index = 0;
+        if (poll_index > 7) poll_index = 0;
 
         break;
 

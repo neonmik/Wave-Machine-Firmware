@@ -77,26 +77,29 @@ namespace NOTE_PRIORITY {
             return _voices_active;
         }
 
-        struct voice_data {
+        struct voice_data_t {
             uint8_t     note; // holds MIDI note number
             bool        gate; // tracks whether note is being physcially played
             bool        active; // tracks whether the note is still sounding out
             uint32_t    activation_time; // time when the note was activated
 
-            void voice_on (uint8_t note, uint8_t velocity) {
-                note = note;
+            void on (uint8_t _note) {
+                note = _note;
                 gate = true;
                 active = true;
                 activation_time = to_ms_since_boot(get_absolute_time());
             }
-            void voice_off (uint8_t note, uint8_t velocity) {
-                note = 0;
+            void off (void) {
                 gate = false;
+            }
+            void clear (void) {
+                note = 0;
+                active = false;
             }
         };
     }
     
-    extern voice_data VOICES[8];
+    extern voice_data_t VOICES[8];
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);
     void voice_off(int slot, int note, int velocity);
@@ -111,9 +114,11 @@ namespace NOTE_PRIORITY {
 
     void update (void);
 
-    // void note_on (uint8_t note);
-    // void note_off (uint8_t note);
-    // void notes_clear (void);
-    // uint8_t get_notes_on (void);
+    void check_release (void);
+
+    void note_on (uint8_t note);
+    void note_off (uint8_t note);
+    void notes_clear (void);
+    uint8_t get_notes_on (void);
 }
 

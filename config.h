@@ -21,7 +21,7 @@ static      uint32_t    sample_clock;
 
 constexpr   uint8_t     DEFAULT_BPM     =       120;
 
-constexpr   uint8_t     MAX_VOICES      =       6;              // 8 is the "standard" value...
+constexpr   uint8_t     MAX_VOICES      =       8;              // 8 is the "standard" value...
                                                                 // tracking performance (Core: 144MHz/SR: 48000) :- 
                                                                 // with the DAC core handling notes:
                                                                 //      - runs at 10 voices with just modulation

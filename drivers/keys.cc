@@ -120,23 +120,23 @@ namespace KEYS {
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
         // To be removed
-        note_on(i + DEFAULT_KEY);
-        MIDI::sendNoteOn(i + DEFAULT_KEY, 127);
+        // note_on(i + DEFAULT_KEY);
+        // MIDI::sendNoteOn(i + DEFAULT_KEY, 127);
         //
 
-        // NOTE_PRIORITY::note_on(i+48);
+        NOTE_PRIORITY::note_on(i+48);
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
         // To be removed
-        note_off(i + DEFAULT_KEY);
-        MIDI::sendNoteOff(i + DEFAULT_KEY, 0);
+        // note_off(i + DEFAULT_KEY);
+        // MIDI::sendNoteOff(i + DEFAULT_KEY, 0);
         //
 
-        // NOTE_PRIORITY::note_off(i+48);
+        NOTE_PRIORITY::note_off(i+48);
       }
     }
     // To be removed
-    if (_changed) MAILBOX::NOTE_DATA.send();
+    // if (_changed) MAILBOX::NOTE_DATA.send();
     //
 
     // Page
