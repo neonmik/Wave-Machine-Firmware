@@ -34,6 +34,7 @@ namespace UI {
         bool shift_flag             =           0;
 
         uint8_t poll_index;
+        uint8_t poll_index_last;
 
         UiMode _mode;
     }

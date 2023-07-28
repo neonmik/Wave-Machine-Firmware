@@ -3,7 +3,9 @@
 #include "pico/stdlib.h"
 
 #include "pico/multicore.h"
+#include "pico/util/queue.h"
 #include "pico/sync.h"
+
 
 namespace MAILBOX {
     template <typename T>
@@ -57,15 +59,19 @@ namespace MAILBOX {
         uint8_t     note_state[128];
         uint8_t     notes_on        =       0;
     };
+
+    struct trigger_msg_t {
+        uint8_t     slot; // voice slot where note is now trigged
+        uint8_t     note; // MIDI note number
+    };
+
+    extern queue_t trigger_queue;
+    extern queue_t release_queue;
         
     extern Mailbox<note_data> NOTE_DATA;
 
 
     
     void init (void);
-    // void send (uint8_t index);
-    // void send_synth (void);
-    // void send_mod (void);
-    // void send_arp (void);
     void receive (void);
 }

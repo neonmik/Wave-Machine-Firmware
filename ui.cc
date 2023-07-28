@@ -129,10 +129,10 @@ void set_shift (bool shift) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
             }
-              if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-                  // CONTROLS::toggle_hold();
-                  // LEDS::ARP.flash(2,50);
-              }
+            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
+                // CONTROLS::toggle_hold();
+                // LEDS::ARP.flash(2,50);
+            }
             break;
           case 2:
             ADC::update();
@@ -152,9 +152,10 @@ void set_shift (bool shift) {
             // do nothing
             break;
         }
-
-        ++poll_index;
+        
+        poll_index++;
         if (poll_index > 6) poll_index = 0;
+
         break;
 
       case UI_MODE_FACTORY_TEST:

@@ -8,7 +8,6 @@
 
 namespace NOTE_PRIORITY {
 
-  // voice_data VOICES [MAX_VOICES];
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
     if (note) {
@@ -182,6 +181,7 @@ namespace NOTE_PRIORITY {
 // namespace NOTE_PRIORITY {
 
 //   voice_data VOICES[8];
+
 //   // Synth Note Control
 //   void voice_on(int slot, int note, int velocity) {
 //     if (note) {

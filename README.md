@@ -11,7 +11,7 @@ Current nightly firmware for Beep Machine Hardware.
 
     - Improve Contorls funtionality:
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
-        - LOW PRIORITY - Make sure it only calls a para update when a values actually changed (_probably_ 100% need to improve the input value stabilities for this)
+        - LOW PRIORITY - Make sure it only calls a setting update when a values actually changed (100% need to improve the input value stabilities for this)
         
     - Improve Oscillator script - current bugs include:
         - Finesse soft start code - currently takes too long to get going and still isnt perfect.
@@ -74,6 +74,11 @@ Current nightly firmware for Beep Machine Hardware.
         - Improve modulation inputs for controls.
 
     - Arp code:
+        - Add a setting for note length within the Arp -    currently plays note for a beat, then a beat rest, then another and so on.
+                                                            I find this more musical, but I believe most synths dont have this?
+        - Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
+        - Add a swing setting.
+        - Re-add chord arp - will work great with patterns too.
         - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.

@@ -229,11 +229,8 @@ namespace SYNTH {
   }
   void set_pitch_scale (uint16_t scale) {
     if (scale == _last_pitch) return;
-    _pitch_scale = get_pitch_log(scale);
+    _pitch_scale = pitch_log(scale);
     _last_pitch = scale;
-  }
-  uint16_t get_pitch_log (uint16_t index) {
-      return log_table[index];
   }
 
   void set_attack (uint16_t attack) {
