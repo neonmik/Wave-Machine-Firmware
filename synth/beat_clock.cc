@@ -114,7 +114,7 @@ namespace BEAT_CLOCK {
         // set the current time in µs for use in checking where its still here
         _midi_in_clock_last = _current_time;
         // increase the clock tick so we can raise a flag at the correct divisions for 24ppqn
-        _midi_clock_tick_count++;
+        ++_midi_clock_tick_count;
         if (_midi_clock_tick_count >= midi_division) {
             set_changed(true);
             _midi_clock_tick_count = 0;

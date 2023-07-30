@@ -54,5 +54,5 @@ void ADSREnvelope::update() {
     }
     
     _adsr += _step;
-    _frame++;
+    ++_frame;
 }

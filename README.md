@@ -10,6 +10,7 @@ Current nightly firmware for Beep Machine Hardware.
 - Updates and Bugfixes:
 
     - Improve Contorls funtionality:
+        - Bug: Fast movements can be missed on the pots. at frist I thought it was only down to multiple controls being active, but it seems to also randomly happen on preset 8. Example:- on preset 8, moving the decay really fast misses/looses the control. 
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         - LOW PRIORITY - Make sure it only calls a setting update when a values actually changed (100% need to improve the input value stabilities for this)
         
@@ -44,9 +45,7 @@ Current nightly firmware for Beep Machine Hardware.
         - Add MIDI Clock out. Needs to be 24ppqn, and have high priority timing wise, and obvs be in sync with the synth... (last bit might be more tricky).
 
         
-    - Multicore
-        - Move Note_priority back to core1 - Take the time pressiure off core1, and has it send voice assignments via a queue. 
-        - ???? Test swapping the cores back now I've proved 15~ voices on core0.
+
 
     - Prove hardware functions:
         - MIDI
@@ -71,6 +70,7 @@ Current nightly firmware for Beep Machine Hardware.
         - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
     
     - Improve Filter code: 
+        - Improve Envelope output for highpass control of cutoff.
         - Improve modulation inputs for controls.
 
     - Arp code:
@@ -83,21 +83,17 @@ Current nightly firmware for Beep Machine Hardware.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
         
-    - Add Portomento Mode
 
-    - Lo-fi mode (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
+    - Lo-fi mode? (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
         - could use the prng function from MOD as using the dither function that uses this on the trem output added noise, that noise could also be used to make the pitch unstable at a desired amount?
+
+    - Portomento Mode
 
     - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - implemented, but not chosen functions yet.
 
     - Start-up settings (MIDI channel, other funtions?)
 
     - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
-
-
-    
-
-    - Add double oscillators per voice (can be done currently, but can only be set inside of software and use one of the pre built waves (sine/square/triangle)).
 
 
 
@@ -125,6 +121,7 @@ Things already implemented:
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
     + Note Handling:
+        + Moved Note_priority back to HW core - Takes the time pressiure off the Audio core. Note assignments are now sent via a queue. 
         + Added a the bones of a paraphonic filter for Modulation and/or Filter. This is currently unstable, but will possibly be used in future pending some UI testing.
 
     + Hardware files bug fixes:

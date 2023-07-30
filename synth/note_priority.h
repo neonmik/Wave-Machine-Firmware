@@ -2,7 +2,7 @@
 
 #include "pico/stdlib.h"
 
-#include "../mailbox.h"
+#include "../queue.h"
 #include "../config.h"
 
 #include "arp.h"
@@ -20,9 +20,9 @@ enum class Priority {
 
 namespace NOTE_PRIORITY {
 
+    uint8_t get_notes_on (void);
 
     namespace {
-        MAILBOX::note_data& NOTES = MAILBOX::NOTE_DATA.core0;
 
         // Q16 representations the frequency of all MIDI notes
         const uint32_t note2freq[128] = {
@@ -53,23 +53,20 @@ namespace NOTE_PRIORITY {
         uint8_t     _notes_on;
         uint8_t     _note_state[128];
         uint8_t     _note_state_last[128];
-        
-        uint8_t     _voice_notes[MAX_VOICES];
-        uint32_t    _time_activated[MAX_VOICES];
-        bool        _active_voice[MAX_VOICES];
-        bool        _released_voice[MAX_VOICES];
 
         int8_t     _voices_active = 0;
 
         void        voices_inc (void) {
-            _voices_active++;
-            if (_voices_active > 8) {
+            ++_voices_active;
+            if (_voices_active > MAX_VOICES) {
                 _voices_active = 8;
             }
         }
         void        voices_dec (void) {
             --_voices_active;
             if (_voices_active <= 0) {
+                printf("_voices_active: %d\n", _voices_active);
+                printf("notes_on: %d\n", get_notes_on());
                 _voices_active = 0;
             }
         }
@@ -99,7 +96,7 @@ namespace NOTE_PRIORITY {
         };
     }
     
-    extern voice_data_t VOICES[8];
+    extern voice_data_t VOICES[MAX_VOICES];
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);
     void voice_off(int slot, int note, int velocity);
@@ -119,6 +116,5 @@ namespace NOTE_PRIORITY {
     void note_on (uint8_t note);
     void note_off (uint8_t note);
     void notes_clear (void);
-    uint8_t get_notes_on (void);
 }
 

@@ -47,6 +47,8 @@ namespace CONTROLS {
         Preset[preset].Arpeggiator.range = Control.get(Controls::ARP, 2);
         Preset[preset].Arpeggiator.direction = Control.get(Controls::ARP, 3);
 
+        Preset[preset].Effects.gain = Control.get(Controls::SHFT, 3);
+
         Preset[preset].Filter.cutoff = Control.get(Controls::FILT, 0);
         Preset[preset].Filter.resonance = Control.get(Controls::FILT, 1);
         Preset[preset].Filter.punch = Control.get(Controls::FILT, 2);
@@ -57,7 +59,8 @@ namespace CONTROLS {
         Preset[preset].Filter.sustain = Control.get(Controls::fENV, 2);
         Preset[preset].Filter.release = Control.get(Controls::fENV, 3);
 
-        Preset[preset].Effects.gain = Control.get(Controls::SHFT, 3);
+
+
 
 
         
@@ -88,6 +91,11 @@ namespace CONTROLS {
         Control.set(Controls::ARP, 1, Preset[preset].Arpeggiator.divisions);
         Control.set(Controls::ARP, 2, Preset[preset].Arpeggiator.range);
         Control.set(Controls::ARP, 3, Preset[preset].Arpeggiator.direction);
+        
+        Control.set(Controls::SHFT, 0, 0);
+        Control.set(Controls::SHFT, 1, 0);
+        Control.set(Controls::SHFT, 2, Preset[preset].Effects.gain);
+        Control.set(Controls::SHFT, 3, 0);
 
         // Control.set_filter(Preset[preset].Filter.state);
         Control.set(Controls::FILT, 0, Preset[preset].Filter.cutoff);
@@ -100,10 +108,10 @@ namespace CONTROLS {
         Control.set(Controls::fENV, 2, Preset[preset].Filter.sustain);
         Control.set(Controls::fENV, 3, Preset[preset].Filter.release);
 
-        Control.set(Controls::SHFT, 0, 0);
-        Control.set(Controls::SHFT, 1, 0);
-        Control.set(Controls::SHFT, 2, Preset[preset].Effects.gain);
-        Control.set(Controls::SHFT, 3, 0);
+        // Control.set(Controls::SPAR, 0, 0);
+        // Control.set(Controls::SPAR, 1, 0);
+        // Control.set(Controls::SPAR, 2, 0);
+        // Control.set(Controls::SPAR, 3, 0);
 
         _changed = true;
     

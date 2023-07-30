@@ -60,7 +60,7 @@ namespace UI {
   }
 
   void change_preset(void) {
-    _preset++;
+    ++_preset;
     if (_preset >= MAX_PRESETS) _preset = 0;
     CONTROLS::set_preset(_preset);
     LEDS::PRESET.preset(_preset);
@@ -154,7 +154,7 @@ void set_shift (bool shift) {
             break;
         }
         
-        poll_index++;
+        ++poll_index;
         if (poll_index > 7) poll_index = 0;
 
         break;

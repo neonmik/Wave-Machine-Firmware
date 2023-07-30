@@ -43,7 +43,7 @@ namespace ShiftReg {
         bool        _send;
 
         void tick (void) {
-            time++;
+            ++time;
             if (time == resolution) time = 0; 
         }
     }

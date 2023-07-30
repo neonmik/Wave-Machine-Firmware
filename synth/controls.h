@@ -29,9 +29,10 @@ namespace CONTROLS {
             ADSR = 1,
             MOD  = 2,
             ARP  = 3,
-            FILT = 4,
+            SHFT = 4,
             fENV = 5,
-            SHFT = 6
+            FILT = 6,
+            SPAR = 7,
         };
            
     }
@@ -95,13 +96,13 @@ namespace CONTROLS {
             ~CONTROL () { }
 
             Page        MAIN    {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,         nullptr};
-                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
+                Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::set_gain,    nullptr,                         nullptr};
             
             Page        ADSR    {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,             nullptr};
                 Page    fENV    {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
             
             Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
-                Page    SHFT    {&FX::SOFTCLIP::set_gain,  nullptr,                    nullptr,                    nullptr,                         nullptr};
+                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
             Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
                 // Page    SHFT    {nullptr,                nullptr,                    nullptr,                    nullptr,                        nullptr};
@@ -127,13 +128,13 @@ namespace CONTROLS {
                         ARP.set(control, input);
                         break;
                     case 4:
-                        FILT.set(control, input);
+                        SHFT.set(control, input);
                         break;
                     case 5:
                         fENV.set(control, input);
                         break;
                     case 6:
-                        SHFT.set(control, input);
+                        FILT.set(control, input);
                         break;
                 }
             }
@@ -149,11 +150,11 @@ namespace CONTROLS {
                     case 3:
                         return ARP.get(control);
                     case 4:
-                        return FILT.get(control);
+                        return SHFT.get(control);
                     case 5:
                         return fENV.get(control);
                     case 6:
-                        return SHFT.get(control);
+                        return FILT.get(control);
                     default:
                         return 0;
                 }

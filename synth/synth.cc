@@ -75,7 +75,7 @@ namespace SYNTH {
   uint16_t get_audio_frame() {
     
     if (_soft_start) {
-      _soft_start_index++;
+      ++_soft_start_index;
       if (_soft_start_index >= 2) {
         _soft_start_index = 0;
         _soft_start_sample += 1;
@@ -113,7 +113,7 @@ namespace SYNTH {
           channel.ADSR.update();
           if (channel.ADSR.isStopped()) {
             channel.note_stopped();
-            MAILBOX::release_send(c);
+            QUEUE::release_send(c);
           }
 
           // if(channel.waveform_offset & 0x10000) {
@@ -130,12 +130,12 @@ namespace SYNTH {
 
           // if (oscillator & Oscillator::NOISE) {
           //   channel_sample += channel.noise;
-          //   waveform_count++;
+          //   ++waveform_count;
           // }
 
           // if (oscillator & Oscillator::SAW) {
           //   channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
-          //   waveform_count++;
+          //   ++waveform_count;
           // }
 
           // if (oscillator & Oscillator::TRIANGLE) {
@@ -145,12 +145,12 @@ namespace SYNTH {
           //   else { // final quarter up slope
           //     channel_sample += int32_t(0x7fff) - ((int32_t(channel.waveform_offset) - int32_t(0x7fff)) * 2);
           //   }
-          //   waveform_count++;
+          //   ++waveform_count;
           // }
 
           // if (oscillator & Oscillator::SQUARE) {
           //   channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
-          //   waveform_count++;
+          //   ++waveform_count;
           // }
           
           // if (oscillator & Oscillator::SINE) {
@@ -158,18 +158,18 @@ namespace SYNTH {
           //   // total so we'll just use the most significant bits
           //   // of the current waveform position to index into it
           //   channel_sample += sine_waveform[(channel.waveform_offset >> 8)];
-          //   waveform_count++;
+          //   ++waveform_count;
           // }
 
           // if (oscillator & Oscillator::ARBITARY) {
           //   // OLD Arbitary Waveform? Not sure how it was meant to work, but it didnt...
           //   // channel_sample += channel.wave_buffer[channel.wave_buf_pos];
-          //   // if (++channel.wave_buf_pos == 64) {
+          //   // if (channel.wave_buf_pos == 64) {
           //   //   channel.wave_buf_pos = 0;
           //   //   if(channel.wave_buffer_callback)
           //   //       channel.wave_buffer_callback(channel);
           //   // }
-          //   // waveform_count++;
+          //   // ++waveform_count;
           // }
           
           if (oscillator & Oscillator::WAVETABLE) {
@@ -178,8 +178,7 @@ namespace SYNTH {
             // total so we'll just use the most significant bits
             // of the current waveform position to index into it
             channel_sample += get_wavetable((channel.waveform_offset >> 8) + vector);
-            waveform_count++;
-
+            ++waveform_count;
             
           }
 

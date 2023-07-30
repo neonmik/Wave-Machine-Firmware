@@ -136,7 +136,7 @@ namespace KEYS {
       }
     }
     // To be removed
-    // if (_changed) MAILBOX::NOTE_DATA.send();
+    // if (_changed) QUEUE::NOTE_DATA.send();
     //
 
     // Page
@@ -174,26 +174,5 @@ namespace KEYS {
     // store keys for next time
     Keys.set_last(keys);
     
-  }
-
-  void note_on (uint8_t note) {
-    NOTES.note_state[note & 127] = 1;
-    inc_physical_notes();
-    _changed = true;
-  }
-  void note_off (uint8_t note) {
-    NOTES.note_state[note & 127] = 0;
-    dec_physical_notes();
-    _changed = true;
-  }
-  void notes_clear (void) {
-    for (int i = 0; i < 128; i++) {
-      NOTES.note_state[i] = 0;
-    }
-    NOTES.notes_on = 0;
-    _changed = true;
-  }
-  uint8_t get_notes_on (void) {
-    return NOTES.notes_on;
   }
 }

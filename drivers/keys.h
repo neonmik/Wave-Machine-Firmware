@@ -24,10 +24,10 @@
 
 #include "button.h"
 
-// #include "../synth/note_priority.h"
+#include "../synth/note_priority.h"
 
-#include "../mailbox.h"
-#include "../midi.h"
+// #include "../queue.h"
+// #include "../midi.h"
 
 namespace KEYS {
 
@@ -83,27 +83,10 @@ namespace KEYS {
             }
 
     };
-    namespace {
-        MAILBOX::note_data& NOTES = MAILBOX::NOTE_DATA.core1;
-        
-        bool       _changed         =       false;
-
-        void inc_physical_notes() {
-            NOTES.notes_on++;
-        }
-        void dec_physical_notes() {
-            if (NOTES.notes_on) NOTES.notes_on--; //checks to make sure there is a note on
-        }
-    }
     
     extern Keyboard Keys;
 
     void init (void);
     void read (void);
     void update (void);
-
-    void note_on (uint8_t note);
-    void note_off (uint8_t note);
-    void notes_clear (void);
-    uint8_t get_notes_on (void);
 }

@@ -83,12 +83,9 @@ namespace FILTER {
     void process(int32_t &sample) {
         if (_mode != FilterType::Off) {
             ADSR.update();
-            // if (ADSR.isStopped()) return;
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
             if (_dirty) {
-                // f_ = Interpolate824(lut_svf_cutoff, frequency_ << 17);
-                // _damp = Interpolate824(lut_svf_damp, _resonance << 17);
                 _frequency = _cutoff;
                 _damp = _resonance;
                 _dirty = false;
@@ -96,7 +93,6 @@ namespace FILTER {
 
 
             volatile int32_t frequency;
-            // frequency = _frequency;
             frequency = (int32_t(_frequency) * int32_t(ADSR.get_adsr() >> 8)) >> 16;
             if (frequency <= 15) frequency = 15;
 
@@ -116,9 +112,6 @@ namespace FILTER {
             FX::HARDCLIP::process(_bandpass);
 
             switch (_mode) {
-                // case Off:
-                //     sample = sample;
-                //     break;
                 case LowPass:
                     sample = _lowpass;
                     break;

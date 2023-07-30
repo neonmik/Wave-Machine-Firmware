@@ -1,18 +1,12 @@
-#include "mailbox.h"
+#include "queue.h"
 
-namespace MAILBOX {
-    Mailbox<note_data> NOTE_DATA;
-
+namespace QUEUE {
     queue_t trigger_queue;
     queue_t release_queue;
     
     void init() {
-        NOTE_DATA.init();
         queue_init(&trigger_queue, sizeof(trigger_msg_t), 8);
         queue_init(&release_queue, sizeof(uint8_t), 8);
-    }
-    void send() {
-        NOTE_DATA.send();
     }
     
     void trigger_send (uint8_t slot, uint8_t note, bool gate) {
@@ -45,12 +39,5 @@ namespace MAILBOX {
     }
     uint8_t release_check_queue (){
         return queue_get_level_unsafe(&release_queue);
-    }
-
-    void receive() {
-        NOTE_DATA.receive();
-    }
-    void update() {
-
     }
 }

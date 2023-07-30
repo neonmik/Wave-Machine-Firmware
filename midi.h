@@ -2,16 +2,11 @@
 
 #include "pico/stdlib.h"
 
-// #include "bsp/board.h"
-// #include "tusb.h"
-
 #include "drivers/usb.h"
 
-#include "drivers/keys.h"
 #include "synth/beat_clock.h"
 #include "synth/controls.h"
 
-#include "mailbox.h"
 
 #include "debug.h"
 
@@ -19,18 +14,6 @@
 #include "functions.h"
 
 namespace MIDI {
-    namespace {
-        MAILBOX::note_data& NOTES = MAILBOX::NOTE_DATA.core1;
-        
-        bool       _changed         =       false;
-
-        void inc_physical_notes() {
-            NOTES.notes_on++;
-        }
-        void dec_physical_notes() {
-            if (NOTES.notes_on) NOTES.notes_on--; //checks to make sure there is a note on
-        }
-    }
 
     constexpr   uint8_t     MIDI_CHANNEL_OMNI =             0;
     constexpr   uint8_t     MIDI_CHANNEL_OFF =              17; // and over

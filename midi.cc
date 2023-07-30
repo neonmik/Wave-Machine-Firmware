@@ -100,10 +100,10 @@ namespace MIDI {
         uint16_t temp = map(value, CONTROL_CHANGE_MIN, CONTROL_CHANGE_MAX, KNOB_MIN, KNOB_MAX);
         switch (controller) {
             case 1: // Modulation wheel
-                printf("MIDI IN: Modulation Wheel - %d\n", temp);
+                // printf("MIDI IN: Modulation Wheel - %d\n", temp);
                 break;
             case 7: // Volume
-                printf("MIDI IN: Volume - %d\n", temp);
+                // printf("MIDI IN: Volume - %d\n", temp);
                 break;
             case 70: // Wavetable
                 // printf("MIDI IN: Wavetable - %d\n", temp);
@@ -139,8 +139,9 @@ namespace MIDI {
     void handlePitchBend(uint8_t channel, uint16_t pitch) {
         if (channel != MIDI_CHANNEL) return;
         // printf("MIDI IN: Pitch Bend - %d\n", pitch);
-        uint16_t temp = map(pitch, 0, EXTENDED_CONTROL_CHANGE_MAX, 0, 1023);
-        printf("MIDI IN: Pitch Bend (mapped) - %d\n", temp);
+        // uint16_t temp = map(pitch, 0, EXTENDED_CONTROL_CHANGE_MAX, 0, 1023);
+        uint16_t temp = pitch >> 4; // easy way to map 14 bit range to the needed internal 10 bit.
+        // printf("MIDI IN: Pitch Bend (mapped) - %d\n", temp);
         CONTROLS::set_value(0, 3, temp);
     }
     void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {}

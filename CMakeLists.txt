@@ -32,7 +32,7 @@ add_executable(${PROJECT_NAME}
     
     settings.cc
     functions.cc
-    mailbox.cc
+    queue.cc
     
     random.cc
     

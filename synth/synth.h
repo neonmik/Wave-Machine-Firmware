@@ -12,9 +12,9 @@
 #include "adsr.h"
 
 #include "wavetable.h"
-#include "log_table.h"
+#include "resources.h"
 
-#include "../mailbox.h"
+#include "../queue.h"
 
 
 namespace SYNTH {

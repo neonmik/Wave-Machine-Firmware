@@ -8,12 +8,8 @@
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
 constexpr   uint32_t    SAMPLE_RATE     =       48000;
-constexpr   uint8_t     BUFFER_SIZE     =       64;             // Buffer size can be set at any interval (2/4/8/16/32/64/128/256)
-                                                                // but the higher the size, the more clock noise is present from the mod calcs 
-                                                                // - could be due to processing time but also the mod call rate can probably be
-                                                                // reduced due to the tops speed needed from it (2.5kHz). This would be 
-                                                                // accomplished be reducing the call rate and changing the phase accumulator
-                                                                // bit shift ratios.
+constexpr   uint16_t    BUFFER_SIZE     =       64;             // Buffer size can be set at any interval (2/4/8/16/32/64/128/256)
+                                                                // but the higher the size, the worst the performance
 
 static      uint32_t    sample_clock;
 
@@ -27,9 +23,9 @@ constexpr   uint8_t     MAX_VOICES      =       8;              // 8 is the "sta
                                                                 //      - runs at 10 voices with just modulation
                                                                 //      - runs at 10 voices with just filter
                                                                 //      - runs at 6 voices with filter and modulation mostly
-                                                                // with eventual HW core (Core: 144MHz/SR: 48000) :-
-                                                                //      - runs at * voices with just modulation
-                                                                //      - runs at * voices with just filter
+                                                                // with Note Priority on HW core (Core: 144MHz/SR: 48000) :-
+                                                                //      - runs at 8 voices with both
+
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 

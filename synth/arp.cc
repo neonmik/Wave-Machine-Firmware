@@ -34,7 +34,7 @@ namespace ARP {
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
             case UP:
-                _play_index++;
+                ++_play_index;
                 if (_play_index >= _count) {
                     _play_index = 0;
                     update_range();
@@ -54,13 +54,13 @@ namespace ARP {
                 break;
             case UP_DOWN:
                 if (_switch) {
-                    _play_index++;
+                    ++_play_index;
                     if (_play_index >= _count) {
                         _play_index = _count > 1 ? _count - 2 : 0;
                         _switch = false;
                     }
                 } else {
-                    _play_index--;
+                    --_play_index;
                     if (_play_index < 0) {
                         _play_index = _count > 1 ? 1 : 0;
                         _switch = true;
@@ -76,7 +76,7 @@ namespace ARP {
                         _switch = false;
                     }
                 } else {
-                    _play_index++;
+                    ++_play_index;
                     if (_play_index >= _count) {
                         _play_index = _count > 1 ? _count - 2 : 0;
                         _switch = true;
@@ -119,7 +119,7 @@ namespace ARP {
 
  
     void add_notes (uint8_t note) {
-        for (int i = 0; i < max_arp; ++i) {
+        for (int i = 0; i < max_arp; i++) {
             if (_notes[i] == note) {
                 _notes_changed = true;
                 return;
@@ -146,10 +146,10 @@ namespace ARP {
         if (_count == 0) {
             return;
         }
-        for (int i = 0; i <= _count; ++i) {
+        for (int i = 0; i <= _count; i++) {
             if (_notes[i] == note) {
                 // Shift all the notes after the removed note back by one
-                for (int j = i; j < _count; ++j) {
+                for (int j = i; j < _count; j++) {
                     _notes[j] = _notes[j + 1];
                     _notes[j + 1] = 0;
                 }
