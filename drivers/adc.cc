@@ -50,9 +50,11 @@ namespace ADC {
         // FIR_filter(_adc_value, _mux_address);
         
         // moves filtered sample to the adc array
-        _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 12, 4095, KNOB_MIN, KNOB_MAX);
-        
+        _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 10, 4095, KNOB_MIN, KNOB_MAX);
+
+        // Improve this to have more random numbers, make the RNG better.
         _adc_noise = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
+
         // RANDOM::update(_adc_noise);
 
         increment_mux_address();

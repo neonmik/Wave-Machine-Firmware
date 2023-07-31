@@ -29,6 +29,7 @@ namespace ADC {
         uint32_t _sample[MAX_KNOBS];
         uint32_t _output;
 
+        // change these to just handle the sample filter with a reference, and then add new function for saving to the table.
         inline void NO_filter (uint16_t reading, uint8_t index) {
             _sample[index] = (reading >> 2);
         }
@@ -46,7 +47,8 @@ namespace ADC {
             _mux_address = (_mux_address + 1) % MAX_KNOBS;
         }
         void read_mux (void) {
-            gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
+            // Not needed anymore due to hardware changes.
+            // gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
 
             // sets mux pins
             gpio_put(MUX_SEL_A, _mux_address & 1); 
@@ -59,8 +61,10 @@ namespace ADC {
             
             _adc_value = adc_read();
 
+            // Not needed anymore due to hardware changes.
             // puts SMPS back into PWM mode
-            gpio_put(23, 0); 
+            // gpio_put(23, 0); 
+            
 
             // zeros mux for keys
             gpio_put(MUX_SEL_A, 0);
