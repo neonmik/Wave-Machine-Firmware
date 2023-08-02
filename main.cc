@@ -53,7 +53,7 @@ void synth_core() {
           bool gate_ = false;
 
           QUEUE::trigger_receive(slot_, note_, gate_);
-            if (slot_<MAX_VOICES) {
+            if (slot_ < MAX_VOICES) {
               if (gate_) SYNTH::voice_on(slot_, note_);
               if (!gate_) SYNTH::voice_off(slot_);
             } else {
