@@ -23,7 +23,7 @@ namespace FILTER {
     };
 
     namespace {
-        // uint8_t     _index;
+        uint8_t     _index;
 
         bool        _dirty;
 
@@ -65,8 +65,8 @@ namespace FILTER {
         }
 
         uint32_t calc_end_frame (uint32_t milliseconds) {
-            // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
-            return (milliseconds * SAMPLE_RATE) / 1000;
+            return (milliseconds * (SAMPLE_RATE/8)) / 1000;
+            // return (milliseconds * SAMPLE_RATE) / 1000;
         }
 
 

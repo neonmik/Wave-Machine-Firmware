@@ -5,7 +5,7 @@ Current nightly firmware for Beep Machine Hardware.
 
 - Alpha Release bugfixes:
 
-    - Mod makes noise when on. figure out. 
+    
 
 - Updates and Bugfixes:
 
