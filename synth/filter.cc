@@ -83,6 +83,11 @@ namespace FILTER {
     void process(int32_t &sample) {
         if (_mode != FilterType::Off) {
             ADSR.update();
+            if (ADSR.isStopped()) QUEUE::release_send(MAX_VOICES+1);
+            // for future effecientcy improvements. Allows to reduce sample rate of ADSR.
+            // _index++;
+            // _index &= 0x7;
+            // if (_index == 0) ADSR.update();
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
             if (_dirty) {

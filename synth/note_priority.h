@@ -59,14 +59,12 @@ namespace NOTE_PRIORITY {
         void        voices_inc (void) {
             ++_voices_active;
             if (_voices_active > MAX_VOICES) {
-                _voices_active = 8;
+                _voices_active = MAX_VOICES;
             }
         }
         void        voices_dec (void) {
             --_voices_active;
             if (_voices_active <= 0) {
-                printf("_voices_active: %d\n", _voices_active);
-                printf("notes_on: %d\n", get_notes_on());
                 _voices_active = 0;
             }
         }
@@ -113,8 +111,8 @@ namespace NOTE_PRIORITY {
 
     void check_release (void);
 
-    void note_on (uint8_t note);
-    void note_off (uint8_t note);
+    void note_on (uint8_t note, uint8_t velocity);
+    void note_off (uint8_t note, uint8_t velocity);
     void notes_clear (void);
 }
 

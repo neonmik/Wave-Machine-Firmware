@@ -84,10 +84,10 @@ namespace MIDI {
     }
     //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-        if (channel == MIDI_CHANNEL) NOTE_PRIORITY::note_off(note);
+        if (channel == MIDI_CHANNEL) NOTE_PRIORITY::note_off(note, velocity);
     }
     void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-        if (channel == MIDI_CHANNEL && velocity > 0) NOTE_PRIORITY::note_on(note);
+        if (channel == MIDI_CHANNEL && velocity > 0) NOTE_PRIORITY::note_on(note, velocity);
     }
     void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {
         if (channel != MIDI_CHANNEL) return;

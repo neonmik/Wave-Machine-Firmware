@@ -36,6 +36,10 @@ namespace UI {
         uint8_t poll_index;
         uint8_t poll_index_last;
 
+        uint32_t time_start;
+        uint32_t time_end;
+        uint32_t time_taken;
+
         UiMode _mode;
     }
     
@@ -61,4 +65,5 @@ namespace UI {
     void init (void);
     void update (void);
     void debug (void);
+    void calibrate (void);
 }

@@ -6,6 +6,7 @@
 
 #include "../config.h"
 #include "../functions.h"
+#include "../queue.h"
 
 #include "resources.h"
 
@@ -22,6 +23,8 @@ namespace FILTER {
     };
 
     namespace {
+        // uint8_t     _index;
+
         bool        _dirty;
 
         int16_t     _cutoff;
@@ -62,6 +65,7 @@ namespace FILTER {
         }
 
         uint32_t calc_end_frame (uint32_t milliseconds) {
+            // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
             return (milliseconds * SAMPLE_RATE) / 1000;
         }
 

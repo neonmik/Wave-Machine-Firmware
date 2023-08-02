@@ -47,9 +47,6 @@ namespace ADC {
             _mux_address = (_mux_address + 1) % MAX_KNOBS;
         }
         void read_mux (void) {
-            // Not needed anymore due to hardware changes.
-            // gpio_put(23, 1); // sets SMPS into low power mode for better reading on the ADC - need to validate... 
-
             // sets mux pins
             gpio_put(MUX_SEL_A, _mux_address & 1); 
             gpio_put(MUX_SEL_B, (_mux_address >> 1) & 1);
@@ -59,11 +56,7 @@ namespace ADC {
             // wait to read - allows settling time
             asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
             
-            _adc_value = adc_read();
-
-            // Not needed anymore due to hardware changes.
-            // puts SMPS back into PWM mode
-            // gpio_put(23, 0); 
+            _adc_value = adc_read(); 
             
 
             // zeros mux for keys

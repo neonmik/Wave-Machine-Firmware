@@ -24,7 +24,7 @@
 #include "queue.h"
 
 
-void core1_main() {
+void hw_core() {
   
   UI::init();
 
@@ -36,7 +36,7 @@ void core1_main() {
 }
 
 
-void core0_main() {
+void synth_core() {
 
   SYNTH::init();
   DAC::init(SYNTH::get_audio_frame);
@@ -53,9 +53,13 @@ void core0_main() {
           bool gate_ = false;
 
           QUEUE::trigger_receive(slot_, note_, gate_);
-
-          if (gate_) SYNTH::voice_on(slot_, note_);
-          if (!gate_) SYNTH::voice_off(slot_);
+            if (slot_<MAX_VOICES) {
+              if (gate_) SYNTH::voice_on(slot_, note_);
+              if (!gate_) SYNTH::voice_off(slot_);
+            } else {
+              if (gate_) FILTER::trigger_attack();
+              if (!gate_) FILTER::trigger_release();
+            }
         }
       }
       
@@ -72,9 +76,9 @@ void core0_main() {
 
   QUEUE::init(); // has to be here to allow both cores access to MAILBOX
   
-  multicore_launch_core1(core1_main); 
+  multicore_launch_core1(hw_core); 
 
-  core0_main();
+  synth_core();
 
 } 
 

@@ -100,7 +100,7 @@ void set_shift (bool shift) {
     PAGINATION::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
-      _mode = UI_MODE_FACTORY_TEST;
+      _mode = UI_MODE_CALIBRATION;
     }
     LEDS::LFO.set(get_lfo());
     LEDS::ARP.set(get_arp());
@@ -153,17 +153,17 @@ void set_shift (bool shift) {
             // do nothing
             break;
         }
-        
+
         ++poll_index;
         if (poll_index > 7) poll_index = 0;
 
         break;
 
       case UI_MODE_FACTORY_TEST:
-        debug();
         break;
 
       case UI_MODE_CALIBRATION:
+        calibrate();
         break;
 
       default:
@@ -172,7 +172,7 @@ void set_shift (bool shift) {
     }
   }
 
-  void debug (void) {
+  void calibrate (void) {
 
     LEDS::test(30);
 
