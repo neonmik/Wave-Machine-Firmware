@@ -5,9 +5,11 @@ Current nightly firmware for Beep Machine Hardware.
 
 - Alpha Release bugfixes:
 
-    
+    - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
 
 - Updates and Bugfixes:
+
+    - Feature: Figure sustain pedal algorithm out. Needs to be before Arp or Priority allocation but also be able to keep up with voice allocation? probably needs to control two seperate algorithms in seperate sections, like I've started.
 
     - Improve Contorls funtionality:
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
@@ -63,6 +65,8 @@ Current nightly firmware for Beep Machine Hardware.
         - Make the code more portable:- currently the calculations for ADSR times are done in the synth module, but would be good to move them into the ADSR module. I need global controls, but to be able to trigger phases of each voice seperately.
     
     - Improve Mod code:
+        - Try making it Poly - I think the sample rate can be reduced by 8 (6kHz) and that should allow every voice to have its own poly Mod. Would probably need a reset for when notes are released, so that you can really hear the difference.
+
         - Add a tempo sync function.
         - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
         - Add a ramp down feature when switching between destinations - could be difficult. 
@@ -81,7 +85,8 @@ Current nightly firmware for Beep Machine Hardware.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
-    - Portomento Mode
+    - Add Portomento Mode - probably need mono mode first?
+    - Add Mono Mode - selectable at start up.
 
     - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - chosen functions.
 
@@ -115,6 +120,7 @@ Things already implemented:
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
     + Note Handling:
+        + Bugfix: An error with the release message queue was causing the notes not to release properly. Only recognised during Sustain Pedal Feature testing.
         + Moved Note_priority back to HW core - Takes the time pressiure off the Audio core. Note assignments are now sent via a queue. 
         + Added a the bones of a paraphonic filter for Modulation and/or Filter. This is currently unstable, but will possibly be used in future pending some UI testing.
 
@@ -179,6 +185,7 @@ Things already implemented:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + USB MIDI/MIDI:
+        + Bugfix: MIDI messages were being repeatedly called, turned out to be and issue with the way that the USB-MIDI queue was being checked for messages. Only found if during testing for Sustain Pedal Feature.
         + Bugfix: MIDI in note calls would fire if keybaord hadnt been pressed. changed the way they're called.
         + MIDI Clock can handle both Clock stopping and Clock drop out (Not ideal, but should be ok for most uses)
         + MIDI Clock can recieve any tempo in the range of 20-999 BPM
