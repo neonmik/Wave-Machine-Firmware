@@ -87,7 +87,7 @@ namespace FILTER {
             _index++;
             _index &= 0x7;
             if (_index == 0) ADSR.update();
-            if (ADSR.isStopped()) QUEUE::release_send(MAX_VOICES+1); // not really needed as it stands...
+            // if (ADSR.isStopped()) QUEUE::release_send(MAX_VOICES+1); // not really needed as it stands...
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
             if (_dirty) {

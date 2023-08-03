@@ -25,6 +25,7 @@ constexpr   uint8_t     MAX_VOICES      =       8;              // 8 is the "sta
                                                                 //      - runs at 6 voices with filter and modulation mostly
                                                                 // with Note Priority on HW core (Core: 144MHz/SR: 48000) :-
                                                                 //      - runs at 8 voices with both
+constexpr   uint8_t     FILTER_VOICE    =       (MAX_VOICES+1);
 
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available

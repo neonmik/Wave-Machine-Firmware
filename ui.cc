@@ -134,7 +134,7 @@ void set_shift (bool shift) {
             }
             break;
           case 2:
-            NOTE_PRIORITY::update();
+            NOTE_HANDLING::update();
           case 3:
             ADC::update();
           case 4:

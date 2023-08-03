@@ -14,7 +14,7 @@
 #include "config.h"
 
 #include "synth/arp.h"
-#include "synth/note_priority.h"
+// #include "synth/note_priority.h"
 #include "synth/synth.h"
 
 #include "drivers/dac.h"

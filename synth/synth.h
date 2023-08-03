@@ -129,6 +129,9 @@ namespace SYNTH {
       _note = 0;
       _frequency = 0;
     }
+    bool is_active (void) {
+      return _active;
+    }
     
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
   };

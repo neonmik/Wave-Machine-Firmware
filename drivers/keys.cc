@@ -119,10 +119,10 @@ namespace KEYS {
 
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
-        NOTE_PRIORITY::note_on(i+DEFAULT_KEY, DEFAULT_VEL);
+        NOTE_HANDLING::note_on(i+DEFAULT_KEY, DEFAULT_VEL);
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
-        NOTE_PRIORITY::note_off(i+DEFAULT_KEY, DEFAULT_VEL);
+        NOTE_HANDLING::note_off(i+DEFAULT_KEY, DEFAULT_VEL);
       }
     }
 

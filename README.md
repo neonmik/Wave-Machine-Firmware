@@ -10,9 +10,7 @@ Current nightly firmware for Beep Machine Hardware.
 - Updates and Bugfixes:
 
     - Improve Contorls funtionality:
-        - Bug: Fast movements can be missed on the pots. at frist I thought it was only down to multiple controls being active, but it seems to also randomly happen on preset 8. Example:- on preset 8, moving the decay really fast misses/looses the control. 
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
-        - LOW PRIORITY - Make sure it only calls a setting update when a values actually changed (100% need to improve the input value stabilities for this)
         
     - Improve Oscillator script - current bugs include:
         - Finesse soft start code - currently takes too long to get going and still isnt perfect.
@@ -65,9 +63,9 @@ Current nightly firmware for Beep Machine Hardware.
         - Make the code more portable:- currently the calculations for ADSR times are done in the synth module, but would be good to move them into the ADSR module. I need global controls, but to be able to trigger phases of each voice seperately.
     
     - Improve Mod code:
-        - Add a ramp down feature when switching between destinations - could be difficult. 
-        - Add a temp sync function.
+        - Add a tempo sync function.
         - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
+        - Add a ramp down feature when switching between destinations - could be difficult. 
     
     - Improve Filter code: 
         - Improve Envelope output for highpass control of cutoff.
@@ -82,14 +80,10 @@ Current nightly firmware for Beep Machine Hardware.
         - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
-        
-
-    - Lo-fi mode? (Pots arent smoothed, allowing minute chanegs to alter pitch/other controls)
-        - could use the prng function from MOD as using the dither function that uses this on the trem output added noise, that noise could also be used to make the pitch unstable at a desired amount?
 
     - Portomento Mode
 
-    - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - implemented, but not chosen functions yet.
+    - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - chosen functions.
 
     - Start-up settings (MIDI channel, other funtions?)
 
@@ -125,6 +119,7 @@ Things already implemented:
         + Added a the bones of a paraphonic filter for Modulation and/or Filter. This is currently unstable, but will possibly be used in future pending some UI testing.
 
     + Hardware files bug fixes:
+        - Bug: Fixed once I moved the note handling to the HW core and refactored the Note Priority code to remove the massive, now unnecessary for-loop. Fast movements can be missed on the pots. at frist I thought it was only down to multiple controls being active, but it seems to also randomly happen on preset 8. Example:- on preset 8, moving the decay really fast misses/looses the control. 
         + Added a basic debug test function to test the pots and cycle for LEDs on start up - can currently be accessed by holding down preset/shift while powering up.
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
@@ -139,9 +134,9 @@ Things already implemented:
         + Add Arp mode
 
     + Settings Bugfixes:
-        - Added starting shift functions:
+        + Added starting shift functions:
             - Added in functions for Modulation  
-            - Added in functions for Filter (Shift on Main) and its ADSR (Shift on ADSR) - currently disabled due to processing power.
+            - Added in functions for Filter (Shift on LFO) and its ADSR (Shift on ADSR) - fixed issues with processing.
         + Issues when first starting, LFO was active but UI didnt reflect it.
         + Factory Restore function working, just need to implement in controls
         + Load Current Factory Presets to Factory Space
@@ -202,9 +197,10 @@ Things already implemented:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Reduced the sample rate of the filter ADSR. 
         + Added a modulation input, but needs adjusting. Going on the back burner till the Filter and Mod can opperate together.
         + Fixed the inputs using the map_exp functions - now using LUT for speed.
-        - Bugfix: fixed the inputs for controls (Cutoff, Resonance, Type, Punch):- needed the ranges fixing but now can happily take 10bit controls. 
+        + Bugfix: fixed the inputs for controls (Cutoff, Resonance, Type, Punch):- needed the ranges fixing but now can happily take 10bit controls. 
         + Added ADSR functions.
         + Controls are now all there (Cutoff, Resonance, Punch, Type) currently accessable by holding shift on the main page.
         + Started adding controls for inputs.

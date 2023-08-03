@@ -42,7 +42,7 @@ add_executable(${PROJECT_NAME}
     synth/arp.cc
     synth/beat_clock.cc
     synth/modulation.cc
-    synth/note_priority.cc
+    synth/note_handling.cc
     synth/controls.cc
     synth/synth.cc
     synth/resources.cc

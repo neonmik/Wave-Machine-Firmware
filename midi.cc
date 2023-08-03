@@ -84,10 +84,13 @@ namespace MIDI {
     }
     //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
-        if (channel == MIDI_CHANNEL) NOTE_PRIORITY::note_off(note, velocity);
+        if (channel == MIDI_CHANNEL) NOTE_HANDLING::note_off(note, velocity);
     }
     void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-        if (channel == MIDI_CHANNEL && velocity > 0) NOTE_PRIORITY::note_on(note, velocity);
+        if (channel == MIDI_CHANNEL) {
+            if (velocity > 0) NOTE_HANDLING::note_on(note, velocity);
+            else NOTE_HANDLING::note_off(note, velocity);
+        }
     }
     void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {
         if (channel != MIDI_CHANNEL) return;
@@ -107,23 +110,27 @@ namespace MIDI {
                 break;
             case 70: // Wavetable
                 // printf("MIDI IN: Wavetable - %d\n", temp);
-                CONTROLS::set_value(0 , 0, temp);
+                CONTROLS::set_value(CONTROLS::Controls::MAIN, 0, temp);
                 break;
             case 71: // Vector
                 // printf("MIDI IN: Vector - %d\n", temp);
-                CONTROLS::set_value(0 , 1, temp);
+                CONTROLS::set_value(CONTROLS::Controls::MAIN, 1, temp);
                 break;
             case 72: // Release
                 // printf("MIDI IN: Release - %d\n", temp);
-                CONTROLS::set_value(1 , 3, temp);
+                CONTROLS::set_value(CONTROLS::Controls::ADSR, 3, temp);
                 break;
             case 73: // Attack
                 // printf("MIDI IN: Attack - %d\n", temp);
-                CONTROLS::set_value(1 , 0, temp);
+                CONTROLS::set_value(CONTROLS::Controls::ADSR, 0, temp);
                 break;
             case 75: // Decay
                 // printf("MIDI IN: Decay - %d\n", temp);
-                CONTROLS::set_value(1 , 1, temp);
+                CONTROLS::set_value(CONTROLS::Controls::ADSR, 1, temp);
+                break;
+            case 64: // Sustain pedal
+                // CONTROLS::set_value(CONTROLS::Controls::ARP, 0, temp); 
+                NOTE_HANDLING::sustain_pedal(temp);
                 break;
             default:
                 break;
@@ -203,10 +210,12 @@ namespace MIDI {
     void usb_midi_task (void) {
         if (USB::MIDI::available) {
             uint32_t buffer_length = USB::MIDI::buffer_size();
-            for (int i = 0; i < buffer_length; i++) {
-                uint8_t packet[4];
-                USB::MIDI::get(packet);
-                handleMidiMessage(packet);
+            if (buffer_length) {
+                for (int i = 0; i < buffer_length; i++) {
+                    uint8_t packet[4];
+                    USB::MIDI::get(packet);
+                    handleMidiMessage(packet);
+                }
             }
         }
 

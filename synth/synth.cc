@@ -116,7 +116,7 @@ namespace SYNTH {
           channel.waveform_offset += _vibrato;
 
           channel.ADSR.update();
-          if (channel.ADSR.isStopped()) {
+          if (channel.is_active() && channel.ADSR.isStopped()) {
             channel.note_stopped();
             QUEUE::release_send(c);
           }

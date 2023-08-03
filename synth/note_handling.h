@@ -18,9 +18,9 @@ enum class Priority {
 };
 
 
-namespace NOTE_PRIORITY {
+namespace NOTE_HANDLING {
 
-    uint8_t get_notes_on (void);
+    // uint8_t get_notes_on (void);
 
     namespace {
 
@@ -51,8 +51,12 @@ namespace NOTE_PRIORITY {
         Priority    _priority = Priority::LAST;
 
         uint8_t     _notes_on;
-        uint8_t     _note_state[128];
-        uint8_t     _note_state_last[128];
+        
+        bool        _sustain;
+        uint8_t     _held_notes[MAX_VOICES];
+        volatile uint8_t     _num_held_notes;
+        // uint8_t     _note_state[128];
+        // uint8_t     _note_state_last[128];
 
         int8_t     _voices_active = 0;
 
@@ -90,6 +94,7 @@ namespace NOTE_PRIORITY {
             void clear (void) {
                 note = 0;
                 active = false;
+                activation_time = 0;
             }
         };
     }
@@ -114,5 +119,8 @@ namespace NOTE_PRIORITY {
     void note_on (uint8_t note, uint8_t velocity);
     void note_off (uint8_t note, uint8_t velocity);
     void notes_clear (void);
+    uint8_t get_notes_on(void);
+
+    void sustain_pedal (uint16_t status);
 }
 

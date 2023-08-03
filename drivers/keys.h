@@ -24,7 +24,7 @@
 
 #include "button.h"
 
-#include "../synth/note_priority.h"
+#include "../synth/note_handling.h"
 
 // #include "../queue.h"
 // #include "../midi.h"

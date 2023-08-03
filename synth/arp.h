@@ -7,7 +7,7 @@
 #include "../functions.h"
 #include "../config.h"
 
-#include "note_priority.h"
+#include "note_handling.h"
 #include "beat_clock.h"
 
 
@@ -42,6 +42,7 @@ namespace ARP {
         constexpr uint8_t max_arp = 8;
         uint8_t _notes[max_arp]; //all the notes stored in the arp sequence
         uint8_t _last_note;
+        uint8_t _last_index;
 
         int8_t      _play_index;
         int8_t      _count;

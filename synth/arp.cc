@@ -97,7 +97,8 @@ namespace ARP {
             if (BEAT_CLOCK::get_changed()) {
                 switch (note_state) {
                     case NOTE_ACTIVE:
-                        NOTE_PRIORITY::priority(0x80, _last_note, 0);
+                        NOTE_HANDLING::priority(0x80, _last_note, 0);
+                        // NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
                         arpeggiate(_direction);
                         note_state = IDLE;
                         break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
@@ -107,7 +108,10 @@ namespace ARP {
                         }
                         if (_notes[_play_index]) {
                             _last_note = ((_notes[_play_index])+(_octave*12));
-                            NOTE_PRIORITY::priority(0x90, _last_note, 127);
+                            NOTE_HANDLING::priority(0x90, _last_note, 127);
+                            // _last_index++;
+                            // if (_last_index > MAX_VOICES) _last_index = 0;
+                            // NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
                             note_state = NOTE_ACTIVE;
                         }
                         break;
@@ -194,14 +198,14 @@ namespace ARP {
     // functions for start/stop of arp
     void pass_notes () {
         for (int i = 0; i < max_arp; i++) {
-            NOTE_PRIORITY::voice_on(i, _notes[i], 127);
+            NOTE_HANDLING::voice_on(i, _notes[i], 127);
         }
     }
     void grab_notes () {
-        NOTE_PRIORITY::update();
+        NOTE_HANDLING::update();
     }
     void stop_all () {
-        NOTE_PRIORITY::voices_panic();
+        NOTE_HANDLING::voices_panic();
     }
     
     void set_hold (uint16_t hold) {

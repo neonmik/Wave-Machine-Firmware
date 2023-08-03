@@ -1,11 +1,11 @@
-#include "note_priority.h"
+#include "note_handling.h"
 
 
-#include "synth.h"
+// #include "synth.h"
 
 #include "../midi.h"
 
-namespace NOTE_PRIORITY {
+namespace NOTE_HANDLING {
 
   voice_data_t VOICES[MAX_VOICES];
 
@@ -27,6 +27,7 @@ namespace NOTE_PRIORITY {
   void voice_off(int slot, int note, int velocity) {
 
     VOICES[slot].off();
+    // if (note != VOICES[slot].note) printf("Note Off not the same as Voice note.\n");
 
     voices_dec();
     filter_off();
@@ -45,14 +46,14 @@ namespace NOTE_PRIORITY {
     if (voices_active()) { // re-triggers on every new note - needs reworking to allow releasing multiple notes
       // MOD::trigger_attack();
       // FILTER::trigger_attack();
-      QUEUE::trigger_send(MAX_VOICES+1, 0, true);
+      QUEUE::trigger_send(FILTER_VOICE, 0, true);
     }
   }
   void filter_off(void) {
     if (!voices_active()) {
       // MOD::trigger_attack();
       // FILTER::trigger_release();
-      QUEUE::trigger_send(MAX_VOICES+1, 0, false);
+      QUEUE::trigger_send(FILTER_VOICE, 0, false);
     }
   }
 
@@ -161,12 +162,15 @@ namespace NOTE_PRIORITY {
   }
 
   void check_release () {
-    // loops through the available queue entries till it's empty.
+    // checks queue level
     uint8_t queue_level = QUEUE::release_check_queue();
-    for (int i = 0; i > queue_level; i++) {
-      // receives the slot number thats released from the queue, and then clears the slot on this core.
-      uint8_t slot = QUEUE::release_receive();
-      VOICES[slot].clear();
+    if (queue_level) {
+      // loops through the available queue entries till it's empty.
+      for (int i = 0; i < queue_level; i++) {
+        // receives the slot number thats released from the queue, and then clears the slot on this core.
+        uint8_t slot = QUEUE::release_receive();
+        VOICES[slot].clear();
+      }
     }
   }
   // transfer from Key/Midi notes to Arp/Note Priority
@@ -174,29 +178,6 @@ namespace NOTE_PRIORITY {
 
     // update voice info - used to pull info from other core
     check_release(); // accesses safe data to check notes are free and done releasing
-    
-    // grab values from notes mutex
-    // bool arpEnabled = ARP::get_state(); // Store the value of ARP::get() in a variable
-
-    // testing removal - trying to reduce big for loops to improve code. this chunk is a hang over from the old multicore handling.
-    // for (int i = 0; i < 128; i++) {
-    //   if (_note_state[i] != _note_state_last[i]) {
-    //     if (!arpEnabled) {
-    //       if (_note_state[i]) {
-    //         priority(0x90, i, 127); // synth voice allocation
-    //       } if (!_note_state[i]) {
-    //         priority(0x80, i, 0); // synth voice allocation
-    //       }
-    //     } else {
-    //       if (_note_state[i]) {
-    //         ARP::add_notes(i);
-    //       } else {
-    //         ARP::remove_notes(i);
-    //       }
-    //     }
-    //     _note_state_last[i] = _note_state[i];
-    //   }
-    // }
 
     if (ARP::get_state()) { 
       ARP::organise_notes();
@@ -207,30 +188,65 @@ namespace NOTE_PRIORITY {
   }
 
   void note_on (uint8_t note, uint8_t velocity) {
-      // _note_state[note & 127] = 1;
-      if (!ARP::get_state()) {
-        priority(0x90, note, velocity); // synth voice allocation
-      } else {
-        ARP::add_notes(note);
-      }
-      _notes_on++;
+      if (!ARP::get_state()) priority(0x90, note, velocity); // synth voice allocation
+      else ARP::add_notes(note);
   }
-  void note_off (uint8_t note, uint8_t velocity) {
-      // _note_state[note & 127] = 0;
-      if (!ARP::get_state()) {
-        priority(0x80, note, velocity); // synth voice allocation
-      } else {
-        ARP::remove_notes(note);
-      }
-      _notes_on--;
+  void note_off(uint8_t note, uint8_t velocity) {
+    // bool held_by_sustain = false;
+    // if (_sustain) {
+      
+    //   // If the sustain pedal is held, mark the note as "held by sustain"
+    //   for (int i = 0; i < _num_held_notes; i++) {
+    //     if (_held_notes[i] == note) {
+    //       held_by_sustain = true;
+    //       break;
+    //     } else {
+    //       _held_notes[i] = note;
+    //       _num_held_notes++;
+    //       if (_num_held_notes >= MAX_VOICES) _num_held_notes = 0;
+    //     }
+
+    //   }
+    // }
+
+    // If the note is not held by the sustain pedal, process it as a regular note off
+    // if (!held_by_sustain) {
+      if (!ARP::get_state()) priority(0x80, note, velocity); // synth voice allocation
+      else ARP::remove_notes(note);
+    // }
   }
-  void notes_clear (void) {
-      for (int i = 0; i < 128; i++) {
-      _note_state[i] = 0;
-      }
-      _notes_on = 0;
-  }
-  uint8_t get_notes_on (void) {
-      return _notes_on;
+  void sustain_pedal(uint16_t status) {
+    if (!ARP::get_state()) {
+      // normal note shit
+    }
+    else {
+      // kinda works, but maybe needs an array of all the midi notes again to check the currently held notes... 
+      // ARP::set_hold(status);
+
+    }
+    // bit shift to binary number (yes or no)
+    bool temp = (status >> 9);
+
+    // if the input is new, then...
+    // if (_sustain != temp) {
+    //   _sustain = temp;
+    //   if (_sustain) {
+    //     // If the sustain pedal is pressed, transfer currently held notes to the array
+    //     for (int i = 0; i < MAX_VOICES; i++) {
+    //       if (VOICES[i].gate) {
+    //         _held_notes[_num_held_notes] = VOICES[i].note;
+    //         _num_held_notes++;
+    //         if (_num_held_notes >= MAX_VOICES) _num_held_notes = 0;
+    //       }
+    //     }
+    //   } else {
+    //     // If sustain is released, release all the held notes
+    //     for (int i = 0; i < _num_held_notes; i++) {
+    //       note_off(_held_notes[i], 0);
+    //       _held_notes[i] = 0;
+    //     }
+    //     _num_held_notes = 0;
+    //   }
+    // }
   }
 }
