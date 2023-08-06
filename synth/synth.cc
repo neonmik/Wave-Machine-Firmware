@@ -187,6 +187,27 @@ namespace SYNTH {
             
           }
 
+          // Blueprint for future FM mode
+          // if (oscillator & Oscillator::FM) {
+          //   phaseDeltaModulator = (pitch * harmonicity) >> 6;   // calculate modulator frequency for a  given harmonicity
+          //   phaseDeltaCarrier = pitch;                           // this is just pitch (although not in Hz)
+
+          //   // calculate frequency mod
+          //   phaseAccumModulator += phaseDeltaModulator;
+          //   indexModulator = phaseAccumModulator >> 8;
+          //   modulator = get_wavetable[indexModulator];
+          //   modulator = (modulator * modulatorDepth) >> 3;
+          //   modulatorSigned = modulator - ((128 * modulatorDepth) >> 3);   // center at 0
+
+          //   // get carrier frequency
+          //   phaseDeltaCarrier += modulatorSigned;
+
+          //   // calculate carrier
+          //   phaseAccumCarrier += phaseDeltaCarrier;
+          //   indexCarrier = phaseAccumCarrier >> 8;
+          //   channel_sample = get_wavetable[indexCarrier];
+          // }
+
           // divide the sample by the amount of waveforms - good for multi oscillator voices
           channel_sample = channel_sample / waveform_count;
           

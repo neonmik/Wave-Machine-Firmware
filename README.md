@@ -11,7 +11,7 @@ Current nightly firmware for Beep Machine Hardware.
 
     - Feature: Figure sustain pedal algorithm out. Needs to be before Arp or Priority allocation but also be able to keep up with voice allocation? probably needs to control two seperate algorithms in seperate sections, like I've started.
 
-    - Improve Contorls funtionality:
+    - Improve Controls funtionality:
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Improve Oscillator script - current bugs include:
@@ -85,7 +85,19 @@ Current nightly firmware for Beep Machine Hardware.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
-    - Add Portomento Mode - probably need mono mode first?
+    - Add Portomento Mode: Should be added form the note-handling script (adding a portomento flag via the priority script, and having a new note, but dont clear old note freq in the message?) then a portamento time control, which then slides the note freq from old to new. 
+
+        - check out yoshimi github
+        if (porto) {
+            if (!aligned) {
+                if (oldfreq > newfreq) oldfreq -= portamento_inc;
+                else oldfreq += portamento_inc;
+                if (oldfreq == newfreq) {
+                    algined = true;
+                    oldfreq = newfreq;
+                }
+            }
+        }
     - Add Mono Mode - selectable at start up.
 
     - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - chosen functions.
