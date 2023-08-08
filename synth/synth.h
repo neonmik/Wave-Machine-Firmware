@@ -136,7 +136,7 @@ namespace SYNTH {
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
   };
 
-  extern Oscillators channels[MAX_VOICES];
+  extern Oscillators channels[POLYPHONY];
 
   void voice_on (uint8_t voice, uint8_t note);
   void voice_off (uint8_t voice);

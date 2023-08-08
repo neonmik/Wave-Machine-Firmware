@@ -44,7 +44,7 @@ class ADSREnvelope {
         bool isStopped() { return _phase == Phase::OFF; }
         bool isReleasing() { return _phase == Phase::RELEASE; }
 
-        uint32_t get_adsr() { return _adsr; }
+        uint32_t get() { return (_adsr >> 8); }
 
 };
 

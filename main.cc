@@ -14,7 +14,6 @@
 #include "config.h"
 
 #include "synth/arp.h"
-// #include "synth/note_priority.h"
 #include "synth/synth.h"
 
 #include "drivers/dac.h"
@@ -45,6 +44,7 @@ void synth_core() {
   while (true) {
      if (DAC::get_state()) {
       
+      // tidy this...
       uint8_t temp = QUEUE::trigger_check_queue();
       if (temp) {
         for (int i = 0; i < temp; i++){
@@ -53,7 +53,7 @@ void synth_core() {
           bool gate_ = false;
 
           QUEUE::trigger_receive(slot_, note_, gate_);
-            if (slot_ < MAX_VOICES) {
+            if (slot_ < POLYPHONY) {
               if (gate_) SYNTH::voice_on(slot_, note_);
               if (!gate_) SYNTH::voice_off(slot_);
             } else {
@@ -74,11 +74,11 @@ void synth_core() {
 
   stdio_init_all(); // has to be here to allow both cores to use the UART
 
-  QUEUE::init(); // has to be here to allow both cores access to MAILBOX
+  QUEUE::init(); // has to be here to allow both cores access to QUEUE
   
-  multicore_launch_core1(hw_core); 
+  multicore_launch_core1(hw_core); // launches the hardware core
 
-  synth_core();
+  synth_core(); // launches the synth/audio core
 
 } 
 

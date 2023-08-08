@@ -110,7 +110,7 @@ namespace ARP {
                             _last_note = ((_notes[_play_index])+(_octave*12));
                             NOTE_HANDLING::priority(0x90, _last_note, 127);
                             // _last_index++;
-                            // if (_last_index > MAX_VOICES) _last_index = 0;
+                            // if (_last_index > POLYPHONY) _last_index = 0;
                             // NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
                             note_state = NOTE_ACTIVE;
                         }

@@ -6,6 +6,7 @@ Current nightly firmware for Beep Machine Hardware.
 - Alpha Release bugfixes:
 
     - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
+    - Bug: Notes and releases actint strangly accross preset changes - some notes can get stuck.
 
 - Updates and Bugfixes:
 
@@ -72,8 +73,8 @@ Current nightly firmware for Beep Machine Hardware.
         - Add a ramp down feature when switching between destinations - could be difficult. 
     
     - Improve Filter code: 
-        - Improve Envelope output for highpass control of cutoff.
         - Improve modulation inputs for controls.
+        - Add a switch for direction of envelope (like the Modulation setup with different types of filter selecting differing paths for the output)
 
     - Arp code:
         - Add a setting for note length within the Arp -    currently plays note for a beat, then a beat rest, then another and so on.
@@ -86,11 +87,10 @@ Current nightly firmware for Beep Machine Hardware.
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
     - Add Portomento Mode: Should be added form the note-handling script (adding a portomento flag via the priority script, and having a new note, but dont clear old note freq in the message?) then a portamento time control, which then slides the note freq from old to new. 
-
         - check out yoshimi github
         if (porto) {
             if (!aligned) {
-                if (oldfreq > newfreq) oldfreq -= portamento_inc;
+                if (oldfreq > newfreq) oldfreq -= (portamento_inc/2); // remember pitch is logarthimic
                 else oldfreq += portamento_inc;
                 if (oldfreq == newfreq) {
                     algined = true;
@@ -98,6 +98,7 @@ Current nightly firmware for Beep Machine Hardware.
                 }
             }
         }
+    
     - Add Mono Mode - selectable at start up.
 
     - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - chosen functions.
@@ -216,6 +217,7 @@ Things already implemented:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Improved Envelope output for highpass control of cutoff - it now applies the envlope downwards.
         + Reduced the sample rate of the filter ADSR. 
         + Added a modulation input, but needs adjusting. Going on the back burner till the Filter and Mod can opperate together.
         + Fixed the inputs using the map_exp functions - now using LUT for speed.

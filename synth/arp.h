@@ -83,7 +83,7 @@ namespace ARP {
     void set_direction (uint16_t direction);
 
     void update_range (void);
-    void update_controls (void);
+    // void update_controls (void);
 
     void set_rate (uint16_t rate);
 }

@@ -7,7 +7,7 @@
 
 namespace NOTE_HANDLING {
 
-  voice_data_t VOICES[MAX_VOICES];
+  voice_data_t VOICES[POLYPHONY];
 
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
@@ -37,7 +37,7 @@ namespace NOTE_HANDLING {
   }
 
   void voices_panic() {
-    for (int i = 0; i < MAX_VOICES; i++) {
+    for (int i = 0; i < POLYPHONY; i++) {
       voice_off(i, 0, 0);
     }
   }
@@ -65,7 +65,7 @@ namespace NOTE_HANDLING {
         if (velocity>0)  {   //is velocity 0?  if so, we want it to be thought of as note off
           volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
 
-          for (int i = 0; i < MAX_VOICES; i++)  {
+          for (int i = 0; i < POLYPHONY; i++)  {
             if (VOICES[i].note == note && VOICES[i].gate) { 
               voice = i;
               break;  // breaks for loop as a free slot has been found
@@ -77,7 +77,7 @@ namespace NOTE_HANDLING {
           }
 
           // should skip this is a free voice is found
-          if (voice<0) {
+          if (voice < 0) {
             int8_t priority_voice = -1;
             volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
             
@@ -87,7 +87,7 @@ namespace NOTE_HANDLING {
                 // This mode assigns the new note to the voice with the oldest persisting voice (The Latest notes played have prioirty)
                 uint32_t longest_released_time = time_now;
                 uint32_t longest_active_time = time_now;
-                for (int i = 0; i < MAX_VOICES; i++)  {
+                for (int i = 0; i < POLYPHONY; i++)  {
                   if (!VOICES[i].gate && (VOICES[i].activation_time<longest_released_time)) { // released notes
                     longest_released_time = VOICES[i].activation_time;
                     voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
@@ -103,7 +103,7 @@ namespace NOTE_HANDLING {
                 // This mode assigns the new note to the newest persisting voice (the first notes played have priority)
                 uint32_t shortest_released_time = 0;
                 uint32_t shortest_active_time = 0;
-                for (int i = 0; i < MAX_VOICES; i++)  {
+                for (int i = 0; i < POLYPHONY; i++)  {
                   if (!VOICES[i].active && (VOICES[i].activation_time>shortest_released_time)) { // released notes
                     shortest_released_time = VOICES[i].activation_time;
                     voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
@@ -118,7 +118,7 @@ namespace NOTE_HANDLING {
               case Priority::LOWEST: {
                   // This mode assigns the new note only if the new note is lower than one of the persisting notes (the lowest notes have priority)
                   uint8_t lowest_note = 127; // Initialize to the highest possible MIDI note value
-                  for (int i = 0; i < MAX_VOICES; i++) {
+                  for (int i = 0; i < POLYPHONY; i++) {
                       if (VOICES[i].active && VOICES[i].note < lowest_note) {
                           lowest_note = VOICES[i].note;
                           voice = i; // Assign the slot with the lowest note
@@ -129,7 +129,7 @@ namespace NOTE_HANDLING {
               case Priority::HIGHEST: {
                   // This mode assigns the new note only if the new note is higher than one of the persisting notes (the highest notes have priority)
                   uint8_t highest_note = 0; // Initialize to the lowest possible MIDI note value
-                  for (int i = 0; i < MAX_VOICES; i++) {
+                  for (int i = 0; i < POLYPHONY; i++) {
                       if (VOICES[i].active && VOICES[i].note > highest_note) {
                           highest_note = VOICES[i].note;
                           voice = i; // Assign the slot with the highest note
@@ -149,7 +149,7 @@ namespace NOTE_HANDLING {
         }
 
       case 0x80:
-        for (int8_t voice = 0; voice < MAX_VOICES; voice++)  {
+        for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
           if (VOICES[voice].note == note)  { //check for a matching note
             voice_off(voice, note, velocity);
             //no break here just in case there are somehow multiple of the same note stuck on
@@ -173,7 +173,8 @@ namespace NOTE_HANDLING {
       }
     }
   }
-  // transfer from Key/Midi notes to Arp/Note Priority
+
+  // Update voice info from Synth Core, and update Arp notes if active.
   void update() {
 
     // update voice info - used to pull info from other core
@@ -203,7 +204,7 @@ namespace NOTE_HANDLING {
     //     } else {
     //       _held_notes[i] = note;
     //       _num_held_notes++;
-    //       if (_num_held_notes >= MAX_VOICES) _num_held_notes = 0;
+    //       if (_num_held_notes >= POLYPHONY) _num_held_notes = 0;
     //     }
 
     //   }
@@ -232,11 +233,11 @@ namespace NOTE_HANDLING {
     //   _sustain = temp;
     //   if (_sustain) {
     //     // If the sustain pedal is pressed, transfer currently held notes to the array
-    //     for (int i = 0; i < MAX_VOICES; i++) {
+    //     for (int i = 0; i < POLYPHONY; i++) {
     //       if (VOICES[i].gate) {
     //         _held_notes[_num_held_notes] = VOICES[i].note;
     //         _num_held_notes++;
-    //         if (_num_held_notes >= MAX_VOICES) _num_held_notes = 0;
+    //         if (_num_held_notes >= POLYPHONY) _num_held_notes = 0;
     //       }
     //     }
     //   } else {

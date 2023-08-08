@@ -9,6 +9,7 @@ namespace DEBUG {
         PRINT,
         BREAKPOINT
     };
+
     inline void overflow (void) {
         printf("OVERFLOW! ***Generic Debug Warning***");
     }

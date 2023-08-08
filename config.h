@@ -17,7 +17,7 @@ static      uint32_t    sample_clock;
 
 constexpr   uint8_t     DEFAULT_BPM     =       120;
 
-constexpr   uint8_t     MAX_VOICES      =       8;              // 8 is the "standard" value...
+constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "standard" value...
                                                                 // tracking performance (Core: 144MHz/SR: 48000) :- 
                                                                 // with the DAC core handling notes:
                                                                 //      - runs at 10 voices with just modulation
@@ -25,13 +25,17 @@ constexpr   uint8_t     MAX_VOICES      =       8;              // 8 is the "sta
                                                                 //      - runs at 6 voices with filter and modulation mostly
                                                                 // with Note Priority on HW core (Core: 144MHz/SR: 48000) :-
                                                                 //      - runs at 8 voices with both
-constexpr   uint8_t     FILTER_VOICE    =       (MAX_VOICES+1);
+
+constexpr   uint8_t     FILTER_VOICE    =       (POLYPHONY+1);  // Sets the Filter envelope control to be outside of the Polyphony range. 
+                                                                // This makes sure it never gets in the way of the note handling.
+
 
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 
-constexpr   uint8_t     DEFAULT_KEY     =       48;
-constexpr   uint8_t     DEFAULT_VEL     =       127;
+constexpr   uint8_t     DEFAULT_KEY     =       48;             // The Default first key on the keyboard (C3 == 48, C4 == 60, etc). 
+                                                                // 48 sets C3 as the lowest note one the keyboard, and the middle C on the keyboard as C4
+constexpr   uint8_t     DEFAULT_VEL     =       127;            
 
 constexpr   uint16_t    KNOB_MIN        =       0;
 constexpr   uint16_t    KNOB_MAX        =       1023;

@@ -36,16 +36,19 @@ namespace FILTER {
         uint8_t index = (mode>>8);
         switch (index) {
         case 0:
-            _mode = FilterType::Off;
+            _mode = Type::Off;
             break;
         case 1:
-            _mode = FilterType::LowPass;
+            _mode = Type::LowPass;
+            _direction = Direction::Regular;
             break;
         case 2:
-            _mode = FilterType::BandPass;
+            _mode = Type::BandPass;
+            _direction = Direction::Regular;
             break;
         case 3:
-            _mode = FilterType::HighPass;
+            _mode = Type::HighPass;
+            _direction = Direction::Inverted;
             break;
         default:
             break;
@@ -81,13 +84,13 @@ namespace FILTER {
     }
 
     void process(int32_t &sample) {
-        if (_mode != FilterType::Off) {
+        if (_mode != Type::Off) {
             // ADSR.update();
-            // for future effecientcy improvements. Allows to reduce sample rate of ADSR.
+            // for effeciency improvements, this allows the Envelope to run at a reduced sample rate of 6kHz.
             _index++;
             _index &= 0x7;
             if (_index == 0) ADSR.update();
-            // if (ADSR.isStopped()) QUEUE::release_send(MAX_VOICES+1); // not really needed as it stands...
+            // if (ADSR.isStopped()) QUEUE::release_send(POLYPHONY+1); // not really needed as it stands...
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
             if (_dirty) {
@@ -98,7 +101,17 @@ namespace FILTER {
 
 
             volatile int32_t frequency;
-            frequency = (int32_t(_frequency) * int32_t(ADSR.get_adsr() >> 8)) >> 16;
+            
+            if (_direction == Direction::Regular) {
+                frequency = (_frequency * ADSR.get()) >> 16;
+            } 
+            if (_direction == Direction::Inverted) {
+                uint16_t MAX_FREQ = (SAMPLE_RATE/2);
+                frequency = MAX_FREQ - (((MAX_FREQ - _frequency) * (ADSR.get())) >> 16);
+            }
+
+
+            // frequency = (int32_t(_frequency) * int32_t(ADSR.get() >> 8)) >> 16;
             if (frequency <= 15) frequency = 15;
 
             int32_t damp = _damp;

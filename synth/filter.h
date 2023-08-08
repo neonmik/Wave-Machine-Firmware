@@ -15,11 +15,16 @@
 
 namespace FILTER {
 
-    enum FilterType {
+    enum Type {
         Off,
         LowPass,
         BandPass,
         HighPass
+    };
+
+    enum Direction {
+        Regular,
+        Inverted
     };
 
     namespace {
@@ -48,8 +53,8 @@ namespace FILTER {
         uint16_t    _last_sustain = 1024;
         uint16_t    _last_release = 1024;
 
-
-        FilterType  _mode;
+        Type        _mode;
+        Direction   _direction;
 
         inline uint16_t Interpolate824(const uint16_t* table, uint32_t phase) {
             uint32_t a = table[phase >> 24];
