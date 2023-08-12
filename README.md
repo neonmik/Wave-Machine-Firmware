@@ -112,6 +112,10 @@ Current nightly firmware for Wave Machine Hardware.
     - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
 
 
+Changelog: 
+
+    12/08/2023:- Added Changelog and Updated synth name.
+
 
 Things already implemented:
 
