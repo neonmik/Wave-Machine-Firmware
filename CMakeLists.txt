@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 include(pico_sdk_import.cmake)
 # include(pico_extras_import.cmake)
 
-project(beepmachine-firmware-v0.28 C CXX ASM)
+project(wavemachine-firmware-v0.29 C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -25,6 +25,7 @@ add_executable(${PROJECT_NAME}
     drivers/leds.cc
     drivers/rgb.cc
     drivers/shiftreg.cc
+    drivers/uart.cc
     
     
     ui.cc

@@ -1,5 +1,5 @@
 /**
- *                Beep Machine Firmware v0.28
+ *                Wave Machine Firmware v0.29
  * 
  * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  

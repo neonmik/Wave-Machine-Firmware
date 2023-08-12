@@ -1,18 +1,25 @@
 # Beep-Machine-Firmware
 
-Current nightly firmware for Beep Machine Hardware.
+Current nightly firmware for Wave Machine Hardware.
 
 
 - Alpha Release bugfixes:
 
     - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
     - Bug: Notes and releases actint strangly accross preset changes - some notes can get stuck.
+    - Bug: MIDI timecode sync not working properly - investigate.
+
 
 - Updates and Bugfixes:
 
     - Feature: Figure sustain pedal algorithm out. Needs to be before Arp or Priority allocation but also be able to keep up with voice allocation? probably needs to control two seperate algorithms in seperate sections, like I've started.
 
     - Improve Controls funtionality:
+        - Change the layout of controls:
+            - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
+        - Holding Preset should save
+        - Shift should be holding Page?
+        - 
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Improve Oscillator script - current bugs include:
@@ -20,11 +27,8 @@ Current nightly firmware for Beep Machine Hardware.
     
     - Improve USB MIDI/ Implement MIDI hardware:
 
-
-        - Add midi_task() alongside usb_midi_task(). 
-
-        - Write MIDI hardware code.
-
+        - Test UART-MIDI
+        - Test UART
 
         - Tidy up MIDI processing code, could be more efficient.
 
@@ -198,6 +202,7 @@ Things already implemented:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + USB MIDI/MIDI:
+        + Added UART code and associated MIDI call functions.
         + Bugfix: MIDI messages were being repeatedly called, turned out to be and issue with the way that the USB-MIDI queue was being checked for messages. Only found if during testing for Sustain Pedal Feature.
         + Bugfix: MIDI in note calls would fire if keybaord hadnt been pressed. changed the way they're called.
         + MIDI Clock can handle both Clock stopping and Clock drop out (Not ideal, but should be ok for most uses)

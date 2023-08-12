@@ -87,10 +87,9 @@ void set_shift (bool shift) {
 
 
   void init (void) {
-    // stdio_init_all();
 
-    printf("\nWelcome to the jungle...\n\n");
-    // printf("\ncore1 here!\n");
+    printf("\nWelcome to the Wave...\n\n");
+
     MIDI::init();
 
     LEDS::init();
@@ -117,13 +116,17 @@ void set_shift (bool shift) {
             break;
           case 1:
             KEYS::update();
+
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
                 toggle_arp();
             }
+
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
                 toggle_lfo();
             }
+
             set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
+
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
@@ -182,7 +185,7 @@ void set_shift (bool shift) {
     printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
     printf("|-------------------------------------------------------------------------------|\n");
     printf("|										|\n");
-    printf("|				Beep Machine Prototype				|\n");
+    printf("|				Wave Machine Prototype				|\n");
     printf("|				      2020-2023					|\n");
     printf("|										|\n");
     printf("|		      Made by Nick Allott Musical Services (NAMS)		|\n");

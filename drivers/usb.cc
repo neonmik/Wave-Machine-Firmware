@@ -18,9 +18,6 @@ namespace USB {
         void get (uint8_t *packet) {   
             tud_midi_packet_read(packet);
         }
-        // void get_stream (void *buffer,  uint32_t *length) {
-        //     length = tud_midi_n_stream_read(0,0,buffer,128);
-        // }
         void send (uint8_t msg[3]) {
             tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, 3);
         }

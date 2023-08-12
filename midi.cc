@@ -80,7 +80,7 @@ namespace MIDI {
         uint8_t status = (type | channel);
         uint8_t msg[3] = { status, data1, data2 };
         USB::MIDI::send(msg);
-        // UART::MIDI::send(msg);
+        UART::MIDI::send(msg);
     }
     //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
@@ -204,7 +204,7 @@ namespace MIDI {
 
     void init () {
         USB::init();
-        // UART::init(); // eventual places for MIDI via UART initiation
+        UART::init(); // eventual places for MIDI via UART initiation
     }
 
     void usb_midi_task (void) {
@@ -223,16 +223,14 @@ namespace MIDI {
     }
 
     void midi_task () {
-        // if (UART::MIDI::available) {
-        //     uint8_t packet[4];
-        //     UART::MIDI::get(packet);
-        //     handleMidiMessage(packet);
-        // }
+        uint8_t packet[4];
+        UART::MIDI::get(packet);
+        handleMidiMessage(packet);
     }
 
     void update () {
         USB::update();
         usb_midi_task();
-        // midi_task();
+        midi_task();
     }
 }
