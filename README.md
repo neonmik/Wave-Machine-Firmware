@@ -1,4 +1,4 @@
-# Beep-Machine-Firmware
+# Wave-Machine-Firmware
 
 Current nightly firmware for Wave Machine Hardware.
 
