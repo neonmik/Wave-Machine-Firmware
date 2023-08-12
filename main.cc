@@ -72,7 +72,7 @@ void synth_core() {
 
   set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Extra speed is needed to run the code.
 
-  stdio_init_all(); // has to be here to allow both cores to use the UART
+  stdio_init_all(); // has to be here to allow both cores to use the debug serial UART. 
 
   QUEUE::init(); // has to be here to allow both cores access to QUEUE
   
