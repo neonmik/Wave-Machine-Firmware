@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
-# include(pico_extras_import.cmake)
 
 project(wavemachine-firmware-v0.29 C CXX ASM)
 set(CMAKE_C_STANDARD 11)
@@ -50,8 +49,6 @@ add_executable(${PROJECT_NAME}
     
     synth/fx.cc
     synth/filter.cc
-    
-    # synth/oscillator.cc
     )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -85,4 +82,3 @@ target_link_libraries(${PROJECT_NAME}
                         tinyusb_board
                         )
 
-# add_compile_options(-CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/drivers/tusb_config.h)
