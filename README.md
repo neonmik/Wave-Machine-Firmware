@@ -14,6 +14,8 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Feature: Figure sustain pedal algorithm out. Needs to be before Arp or Priority allocation but also be able to keep up with voice allocation? probably needs to control two seperate algorithms in seperate sections, like I've started.
 
+    - Arp & Filter/Mod Envelope should have an option to be from the start of any pressed notes, so that the envelope can ope slowly up on a playing Arp.
+
     - Improve Controls funtionality:
         - Change the layout of controls:
             - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
