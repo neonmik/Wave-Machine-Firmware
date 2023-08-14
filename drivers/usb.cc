@@ -13,7 +13,7 @@ namespace USB {
             return tud_midi_available();
         }
         uint32_t buffer_size () {
-            return (tud_midi_n_available(0,0)/4);
+            return (tud_midi_n_available(0,0));
         }
         void get (uint8_t *packet) {   
             tud_midi_packet_read(packet);

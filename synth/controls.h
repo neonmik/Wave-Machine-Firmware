@@ -105,7 +105,7 @@ namespace CONTROLS {
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
             Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-                // Page    SHFT    {nullptr,                nullptr,                    nullptr,                    nullptr,                        nullptr};
+            //  Page    SHFT    {nullptr,                  nullptr,                    nullptr,                    nullptr,                         nullptr};
             
             
             // Page: 1 - 

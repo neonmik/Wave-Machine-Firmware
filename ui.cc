@@ -138,8 +138,10 @@ void set_shift (bool shift) {
             break;
           case 2:
             NOTE_HANDLING::update();
+            break;
           case 3:
             ADC::update();
+            break;
           case 4:
             PAGINATION::update();
             break;
