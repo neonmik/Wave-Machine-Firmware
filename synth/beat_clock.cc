@@ -117,6 +117,7 @@ namespace BEAT_CLOCK {
         ++_midi_clock_tick_count;
         if (_midi_clock_tick_count >= midi_division) {
             set_changed(true);
+            printf("midi 1/4 \n");
             _midi_clock_tick_count = 0;
         }
     }

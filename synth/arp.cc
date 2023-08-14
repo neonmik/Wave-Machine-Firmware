@@ -93,7 +93,7 @@ namespace ARP {
 
     void update (void) {
         if (_active) {
-            BEAT_CLOCK::update();
+            
             if (BEAT_CLOCK::get_changed()) {
                 switch (note_state) {
                     case NOTE_ACTIVE:
@@ -118,6 +118,7 @@ namespace ARP {
                 }
                 BEAT_CLOCK::set_changed(false);
             }
+            BEAT_CLOCK::update();
         }
     }
 

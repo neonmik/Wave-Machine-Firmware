@@ -82,3 +82,4 @@ target_link_libraries(${PROJECT_NAME}
                         tinyusb_board
                         )
 
+# add_compile_options(-CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/drivers/tusb_config.h)

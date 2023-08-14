@@ -31,11 +31,13 @@ namespace UART {
         }
         void get (uint8_t *packet) {
             while (!uart_is_readable(UART_ID)){
+                // block until readable
             }
-            uart_read_blocking(UART_ID, packet, 1);
+            uart_read_blocking(UART_ID, packet, 3);
         }
         void send (uint8_t msg[3]) {
             while (!uart_is_writable(UART_ID)){
+                // block until writeable
             }
             uart_write_blocking(UART_ID, msg, 3);
             return;

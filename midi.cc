@@ -2,17 +2,17 @@
 
 namespace MIDI {
 
-    void handleMidiMessage(uint8_t msg[4]) {
+    void handleMidiMessage(uint8_t msg[3]) {
         uint8_t midiType, channel, data1, data2;
-        if (msg[1] >= 0xF0) { // check if SYS EX, as they use the lower half of the status byte
-            midiType = msg[1]; // Extract the MIDI type
-            data1 = msg[2]; // Extract the first data byte
-            data2 = msg[3]; // Extract the second data byte
+        if (msg[0] >= 0xF0) { // check if SYS EX, as they use the lower half of the status byte
+            midiType = msg[0]; // Extract the MIDI type
+            data1 = msg[1]; // Extract the first data byte
+            data2 = msg[2]; // Extract the second data byte
         } else { // everything else uses it for channel data
-            midiType = msg[1] & 0xF0; // Extract the MIDI type
-            channel = msg[1] & 0x0F; // Extract the channel from the status byte
-            data1 = msg[2]; // Extract the first data byte
-            data2 = msg[3]; // Extract the second data byte
+            midiType = msg[0] & 0xF0; // Extract the MIDI type
+            channel = msg[0] & 0x0F; // Extract the channel from the status byte
+            data1 = msg[1]; // Extract the first data byte
+            data2 = msg[2]; // Extract the second data byte
         }
 
         switch (midiType) {
@@ -20,6 +20,7 @@ namespace MIDI {
             case MidiType::CLOCK:
                 handleClock();
                 break;
+            
             case MidiType::START:
                 handleStart();
                 break;
@@ -29,7 +30,6 @@ namespace MIDI {
             case MidiType::STOP:
                 handleStop();
                 break;
-            
             case MidiType::NOTE_OFF:
                 handleNoteOff(channel, data1, data2);
                 break;
@@ -49,9 +49,13 @@ namespace MIDI {
                 handleAfterTouch(channel, data1);
                 break;
             case MidiType::PITCH_BEND:
-                 handlePitchBend(channel, ((data2 << 7) | (data1)));
+                handlePitchBend(channel, ((data2 << 7) | (data1)));
                 break;
             case MidiType::SYS_EX:
+                if (data1 == 42) {
+                    printf("clock in\n");
+                } 
+
                 break;
             case MidiType::SONG_POSITION: 
                 handleSongPosition(data1, data2);
@@ -80,7 +84,7 @@ namespace MIDI {
         uint8_t status = (type | channel);
         uint8_t msg[3] = { status, data1, data2 };
         USB::MIDI::send(msg);
-        UART::MIDI::send(msg);
+        // UART::MIDI::send(msg);
     }
     //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
@@ -208,33 +212,29 @@ namespace MIDI {
     }
 
     void usb_midi_task (void) {
-        if (USB::MIDI::available) {
-            uint32_t buffer_length = USB::MIDI::buffer_size();
-            if (buffer_length) {
-                for (int i = 0; i < buffer_length; i++) {
-                    uint8_t packet[4];
-                    USB::MIDI::get(packet);
-                    handleMidiMessage(packet);
-                }
-            }
-            // while (USB::MIDI::buffer_size()) {
-            //     uint8_t packet[4];
-            //     USB::MIDI::get(packet);
-            //     handleMidiMessage(packet);
-            // }
+        int buffer_size;
+        while (buffer_size = USB::MIDI::available()) {
+            uint8_t packet[3];
+            USB::MIDI::get(packet);
+            handleMidiMessage(packet);
         }
-
     }
 
     void midi_task () {
-        uint8_t packet[4];
-        UART::MIDI::get(packet);
-        handleMidiMessage(packet);
+        // uint8_t packet[4];
+        // UART::MIDI::get(packet);
+        // handleMidiMessage(packet);
     }
 
     void update () {
         USB::update();
         usb_midi_task();
         // midi_task();
+    }
+
+    void print (uint8_t *packet) {
+        printf("MIDI IN: %02X", packet[0]);
+        printf(" %02X", packet[1]);
+        printf(" %02X\n", packet[2]);
     }
 }
