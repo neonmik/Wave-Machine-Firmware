@@ -101,7 +101,7 @@ namespace ARP {
                         // NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
                         arpeggiate(_direction);
                         note_state = IDLE;
-                        break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
+                        // break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                     case IDLE:
                         if (_play_index >= _count) {
                             _play_index = 0;

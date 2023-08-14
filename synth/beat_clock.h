@@ -37,7 +37,8 @@ namespace BEAT_CLOCK {
         bool _delta_flag = 0;
 
         void calculate_division (void) {
-            _samples_per_division = (60 * _sample_rate / _bpm) / _division;
+            _samples_per_division = (60 * _sample_rate / _bpm) / _division; // this is wrong...?
+            // _samples_per_division = (60 * _sample_rate) / (_bpm * _division);
         }
     }
 

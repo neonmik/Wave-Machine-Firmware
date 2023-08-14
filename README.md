@@ -7,7 +7,7 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
     - Bug: Notes and releases actint strangly accross preset changes - some notes can get stuck.
-    - Bug: MIDI timecode sync not working properly - investigate. Seems to be in the beat clock? looks like Midi clock is coming through right... 
+    - Bug: MIDI timecode sync not working properly - investigate. This is in the code for calculating samples per divison. Just need to fix the equation.
 
 
 - Updates and Bugfixes:

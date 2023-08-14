@@ -179,3 +179,27 @@ namespace BEAT_CLOCK {
 //    60 seconds
 //     
 // = 800 ticks per second
+
+// ------------------------------------------------
+//              SAMPLES PER DIVISION
+// ------------------------------------------------
+// 
+// Clock durations
+// ------------------------------------------------
+//                      
+// Whole note           =       96  samples
+// Dotted half note     =       72  samples 
+// Half note            =       48  samples
+// Dotted quarter note  =       36  samples 
+// Quarter note         =       24  samples (24ppqn)
+// 8th note             =       12  samples
+// Triplet 8th note     =       8   samples
+// 16th note            =       6   samples
+// Triplet 16th note    =       4   samples
+// 32nd note            =       3   samples
+// Triplet 32nd note    =       2   samples
+// 64th note            =       1.5 samples
+// Triplet 64th note    =       1   samples
+// 
+// ------------------------------------------------
+// ------------------------------------------------
