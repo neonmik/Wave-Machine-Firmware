@@ -22,6 +22,7 @@ namespace BEAT_CLOCK {
 
         uint32_t _sample_rate;
         uint16_t _bpm = 120;
+        uint8_t  _beats = 4;
         uint8_t _division = 8;
 
         bool _midi_clock_present = false;
@@ -37,8 +38,8 @@ namespace BEAT_CLOCK {
         bool _delta_flag = 0;
 
         void calculate_division (void) {
-            _samples_per_division = (60 * _sample_rate / _bpm) / _division; // this is wrong...?
-            // _samples_per_division = (60 * _sample_rate) / (_bpm * _division);
+            _samples_per_division = ((60 * _sample_rate) / (_bpm / _beats)) / _division;
+            // _samples_per_division = (60 * _sample_rate / _bpm) / _division; // this is wrong... needs to use bars per minute instead of beats...
         }
     }
 
