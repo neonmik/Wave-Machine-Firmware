@@ -105,7 +105,7 @@ namespace CONTROLS {
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
             Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-                Page    sARP    {&ARP::set_gap,            nullptr,                    nullptr,                    nullptr,                         nullptr};
+                // Page    sARP    {&ARP::set_gap,            nullptr,                    nullptr,                    nullptr,                         nullptr};
             
             
             // Page: 1 - 
@@ -148,8 +148,8 @@ namespace CONTROLS {
                     case 6:
                         FILT.set(control, input);
                         break;
-                    case 7:
-                        sARP.set(control, input);
+                    // case 7:
+                        // sARP.set(control, input);
                 }
             }
             uint16_t get (uint8_t page, uint16_t control) {
@@ -169,8 +169,8 @@ namespace CONTROLS {
                         return fENV.get(control);
                     case 6:
                         return FILT.get(control);
-                    case 7:
-                        return sARP.get(control);
+                    // case 7:
+                        // return sARP.get(control);
                     default:
                         return 0;
                 }
@@ -203,7 +203,7 @@ namespace CONTROLS {
                 FILT.update();
                 fENV.update();
                 SHFT.update();
-                sARP.update();
+                // sARP.update();
             }
     };
     
