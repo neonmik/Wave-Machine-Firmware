@@ -7,7 +7,6 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
     - Bug: Notes and releases actint strangly accross preset changes - some notes can get stuck.
-    - Bug: MIDI timecode sync not working properly - investigate. This is in the code for calculating samples per divison. Just need to fix the equation.
 
 
 - Updates and Bugfixes:
@@ -153,6 +152,7 @@ Things already implemented:
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
     + Arp functionality bug fixes:
+        + Bugfix: Arp Sync now working properly. A Bug was highlighted when a bug in the MIDI handling code was fixed, the speed didnt align with the MIDI clock speed.
         + Bugfix: fixed bug in Arp noter removal logic that cause strange behaviour and a comile warning.
         + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
         + When the range is set to anything above 0 only the first octave of the arp has proper release - think it's to do with the note_clear function in the oscillator (definitely was)
