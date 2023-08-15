@@ -87,6 +87,7 @@ namespace ARP {
         }
     }
     void update_range () {
+        // add variable for direction for new arp modes (more similar in handling to JUNO)
         ++_octave;
         if (_octave > _range) _octave = 0;
     }
@@ -97,8 +98,12 @@ namespace ARP {
             if (BEAT_CLOCK::get_changed()) {
                 switch (note_state) {
                     case NOTE_ACTIVE:
-                        // NOTE_HANDLING::priority(0x80, _last_note, 0);
+                        // old voice handling, keeping until fully bug tested
+                        // NOTE_HANDLING::priority(0x80, _last_note, 0); 
+
+                        // new voice handling
                         NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
+
                         arpeggiate(_direction);
                         note_state = IDLE;
                         if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
@@ -108,10 +113,16 @@ namespace ARP {
                         }
                         if (_notes[_play_index]) {
                             _last_note = ((_notes[_play_index])+(_octave*12));
-                            // NOTE_HANDLING::priority(0x90, _last_note, 127); // old arp had 
+                            
+                             // old voice handling, keeping until fully bug tested 
+                            // NOTE_HANDLING::priority(0x90, _last_note, 127);
+                            
+                            // New Voice handling -
                             _last_index++;
                             if (_last_index == POLYPHONY) _last_index = 0;
                             NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
+                            // --------------------
+
                             note_state = NOTE_ACTIVE;
                         }
                         break;
