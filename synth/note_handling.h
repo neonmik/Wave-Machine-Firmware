@@ -55,8 +55,6 @@ namespace NOTE_HANDLING {
         bool        _sustain;
         uint8_t     _held_notes[POLYPHONY];
         volatile uint8_t     _num_held_notes;
-        // uint8_t     _note_state[128];
-        // uint8_t     _note_state_last[128];
 
         int8_t     _voices_active = 0;
 
@@ -68,7 +66,7 @@ namespace NOTE_HANDLING {
         }
         void        voices_dec (void) {
             --_voices_active;
-            if (_voices_active <= 0) {
+            if (_voices_active < 0) {
                 _voices_active = 0;
             }
         }
@@ -98,7 +96,7 @@ namespace NOTE_HANDLING {
             }
         };
     }
-    
+
     extern voice_data_t VOICES[POLYPHONY];
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);

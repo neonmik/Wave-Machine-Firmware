@@ -50,7 +50,7 @@ void synth_core() {
         for (int i = 0; i < temp; i++){
           uint8_t slot_ = 0;
           uint8_t note_ = 0;
-          bool gate_ = false;
+          bool gate_ = 0;
 
           QUEUE::trigger_receive(slot_, note_, gate_);
             if (slot_ < POLYPHONY) {

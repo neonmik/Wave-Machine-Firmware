@@ -93,10 +93,11 @@ namespace SYNTH {
       int16_t clipped_sample = 0;
 
       // for reduced speed poly lfo. To be used for making fully poly.
-      // m++;
-      // m &= 0x7;
-      // if (m == 0) MOD::update();
-      MOD::update();
+      m++;
+      m &= 0x7;
+      if (m == 0) MOD::update();
+      
+      // MOD::update();
 
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
@@ -191,17 +192,14 @@ namespace SYNTH {
           // if (oscillator & Oscillator::FM) {
           //   phaseDeltaModulator = (pitch * harmonicity) >> 6;   // calculate modulator frequency for a  given harmonicity
           //   phaseDeltaCarrier = pitch;                           // this is just pitch (although not in Hz)
-
           //   // calculate frequency mod
           //   phaseAccumModulator += phaseDeltaModulator;
           //   indexModulator = phaseAccumModulator >> 8;
           //   modulator = get_wavetable[indexModulator];
           //   modulator = (modulator * modulatorDepth) >> 3;
           //   modulatorSigned = modulator - ((128 * modulatorDepth) >> 3);   // center at 0
-
           //   // get carrier frequency
           //   phaseDeltaCarrier += modulatorSigned;
-
           //   // calculate carrier
           //   phaseAccumCarrier += phaseDeltaCarrier;
           //   indexCarrier = phaseAccumCarrier >> 8;
@@ -220,10 +218,6 @@ namespace SYNTH {
           sample += channel_sample;
         }
       }
-
-      // Atempt at normalising the volume when theres less than 8 voices, currently is just quiest and then gets louder.
-      // if (!voice_count) voice_count = 1;
-      // sample = sample / voice_count;
 
       sample = (int32_t(sample >> 2) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 

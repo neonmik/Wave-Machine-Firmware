@@ -5,8 +5,8 @@ namespace QUEUE {
     queue_t release_queue;
     
     void init() {
-        queue_init(&trigger_queue, sizeof(trigger_msg_t), 8);
-        queue_init(&release_queue, sizeof(uint8_t), 8);
+        queue_init(&trigger_queue, sizeof(trigger_msg_t), 16);
+        queue_init(&release_queue, sizeof(uint8_t), 16);
     }
     
     void trigger_send (uint8_t slot, uint8_t note, bool gate) {
@@ -26,7 +26,6 @@ namespace QUEUE {
     uint8_t trigger_check_queue () {
         return queue_get_level(&trigger_queue);
     }
-
 
     void release_send (uint8_t slot) {
         uint8_t _slot = slot;

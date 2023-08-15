@@ -52,10 +52,6 @@ namespace MIDI {
                 handlePitchBend(channel, ((data2 << 7) | (data1)));
                 break;
             case MidiType::SYS_EX:
-                if (data1 == 42) {
-                    printf("clock in\n");
-                } 
-
                 break;
             case MidiType::SONG_POSITION: 
                 handleSongPosition(data1, data2);

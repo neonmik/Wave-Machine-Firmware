@@ -13,8 +13,10 @@ namespace NOTE_HANDLING {
   void voice_on(int slot, int note, int velocity) {
     if (note) {
 
+      // if (VOICES[slot].note != note)  voices_inc();
       VOICES[slot].on(note);
 
+      
       voices_inc();
       filter_on();
 
@@ -66,12 +68,17 @@ namespace NOTE_HANDLING {
           volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
 
           for (int i = 0; i < POLYPHONY; i++)  {
+
+            // voice is being used, but by this note, so fire again
             if (VOICES[i].note == note && VOICES[i].gate) { 
               voice = i;
-              break;  // breaks for loop as a free slot has been found
+              break;  // breaks for-loop as a free slot has been found
             }
+
+            // Voice is free
             if (!VOICES[i].active) {
               voice = i;
+              // voices_inc();
               break;
             }
           }
@@ -180,7 +187,7 @@ namespace NOTE_HANDLING {
     // update voice info - used to pull info from other core
     check_release(); // accesses safe data to check notes are free and done releasing
 
-    if (ARP::get_state()) { 
+    if (ARP::get_state) { 
       ARP::organise_notes();
       ARP::update();
     }
@@ -250,4 +257,6 @@ namespace NOTE_HANDLING {
     //   }
     // }
   }
+
+
 }

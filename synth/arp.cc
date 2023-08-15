@@ -99,10 +99,10 @@ namespace ARP {
                 switch (note_state) {
                     case NOTE_ACTIVE:
                         // old voice handling, keeping until fully bug tested
-                        // NOTE_HANDLING::priority(0x80, _last_note, 0); 
+                        NOTE_HANDLING::priority(0x80, _last_note, 0); 
 
                         // new voice handling
-                        NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
+                        // NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
 
                         arpeggiate(_direction);
                         note_state = IDLE;
@@ -115,12 +115,12 @@ namespace ARP {
                             _last_note = ((_notes[_play_index])+(_octave*12));
                             
                              // old voice handling, keeping until fully bug tested 
-                            // NOTE_HANDLING::priority(0x90, _last_note, 127);
+                            NOTE_HANDLING::priority(0x90, _last_note, 127);
                             
                             // New Voice handling -
-                            _last_index++;
-                            if (_last_index == POLYPHONY) _last_index = 0;
-                            NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
+                            // _last_index++;
+                            // _last_index &= POLYPHONY;
+                            // NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
                             // --------------------
 
                             note_state = NOTE_ACTIVE;
@@ -153,6 +153,7 @@ namespace ARP {
             _write_index = 0;
         }
         _notes_changed = true;
+        // NOTE_HANDLING::voices_inc();
     }
     void remove_notes (uint8_t note) {
         if (_hold) {
@@ -175,6 +176,7 @@ namespace ARP {
                 if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
                 if (_write_index <= 0) _write_index = _count;
                 _notes_changed = true;
+                // NOTE_HANDLING::voices_dec();
                 //don't return here in case the note is in the list more than once
             }
         }
