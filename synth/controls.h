@@ -32,7 +32,7 @@ namespace CONTROLS {
             SHFT = 4,
             fENV = 5,
             FILT = 6,
-            SPAR = 7,
+            sARP = 7,
         };
            
     }
@@ -105,7 +105,7 @@ namespace CONTROLS {
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
             Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-            //  Page    SHFT    {nullptr,                  nullptr,                    nullptr,                    nullptr,                         nullptr};
+                Page    sARP    {&ARP::set_gap,            nullptr,                    nullptr,                    nullptr,                         nullptr};
             
             
             // Page: 1 - 
@@ -119,7 +119,7 @@ namespace CONTROLS {
             //           ENV    Knob 1: Attack,         Knob 2: Decay,          Knob 3: Sustain,    Knob 4: Release,        Button: Envelope Bypass 
             // Page: 4(ALL) - 
             //           ARP    Knob 1: Hold,           Knob 2: Rate,           Knob 3: Range,      Knob 4: Direction,      Button: ?
-            //           ???    Knob 1: unkown,         Knob 2: unkown,         Knob 3: unkown,     Knob 4: unkown,         Button: unkown 
+            //           ???    Knob 1: Gap,            Knob 2: unkown,         Knob 3: unkown,     Knob 4: unkown,         Button: unkown 
 
             
 
@@ -148,6 +148,8 @@ namespace CONTROLS {
                     case 6:
                         FILT.set(control, input);
                         break;
+                    case 7:
+                        sARP.set(control, input);
                 }
             }
             uint16_t get (uint8_t page, uint16_t control) {
@@ -167,6 +169,8 @@ namespace CONTROLS {
                         return fENV.get(control);
                     case 6:
                         return FILT.get(control);
+                    case 7:
+                        return sARP.get(control);
                     default:
                         return 0;
                 }
@@ -199,6 +203,7 @@ namespace CONTROLS {
                 FILT.update();
                 fENV.update();
                 SHFT.update();
+                sARP.update();
             }
     };
     

@@ -65,15 +65,14 @@ namespace BEAT_CLOCK {
                 _division = 32;
                 midi_division = 3;
                 break;
-            // Not been used, and I've not missed them.
-            // case 10: // 32nd Note Triplet (1/48)
-            //     _division = 48;
-            //     midi_division = 2;
-            //     break;
-            // case 11: // 1/64 - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
-            //     _division = 64;
-            //     // midi_division = 96;
-            //     break;
+            case 10: // 32nd Note Triplet (1/48)
+                _division = 48;
+                midi_division = 2;
+                break;
+            case 11: // 1/64 - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
+                _division = 64;
+                // midi_division = 96;
+                break;
 
             // case ?: // Dotted Half note (?) - Not currently possible in divisions, and I've not missed it.
             //     _division = 1.333; // ~
@@ -173,33 +172,3 @@ namespace BEAT_CLOCK {
 // ------------------------------------------------
 
 
-
-// 48000 ticks per minute
-// -----
-//    60 seconds
-//     
-// = 800 ticks per second
-
-// ------------------------------------------------
-//              SAMPLES PER DIVISION
-// ------------------------------------------------
-// 
-// Clock durations
-// ------------------------------------------------
-//                      
-// Whole note           =       96  samples
-// Dotted half note     =       72  samples 
-// Half note            =       48  samples
-// Dotted quarter note  =       36  samples 
-// Quarter note         =       24  samples (24ppqn)
-// 8th note             =       12  samples
-// Triplet 8th note     =       8   samples
-// 16th note            =       6   samples
-// Triplet 16th note    =       4   samples
-// 32nd note            =       3   samples
-// Triplet 32nd note    =       2   samples
-// 64th note            =       1.5 samples
-// Triplet 64th note    =       1   samples
-// 
-// ------------------------------------------------
-// ------------------------------------------------

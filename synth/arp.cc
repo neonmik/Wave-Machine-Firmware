@@ -97,21 +97,21 @@ namespace ARP {
             if (BEAT_CLOCK::get_changed()) {
                 switch (note_state) {
                     case NOTE_ACTIVE:
-                        NOTE_HANDLING::priority(0x80, _last_note, 0);
-                        // NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
+                        // NOTE_HANDLING::priority(0x80, _last_note, 0);
+                        NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
                         arpeggiate(_direction);
                         note_state = IDLE;
-                        // break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
+                        if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                     case IDLE:
                         if (_play_index >= _count) {
                             _play_index = 0;
                         }
                         if (_notes[_play_index]) {
                             _last_note = ((_notes[_play_index])+(_octave*12));
-                            NOTE_HANDLING::priority(0x90, _last_note, 127);
-                            // _last_index++;
-                            // if (_last_index > POLYPHONY) _last_index = 0;
-                            // NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
+                            // NOTE_HANDLING::priority(0x90, _last_note, 127); // old arp had 
+                            _last_index++;
+                            if (_last_index == POLYPHONY) _last_index = 0;
+                            NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
                             note_state = NOTE_ACTIVE;
                         }
                         break;
@@ -253,6 +253,13 @@ namespace ARP {
                 break;
         }
     }
+    
+    void set_gap (uint16_t gap) {
+        bool temp = (bool)(gap>>9);
+        if (_gap != temp) _gap = temp;
+    }
+
+
     void set_rate (uint16_t rate) {
         BEAT_CLOCK::set_bpm(map(rate, KNOB_MIN, KNOB_MAX, 30, 350));
     }

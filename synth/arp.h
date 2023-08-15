@@ -36,6 +36,8 @@ namespace ARP {
 
         NoteState note_state = IDLE;
 
+        bool _gap = false;
+
         bool  _active;
         bool  _active_last;
         
@@ -77,10 +79,13 @@ namespace ARP {
     void set_state (bool state);
     bool get_state (void);
     void reset (void);
+
     void set_hold (uint16_t hold);
     void set_division (uint16_t division);
     void set_range (uint16_t range);
     void set_direction (uint16_t direction);
+
+    void set_gap (uint16_t gap);
 
     void update_range (void);
     // void update_controls (void);

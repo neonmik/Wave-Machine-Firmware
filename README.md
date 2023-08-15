@@ -6,7 +6,7 @@ Current nightly firmware for Wave Machine Hardware.
 - Alpha Release bugfixes:
 
     - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
-    - Bug: Notes and releases actint strangly accross preset changes - some notes can get stuck.
+    - Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can really replicate yet, just noticed it doing it when Joe was playing...
 
 
 - Updates and Bugfixes:
@@ -20,7 +20,6 @@ Current nightly firmware for Wave Machine Hardware.
             - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
         - Holding Preset should save
         - Shift should be holding Page?
-        - 
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Improve Oscillator script - current bugs include:
@@ -152,6 +151,8 @@ Things already implemented:
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
     + Arp functionality bug fixes:
+        + Change: Altered how the voice allocation is handled in Arp. Removes the need for note priority, and should allow for better control of Hold/Sustain.
+        + Feature: Added a hardware control for Arp Gap. Basically gives you a choice between notes that lead straight into each other adn notes that have a gap between the same duration as the note duration.
         + Bugfix: Arp Sync now working properly. A Bug was highlighted when a bug in the MIDI handling code was fixed, the speed didnt align with the MIDI clock speed.
         + Bugfix: fixed bug in Arp noter removal logic that cause strange behaviour and a comile warning.
         + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
