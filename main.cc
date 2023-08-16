@@ -22,7 +22,7 @@
 
 #include "queue.h"
 
-uint32_t sample_clock;
+// uint32_t sample_clock;
 
 void hw_core() {
   
@@ -40,7 +40,7 @@ void synth_core() {
 
   SYNTH::init();
   DAC::init(SYNTH::get_audio_frame);
-  // CLOCK::init();
+  CLOCK::init();
   
   while (true) {
      if (DAC::get_state()) {

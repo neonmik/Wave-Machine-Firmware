@@ -12,7 +12,7 @@ namespace NOTE_HANDLING {
       VOICES[slot].on(note);
 
       
-      // voices_inc();
+      voices_inc();
       filter_on();
 
       MIDI::sendNoteOn(VOICES[slot].note, velocity);
@@ -25,7 +25,7 @@ namespace NOTE_HANDLING {
 
     VOICES[slot].off();
 
-    // voices_dec();
+    voices_dec();
     filter_off();
 
     MIDI::sendNoteOff(VOICES[slot].note, velocity);
@@ -64,7 +64,7 @@ namespace NOTE_HANDLING {
       // Voice is free
       if (!VOICES[i].active) {
         voice = i;
-        voices_inc();
+        // voices_inc();
         break;
       }
     }
@@ -131,9 +131,9 @@ namespace NOTE_HANDLING {
             break;
         }
       }
-      if (voice > 0) {
-        voices_inc();
-      }
+      // if (voice > 0) {
+      //   voices_inc();
+      // }
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
         voice = priority_voice;
@@ -145,7 +145,7 @@ namespace NOTE_HANDLING {
   void release(int note, int velocity) {
     for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
       if (VOICES[voice].note == note)  {
-        voices_dec();
+        // voices_dec();
         voice_off(voice, note, velocity);
       }
     }
@@ -179,14 +179,14 @@ namespace NOTE_HANDLING {
       if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
       else {
         ARP::add_notes(note);
-        voices_inc();
+        // voices_inc();
       }
   }
   void note_off(uint8_t note, uint8_t velocity) {
       if (!ARP::get_state()) release(note, velocity); // synth voice allocation
       else {
         ARP::remove_notes(note);
-        voices_dec();
+        // voices_dec();
       }
   }
   void sustain_pedal(uint16_t status) {

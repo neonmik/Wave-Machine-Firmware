@@ -21,6 +21,7 @@ namespace CONTROLS {
         uint8_t _page;
         bool    _shift;
         bool    _changed;
+        uint8_t _poll;
 
         uint8_t _default_preset = 0;
 
@@ -198,6 +199,34 @@ namespace CONTROLS {
                 return ARP.get_state();;
             }
             void update (void) {
+                // switch (_poll) {
+                //     case 0:
+                //         MAIN.update();
+                //         break;
+                //     case 1:
+                //         ADSR.update();
+                //         break;
+                //     case 2:
+                //         MOD1.update();
+                //         break;
+                //     case 3:
+                //         ARP.update();
+                //         break;
+                //     case 4:
+                //         FILT.update();
+                //         break;
+                //     case 5:
+                //         fENV.update();
+                //         break;
+                //     case 6:
+                //         SHFT.update();
+                //         break;
+                    // case 7:
+                        // sARP.update();
+                        // break;
+                // }
+                // _poll++;
+                // if (_poll > 6) _poll = 0;
                 MAIN.update();
                 ADSR.update();
                 MOD1.update();
@@ -205,7 +234,6 @@ namespace CONTROLS {
                 FILT.update();
                 fENV.update();
                 SHFT.update();
-                // sARP.update();
             }
     };
     

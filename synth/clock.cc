@@ -86,21 +86,17 @@ namespace CLOCK {
 
     void tick (void) {
         ++_tick;
+        if (_tick >= _samples_per_division) {
+            if (!_midi_clock_present) set_changed(true);
+            _tick = 0;
+        }
     }
 
     void check_sample_clock (void) {
-        if (_tick >= 128) {
-            _tock++;
-            _tick = 0;
-        }
         
-        if (_tock >= _samples_per_division) {
-            if (!_midi_clock_present) set_changed(true);
-            _tock = 0;
-        }
     }
     void update (void) {
-        check_sample_clock();
+        // check_sample_clock();
         check_for_midi_clock();
     }
 
