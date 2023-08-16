@@ -60,111 +60,104 @@ namespace NOTE_HANDLING {
   }
 
   // Priority Control
-  void priority(int status, int note, int velocity) {
-    // Note Priority system
-    switch (status)  { //check which type we received
-      case 0x90:
-        if (velocity>0)  {   //is velocity 0?  if so, we want it to be thought of as note off
-          volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
+  void priority(int note, int velocity) {
+    volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
 
+    for (int i = 0; i < POLYPHONY; i++)  {
+
+      // voice is being used, but by this note, so fire again
+      if (VOICES[i].note == note && VOICES[i].gate) { 
+        voice = i;
+        break;  // breaks for-loop as a free slot has been found
+      }
+
+      // Voice is free
+      if (!VOICES[i].active) {
+        voice = i;
+        // voices_inc();
+        break;
+      }
+    }
+
+    // should skip this is a free voice is found
+    if (voice < 0) {
+      int8_t priority_voice = -1;
+      volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
+      
+      switch (_priority) {
+        // When there are no free voices on the synth, this code uses various priority types to assign the new note to a voice.
+        case Priority::LAST: {
+          // This mode assigns the new note to the voice with the oldest persisting voice (The Latest notes played have prioirty)
+          uint32_t longest_released_time = time_now;
+          uint32_t longest_active_time = time_now;
           for (int i = 0; i < POLYPHONY; i++)  {
-
-            // voice is being used, but by this note, so fire again
-            if (VOICES[i].note == note && VOICES[i].gate) { 
-              voice = i;
-              break;  // breaks for-loop as a free slot has been found
+            if (!VOICES[i].gate && (VOICES[i].activation_time<longest_released_time)) { // released notes
+              longest_released_time = VOICES[i].activation_time;
+              voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
             }
-
-            // Voice is free
-            if (!VOICES[i].active) {
-              voice = i;
-              // voices_inc();
-              break;
+            else if (VOICES[i].activation_time<longest_active_time) { // still active
+              longest_active_time = VOICES[i].activation_time;
+              priority_voice = i; // will give the oldest voice thats still being used
             }
           }
-
-          // should skip this is a free voice is found
-          if (voice < 0) {
-            int8_t priority_voice = -1;
-            volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
-            
-            switch (_priority) {
-              // When there are no free voices on the synth, this code uses various priority types to assign the new note to a voice.
-              case Priority::LAST: {
-                // This mode assigns the new note to the voice with the oldest persisting voice (The Latest notes played have prioirty)
-                uint32_t longest_released_time = time_now;
-                uint32_t longest_active_time = time_now;
-                for (int i = 0; i < POLYPHONY; i++)  {
-                  if (!VOICES[i].gate && (VOICES[i].activation_time<longest_released_time)) { // released notes
-                    longest_released_time = VOICES[i].activation_time;
-                    voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
-                  }
-                  else if (VOICES[i].activation_time<longest_active_time) { // still active
-                    longest_active_time = VOICES[i].activation_time;
-                    priority_voice = i; // will give the oldest voice thats still being used
-                  }
-                }
-                break; 
-              }
-              case Priority::FIRST: {
-                // This mode assigns the new note to the newest persisting voice (the first notes played have priority)
-                uint32_t shortest_released_time = 0;
-                uint32_t shortest_active_time = 0;
-                for (int i = 0; i < POLYPHONY; i++)  {
-                  if (!VOICES[i].active && (VOICES[i].activation_time>shortest_released_time)) { // released notes
-                    shortest_released_time = VOICES[i].activation_time;
-                    voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
-                  }
-                  else if (VOICES[i].activation_time>shortest_active_time) { // still active
-                    shortest_active_time = VOICES[i].activation_time;
-                    priority_voice = i; // will give the oldest slot thats still being used
-                  }
-                }
-                break;
-              }
-              case Priority::LOWEST: {
-                  // This mode assigns the new note only if the new note is lower than one of the persisting notes (the lowest notes have priority)
-                  uint8_t lowest_note = 127; // Initialize to the highest possible MIDI note value
-                  for (int i = 0; i < POLYPHONY; i++) {
-                      if (VOICES[i].active && VOICES[i].note < lowest_note) {
-                          lowest_note = VOICES[i].note;
-                          voice = i; // Assign the slot with the lowest note
-                      }
-                  }
-                  break;
-              }
-              case Priority::HIGHEST: {
-                  // This mode assigns the new note only if the new note is higher than one of the persisting notes (the highest notes have priority)
-                  uint8_t highest_note = 0; // Initialize to the lowest possible MIDI note value
-                  for (int i = 0; i < POLYPHONY; i++) {
-                      if (VOICES[i].active && VOICES[i].note > highest_note) {
-                          highest_note = VOICES[i].note;
-                          voice = i; // Assign the slot with the highest note
-                      }
-                  }
-                  break;
-              }
-            }
-            // No slots in release? Use the next priority appropriate active voice
-            if (voice < 0) {
-              voice = priority_voice;
-            }
-          }
-          voice_on(voice, note, velocity);
-          
-          break;  //only breaks if velocity > 0.  otherwise, the switch just rolls onto next case, note_off.
+          break; 
         }
-
-      case 0x80:
-        for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
-          if (VOICES[voice].note == note)  { //check for a matching note
-            voice_off(voice, note, velocity);
-            //no break here just in case there are somehow multiple of the same note stuck on
+        case Priority::FIRST: {
+          // This mode assigns the new note to the newest persisting voice (the first notes played have priority)
+          uint32_t shortest_released_time = 0;
+          uint32_t shortest_active_time = 0;
+          for (int i = 0; i < POLYPHONY; i++)  {
+            if (!VOICES[i].active && (VOICES[i].activation_time>shortest_released_time)) { // released notes
+              shortest_released_time = VOICES[i].activation_time;
+              voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
+            }
+            else if (VOICES[i].activation_time>shortest_active_time) { // still active
+              shortest_active_time = VOICES[i].activation_time;
+              priority_voice = i; // will give the oldest slot thats still being used
+            }
           }
+          break;
         }
-        break;
-      default:
-        break;
+        case Priority::LOWEST: {
+            // This mode assigns the new note only if the new note is lower than one of the persisting notes (the lowest notes have priority)
+            uint8_t lowest_note = 127; // Initialize to the highest possible MIDI note value
+            for (int i = 0; i < POLYPHONY; i++) {
+                if (VOICES[i].active && VOICES[i].note < lowest_note) {
+                    lowest_note = VOICES[i].note;
+                    voice = i; // Assign the slot with the lowest note
+                }
+            }
+            break;
+        }
+        case Priority::HIGHEST: {
+            // This mode assigns the new note only if the new note is higher than one of the persisting notes (the highest notes have priority)
+            uint8_t highest_note = 0; // Initialize to the lowest possible MIDI note value
+            for (int i = 0; i < POLYPHONY; i++) {
+                if (VOICES[i].active && VOICES[i].note > highest_note) {
+                    highest_note = VOICES[i].note;
+                    voice = i; // Assign the slot with the highest note
+                }
+            }
+            break;
+        }
+      }
+      // if (voice > 0) {
+      //   voices_inc():
+      // }
+      // No slots in release? Use the next priority appropriate active voice
+      if (voice < 0) {
+        voice = priority_voice;
+      }
+    }
+    voice_on(voice, note, velocity);
+  }
+
+  void release(int note, int velocity) {
+    for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
+      if (VOICES[voice].note == note)  { //check for a matching note
+        voice_off(voice, note, velocity);
+        //no break here just in case there are somehow multiple of the same note stuck on
+      }
     }
   }
 
@@ -196,7 +189,7 @@ namespace NOTE_HANDLING {
   }
 
   void note_on (uint8_t note, uint8_t velocity) {
-      if (!ARP::get_state()) priority(0x90, note, velocity); // synth voice allocation
+      if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
       else ARP::add_notes(note);
   }
   void note_off(uint8_t note, uint8_t velocity) {
@@ -219,7 +212,7 @@ namespace NOTE_HANDLING {
 
     // If the note is not held by the sustain pedal, process it as a regular note off
     // if (!held_by_sustain) {
-      if (!ARP::get_state()) priority(0x80, note, velocity); // synth voice allocation
+      if (!ARP::get_state()) release(note, velocity); // synth voice allocation
       else ARP::remove_notes(note);
     // }
   }

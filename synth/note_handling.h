@@ -109,6 +109,7 @@ namespace NOTE_HANDLING {
 
     // Note priority detection
     void priority(int status, int note, int velocity);
+    void release(int note, int velocity);
 
     void update (void);
 

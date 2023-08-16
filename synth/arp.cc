@@ -99,10 +99,14 @@ namespace ARP {
                 switch (note_state) {
                     case NOTE_ACTIVE:
                         // old voice handling, keeping until fully bug tested
-                        NOTE_HANDLING::priority(0x80, _last_note, 0); 
+                        // NOTE_HANDLING::priority(0x80, _last_note, 0); 
 
-                        // new voice handling
-                        // NOTE_HANDLING::voice_off(_last_index, _last_note, 0);
+                        // ----------------------
+                        // New Arp Voice handling 
+                        NOTE_HANDLING::voice_off(_voice_index, _last_note, 0);
+                        _voice_index++;
+                        if (_voice_index >= POLYPHONY) _voice_index = 0;
+                        // ----------------------
 
                         arpeggiate(_direction);
                         note_state = IDLE;
@@ -115,13 +119,12 @@ namespace ARP {
                             _last_note = ((_notes[_play_index])+(_octave*12));
                             
                              // old voice handling, keeping until fully bug tested 
-                            NOTE_HANDLING::priority(0x90, _last_note, 127);
+                            // NOTE_HANDLING::priority(0x90, _last_note, 127);
                             
-                            // New Voice handling -
-                            // _last_index++;
-                            // _last_index &= POLYPHONY;
-                            // NOTE_HANDLING::voice_on(_last_index, _last_note, 127);
-                            // --------------------
+                            // ----------------------
+                            // New Arp Voice handling 
+                            NOTE_HANDLING::voice_on(_voice_index, _last_note, 127);
+                            // ----------------------
 
                             note_state = NOTE_ACTIVE;
                         }
