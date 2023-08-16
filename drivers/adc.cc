@@ -3,9 +3,11 @@
 namespace ADC {
     void init() {
 
+        adc_init();
 
         read_onboard_temperature();
 
+        adc_mux_init();
 
         gpio_init(MUX_SEL_A);
         gpio_init(MUX_SEL_B);
@@ -28,9 +30,6 @@ namespace ADC {
         gpio_set_drive_strength(MUX_SEL_D, GPIO_DRIVE_STRENGTH_2MA);
 
         // adc pin setup
-        adc_gpio_init(MUX_OUT_ADC);
-        adc_init();
-        adc_select_input(0);
 
         _mux_address = 0;
 

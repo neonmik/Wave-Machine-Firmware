@@ -31,11 +31,18 @@ namespace ADC {
         uint32_t _sample[MAX_KNOBS];
         uint32_t _output;
 
-        void read_onboard_temperature(void) {
-
-            adc_init();
+        void adc_temp_init(void) {
             adc_set_temp_sensor_enabled(true);
             adc_select_input(4);
+        }
+        void adc_mux_init (void) {
+            adc_gpio_init(MUX_OUT_ADC);
+            adc_select_input(0);
+        }
+
+        void read_onboard_temperature(void) {
+
+            adc_temp_init();
             
             /* 12-bit conversion, assume max value == ADC_VREF == 3.3 V */
             const float conversionFactor = 3.3f / (1 << 12);
@@ -44,6 +51,10 @@ namespace ADC {
             float tempC = 27.0f - (adc - 0.706f) / 0.001721f;
 
             printf("CPU temperature = %.02fºC\n", tempC);
+
+            adc_set_temp_sensor_enabled(false);
+
+            adc_mux_init();
         }
 
 
