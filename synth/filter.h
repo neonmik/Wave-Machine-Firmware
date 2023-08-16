@@ -70,8 +70,8 @@ namespace FILTER {
         }
 
         uint32_t calc_end_frame (uint32_t milliseconds) {
-            return (milliseconds * (SAMPLE_RATE/8)) / 1000;
-            // return (milliseconds * SAMPLE_RATE) / 1000;
+            // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
+            return (milliseconds * SAMPLE_RATE) / 1000;
         }
 
 
