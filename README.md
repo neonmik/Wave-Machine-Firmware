@@ -6,15 +6,17 @@ Current nightly firmware for Wave Machine Hardware.
 - Alpha Release bugfixes:
 
     - Bug: Filter still releases if you're holding a chord, say of thre notes, and then play a few notes above... assuming down to the simple algorithm not performing correctly when full.
-    - Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can really replicate yet, just noticed it doing it when Joe was playing...
+    
+    - Uncofirmed Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can really replicate yet, just noticed it doing it when Joe was playing...
 
 
 - Updates and Bugfixes:
 
     - Arp: Move back to HW core, and try and link beat clock...
+    
     - Feature: Figure sustain pedal algorithm out. Needs to be before Arp or Priority allocation but also be able to keep up with voice allocation? probably needs to control two seperate algorithms in seperate sections, like I've started.
 
-    - Arp & Filter/Mod Envelope should have an option to be from the start of any pressed notes, so that the envelope can ope slowly up on a playing Arp.
+    
 
     - Improve Controls funtionality:
         - Change the layout of controls:
@@ -230,6 +232,7 @@ Things already implemented:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Bugfix - Arp & Filter/Mod Envelope now have an option to be MONO or POLY, this allows the envelope to open slowly up on a playing Arp, or fire for every note.
         + Improved Envelope output for highpass control of cutoff - it now applies the envlope downwards.
         + Reduced the sample rate of the filter ADSR. 
         + Added a modulation input, but needs adjusting. Going on the back burner till the Filter and Mod can opperate together.
