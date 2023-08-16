@@ -56,6 +56,7 @@ namespace NOTE_HANDLING {
         // volatile uint8_t     _num_held_notes;
 
         int8_t     _voices_active = 0;
+        bool       _filter_active = false;
 
 
         struct voice_data_t {

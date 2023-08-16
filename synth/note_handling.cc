@@ -11,8 +11,6 @@ namespace NOTE_HANDLING {
     if (note) {
       VOICES[slot].on(note);
 
-      
-      // voices_inc();
       filter_on();
 
       MIDI::sendNoteOn(VOICES[slot].note, velocity);
@@ -25,7 +23,6 @@ namespace NOTE_HANDLING {
 
     VOICES[slot].off();
 
-    // voices_dec();
     filter_off();
 
     MIDI::sendNoteOff(VOICES[slot].note, velocity);
@@ -39,13 +36,22 @@ namespace NOTE_HANDLING {
   }
 
   void filter_on(void) {
-    if (voices_active()) { // re-triggers on every new note - needs reworking to fix releasing multiple notes
+    // FOR MONO MODE
+    // if (!_filter_active && voices_active()) { 
+    //   QUEUE::trigger_send(FILTER_VOICE, 0, true);
+    //   _filter_active = true;
+    // }
+    // FOR POLY MODE
+    if (voices_active()) { 
       QUEUE::trigger_send(FILTER_VOICE, 0, true);
+      _filter_active = true;
     }
   }
   void filter_off(void) {
-    if (!voices_active()) {
+    // FOR MONO MODE
+    if (_filter_active && !voices_active()) {
       QUEUE::trigger_send(FILTER_VOICE, 0, false);
+      _filter_active = false;
     }
   }
 
@@ -135,6 +141,7 @@ namespace NOTE_HANDLING {
       }
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
+        
         voice = priority_voice;
       }
     }
@@ -144,7 +151,7 @@ namespace NOTE_HANDLING {
   void release(int note, int velocity) {
     for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
       if (VOICES[voice].note == note)  {
-        voices_dec();
+        if (VOICES[voice].gate) voices_dec();
         voice_off(voice, note, velocity);
       }
     }
