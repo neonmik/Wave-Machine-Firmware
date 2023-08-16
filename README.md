@@ -11,6 +11,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Updates and Bugfixes:
 
+    - Arp: Move back to HW core, and try and link beat clock...
     - Feature: Figure sustain pedal algorithm out. Needs to be before Arp or Priority allocation but also be able to keep up with voice allocation? probably needs to control two seperate algorithms in seperate sections, like I've started.
 
     - Arp & Filter/Mod Envelope should have an option to be from the start of any pressed notes, so that the envelope can ope slowly up on a playing Arp.

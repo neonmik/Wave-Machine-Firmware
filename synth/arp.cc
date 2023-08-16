@@ -3,7 +3,7 @@
 namespace ARP {
 
     void init () {
-        BEAT_CLOCK::init();
+        // CLOCK::init();
     }
     void set_state (bool state) {
         if (state != _active) {
@@ -93,46 +93,43 @@ namespace ARP {
     }
 
     void update (void) {
-        if (_active) {
-            
-            if (BEAT_CLOCK::get_changed()) {
-                switch (note_state) {
-                    case NOTE_ACTIVE:
-                        // old voice handling, keeping until fully bug tested
-                        // NOTE_HANDLING::priority(0x80, _last_note, 0); 
+        CLOCK::update();
+        if (CLOCK::get_changed()) {
+            switch (note_state) {
+                case NOTE_ACTIVE:
+                    // old voice handling, keeping until fully bug tested
+                    // NOTE_HANDLING::priority(0x80, _last_note, 0); 
 
+                    // ----------------------
+                    // New Arp Voice handling 
+                    NOTE_HANDLING::voice_off(_voice_index, _last_note, 0);
+                    _voice_index++;
+                    if (_voice_index >= POLYPHONY) _voice_index = 0;
+                    // ----------------------
+
+                    arpeggiate(_direction);
+                    note_state = IDLE;
+                    if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
+                case IDLE:
+                    if (_play_index >= _count) {
+                        _play_index = 0;
+                    }
+                    if (_notes[_play_index]) {
+                        _last_note = ((_notes[_play_index])+(_octave*12));
+                        
+                            // old voice handling, keeping until fully bug tested 
+                        // NOTE_HANDLING::priority(0x90, _last_note, 127);
+                        
                         // ----------------------
                         // New Arp Voice handling 
-                        NOTE_HANDLING::voice_off(_voice_index, _last_note, 0);
-                        _voice_index++;
-                        if (_voice_index >= POLYPHONY) _voice_index = 0;
+                        NOTE_HANDLING::voice_on(_voice_index, _last_note, 127);
                         // ----------------------
 
-                        arpeggiate(_direction);
-                        note_state = IDLE;
-                        if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
-                    case IDLE:
-                        if (_play_index >= _count) {
-                            _play_index = 0;
-                        }
-                        if (_notes[_play_index]) {
-                            _last_note = ((_notes[_play_index])+(_octave*12));
-                            
-                             // old voice handling, keeping until fully bug tested 
-                            // NOTE_HANDLING::priority(0x90, _last_note, 127);
-                            
-                            // ----------------------
-                            // New Arp Voice handling 
-                            NOTE_HANDLING::voice_on(_voice_index, _last_note, 127);
-                            // ----------------------
-
-                            note_state = NOTE_ACTIVE;
-                        }
-                        break;
-                }
-                BEAT_CLOCK::set_changed(false);
+                        note_state = NOTE_ACTIVE;
+                    }
+                    break;
             }
-            BEAT_CLOCK::update();
+            CLOCK::set_changed(false);
         }
     }
 
@@ -156,7 +153,6 @@ namespace ARP {
             _write_index = 0;
         }
         _notes_changed = true;
-        // NOTE_HANDLING::voices_inc();
     }
     void remove_notes (uint8_t note) {
         if (_hold) {
@@ -179,7 +175,6 @@ namespace ARP {
                 if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
                 if (_write_index <= 0) _write_index = _count;
                 _notes_changed = true;
-                // NOTE_HANDLING::voices_dec();
                 //don't return here in case the note is in the list more than once
             }
         }
@@ -239,7 +234,7 @@ namespace ARP {
     void set_division (uint16_t division) {
         if (division == _last_division) return;
         _last_division = division;
-        BEAT_CLOCK::set_division(division);
+        CLOCK::set_division(division);
     }
     void set_range (uint16_t range) {
         if (range == _last_range) return;
@@ -277,6 +272,6 @@ namespace ARP {
 
 
     void set_rate (uint16_t rate) {
-        BEAT_CLOCK::set_bpm(map(rate, KNOB_MIN, KNOB_MAX, 30, 350));
+        CLOCK::set_bpm(map(rate, KNOB_MIN, KNOB_MAX, 30, 350));
     }
 }

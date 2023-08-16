@@ -1,6 +1,6 @@
-#include "beat_clock.h"
+#include "clock.h"
 
-namespace BEAT_CLOCK {
+namespace CLOCK {
 
     void init () {
         _sample_rate = SAMPLE_RATE;
@@ -23,7 +23,7 @@ namespace BEAT_CLOCK {
     void set_division (uint16_t division) {
         // set the division of the bpm clock...
         // currently /8 to get a 16th note, but rename the _samples_per_16th to _samples_per_division
-        uint8_t temp = map(division, 0, 1023, 0, 9);
+        uint8_t temp = map(division, 0, 1023, 0, 10);
         switch (temp) {
             case 0: // Whole Note (1/1)
                 _division = 1;
@@ -71,12 +71,12 @@ namespace BEAT_CLOCK {
                 break;
             case 11: // 1/64 - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
                 _division = 64;
-                // midi_division = 96;
+                // midi_division = ?;
                 break;
 
             // case ?: // Dotted Half note (?) - Not currently possible in divisions, and I've not missed it.
-            //     _division = 1.333; // ~
-            //     midi_division = 72;
+            //     _division = ?;
+            //     midi_division = ?;
             //     break;
             default:
                 break;
@@ -86,12 +86,21 @@ namespace BEAT_CLOCK {
 
     void tick (void) {
         ++_tick;
-        if (_tick >= _samples_per_division) { // && (_tick != _last_tick)) {
-            if (!_midi_clock_present) set_changed(true);
+    }
+
+    void check_sample_clock (void) {
+        if (_tick >= 128) {
+            _tock++;
             _tick = 0;
+        }
+        
+        if (_tock >= _samples_per_division) {
+            if (!_midi_clock_present) set_changed(true);
+            _tock = 0;
         }
     }
     void update (void) {
+        check_sample_clock();
         check_for_midi_clock();
     }
 

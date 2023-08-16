@@ -5,7 +5,7 @@
 #include "drivers/usb.h"
 // #include "drivers/uart.h"
 
-#include "synth/beat_clock.h"
+#include "synth/clock.h"
 #include "synth/controls.h"
 
 

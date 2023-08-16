@@ -40,15 +40,15 @@ add_executable(${PROJECT_NAME}
     
     synth/adsr.cc
     synth/arp.cc
-    synth/beat_clock.cc
+    synth/clock.cc
+    synth/controls.cc
+    synth/filter.cc
+    synth/fx.cc
     synth/modulation.cc
     synth/note_handling.cc
-    synth/controls.cc
-    synth/synth.cc
     synth/resources.cc
+    synth/synth.cc
     
-    synth/fx.cc
-    synth/filter.cc
     )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

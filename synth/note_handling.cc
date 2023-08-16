@@ -1,8 +1,5 @@
 #include "note_handling.h"
 
-
-// #include "synth.h"
-
 #include "../midi.h"
 
 namespace NOTE_HANDLING {
@@ -12,12 +9,10 @@ namespace NOTE_HANDLING {
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
     if (note) {
-
-      // if (VOICES[slot].note != note)  voices_inc();
       VOICES[slot].on(note);
 
       
-      voices_inc();
+      // voices_inc();
       filter_on();
 
       MIDI::sendNoteOn(VOICES[slot].note, velocity);
@@ -29,9 +24,8 @@ namespace NOTE_HANDLING {
   void voice_off(int slot, int note, int velocity) {
 
     VOICES[slot].off();
-    // if (note != VOICES[slot].note) printf("Note Off not the same as Voice note.\n");
 
-    voices_dec();
+    // voices_dec();
     filter_off();
 
     MIDI::sendNoteOff(VOICES[slot].note, velocity);
@@ -46,15 +40,11 @@ namespace NOTE_HANDLING {
 
   void filter_on(void) {
     if (voices_active()) { // re-triggers on every new note - needs reworking to allow releasing multiple notes
-      // MOD::trigger_attack();
-      // FILTER::trigger_attack();
       QUEUE::trigger_send(FILTER_VOICE, 0, true);
     }
   }
   void filter_off(void) {
     if (!voices_active()) {
-      // MOD::trigger_attack();
-      // FILTER::trigger_release();
       QUEUE::trigger_send(FILTER_VOICE, 0, false);
     }
   }
@@ -74,7 +64,7 @@ namespace NOTE_HANDLING {
       // Voice is free
       if (!VOICES[i].active) {
         voice = i;
-        // voices_inc();
+        voices_inc();
         break;
       }
     }
@@ -141,9 +131,9 @@ namespace NOTE_HANDLING {
             break;
         }
       }
-      // if (voice > 0) {
-      //   voices_inc():
-      // }
+      if (voice > 0) {
+        voices_inc();
+      }
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
         voice = priority_voice;
@@ -154,18 +144,16 @@ namespace NOTE_HANDLING {
 
   void release(int note, int velocity) {
     for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
-      if (VOICES[voice].note == note)  { //check for a matching note
+      if (VOICES[voice].note == note)  {
+        voices_dec();
         voice_off(voice, note, velocity);
-        //no break here just in case there are somehow multiple of the same note stuck on
       }
     }
   }
 
   void check_release () {
-    // checks queue level
     uint8_t queue_level = QUEUE::release_check_queue();
     if (queue_level) {
-      // loops through the available queue entries till it's empty.
       for (int i = 0; i < queue_level; i++) {
         // receives the slot number thats released from the queue, and then clears the slot on this core.
         uint8_t slot = QUEUE::release_receive();
@@ -174,49 +162,43 @@ namespace NOTE_HANDLING {
     }
   }
 
-  // Update voice info from Synth Core, and update Arp notes if active.
   void update() {
 
-    // update voice info - used to pull info from other core
-    check_release(); // accesses safe data to check notes are free and done releasing
+    // Check the note-finished messages from Synth Core.
+    check_release();
 
-    if (ARP::get_state) { 
+    // Update Arp notes if active.
+    if (ARP::get_state()) { 
       ARP::organise_notes();
       ARP::update();
     }
 
 
   }
-
   void note_on (uint8_t note, uint8_t velocity) {
       if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
-      else ARP::add_notes(note);
+      else {
+        ARP::add_notes(note);
+        voices_inc();
+      }
   }
   void note_off(uint8_t note, uint8_t velocity) {
-    // bool held_by_sustain = false;
-    // if (_sustain) {
-      
-    //   // If the sustain pedal is held, mark the note as "held by sustain"
-    //   for (int i = 0; i < _num_held_notes; i++) {
-    //     if (_held_notes[i] == note) {
-    //       held_by_sustain = true;
-    //       break;
-    //     } else {
-    //       _held_notes[i] = note;
-    //       _num_held_notes++;
-    //       if (_num_held_notes >= POLYPHONY) _num_held_notes = 0;
-    //     }
-
-    //   }
-    // }
-
-    // If the note is not held by the sustain pedal, process it as a regular note off
-    // if (!held_by_sustain) {
       if (!ARP::get_state()) release(note, velocity); // synth voice allocation
-      else ARP::remove_notes(note);
-    // }
+      else {
+        ARP::remove_notes(note);
+        voices_dec();
+      }
   }
   void sustain_pedal(uint16_t status) {
+    // bit shift to binary number (yes or no)
+    bool temp = (status >> 9);
+
+    // if the input is new, then...
+    if (_sustain != temp) {
+      _sustain = temp;
+    }
+
+
     if (!ARP::get_state()) {
       // normal note shit
     }
@@ -225,12 +207,6 @@ namespace NOTE_HANDLING {
       // ARP::set_hold(status);
 
     }
-    // bit shift to binary number (yes or no)
-    bool temp = (status >> 9);
-
-    // if the input is new, then...
-    // if (_sustain != temp) {
-    //   _sustain = temp;
     //   if (_sustain) {
     //     // If the sustain pedal is pressed, transfer currently held notes to the array
     //     for (int i = 0; i < POLYPHONY; i++) {

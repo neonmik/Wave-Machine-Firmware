@@ -10,17 +10,16 @@
 
 
 
-enum class Priority {
-    FIRST,      // First/oldest notes stay the longest
-    LAST,       // Last/newest notes stay the longest
-    HIGHEST,    // Highest notes stay the longest
-    LOWEST      // Lowest notes stay the longest
-};
 
 
 namespace NOTE_HANDLING {
 
-    // uint8_t get_notes_on (void);
+    enum class Priority {
+        FIRST,      // First/oldest notes stay the longest
+        LAST,       // Last/newest notes stay the longest
+        HIGHEST,    // Highest notes stay the longest
+        LOWEST      // Lowest notes stay the longest
+    };
 
     namespace {
 

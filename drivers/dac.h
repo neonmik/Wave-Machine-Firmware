@@ -14,7 +14,7 @@
 
 #include "../ui.h"
 
-#include "../synth/beat_clock.h"
+#include "../synth/clock.h"
 
 #define DAC_DATA        11
 #define DAC_CLK         10
@@ -24,6 +24,8 @@
 #define DAC_CONFIG      0b0111000000000000
 
 #define size_bits       log2(BUFFER_SIZE * sizeof(uint16_t))
+
+extern uint32_t sample_clock;
 
 typedef uint16_t (*synth_function)();
 namespace DAC {
@@ -48,8 +50,8 @@ namespace DAC {
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
                 buf[i] = (process()) | (DAC_CONFIG);
-                ++sample_clock;
-                BEAT_CLOCK::tick();
+                // ++sample_clock;
+                CLOCK::tick();
             }
             _full = true;
         }

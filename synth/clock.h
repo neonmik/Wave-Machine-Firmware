@@ -7,11 +7,16 @@
 
 #define MIDI_CLOCK_TIMEOUT 670000 // time in us for 1 pulse at 24ppqn
 
-namespace BEAT_CLOCK {
+
+
+namespace CLOCK {
 
     namespace {
 
+
+
         uint32_t _tick = 0;
+        uint32_t _tock = 0;
         uint32_t _last_tick = 0;
 
         uint8_t _max = 8; // 4/4 - 4 beats in a bar
@@ -39,7 +44,9 @@ namespace BEAT_CLOCK {
 
         void calculate_division (void) {
             // calculation for division using samples per bar, and then using the division from there.
-            _samples_per_division = ((60 * _sample_rate) / (_bpm / _beats)) / _division;
+            _samples_per_division = (((60 * _sample_rate) / (_bpm / _beats)) / _division) / 128; // last divide is to make it compatable with the new clock...
+
+
         }
     }
 

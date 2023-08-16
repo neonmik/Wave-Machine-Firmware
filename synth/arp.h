@@ -8,11 +8,7 @@
 #include "../config.h"
 
 #include "note_handling.h"
-#include "beat_clock.h"
-
-
-extern uint32_t sample_clock;
-extern uint32_t sample_clock_last;
+#include "clock.h"
 
 namespace ARP {
 

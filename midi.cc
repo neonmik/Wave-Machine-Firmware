@@ -155,13 +155,13 @@ namespace MIDI {
     void handleSongSelect(uint8_t song) {}
     void handleTuneRequest(void) {}
     void handleClock(void) {
-        BEAT_CLOCK::midi_tick();
+        CLOCK::midi_tick();
     }
     void handleStart(void) {
-        BEAT_CLOCK::start_midi_clock();
+        CLOCK::start_midi_clock();
     }
     void handleStop(void) {
-        BEAT_CLOCK::stop_midi_clock();
+        CLOCK::stop_midi_clock();
     }
     void handleContinue(void) {}
     void handleActiveSense(void) {}

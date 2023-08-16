@@ -97,6 +97,7 @@ void set_shift (bool shift) {
     ADC::init();
     CONTROLS::init();
     PAGINATION::init();
+    CLOCK::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;

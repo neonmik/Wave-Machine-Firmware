@@ -8,10 +8,10 @@
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
 constexpr   uint32_t    SAMPLE_RATE     =       48000;
-constexpr   uint16_t    BUFFER_SIZE     =       64;             // Buffer size can be set at any interval (2/4/8/16/32/64/128/256)
+constexpr   uint16_t    BUFFER_SIZE     =       32;             // Buffer size can be set at any interval (2/4/8/16/32/64/128/256)
                                                                 // but the higher the size, the worst the performance
 
-static      uint32_t    sample_clock;
+extern      uint32_t    sample_clock;
 
 
 
