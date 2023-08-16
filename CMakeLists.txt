@@ -62,6 +62,7 @@ pico_enable_stdio_uart(${PROJECT_NAME} 1)
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
+# target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DEBUG)  # add this line to enable debug output
 
 
 target_link_libraries(${PROJECT_NAME} 

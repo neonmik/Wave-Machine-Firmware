@@ -26,7 +26,7 @@ namespace EEPROM {
         }
 
         uint16_t address = slot * PAGE_SIZE;
-        printf("Saving Preset %d...\n", slot);
+        // printf("Saving Preset %d...\n", slot);
 
         uint8_t buffer[ADDRESS_SIZE + PAGE_SIZE] = {0};
         buffer[0] = (address >> 8) & 0xFF;
@@ -111,42 +111,42 @@ namespace EEPROM {
 
         i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + PAGE_SIZE, false);
 
-        printf("Preset saved to EEPROM at address: %d\n", address);
+        // printf("Preset saved to EEPROM at address: %d\n", address);
 
-        printf("Waveshape:  %d\n",      preset.Wave.shape);
-        printf("Vector:     %d\n",      preset.Wave.vector);
-        printf("Octave:     %d\n",      preset.Wave.octave);
-        printf("Pitch:      %d\n\n",    preset.Wave.pitch);
+        // printf("Waveshape:  %d\n",      preset.Wave.shape);
+        // printf("Vector:     %d\n",      preset.Wave.vector);
+        // printf("Octave:     %d\n",      preset.Wave.octave);
+        // printf("Pitch:      %d\n\n",    preset.Wave.pitch);
         
-        printf("Attack:     %d\n",      preset.Envelope.attack);
-        printf("Decay:      %d\n",      preset.Envelope.decay);
-        printf("Sustain:    %d\n",      preset.Envelope.sustain);
-        printf("Release:    %d\n\n",    preset.Envelope.release);
+        // printf("Attack:     %d\n",      preset.Envelope.attack);
+        // printf("Decay:      %d\n",      preset.Envelope.decay);
+        // printf("Sustain:    %d\n",      preset.Envelope.sustain);
+        // printf("Release:    %d\n\n",    preset.Envelope.release);
 
-        printf("LFO state:  %d\n",      preset.Modulation.state);
-        printf("matriix:    %d\n",      preset.Modulation.matrix);
-        printf("rate:       %d\n",      preset.Modulation.rate);
-        printf("depth:      %d\n",      preset.Modulation.depth);
-        printf("shape:      %d\n\n",    preset.Modulation.wave);
+        // printf("LFO state:  %d\n",      preset.Modulation.state);
+        // printf("matriix:    %d\n",      preset.Modulation.matrix);
+        // printf("rate:       %d\n",      preset.Modulation.rate);
+        // printf("depth:      %d\n",      preset.Modulation.depth);
+        // printf("shape:      %d\n\n",    preset.Modulation.wave);
         
-        printf("ARP state:  %d\n",      preset.Arpeggiator.state);
-        printf("matrix:     %d\n",      preset.Arpeggiator.hold);
-        printf("rate:       %d\n",      preset.Arpeggiator.divisions);
-        printf("depth:      %d\n",      preset.Arpeggiator.range);
-        printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
+        // printf("ARP state:  %d\n",      preset.Arpeggiator.state);
+        // printf("matrix:     %d\n",      preset.Arpeggiator.hold);
+        // printf("rate:       %d\n",      preset.Arpeggiator.divisions);
+        // printf("depth:      %d\n",      preset.Arpeggiator.range);
+        // printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
 
-        printf("FILT state: %d\n",      preset.Filter.state);
-        printf("Cutoff:     %d\n",      preset.Filter.cutoff);
-        printf("Resonance:  %d\n",      preset.Filter.resonance);
-        printf("Punch:      %d\n",      preset.Filter.punch);
-        printf("Type:       %d\n\n",    preset.Filter.type);
+        // printf("FILT state: %d\n",      preset.Filter.state);
+        // printf("Cutoff:     %d\n",      preset.Filter.cutoff);
+        // printf("Resonance:  %d\n",      preset.Filter.resonance);
+        // printf("Punch:      %d\n",      preset.Filter.punch);
+        // printf("Type:       %d\n\n",    preset.Filter.type);
 
-        printf("Attack:     %d\n",      preset.Filter.attack);
-        printf("Decay:      %d\n",      preset.Filter.decay);
-        printf("Sustain:    %d\n",      preset.Filter.sustain);
-        printf("Release:    %d\n\n",    preset.Filter.release);
+        // printf("Attack:     %d\n",      preset.Filter.attack);
+        // printf("Decay:      %d\n",      preset.Filter.decay);
+        // printf("Sustain:    %d\n",      preset.Filter.sustain);
+        // printf("Release:    %d\n\n",    preset.Filter.release);
 
-        printf("Gain:       %d\n",      preset.Effects.gain);
+        // printf("Gain:       %d\n",      preset.Effects.gain);
     }
     void loadPreset (uint8_t slot, PRESET &preset) {
         if (slot >= MAX_PRESETS) {
@@ -201,44 +201,45 @@ namespace EEPROM {
         preset.Filter.release = (preset_buffer[49] << 8) | preset_buffer[50];
 
         preset.Effects.gain = (preset_buffer[51] << 8) | preset_buffer[52];
+
         
-        printf("Preset %d read from EEPROM!\n", slot);
-        printf("Memory Location: %d\n\n", preset_address);
+        // printf("Preset %d read from EEPROM!\n", slot);
+        // printf("Memory Location: %d\n\n", preset_address);
 
-        printf("Waveshape:      %d\n",       preset.Wave.shape);
-        printf("Vector:         %d\n",       preset.Wave.vector);
-        printf("Octave:         %d\n",       preset.Wave.octave);
-        printf("Pitch:          %d\n\n",     preset.Wave.pitch);
+        // printf("Waveshape:      %d\n",       preset.Wave.shape);
+        // printf("Vector:         %d\n",       preset.Wave.vector);
+        // printf("Octave:         %d\n",       preset.Wave.octave);
+        // printf("Pitch:          %d\n\n",     preset.Wave.pitch);
         
-        printf("Attack:         %d\n",       preset.Envelope.attack);
-        printf("Decay:          %d\n",       preset.Envelope.decay);
-        printf("Sustain:        %d\n",       preset.Envelope.sustain);
-        printf("Release:        %d\n\n",     preset.Envelope.release);
+        // printf("Attack:         %d\n",       preset.Envelope.attack);
+        // printf("Decay:          %d\n",       preset.Envelope.decay);
+        // printf("Sustain:        %d\n",       preset.Envelope.sustain);
+        // printf("Release:        %d\n\n",     preset.Envelope.release);
 
-        printf("LFO state:      %d\n",       preset.Modulation.state);
-        printf("Destination:    %d\n",       preset.Modulation.matrix);
-        printf("Rate:           %d\n",       preset.Modulation.rate);
-        printf("Depth:          %d\n",       preset.Modulation.depth);
-        printf("Shape:          %d\n\n",     preset.Modulation.wave);
+        // printf("LFO state:      %d\n",       preset.Modulation.state);
+        // printf("Destination:    %d\n",       preset.Modulation.matrix);
+        // printf("Rate:           %d\n",       preset.Modulation.rate);
+        // printf("Depth:          %d\n",       preset.Modulation.depth);
+        // printf("Shape:          %d\n\n",     preset.Modulation.wave);
         
-        printf("ARP state:      %d\n",       preset.Arpeggiator.state);
-        printf("Hold:           %d\n",       preset.Arpeggiator.hold);
-        printf("Division:       %d\n",       preset.Arpeggiator.divisions);
-        printf("Range:          %d\n",       preset.Arpeggiator.range);
-        printf("Direction:      %d\n\n",     preset.Arpeggiator.direction);
+        // printf("ARP state:      %d\n",       preset.Arpeggiator.state);
+        // printf("Hold:           %d\n",       preset.Arpeggiator.hold);
+        // printf("Division:       %d\n",       preset.Arpeggiator.divisions);
+        // printf("Range:          %d\n",       preset.Arpeggiator.range);
+        // printf("Direction:      %d\n\n",     preset.Arpeggiator.direction);
 
-        printf("FILT state:     %d\n",       preset.Filter.state);
-        printf("Cutoff:         %d\n",       preset.Filter.cutoff);
-        printf("Resonance:      %d\n",       preset.Filter.resonance);
-        printf("Punch:          %d\n",       preset.Filter.punch);
-        printf("Type:           %d\n\n",     preset.Filter.type);
+        // printf("FILT state:     %d\n",       preset.Filter.state);
+        // printf("Cutoff:         %d\n",       preset.Filter.cutoff);
+        // printf("Resonance:      %d\n",       preset.Filter.resonance);
+        // printf("Punch:          %d\n",       preset.Filter.punch);
+        // printf("Type:           %d\n\n",     preset.Filter.type);
 
-        printf("Attack:         %d\n",      preset.Filter.attack);
-        printf("Decay:          %d\n",      preset.Filter.decay);
-        printf("Sustain:        %d\n",      preset.Filter.sustain);
-        printf("Release:        %d\n\n",    preset.Filter.release);
+        // printf("Attack:         %d\n",      preset.Filter.attack);
+        // printf("Decay:          %d\n",      preset.Filter.decay);
+        // printf("Sustain:        %d\n",      preset.Filter.sustain);
+        // printf("Release:        %d\n\n",    preset.Filter.release);
 
-        printf("Gain:           %d\n",      preset.Effects.gain);
+        // printf("Gain:           %d\n",      preset.Effects.gain);
     }
 
     void restorePreset (uint8_t slot) {

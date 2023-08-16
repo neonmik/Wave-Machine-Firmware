@@ -10,6 +10,8 @@ namespace SYNTH {
   uint8_t m;
 
 
+  uint8_t _released;
+
   uint16_t oscillator = Oscillator::WAVETABLE; // | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   uint16_t _wave_shape;
@@ -93,11 +95,11 @@ namespace SYNTH {
       int16_t clipped_sample = 0;
 
       // for reduced speed poly lfo. To be used for making fully poly.
-      m++;
-      m &= 0x7;
-      if (m == 0) MOD::update();
+      // m++;
+      // m &= 0x7;
+      // if (m == 0) MOD::update();
       
-      // MOD::update();
+      MOD::update();
 
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
@@ -119,6 +121,7 @@ namespace SYNTH {
           channel.ADSR.update();
           if (channel.is_active() && channel.ADSR.isStopped()) {
             channel.note_stopped();
+            // _released++;
             QUEUE::release_send(c);
           }
 
@@ -219,7 +222,8 @@ namespace SYNTH {
         }
       }
 
-      sample = (int32_t(sample >> 2) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
+
+      sample = (int32_t(sample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       // was meant to introduce lower sample rate filter, but makes a bit crushed effect...
       // m++;

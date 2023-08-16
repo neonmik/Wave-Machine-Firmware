@@ -12,7 +12,7 @@ namespace NOTE_HANDLING {
       VOICES[slot].on(note);
 
       
-      voices_inc();
+      // voices_inc();
       filter_on();
 
       MIDI::sendNoteOn(VOICES[slot].note, velocity);
@@ -25,7 +25,7 @@ namespace NOTE_HANDLING {
 
     VOICES[slot].off();
 
-    voices_dec();
+    // voices_dec();
     filter_off();
 
     MIDI::sendNoteOff(VOICES[slot].note, velocity);
@@ -39,7 +39,7 @@ namespace NOTE_HANDLING {
   }
 
   void filter_on(void) {
-    if (voices_active()) { // re-triggers on every new note - needs reworking to allow releasing multiple notes
+    if (voices_active()) { // re-triggers on every new note - needs reworking to fix releasing multiple notes
       QUEUE::trigger_send(FILTER_VOICE, 0, true);
     }
   }
@@ -54,7 +54,6 @@ namespace NOTE_HANDLING {
     volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
 
     for (int i = 0; i < POLYPHONY; i++)  {
-
       // voice is being used, but by this note, so fire again
       if (VOICES[i].note == note && VOICES[i].gate) { 
         voice = i;
@@ -64,7 +63,7 @@ namespace NOTE_HANDLING {
       // Voice is free
       if (!VOICES[i].active) {
         voice = i;
-        // voices_inc();
+        voices_inc();
         break;
       }
     }
@@ -131,9 +130,9 @@ namespace NOTE_HANDLING {
             break;
         }
       }
-      // if (voice > 0) {
-      //   voices_inc();
-      // }
+      if (voice > 0) {
+        voices_inc();
+      }
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
         voice = priority_voice;
@@ -145,7 +144,7 @@ namespace NOTE_HANDLING {
   void release(int note, int velocity) {
     for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
       if (VOICES[voice].note == note)  {
-        // voices_dec();
+        voices_dec();
         voice_off(voice, note, velocity);
       }
     }
@@ -227,5 +226,19 @@ namespace NOTE_HANDLING {
     // }
   }
 
-
+  void        voices_inc (void) {
+    ++_voices_active;
+    if (_voices_active > POLYPHONY) {
+        _voices_active = POLYPHONY;
+    }
+  }
+  void        voices_dec (void) {
+    --_voices_active;
+    if (_voices_active < 0) {
+        _voices_active = 0;
+    }
+  }
+  bool        voices_active (void) {
+    return _voices_active;
+  }
 }

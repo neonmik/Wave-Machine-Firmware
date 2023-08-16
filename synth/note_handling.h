@@ -52,26 +52,11 @@ namespace NOTE_HANDLING {
         uint8_t     _notes_on;
         
         bool        _sustain;
-        uint8_t     _held_notes[POLYPHONY];
-        volatile uint8_t     _num_held_notes;
+        // uint8_t     _held_notes[POLYPHONY];
+        // volatile uint8_t     _num_held_notes;
 
         int8_t     _voices_active = 0;
 
-        void        voices_inc (void) {
-            ++_voices_active;
-            if (_voices_active > POLYPHONY) {
-                _voices_active = POLYPHONY;
-            }
-        }
-        void        voices_dec (void) {
-            --_voices_active;
-            if (_voices_active < 0) {
-                _voices_active = 0;
-            }
-        }
-        bool        voices_active (void) {
-            return _voices_active;
-        }
 
         struct voice_data_t {
             uint8_t     note; // holds MIDI note number
@@ -96,6 +81,10 @@ namespace NOTE_HANDLING {
         };
     }
 
+    void voices_inc (void);
+    void voices_dec (void);
+    bool voices_active (void);
+    
     extern voice_data_t VOICES[POLYPHONY];
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);

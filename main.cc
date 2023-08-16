@@ -6,12 +6,11 @@
  */
 
 
-#include <stdio.h>
-
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 
 #include "config.h"
+#include "debug.h"
 
 #include "synth/arp.h"
 #include "synth/synth.h"
@@ -22,7 +21,7 @@
 
 #include "queue.h"
 
-// uint32_t sample_clock;
+uint8_t voices_active;
 
 void hw_core() {
   
@@ -44,26 +43,30 @@ void synth_core() {
   
   while (true) {
      if (DAC::get_state()) {
-      
       // tidy this...
-      uint8_t temp = QUEUE::trigger_check_queue();
+      volatile uint8_t temp = QUEUE::trigger_check_queue();
       if (temp) {
         for (int i = 0; i < temp; i++){
-          uint8_t slot_ = 0;
-          uint8_t note_ = 0;
-          bool gate_ = 0;
+          uint8_t slot_;
+          uint8_t note_;
+          bool gate_;
 
           QUEUE::trigger_receive(slot_, note_, gate_);
-            if (slot_ < POLYPHONY) {
-              if (gate_) SYNTH::voice_on(slot_, note_);
-              if (!gate_) SYNTH::voice_off(slot_);
+          if (slot_ == FILTER_VOICE) {
+            if (gate_) FILTER::trigger_attack();
+            else FILTER::trigger_release();
+          } 
+          else {
+            if (gate_) {
+              SYNTH::voice_on(slot_, note_);
             } else {
-              if (gate_) FILTER::trigger_attack();
-              if (!gate_) FILTER::trigger_release();
+              SYNTH::voice_off(slot_);
             }
+            if (slot_ > POLYPHONY) printf("Voice Queue error! Out of bounds voice\n");
+          }
         }
       }
-      
+
       DAC::clear_state();
     }
   }

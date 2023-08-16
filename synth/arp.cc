@@ -146,6 +146,7 @@ namespace ARP {
         _notes[_write_index] = note;
         ++_count;
         ++_write_index;
+        NOTE_HANDLING::voices_inc();
         if (_count >= max_arp) {
             _count = max_arp;
         }
@@ -172,6 +173,7 @@ namespace ARP {
                 // Decrement _count
                 --_count;
                 --_write_index;
+                NOTE_HANDLING::voices_dec();
                 if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
                 if (_write_index <= 0) _write_index = _count;
                 _notes_changed = true;

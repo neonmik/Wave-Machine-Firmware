@@ -87,9 +87,11 @@ namespace FILTER {
         if (_mode != Type::Off) {
             // ADSR.update();
             // for effeciency improvements, this allows the Envelope to run at a reduced sample rate of 6kHz.
-            _index++;
-            _index &= 0x7;
-            if (_index == 0) ADSR.update();
+            // _index++;
+            // _index &= 0x7;
+            // if (_index == 0) ADSR.update();
+
+            ADSR.update();
             // if (ADSR.isStopped()) QUEUE::release_send(POLYPHONY+1); // not really needed as it stands...
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
@@ -100,7 +102,7 @@ namespace FILTER {
             }
 
 
-            volatile int32_t frequency;
+            volatile int32_t frequency = 0 ;
             
             if (_direction == Direction::Regular) {
                 frequency = (_frequency * ADSR.get()) >> 16;
