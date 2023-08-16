@@ -21,6 +21,8 @@
 
 namespace ADC {
     namespace {
+        uint16_t _core_temp;
+
         uint16_t _adc_value;
         uint8_t  _adc_noise;
         uint16_t _values[MAX_KNOBS];
@@ -28,6 +30,22 @@ namespace ADC {
         uint8_t _mux_address;
         uint32_t _sample[MAX_KNOBS];
         uint32_t _output;
+
+        void read_onboard_temperature(void) {
+
+            adc_init();
+            adc_set_temp_sensor_enabled(true);
+            adc_select_input(4);
+            
+            /* 12-bit conversion, assume max value == ADC_VREF == 3.3 V */
+            const float conversionFactor = 3.3f / (1 << 12);
+
+            float adc = (float)adc_read() * conversionFactor;
+            float tempC = 27.0f - (adc - 0.706f) / 0.001721f;
+
+            printf("CPU temperature = %.02fºC\n", tempC);
+        }
+
 
         // change these to just handle the sample filter with a reference, and then add new function for saving to the table.
         inline void NO_filter (uint16_t reading, uint8_t index) {

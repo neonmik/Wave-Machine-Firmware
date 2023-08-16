@@ -2,6 +2,11 @@
 
 namespace ADC {
     void init() {
+
+
+        read_onboard_temperature();
+
+
         gpio_init(MUX_SEL_A);
         gpio_init(MUX_SEL_B);
         gpio_init(MUX_SEL_C);
