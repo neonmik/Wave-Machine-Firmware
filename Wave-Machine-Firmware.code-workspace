@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	"folders": [
 		{
 			"path": "."
@@ -56,4 +57,11 @@
 		"cortex-debug.variableUseNaturalFormat": true,
 		"cortex-debug.registerUseNaturalFormat": true
 	}
+=======
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
+>>>>>>> 97a0aa9778b6d35cbcb9eb2f40064243b3aa15b9
 }
