@@ -2,6 +2,8 @@
 
 namespace ARP {
 
+    arp_data_t ARPS[MAX_ARP];
+    
     void init () {
         // CLOCK::init();
     }
@@ -12,7 +14,7 @@ namespace ARP {
                 // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
                 if (!_hold) pass_notes();
                 else stop_all();
-                clear_notes();
+                clear_all_notes();
             }
             if (_active) {
                 stop_all();
@@ -29,16 +31,12 @@ namespace ARP {
             // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
             if (!_hold) pass_notes();
             else stop_all();
-            clear_notes();
+            clear_all_notes();
         }
         if (_active) {
             stop_all();
             grab_notes();
         }   
-        // stop_all();
-        // if (!_hold) pass_notes();
-        // clear_notes();
-
     }
 
     void arpeggiate(ArpDirection direction) {
@@ -104,69 +102,90 @@ namespace ARP {
 
     void update (void) {
         CLOCK::update();
-        if (CLOCK::get_changed()) {
-            switch (note_state) {
-                case NOTE_ACTIVE:
-                    // old voice handling, keeping until fully bug tested
-                    // NOTE_HANDLING::priority(0x80, _last_note, 0); 
+        if (_active) {
+            if (_sustain_just_released) {
+                clear_all_notes();
 
-                    // ----------------------
-                    // New Arp Voice handling 
-                    NOTE_HANDLING::voice_off(_voice_index, _last_note, 0);
-                    _voice_index++;
-                    if (_voice_index >= POLYPHONY) _voice_index = 0;
-                    // ----------------------
+                // check all notes
+                // for (int i = 0; i < MAX_ARP; i++) {
+                //     // if its currently being sustained
+                //     if (ARPS[i].sustained) {
+                //         ARPS[i].clear();
+                //         --_count;
+                //         --_write_index;
+                //         NOTE_HANDLING::voices_dec();
+                //         if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
+                //         if (_write_index <= 0) _write_index = _count;
+                //         _notes_changed = true;
+                //     }
+                // }
+                _sustain_just_released = false;
+            }
+            organise_notes();
+            if (CLOCK::get_changed()) {
+                switch (note_state) {
+                    case NOTE_ACTIVE:
+                        // old voice handling, keeping until fully bug tested
+                        // NOTE_HANDLING::priority(0x80, play_note, 0); 
 
-                    arpeggiate(_direction);
-                    note_state = IDLE;
-                    if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
-                case IDLE:
-                    if (_play_index >= _count) {
-                        _play_index = 0;
-                    }
-                    if (_notes[_play_index]) {
-                        _last_note = ((_notes[_play_index])+(_octave*12));
-                        
-                            // old voice handling, keeping until fully bug tested 
-                        // NOTE_HANDLING::priority(0x90, _last_note, 127);
-                        
                         // ----------------------
                         // New Arp Voice handling 
-                        NOTE_HANDLING::voice_on(_voice_index, _last_note, 127);
+                        NOTE_HANDLING::voice_off(_voice_index, play_note, 0);
+                        _voice_index++;
+                        if (_voice_index >= POLYPHONY) _voice_index = 0;
                         // ----------------------
 
-                        note_state = NOTE_ACTIVE;
-                    }
-                    break;
+                        arpeggiate(_direction);
+                        note_state = IDLE;
+                        if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
+                    case IDLE:
+                        if (_play_index >= _count) {
+                            _play_index = 0;
+                        }
+                        if (ARPS[_play_index].note) {
+                            play_note = ((ARPS[_play_index].note)+(_octave*12));
+
+                            NOTE_HANDLING::voice_on(_voice_index, play_note, 127);
+
+                            note_state = NOTE_ACTIVE;
+                        }
+                        break;
+                }
+                CLOCK::set_changed(false);
             }
-            CLOCK::set_changed(false);
         }
     }
 
  
-    void add_notes (uint8_t note) {
-        for (int i = 0; i < max_arp; i++) {
-            if (_notes[i] == note) {
+    void add_note (uint8_t note) {
+        for (int i = 0; i < MAX_ARP; i++) { // change for count?
+            if (ARPS[i].note == note) {
                 _notes_changed = true;
                 return;
             }
         }
         //    
         // played order
-        _notes[_write_index] = note;
+        ARPS[_write_index].note = note;
         ++_count;
         ++_write_index;
         NOTE_HANDLING::voices_inc();
-        if (_count >= max_arp) {
-            _count = max_arp;
+        if (_count >= MAX_ARP) {
+            _count = MAX_ARP;
         }
-        if (_write_index >= max_arp) {
+        if (_write_index >= MAX_ARP) {
             _write_index = 0;
         }
         _notes_changed = true;
     }
-    void remove_notes (uint8_t note) {
+    void remove_note (uint8_t note) {
         if (_hold) {
+            for (int i = 0; i <= _count; i++) {
+                if (ARPS[i].note == note) {
+                    ARPS[i].sustained = true;
+                    break; 
+                }
+            }
             _notes_changed = true;
             return;
         }
@@ -174,11 +193,12 @@ namespace ARP {
             return;
         }
         for (int i = 0; i <= _count; i++) {
-            if (_notes[i] == note) {
+            if (ARPS[i].note == note) {
                 // Shift all the notes after the removed note back by one
                 for (int j = i; j < _count; j++) {
-                    _notes[j] = _notes[j + 1];
-                    _notes[j + 1] = 0;
+                    ARPS[j].clear();
+                    ARPS[j] = ARPS[j + 1];
+                    ARPS[j + 1].clear();
                 }
                 // Decrement _count
                 --_count;
@@ -191,44 +211,55 @@ namespace ARP {
             }
         }
     }
+    // void clear_note (uint8_t slot) {
+    //     ARPS[slot].clear();
+    //     --_count;
+    //     --_write_index;
+    //     NOTE_HANDLING::voices_dec();
+    //     if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
+    //     if (_write_index <= 0) _write_index = _count;
+    //     _notes_changed = true;
+    // }
     void organise_notes () {
         if (_notes_changed) {
-            // printf("notes in:  %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
+            // printf("notes in:  %d | %d | %d | %d | %d | %d | %d | %d \n", ARPS[0].note, ARPS[1].note, ARPS[2].note, ARPS[3].note, ARPS[4].note, ARPS[5].note, ARPS[6].note, ARPS[7].note);
             uint8_t length      = _count;   // how many entries in the array
-            uint8_t temp        = 0;        // set a temp value, never going to be more than 127, so uint8_t is fine
+            arp_data_t temp;        // set a temp value, never going to be more than 127, so uint8_t is fine
             for (int i = 0; i < length; i++) {     
                 for (int j = i+1; j < length; j++) {     
-                    if(_notes[i] > _notes[j]) {    
-                        temp = _notes[i];    
-                        _notes[i] = _notes[j];    
-                        _notes[j] = temp;    
+                    if(ARPS[i].note > ARPS[j].note) {    
+                        temp = ARPS[i];    
+                        ARPS[i] = ARPS[j];    
+                        ARPS[j] = temp;    
                     }     
                 }
             }
             _notes_changed = false;
-            // printf("notes out: %d | %d | %d | %d | %d | %d | %d | %d \n", _notes[0], _notes[1], _notes[2], _notes[3], _notes[4], _notes[5], _notes[6], _notes[7]);
+            // printf("notes out: %d | %d | %d | %d | %d | %d | %d | %d \n", ARPS[0].note, ARPS[1].note, ARPS[2].note, ARPS[3].note, ARPS[4].note, ARPS[5].note, ARPS[6].note, ARPS[7].note);
         }
     }
-    void clear_notes () {
-        for (int i = 0; i < max_arp; i++) {
-            _notes[i] = 0;
+
+    void clear_all_notes () {
+        for (int i = 0; i < MAX_ARP; i++) {
+            ARPS[i].clear();
         }
         _write_index = 0;
         _count = 0;
         _octave = 0;
         _play_index = 0;
+        NOTE_HANDLING::voices_clr();
     }
     
     // functions for start/stop of arp
     void pass_notes () {
         NOTE_HANDLING::voices_set(_count);
-        for (int i = 0; i < max_arp; i++) {
-            NOTE_HANDLING::voice_on(i, _notes[i], 127);
+        for (int i = 0; i < MAX_ARP; i++) {
+            NOTE_HANDLING::voice_on(i, ARPS[i].note, 127);
         }
     }
     void grab_notes () {
-        for (int i = 0; i < max_arp; i++) {
-            add_notes(NOTE_HANDLING::voices_get(i));
+        for (int i = 0; i < MAX_ARP; i++) {
+            add_note(NOTE_HANDLING::voices_get(i));
         }
         organise_notes();
     }
@@ -238,15 +269,15 @@ namespace ARP {
     }
     
     void set_hold (uint16_t hold) {
-        if (hold == _last_hold) return;
+        // if (hold == _last_hold) return;
         bool temp = (bool)(hold>>9);
-        // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
-        if (_hold) {
-            if (temp != _hold) clear_notes();
+        if (_hold != temp) {
+            _hold = temp;
+            if (!_hold) {
+                // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
+                clear_all_notes();
+            }
         }
-        _hold = temp;
-        _last_hold = hold;
-
     }
     void set_division (uint16_t division) {
         if (division == _last_division) return;
@@ -287,10 +318,14 @@ namespace ARP {
         if (_gap != temp) _gap = temp;
     }
     void set_sustain (bool sus) {
-        if (_hold) {
-            if (sus != _hold) clear_notes();
+        if (_hold != sus) {
+            _hold = sus;
+            if (!_hold) {
+                // if sustain has been released...
+                // raise flag to clear notes out?
+                _sustain_just_released = true;
+            } 
         }
-        _hold = sus;
     }
 
     void set_rate (uint16_t rate) {

@@ -13,9 +13,11 @@ Current nightly firmware for Wave Machine Hardware.
 - Updates and Bugfixes:
 
     - Arp: Move back to HW core, and try and link beat clock...
+    - Arp: Streamline note adding/removal so that organistaion only happens once, and you only use for loops as far as needed (try and remove MAX_ARP's in for loops).
+    - 
     
     - Feature: Check Sustain pedal functions. 
-        - Bug: Normal Keys - When pressing notes as you release the sustain, notes get released too.
+        - Bug: Normal Keys - When pressing notes *JUST* as you release the sustain, notes get released too. Still needs finessing
         - Bug: 
 
     

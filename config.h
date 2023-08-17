@@ -31,7 +31,7 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
 constexpr   uint8_t     FILTER_VOICE    =       (POLYPHONY+1);  // Sets the Filter envelope control to be outside of the Polyphony range. 
                                                                 // This makes sure it never gets in the way of the note handling.
 
-
+constexpr   uint8_t     MAX_ARP         =       POLYPHONY;
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 

@@ -52,6 +52,7 @@ namespace NOTE_HANDLING {
         uint8_t     _notes_on;
         
         bool        _sustain;
+        bool        _sustain_just_released;
         // uint8_t     _held_notes[POLYPHONY];
         // volatile uint8_t     _num_held_notes;
 
@@ -64,6 +65,7 @@ namespace NOTE_HANDLING {
             bool        gate; // tracks whether note is being physcially played
             bool        active; // tracks whether the note is still sounding out
             uint32_t    activation_time; // time when the note was activated
+            bool        sustained;
 
             void on (uint8_t _note) {
                 note = _note;

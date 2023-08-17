@@ -112,7 +112,7 @@ namespace SYNTH {
         if(channel._active) {
 
           // increment the waveform position counter.
-          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 9) << _octave) << 12) / SAMPLE_RATE;
+          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 9) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
@@ -181,15 +181,16 @@ namespace SYNTH {
           //   // ++waveform_count;
           // }
           
-          if (oscillator & Oscillator::WAVETABLE) {
+          // if (oscillator & Oscillator::WAVETABLE) {
 
-            // the wavetable sample contains 256 samples in
-            // total so we'll just use the most significant bits
-            // of the current waveform position to index into it
-            channel_sample += get_wavetable((channel.waveform_offset >> 12) + vector);
-            ++waveform_count;
+          //   // the wavetable sample contains 256 samples in
+          //   // total so we'll just use the most significant bits
+          //   // of the current waveform position to index into it
+          //   // uint32_t t = channel.waveform_offset >> 12;
+          //   ++waveform_count;
             
-          }
+          // }
+          channel_sample += get_wavetable(channel.waveform_offset >> Q_SCALING_FACTOR, vector);
 
           // Blueprint for future FM mode
           // if (oscillator & Oscillator::FM) {
@@ -210,7 +211,7 @@ namespace SYNTH {
           // }
 
           // divide the sample by the amount of waveforms - good for multi oscillator voices
-          channel_sample = channel_sample / waveform_count;
+          // channel_sample = channel_sample / waveform_count;
           
           // apply ADSR
           channel_sample = (int32_t(channel_sample) * int32_t(channel.ADSR.get())) >> 16;

@@ -112,9 +112,12 @@ void set_shift (bool shift) {
       case UI_MODE_NORMAL:
         switch(poll_index) {
           case 0:
-            KEYS::read();
+            NOTE_HANDLING::update();
             break;
           case 1:
+            KEYS::read();
+            break;
+          case 2:
             KEYS::update();
 
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
@@ -135,9 +138,6 @@ void set_shift (bool shift) {
                 // CONTROLS::toggle_hold();
                 // LEDS::ARP.flash(2,50);
             }
-            break;
-          case 2:
-            NOTE_HANDLING::update();
             break;
           case 3:
             ADC::update();

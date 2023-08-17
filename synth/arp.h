@@ -37,17 +37,17 @@ namespace ARP {
         bool  _active;
         bool  _active_last;
         
-        constexpr uint8_t max_arp = 8;
-        uint8_t _notes[max_arp]; //all the notes stored in the arp sequence
-        uint8_t _last_note;
+        uint8_t play_note;
         uint8_t _voice_index;
+
 
         int8_t      _play_index;
         int8_t      _count;
         int8_t      _write_index;
         bool        _notes_changed = false;
 
-        
+        bool        _sustain_just_released = false;
+
         bool        _hold;
         uint16_t    _last_hold;
         uint16_t    _last_division;
@@ -60,14 +60,29 @@ namespace ARP {
         bool _switch = true;
     }
 
+    struct arp_data_t {
+        uint8_t     note; // holds MIDI note number
+        uint8_t     velocity;
+        bool        sustained;
+
+        void clear (void) {
+            note = 0;
+            velocity = 0;
+            sustained = false;
+        }
+    };
+
+    extern arp_data_t ARPS[MAX_ARP];
+
     void init (void);
     
     void update(void);
     
-    void add_notes (uint8_t note);
-    void remove_notes (uint8_t note);
+    void add_note (uint8_t note);
+    void remove_note (uint8_t note);
+    void clear_note (uint8_t slot);
     void organise_notes (void);
-    void clear_notes (void);
+    void clear_all_notes (void);
     void pass_notes(void);
     void grab_notes(void);
     void stop_all (void);
@@ -82,6 +97,7 @@ namespace ARP {
     void set_direction (uint16_t direction);
 
     void set_gap (uint16_t gap);
+    void set_sustain (bool sus);
 
     void update_range (void);
     // void update_controls (void);

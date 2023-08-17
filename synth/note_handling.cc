@@ -179,6 +179,12 @@ namespace NOTE_HANDLING {
           voice_off(voice, note, velocity);
         }
       }
+    } else {
+      for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
+        if (VOICES[voice].note == note) {
+          VOICES[voice].sustained = true;
+        }
+      }
     }
   }
 
@@ -198,27 +204,33 @@ namespace NOTE_HANDLING {
     // Check the note-finished messages from Synth Core.
     check_release();
 
-    // Update Arp notes if active.
-    if (ARP::get_state()) { 
-      ARP::organise_notes();
-      ARP::update();
+    if (_sustain_just_released) {
+      for (int8_t voice = 0; voice < POLYPHONY; voice++) {
+        if (VOICES[voice].sustained) {
+          voices_dec(); // clears the filter control
+          voice_off(voice, 0, 0); // clears the voice and sends note off midi messages
+          VOICES[voice].sustained = false;
+        }
+      }
+      _sustain_just_released = false;
     }
+
+    // Update Arp notes if active.
+    ARP::update();
 
 
   }
   void note_on (uint8_t note, uint8_t velocity) {
-      if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
-      else {
-        ARP::add_notes(note);
-        // voices_inc();
-      }
+    if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
+    else {
+      ARP::add_note(note);
+    }
   }
   void note_off(uint8_t note, uint8_t velocity) {
-      if (!ARP::get_state()) release(note, velocity); // synth voice allocation
-      else {
-        ARP::remove_notes(note);
-        // voices_dec();
-      }
+    if (!ARP::get_state()) release(note, velocity); // synth voice allocation
+    else {
+      ARP::remove_note(note);
+    }
   }
   void sustain_pedal(uint16_t status) {
     // bit shift to binary number (yes or no)
@@ -227,20 +239,13 @@ namespace NOTE_HANDLING {
     if (_sustain != temp) {
       // if the input is new, then set it.
       _sustain = temp;
-
-      if (!ARP::get_state()) {
-        // normal notes ops
-        if (!_sustain) {
-          // sustain has been released
-          for (int8_t voice = 0; voice < POLYPHONY; voice++) {
-            voices_dec(); // clears the filter control
-            voice_off(voice, 0, 0); // clears the voice and sends note off midi messages
-          }
-        }
-      } else {
+      if (ARP::get_state()) {
         // arp notes
-        ARP::set_hold(_sustain); // ???
+        ARP::set_sustain(_sustain); // ???
+      } else {
+        if (!_sustain) _sustain_just_released = true;
       }
+      // still not right - if sustain is released just before pressing new notes, it clears the notes just pressed... this needs to be handled before new notes are added...
     }
   }
 
