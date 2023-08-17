@@ -112,8 +112,8 @@ namespace SYNTH {
         if(channel._active) {
 
           // increment the waveform position counter.
-          channel.waveform_offset += (((((uint64_t)channel._frequency * _pitch_scale) >> 9) << _octave)) / SAMPLE_RATE;
-          // channel.waveform_offset += channel._frequency / SAMPLE_RATE;
+          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 9) << _octave) << 12) / SAMPLE_RATE;
+
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
           channel.waveform_offset += _vibrato;
@@ -131,7 +131,7 @@ namespace SYNTH {
           //   channel.noise = prng_normal();
           // }
 
-          channel.waveform_offset &= 0xffff;
+          channel.waveform_offset &= (0xffff0);
 
           uint8_t waveform_count = 0;
           int32_t channel_sample = 0;
@@ -186,7 +186,7 @@ namespace SYNTH {
             // the wavetable sample contains 256 samples in
             // total so we'll just use the most significant bits
             // of the current waveform position to index into it
-            channel_sample += get_wavetable((channel.waveform_offset >> 8) + vector);
+            channel_sample += get_wavetable((channel.waveform_offset >> 12) + vector);
             ++waveform_count;
             
           }

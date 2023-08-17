@@ -14,7 +14,9 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Arp: Move back to HW core, and try and link beat clock...
     
-    - Feature: Check Sustain pedal functions.
+    - Feature: Check Sustain pedal functions. 
+        - Bug: Normal Keys - When pressing notes as you release the sustain, notes get released too.
+        - Bug: 
 
     
 

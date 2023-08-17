@@ -73,6 +73,10 @@ namespace NOTE_HANDLING {
       _filter_active = false;
     }
   }
+  void filter_refresh (void) {
+    // a little function for refreshing the filter on more notes with arp
+    _filter_active = false;
+  }
 
   // Priority Control
   void priority(int note, int velocity) {
@@ -223,7 +227,7 @@ namespace NOTE_HANDLING {
     if (_sustain != temp) {
       // if the input is new, then set it.
       _sustain = temp;
-      
+
       if (!ARP::get_state()) {
         // normal notes ops
         if (!_sustain) {

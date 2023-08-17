@@ -44,7 +44,7 @@ void synth_core() {
   while (true) {
      if (DAC::get_state()) {
       // tidy this...
-      volatile uint8_t temp = QUEUE::trigger_check_queue();
+      uint8_t temp = QUEUE::trigger_check_queue();
       if (temp) {
         for (int i = 0; i < temp; i++){
           uint8_t slot_;
