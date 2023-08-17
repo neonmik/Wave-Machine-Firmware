@@ -16,8 +16,7 @@ namespace ARP {
             }
             if (_active) {
                 stop_all();
-                // need to add some kind of function here to get notes that are currently held down...
-                // grab_notes();
+                grab_notes();
             }   
         }
     }
@@ -26,9 +25,20 @@ namespace ARP {
     }
 
     void reset () {
-        stop_all();
-        if (!_hold) pass_notes();
-        clear_notes();
+        if (!_active) {
+            // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
+            if (!_hold) pass_notes();
+            else stop_all();
+            clear_notes();
+        }
+        if (_active) {
+            stop_all();
+            grab_notes();
+        }   
+        // stop_all();
+        // if (!_hold) pass_notes();
+        // clear_notes();
+
     }
 
     void arpeggiate(ArpDirection direction) {
@@ -211,15 +221,20 @@ namespace ARP {
     
     // functions for start/stop of arp
     void pass_notes () {
+        NOTE_HANDLING::voices_set(_count);
         for (int i = 0; i < max_arp; i++) {
             NOTE_HANDLING::voice_on(i, _notes[i], 127);
         }
     }
     void grab_notes () {
-        NOTE_HANDLING::update();
+        for (int i = 0; i < max_arp; i++) {
+            add_notes(NOTE_HANDLING::voices_get(i));
+        }
+        organise_notes();
     }
     void stop_all () {
-        NOTE_HANDLING::voices_panic();
+        NOTE_HANDLING::voices_clr();
+        NOTE_HANDLING::voices_stop();
     }
     
     void set_hold (uint16_t hold) {
@@ -271,7 +286,12 @@ namespace ARP {
         bool temp = (bool)(gap>>9);
         if (_gap != temp) _gap = temp;
     }
-
+    void set_sustain (bool sus) {
+        if (_hold) {
+            if (sus != _hold) clear_notes();
+        }
+        _hold = sus;
+    }
 
     void set_rate (uint16_t rate) {
         CLOCK::set_bpm(map(rate, KNOB_MIN, KNOB_MAX, 30, 350));

@@ -84,12 +84,16 @@ namespace NOTE_HANDLING {
 
     void voices_inc (void);
     void voices_dec (void);
+    void voices_set (uint8_t voices);
+    void voices_clr (void);
     bool voices_active (void);
     
     extern voice_data_t VOICES[POLYPHONY];
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);
     void voice_off(int slot, int note, int velocity);
+    uint8_t voices_get (uint8_t slot);
+    void voices_stop(void);
     void voices_panic(void);
 
     // filter env

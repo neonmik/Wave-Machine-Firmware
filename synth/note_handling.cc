@@ -29,10 +29,29 @@ namespace NOTE_HANDLING {
     QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
   }
 
+  uint8_t voices_get (uint8_t slot) {
+    if (VOICES[slot].gate) {
+      return VOICES[slot].note;
+    } else {
+      return 0;
+    }
+  }
+
+  void voices_stop() {
+    // clears the notes from the synth, but not the array storing the info
+    for (int i = 0; i < POLYPHONY; i++) {
+      QUEUE::trigger_send(i, 0, false);
+    }
+    filter_off();
+  }
+
   void voices_panic() {
+    // clears the notes from the vocies, the synths array, and sends out midi note clearing... may need reworking for actual panic (all midi notes)
     for (int i = 0; i < POLYPHONY; i++) {
       voice_off(i, 0, 0);
+      voices_dec();
     }
+    filter_off();
   }
 
   void filter_on(void) {
@@ -149,10 +168,12 @@ namespace NOTE_HANDLING {
   }
 
   void release(int note, int velocity) {
-    for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
-      if (VOICES[voice].note == note)  {
-        if (VOICES[voice].gate) voices_dec();
-        voice_off(voice, note, velocity);
+    if (!_sustain) {
+      for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
+        if (VOICES[voice].note == note)  {
+          if (VOICES[voice].gate) voices_dec();
+          voice_off(voice, note, velocity);
+        }
       }
     }
   }
@@ -199,38 +220,24 @@ namespace NOTE_HANDLING {
     // bit shift to binary number (yes or no)
     bool temp = (status >> 9);
 
-    // if the input is new, then...
     if (_sustain != temp) {
+      // if the input is new, then set it.
       _sustain = temp;
+      
+      if (!ARP::get_state()) {
+        // normal notes ops
+        if (!_sustain) {
+          // sustain has been released
+          for (int8_t voice = 0; voice < POLYPHONY; voice++) {
+            voices_dec(); // clears the filter control
+            voice_off(voice, 0, 0); // clears the voice and sends note off midi messages
+          }
+        }
+      } else {
+        // arp notes
+        ARP::set_hold(_sustain); // ???
+      }
     }
-
-
-    if (!ARP::get_state()) {
-      // normal note shit
-    }
-    else {
-      // kinda works, but maybe needs an array of all the midi notes again to check the currently held notes... 
-      // ARP::set_hold(status);
-
-    }
-    //   if (_sustain) {
-    //     // If the sustain pedal is pressed, transfer currently held notes to the array
-    //     for (int i = 0; i < POLYPHONY; i++) {
-    //       if (VOICES[i].gate) {
-    //         _held_notes[_num_held_notes] = VOICES[i].note;
-    //         _num_held_notes++;
-    //         if (_num_held_notes >= POLYPHONY) _num_held_notes = 0;
-    //       }
-    //     }
-    //   } else {
-    //     // If sustain is released, release all the held notes
-    //     for (int i = 0; i < _num_held_notes; i++) {
-    //       note_off(_held_notes[i], 0);
-    //       _held_notes[i] = 0;
-    //     }
-    //     _num_held_notes = 0;
-    //   }
-    // }
   }
 
   void        voices_inc (void) {
@@ -244,6 +251,12 @@ namespace NOTE_HANDLING {
     if (_voices_active < 0) {
         _voices_active = 0;
     }
+  }
+  void        voices_clr (void) {
+    _voices_active = 0;
+  }
+  void        voices_set (uint8_t voices) {
+    _voices_active = voices;
   }
   bool        voices_active (void) {
     return _voices_active;
