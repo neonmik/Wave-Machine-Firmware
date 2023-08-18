@@ -93,11 +93,6 @@ namespace SYNTH {
     else {
       int32_t sample = 0;  // used to combine channel output
       int16_t clipped_sample = 0;
-
-      // for reduced speed poly lfo. To be used for making fully poly.
-      // m++;
-      // m &= 0x7;
-      // if (m == 0) MOD::update();
       
       MOD::update();
 
@@ -121,7 +116,6 @@ namespace SYNTH {
           channel.ADSR.update();
           if (channel.is_active() && channel.ADSR.isStopped()) {
             channel.note_stopped();
-            // _released++;
             QUEUE::release_send(c);
           }
 
@@ -295,7 +289,8 @@ namespace SYNTH {
   void modulate_vibrato (uint16_t vibrato) {
     volatile int16_t signedInput = vibrato;
     signedInput -= 0x7fff;
-    _vibrato = static_cast<int8_t>(signedInput >> 8);
+    // _vibrato = static_cast<int8_t>(signedInput >> 8);
+    _vibrato = signedInput >> 8;
   }
   void modulate_tremelo (uint16_t tremelo) {
     _tremelo = tremelo;

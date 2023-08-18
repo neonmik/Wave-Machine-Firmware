@@ -12,6 +12,8 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Updates and Bugfixes:
 
+    - Update vibrato to work right with pitch. Also plan for having a max setting.
+
     - Arp: Move back to HW core, and try and link beat clock...
     - Arp: Streamline note adding/removal so that organistaion only happens once, and you only use for loops as far as needed (try and remove MAX_ARP's in for loops).
     - Bugfix: quantize arp? so it always starts right, especially between changing divisions
