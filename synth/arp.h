@@ -102,6 +102,6 @@ namespace ARP {
     void update_range (void);
     // void update_controls (void);
 
-    void set_rate (uint16_t rate);
+    void set_bpm (uint16_t bpm);
 }
 

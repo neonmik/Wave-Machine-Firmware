@@ -56,15 +56,15 @@ namespace NOTE_HANDLING {
 
   void filter_on(void) {
     // FOR MONO MODE
-    if (!_filter_active && voices_active()) { 
-      QUEUE::trigger_send(FILTER_VOICE, 0, true);
-      _filter_active = true;
-    }
-    // FOR POLY MODE
-    // if (voices_active()) { 
+    // if (!_filter_active && voices_active()) { 
     //   QUEUE::trigger_send(FILTER_VOICE, 0, true);
     //   _filter_active = true;
     // }
+    // FOR PARAPHONIC MODE
+    if (voices_active()) { 
+      QUEUE::trigger_send(FILTER_VOICE, 0, true);
+      _filter_active = true;
+    }
   }
   void filter_off(void) {
     // FOR MONO MODE

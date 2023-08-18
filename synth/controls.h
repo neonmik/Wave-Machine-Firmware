@@ -42,8 +42,9 @@ namespace CONTROLS {
             class Page {
                 private:
                     volatile bool _active = true;
-                    volatile bool _changed = false;
+                    // volatile bool _changed = false;
                     uint16_t _input[4];
+                    bool     _changed[4];
                     void (*_update_funcs[4])(uint16_t);
                     void (*_toggle_func)(bool); // Optional function pointer to toggle the state
                 public:
@@ -68,7 +69,7 @@ namespace CONTROLS {
                     void set_state(bool state) {
                         if (_toggle_func != nullptr) {
                             _active = state;
-                            _changed = true;
+                            // _changed = true;
                             _toggle_func(_active);
                         }
                     }
@@ -77,18 +78,25 @@ namespace CONTROLS {
                     }
                     void set(uint8_t control, uint16_t input) {
                         _input[control] = input;
-                        _changed = true;
+                        _changed[control] = true;
                     }
                     uint16_t get(uint8_t control) {
                         return _input[control];
                     }
                     void update() {
-                        if (_active && _changed) {
+                        // if (_active && _changed) {
+                        if (_active) {
                             for (int i = 0; i < 4; i++) {
-                                if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
+                                if (_changed[i]) {
+                                    if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
+                                    _changed[i] = false;
+                                }
                             }
-                            _changed = false;
                         }
+                        //     for (int i = 0; i < 4; i++) {
+                        //         if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
+                        //     }
+                        // }
                     }
             };
 
@@ -106,10 +114,11 @@ namespace CONTROLS {
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
             Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-                // Page    sARP    {nullptr,                  nullptr,                    nullptr,                    nullptr,                         nullptr};
+                Page    sARP    {&ARP::set_gap,            &ARP::set_bpm,              nullptr,                    nullptr,                         nullptr};
+
+            //&ARP::set_gap
             
-            // &ARP::set_gap
-            
+            // Ideas for changing controls layout.
             // Page: 1 - 
             //           OSC    Knob 1: Waveshape,      Knob 2: Wavevector,     Knob 3: Octave,     Knob 4: Pitchbend,      Button: ?
             //           ENV    Knob 1: Attack,         Knob 2: Decay,          Knob 3: Sustain,    Knob 4: Release,        Button: Envelope Bypass 
@@ -121,7 +130,7 @@ namespace CONTROLS {
             //           ENV    Knob 1: Attack,         Knob 2: Decay,          Knob 3: Sustain,    Knob 4: Release,        Button: Envelope Bypass 
             // Page: 4(ALL) - 
             //           ARP    Knob 1: Hold,           Knob 2: Rate,           Knob 3: Range,      Knob 4: Direction,      Button: ?
-            //           ???    Knob 1: Gap,            Knob 2: unkown,         Knob 3: unkown,     Knob 4: unkown,         Button: unkown 
+            //           ???    Knob 1: Gap,            Knob 2: BPM,            Knob 3: fMONO/PARA, Knob 4: unkown,         Button: unkown 
 
             
 
@@ -150,9 +159,9 @@ namespace CONTROLS {
                     case 6:
                         FILT.set(control, input);
                         break;
-                    // case 7:
-                    //     sARP.set(control, input);
-                    //     break;
+                    case 7:
+                        sARP.set(control, input);
+                        break;
                 }
             }
             uint16_t get (uint8_t page, uint16_t control) {
@@ -172,8 +181,8 @@ namespace CONTROLS {
                         return fENV.get(control);
                     case 6:
                         return FILT.get(control);
-                    // case 7:
-                    //     return sARP.get(control);
+                    case 7:
+                        return sARP.get(control);
                     default:
                         return 0;
                 }
@@ -199,34 +208,6 @@ namespace CONTROLS {
                 return ARP.get_state();;
             }
             void update (void) {
-                // switch (_poll) {
-                //     case 0:
-                //         MAIN.update();
-                //         break;
-                //     case 1:
-                //         ADSR.update();
-                //         break;
-                //     case 2:
-                //         MOD1.update();
-                //         break;
-                //     case 3:
-                //         ARP.update();
-                //         break;
-                //     case 4:
-                //         FILT.update();
-                //         break;
-                //     case 5:
-                //         fENV.update();
-                //         break;
-                //     case 6:
-                //         SHFT.update();
-                //         break;
-                    // case 7:
-                        // sARP.update();
-                        // break;
-                // }
-                // _poll++;
-                // if (_poll > 6) _poll = 0;
                 MAIN.update();
                 ADSR.update();
                 MOD1.update();
@@ -234,6 +215,7 @@ namespace CONTROLS {
                 FILT.update();
                 fENV.update();
                 SHFT.update();
+                sARP.update();
             }
     };
     

@@ -14,7 +14,8 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Arp: Move back to HW core, and try and link beat clock...
     - Arp: Streamline note adding/removal so that organistaion only happens once, and you only use for loops as far as needed (try and remove MAX_ARP's in for loops).
-    - 
+    - Bugfix: quantize arp? so it always starts right, especially between changing divisions
+
     
     - Feature: Check Sustain pedal functions. 
         - Bug: Normal Keys - When pressing notes *JUST* as you release the sustain, notes get released too. Still needs finessing
@@ -25,8 +26,8 @@ Current nightly firmware for Wave Machine Hardware.
     - Improve Controls funtionality:
         - Change the layout of controls:
             - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
-        - Holding Preset should save
-        - Shift should be holding Page?
+            - Holding Preset should save
+            - Shift should be holding Page?
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Improve Oscillator script - current bugs include:
@@ -50,11 +51,10 @@ Current nightly firmware for Wave Machine Hardware.
 
         - Fix MIDI in CC calls (currently get stuck if page is open on hardware controls) - find a way to interface MIDI messages and hardware messages and find a way to assign different locks.
         
-        - Add dynamic setting of MIDI timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
+        - Add dynamic setting of MIDI CLOCK timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
         
-        - Bugfix: quantize arp? so it always starts right, especially between changing divisions
 
-        - Add MIDI Clock out. Needs to be 24ppqn, and have high priority timing wise, and obvs be in sync with the synth... (last bit might be more tricky).
+        - Add MIDI Clock out. Needs to be 24ppqn, and have high priority timing wise, and obvs be in sync with the synth... 
 
         
 
@@ -71,52 +71,54 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Add hardware controls for:
         - Factory Reset
-        - Setting BPM
 
     - Improve ADSR code:
-        - Make the code more portable:- currently the calculations for ADSR times are done in the synth module, but would be good to move them into the ADSR module. I need global controls, but to be able to trigger phases of each voice seperately.
+        - Try to make the code more portable - currently the calculations for envelope times are done in the controling code to allow for multicore use, but check to see if it can be done in other ways.
     
     - Improve Mod code:
         - Try making it Poly - I think the sample rate can be reduced by 8 (6kHz) and that should allow every voice to have its own poly Mod. Would probably need a reset for when notes are released, so that you can really hear the difference.
-
         - Add a tempo sync function.
         - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
         - Add a ramp down feature when switching between destinations - could be difficult. 
     
     - Improve Filter code: 
-        - Improve modulation inputs for controls.
-        - Add a switch for direction of envelope (like the Modulation setup with different types of filter selecting differing paths for the output)
+        - Check ADSR setup in Filter - Seems to not update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
+        - Improve modulation inputs.
+        
 
-    - Arp code:
-        - Add a setting for note length within the Arp -    currently plays note for a beat, then a beat rest, then another and so on.
-                                                            I find this more musical, but I believe most synths dont have this?
+    - Improve Arp code:
+        - Add a setting for Mono/Poly Filter
         - Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
-        - Add a swing setting.
+        - Feature: Add a swing feature.
         - Re-add chord arp - will work great with patterns too.
         - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
-    - Add Portomento Mode: Should be added form the note-handling script (adding a portomento flag via the priority script, and having a new note, but dont clear old note freq in the message?) then a portamento time control, which then slides the note freq from old to new. 
-        - check out yoshimi github
-        if (porto) {
-            if (!aligned) {
-                if (oldfreq > newfreq) oldfreq -= (portamento_inc/2); // remember pitch is logarthimic
-                else oldfreq += portamento_inc;
-                if (oldfreq == newfreq) {
-                    algined = true;
-                    oldfreq = newfreq;
+    Improve Note Handling:
+        - Add Mono Mode - selectable at start up.
+        
+        - Add Portomento Mode: Should be added form the note-handling script (adding a portomento flag via the priority script, and having a new note, but dont clear old note freq in the message?) then a portamento time control, which then slides the note freq from old to new. 
+            - check out yoshimi github
+            if (porto) {
+                if (!aligned) {
+                    if (oldfreq > newfreq) oldfreq -= (portamento_inc/2); // remember pitch is logarthimic
+                    else oldfreq += portamento_inc;
+                    if (oldfreq == newfreq) {
+                        algined = true;
+                        oldfreq = newfreq;
+                    }
                 }
             }
-        }
     
-    - Add Mono Mode - selectable at start up.
-
-    - Long button functions (Pages/Shift, LFO/?, Arp/?, Preset/Save) - chosen functions.
 
     - Start-up settings (MIDI channel, other funtions?)
 
     - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
+
+
+
+
 
 
 Changelog: 
@@ -124,10 +126,15 @@ Changelog:
     12/08/2023:- Added Changelog and Updated synth name.
 
 
-Things already implemented:
+
+
+
+
+Features/Bugfixes:
 
     + Proven hardware functions (Pots, LEDs, Keys, Audio)
         + USB-MIDI
+            + Improved the handling of USB-MIDI notes and there update calls.
             + Finally added and tested
         + EEPROM
             + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
@@ -136,8 +143,10 @@ Things already implemented:
                 + Added function to show led test on startup if Preset button is held down
         + Buttons
         + Keys
+        + DAC
 
-    + Oscillator bug fixes:
+    + Oscillator:
+        + Removed all 64bit recasts
         + Added soft clip controls
         + Slighty improved tuning - There was anoticable drift in tuning between octaves/pitch shifts... I've imporved note code to be Q16 to improve accuracy, but still issues.
         + Added soft clipping with adjustable (yet to be assigned) gain control.
@@ -152,12 +161,13 @@ Things already implemented:
         + Moved Note_priority back to HW core - Takes the time pressiure off the Audio core. Note assignments are now sent via a queue. 
         + Added a the bones of a paraphonic filter for Modulation and/or Filter. This is currently unstable, but will possibly be used in future pending some UI testing.
 
-    + Hardware files bug fixes:
+    + Hardware:
         - Bug: Fixed once I moved the note handling to the HW core and refactored the Note Priority code to remove the massive, now unnecessary for-loop. Fast movements can be missed on the pots. at frist I thought it was only down to multiple controls being active, but it seems to also randomly happen on preset 8. Example:- on preset 8, moving the decay really fast misses/looses the control. 
         + Added a basic debug test function to test the pots and cycle for LEDs on start up - can currently be accessed by holding down preset/shift while powering up.
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
-    + Arp functionality bug fixes:
+    + Arp:
+        + Feature: Added hardware control for internal BPM speed.
         + Change: Altered how the voice allocation is handled in Arp. Removes the need for note priority, and should allow for better control of Hold/Sustain.
         + Feature: Added a hardware control for Arp Gap. Basically gives you a choice between notes that lead straight into each other adn notes that have a gap between the same duration as the note duration.
         + Bugfix: Arp Sync now working properly. A Bug was highlighted when a bug in the MIDI handling code was fixed, the speed didnt align with the MIDI clock speed.
@@ -170,7 +180,7 @@ Things already implemented:
         + currently has a random low note on release of arp (noticable in high octaves)
         + Add Arp mode
 
-    + Settings Bugfixes:
+    + Settings/Controls:
         + Added starting shift functions:
             - Added in functions for Modulation  
             - Added in functions for Filter (Shift on LFO) and its ADSR (Shift on ADSR) - fixed issues with processing.
@@ -185,13 +195,13 @@ Things already implemented:
         + Improve Pagination handling
         _- Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
 
-    + ADSR bug fixes:
+    + ADSR:
         + Fixed an overflow issue with multiple notes being in an extended Decay phase causing the output sample to be limitied cause audio artifacts:- Bug: Clipping output signal - When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.)
         + Removed any useless calls to synth voice stuff so can be used more universally (currently planning on adding to Mod) - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
         + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
         + Improved ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths by testing some.
 
-    + Mod bug fixes:
+    + Mod:
         + Added a linear to exponential curve for the Rate function. Can now rate between 0.1Hz and 5000Hz with the lower end of the range being finest, and the higher end coarsest.
         + This was due to a fault wavetable for the Mod code (had an overflow in the sine wave):- Mod overflowing vector/wavetable index I think - if the mod is set slow/max depth/vector output and the actual vector control or wavetable is higher up, it overflows the table and freaks out. Constrain the wavetable indexing.
         + This was due to the output overflowing when the depth was applied, effectivaly doubling the output frequency, but unevenly:- Oscilaltor folds down at the top of range (can be seen at 0.1Hz on vibrato with a tuner - when pressing C with depth to full, it F# to F, but does a little duck away from F at the "top")
@@ -236,6 +246,7 @@ Things already implemented:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Added a switch for direction of envelope.
         + Bugfix: Filter now releases properly (depending on mode). Was underflowing when adding more notes than polyphony then releasing.
         + Bugfix - Arp & Filter/Mod Envelope now have an option to be MONO or POLY, this allows the envelope to open slowly up on a playing Arp, or fire for every note.
         + Improved Envelope output for highpass control of cutoff - it now applies the envlope downwards.

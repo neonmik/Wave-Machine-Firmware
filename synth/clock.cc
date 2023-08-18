@@ -65,6 +65,8 @@ namespace CLOCK {
                 _division = 32;
                 midi_division = 3;
                 break;
+
+            // Note used yet... need to figure 1/64ths for 24ppqn
             case 10: // 32nd Note Triplet (1/48)
                 _division = 48;
                 midi_division = 2;
@@ -73,11 +75,6 @@ namespace CLOCK {
                 _division = 64;
                 // midi_division = ?;
                 break;
-
-            // case ?: // Dotted Half note (?) - Not currently possible in divisions, and I've not missed it.
-            //     _division = ?;
-            //     midi_division = ?;
-            //     break;
             default:
                 break;
         }

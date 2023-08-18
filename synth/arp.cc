@@ -328,7 +328,7 @@ namespace ARP {
         }
     }
 
-    void set_rate (uint16_t rate) {
-        CLOCK::set_bpm(map(rate, KNOB_MIN, KNOB_MAX, 30, 350));
+    void set_bpm (uint16_t bpm) {
+        CLOCK::set_bpm(map(bpm, KNOB_MIN, KNOB_MAX, 30, 350));
     }
 }
