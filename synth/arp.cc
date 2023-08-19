@@ -2,38 +2,39 @@
 
 namespace ARP {
 
-    arp_data_t ARPS[MAX_ARP];
+    ArpData arpVoices[MAX_ARP];
     
     void init () {
-        // CLOCK::init();
+        // nothing happens here, but it might?
     }
+
     void set_state (bool state) {
-        if (state != _active) {
-            _active = state;
-            if (!_active) {
+        if (state != isArpActive) {
+            isArpActive = state;
+            if (!isArpActive) {
                 // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
-                if (!_hold) pass_notes();
+                if (!isHoldEnabled) pass_notes();
                 else stop_all();
                 clear_all_notes();
             }
-            if (_active) {
+            if (isArpActive) {
                 stop_all();
                 grab_notes();
             }   
         }
     }
     bool get_state (void) {
-        return _active;
+        return isArpActive;
     }
 
     void reset () {
-        if (!_active) {
+        if (!isArpActive) {
             // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
-            if (!_hold) pass_notes();
+            if (!isHoldEnabled) pass_notes();
             else stop_all();
             clear_all_notes();
         }
-        if (_active) {
+        if (isArpActive) {
             stop_all();
             grab_notes();
         }   
@@ -42,35 +43,35 @@ namespace ARP {
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
             case UP:
-                ++_play_index;
-                if (_play_index >= _count) {
-                    _play_index = 0;
+                ++currentPlayIndex;
+                if (currentPlayIndex >= currentNoteCount) {
+                    currentPlayIndex = 0;
                     update_range();
                 }
                 break;
             case DOWN:
-                _play_index--;
-                if (_count > 1) {
-                    if (_play_index <= -1) {
-                        _play_index = _count - 1;
+                currentPlayIndex--;
+                if (currentNoteCount > 1) {
+                    if (currentPlayIndex <= -1) {
+                        currentPlayIndex = currentNoteCount - 1;
                         update_range();
                     }
                 } else {
-                    _play_index = 0;
+                    currentPlayIndex = 0;
                     update_range();
                 }
                 break;
             case UP_DOWN:
                 if (_switch) {
-                    ++_play_index;
-                    if (_play_index >= _count) {
-                        _play_index = _count > 1 ? _count - 2 : 0;
+                    ++currentPlayIndex;
+                    if (currentPlayIndex >= currentNoteCount) {
+                        currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
                         _switch = false;
                     }
                 } else {
-                    --_play_index;
-                    if (_play_index < 0) {
-                        _play_index = _count > 1 ? 1 : 0;
+                    --currentPlayIndex;
+                    if (currentPlayIndex < 0) {
+                        currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
                         _switch = true;
                         update_range();
                     }
@@ -78,15 +79,15 @@ namespace ARP {
                 break;
             case DOWN_UP:
                 if (_switch) {
-                    _play_index--;
-                    if (_play_index < 0) {
-                        _play_index = _count > 1 ? 1 : 0;
+                    currentPlayIndex--;
+                    if (currentPlayIndex < 0) {
+                        currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
                         _switch = false;
                     }
                 } else {
-                    ++_play_index;
-                    if (_play_index >= _count) {
-                        _play_index = _count > 1 ? _count - 2 : 0;
+                    ++currentPlayIndex;
+                    if (currentPlayIndex >= currentNoteCount) {
+                        currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
                         _switch = true;
                         update_range();
                     }
@@ -96,56 +97,54 @@ namespace ARP {
     }
     void update_range () {
         // add variable for direction for new arp modes (more similar in handling to JUNO)
-        ++_octave;
-        if (_octave > _range) _octave = 0;
+        ++currentOctave;
+        if (currentOctave > _range) currentOctave = 0;
     }
 
     void update (void) {
+        // always update clock, will be used for MIDI clock out.
         CLOCK::update();
-        if (_active) {
-            if (_sustain_just_released) {
+        // if arp is on, do arp stuff.
+        if (isArpActive) {
+            if (isSustainJustReleased) {
                 clear_all_notes();
 
                 // check all notes
                 // for (int i = 0; i < MAX_ARP; i++) {
                 //     // if its currently being sustained
-                //     if (ARPS[i].sustained) {
-                //         ARPS[i].clear();
-                //         --_count;
+                //     if (arpVoices[i].sustained) {
+                //         arpVoices[i].clear();
+                //         --currentNoteCount;
                 //         --_write_index;
-                //         NOTE_HANDLING::voices_dec();
-                //         if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
-                //         if (_write_index <= 0) _write_index = _count;
+                //         NOTE_HANDLING::arpVoices_dec();
+                //         if (currentNoteCount < 0) currentNoteCount = 0; // maybe add a line here to reset range and play index? 
+                //         if (_write_index <= 0) _write_index = currentNoteCount;
                 //         _notes_changed = true;
                 //     }
                 // }
-                _sustain_just_released = false;
+                isSustainJustReleased = false;
             }
             organise_notes();
             if (CLOCK::get_changed()) {
                 switch (note_state) {
-                    case NOTE_ACTIVE:
-                        // old voice handling, keeping until fully bug tested
-                        // NOTE_HANDLING::priority(0x80, play_note, 0); 
 
-                        // ----------------------
-                        // New Arp Voice handling 
-                        NOTE_HANDLING::voice_off(_voice_index, play_note, 0);
-                        _voice_index++;
-                        if (_voice_index >= POLYPHONY) _voice_index = 0;
-                        // ----------------------
+                    case NOTE_ACTIVE:
+                        NOTE_HANDLING::voice_off(currentVoiceIndex, currentPlayNote, 0);
+                        currentVoiceIndex++;
+                        if (currentVoiceIndex >= POLYPHONY) currentVoiceIndex = 0;
 
                         arpeggiate(_direction);
                         note_state = IDLE;
-                        if (_gap) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
+                        if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
+                        
                     case IDLE:
-                        if (_play_index >= _count) {
-                            _play_index = 0;
+                        if (currentPlayIndex >= currentNoteCount) {
+                            currentPlayIndex = 0;
                         }
-                        if (ARPS[_play_index].note) {
-                            play_note = ((ARPS[_play_index].note)+(_octave*12));
+                        if (arpVoices[currentPlayIndex].isActive()) {
+                            currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
 
-                            NOTE_HANDLING::voice_on(_voice_index, play_note, 127);
+                            NOTE_HANDLING::voice_on(currentVoiceIndex, currentPlayNote, 127);
 
                             note_state = NOTE_ACTIVE;
                         }
@@ -159,19 +158,19 @@ namespace ARP {
  
     void add_note (uint8_t note) {
         for (int i = 0; i < MAX_ARP; i++) { // change for count?
-            if (ARPS[i].note == note) {
+            if (arpVoices[i].note == note) {
                 _notes_changed = true;
                 return;
             }
         }
-        //    
-        // played order
-        ARPS[_write_index].note = note;
-        ++_count;
+
+        // played order - don't rearrange if you want played order.
+        arpVoices[_write_index].note = note;
+        ++currentNoteCount;
         ++_write_index;
         NOTE_HANDLING::voices_inc();
-        if (_count >= MAX_ARP) {
-            _count = MAX_ARP;
+        if (currentNoteCount >= MAX_ARP) {
+            currentNoteCount = MAX_ARP;
         }
         if (_write_index >= MAX_ARP) {
             _write_index = 0;
@@ -179,82 +178,93 @@ namespace ARP {
         _notes_changed = true;
     }
     void remove_note (uint8_t note) {
-        if (_hold) {
-            for (int i = 0; i <= _count; i++) {
-                if (ARPS[i].note == note) {
-                    ARPS[i].sustained = true;
+        if (isHoldEnabled) {
+            for (int i = 0; i <= currentNoteCount; i++) {
+                if (arpVoices[i].note == note) {
+                    arpVoices[i].sustain();
                     break; 
                 }
             }
             _notes_changed = true;
             return;
         }
-        if (_count == 0) {
+        if (currentNoteCount == 0) {
             return;
         }
-        for (int i = 0; i <= _count; i++) {
-            if (ARPS[i].note == note) {
+        for (int i = 0; i <= currentNoteCount; i++) {
+            if (arpVoices[i].note == note) {
                 // Shift all the notes after the removed note back by one
-                for (int j = i; j < _count; j++) {
-                    ARPS[j].clear();
-                    ARPS[j] = ARPS[j + 1];
-                    ARPS[j + 1].clear();
+                for (int j = i; j < currentNoteCount; j++) {
+                    arpVoices[j].clear();
+                    arpVoices[j] = arpVoices[j + 1];
+                    arpVoices[j + 1].clear();
                 }
-                // Decrement _count
-                --_count;
+                // Decrement currentNoteCount
+                --currentNoteCount;
                 --_write_index;
                 NOTE_HANDLING::voices_dec();
-                if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
-                if (_write_index <= 0) _write_index = _count;
+                if (currentNoteCount < 0) currentNoteCount = 0; // maybe add a line here to reset range and play index? 
+                if (_write_index <= 0) _write_index = currentNoteCount;
                 _notes_changed = true;
                 //don't return here in case the note is in the list more than once
             }
         }
     }
     // void clear_note (uint8_t slot) {
-    //     ARPS[slot].clear();
-    //     --_count;
+    //     arpVoices[slot].clear();
+    //     --currentNoteCount;
     //     --_write_index;
-    //     NOTE_HANDLING::voices_dec();
-    //     if (_count < 0) _count = 0; // maybe add a line here to reset range and play index? 
-    //     if (_write_index <= 0) _write_index = _count;
+    //     NOTE_HANDLING::arpVoices_dec();
+    //     if (currentNoteCount < 0) currentNoteCount = 0; // maybe add a line here to reset range and play index? 
+    //     if (_write_index <= 0) _write_index = currentNoteCount;
     //     _notes_changed = true;
     // }
     void organise_notes () {
         if (_notes_changed) {
-            // printf("notes in:  %d | %d | %d | %d | %d | %d | %d | %d \n", ARPS[0].note, ARPS[1].note, ARPS[2].note, ARPS[3].note, ARPS[4].note, ARPS[5].note, ARPS[6].note, ARPS[7].note);
-            uint8_t length      = _count;   // how many entries in the array
-            arp_data_t temp;        // set a temp value, never going to be more than 127, so uint8_t is fine
+            
+            uint8_t length      = currentNoteCount;   // how many entries in the array
+            ArpData swap;
+
             for (int i = 0; i < length; i++) {     
-                for (int j = i+1; j < length; j++) {     
-                    if(ARPS[i].note > ARPS[j].note) {    
-                        temp = ARPS[i];    
-                        ARPS[i] = ARPS[j];    
-                        ARPS[j] = temp;    
+                for (int j = i+1; j < length; j++) {
+                    if(arpVoices[i].note > arpVoices[j].note) {    
+                        swap = arpVoices[i];    
+                        arpVoices[i] = arpVoices[j];    
+                        arpVoices[j] = swap;    
                     }     
                 }
             }
             _notes_changed = false;
-            // printf("notes out: %d | %d | %d | %d | %d | %d | %d | %d \n", ARPS[0].note, ARPS[1].note, ARPS[2].note, ARPS[3].note, ARPS[4].note, ARPS[5].note, ARPS[6].note, ARPS[7].note);
         }
     }
 
     void clear_all_notes () {
         for (int i = 0; i < MAX_ARP; i++) {
-            ARPS[i].clear();
+            arpVoices[i].clear();
         }
         _write_index = 0;
-        _count = 0;
-        _octave = 0;
-        _play_index = 0;
+        currentNoteCount = 0;
+        currentOctave = 0;
+        currentPlayIndex = 0;
         NOTE_HANDLING::voices_clr();
+    }
+
+    void clear_held_notes () {
+        for (int i = 0; i < MAX_ARP; i++) {
+            if (arpVoices[i].sustained) {
+                arpVoices[i].clear();
+                NOTE_HANDLING::voices_dec();
+                currentNoteCount--;
+                // _write_index--;
+            }
+        }
     }
     
     // functions for start/stop of arp
     void pass_notes () {
-        NOTE_HANDLING::voices_set(_count);
+        NOTE_HANDLING::voices_set(currentNoteCount);
         for (int i = 0; i < MAX_ARP; i++) {
-            NOTE_HANDLING::voice_on(i, ARPS[i].note, 127);
+            NOTE_HANDLING::voice_on(i, arpVoices[i].note, 127);
         }
     }
     void grab_notes () {
@@ -271,14 +281,27 @@ namespace ARP {
     void set_hold (uint16_t hold) {
         // if (hold == _last_hold) return;
         bool temp = (bool)(hold>>9);
-        if (_hold != temp) {
-            _hold = temp;
-            if (!_hold) {
+        if (isHoldEnabled != temp) {
+            isHoldEnabled = temp;
+            if (!isHoldEnabled) {
                 // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
-                clear_all_notes();
+                // isSustainJustReleased = true;
+                clear_held_notes();
             }
         }
     }
+    void set_sustain (bool sus) {
+        if (isHoldEnabled != sus) {
+            isHoldEnabled = sus;
+            if (!isHoldEnabled) {
+                // if sustain has been released...
+                // raise flag to clear notes out?
+                isSustainJustReleased = true;
+            } 
+        }
+    }
+
+    // working functions that dont need changing
     void set_division (uint16_t division) {
         if (division == _last_division) return;
         _last_division = division;
@@ -291,7 +314,7 @@ namespace ARP {
         _range = range>>8;
 
         // optional unquantized range changing:
-        // if (_octave > _range) _octave = _range; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
+        // if (currentOctave > _range) currentOctave = _range; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
     }   
     void set_direction (uint16_t direction) {
         if (direction == _last_direction) return;
@@ -312,22 +335,10 @@ namespace ARP {
                 break;
         }
     }
-    
-    void set_gap (uint16_t gap) {
-        bool temp = (bool)(gap>>9);
-        if (_gap != temp) _gap = temp;
+    void set_rest (uint16_t rest) {
+        bool temp = (bool)(rest >> 9);
+        if (isRestEnabled != temp) isRestEnabled = temp;
     }
-    void set_sustain (bool sus) {
-        if (_hold != sus) {
-            _hold = sus;
-            if (!_hold) {
-                // if sustain has been released...
-                // raise flag to clear notes out?
-                _sustain_just_released = true;
-            } 
-        }
-    }
-
     void set_bpm (uint16_t bpm) {
         CLOCK::set_bpm(map(bpm, KNOB_MIN, KNOB_MAX, 30, 350));
     }

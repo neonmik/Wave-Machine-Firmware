@@ -32,47 +32,58 @@ namespace ARP {
 
         NoteState note_state = IDLE;
 
-        bool _gap = false;
+        bool isRestEnabled = false;
 
-        bool  _active;
-        bool  _active_last;
+        bool  isArpActive;
         
-        uint8_t play_note;
-        uint8_t _voice_index;
+        uint8_t     currentPlayNote;
+        uint8_t     currentVoiceIndex;
+        int8_t      currentPlayIndex;
 
 
-        int8_t      _play_index;
-        int8_t      _count;
+        int8_t      currentNoteCount;
         int8_t      _write_index;
         bool        _notes_changed = false;
 
-        bool        _sustain_just_released = false;
+        bool        isSustainJustReleased = false;
 
-        bool        _hold;
+        bool        isHoldEnabled;
         uint16_t    _last_hold;
         uint16_t    _last_division;
         uint16_t    _last_range;
         uint16_t    _last_direction;
 
         int8_t _range;
-        int8_t _octave;
+        int8_t currentOctave;
 
         bool _switch = true;
     }
 
-    struct arp_data_t {
+    struct ArpData {
         uint8_t     note; // holds MIDI note number
         uint8_t     velocity;
         bool        sustained;
 
+        void add (uint8_t input) {
+            note = input;
+        }
+        void sustain (void) {
+            sustained = true;
+        }
         void clear (void) {
             note = 0;
             velocity = 0;
             sustained = false;
         }
+        bool isActive (void) {
+            return note;
+        }
+        uint8_t play (void) {
+            return note;
+        }
     };
 
-    extern arp_data_t ARPS[MAX_ARP];
+    extern ArpData arpVoices[MAX_ARP];
 
     void init (void);
     
@@ -96,7 +107,7 @@ namespace ARP {
     void set_range (uint16_t range);
     void set_direction (uint16_t direction);
 
-    void set_gap (uint16_t gap);
+    void set_rest (uint16_t gap);
     void set_sustain (bool sus);
 
     void update_range (void);

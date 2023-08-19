@@ -55,16 +55,20 @@ namespace NOTE_HANDLING {
   }
 
   void filter_on(void) {
-    // FOR MONO MODE
-    // if (!_filter_active && voices_active()) { 
-    //   QUEUE::trigger_send(FILTER_VOICE, 0, true);
-    //   _filter_active = true;
-    // }
-    // FOR PARAPHONIC MODE
-    if (voices_active()) { 
-      QUEUE::trigger_send(FILTER_VOICE, 0, true);
-      _filter_active = true;
-    }
+    switch (_mode) {
+      case Mode::MONO:
+        if (!_filter_active && voices_active()) { 
+          QUEUE::trigger_send(FILTER_VOICE, 0, true);
+          _filter_active = true;
+        }
+        break;
+      case Mode::PARA:
+        if (voices_active()) { 
+          QUEUE::trigger_send(FILTER_VOICE, 0, true);
+          _filter_active = true;
+        }
+        break;
+    }    
   }
   void filter_off(void) {
     // FOR MONO MODE
@@ -164,9 +168,13 @@ namespace NOTE_HANDLING {
       }
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
-        
         voice = priority_voice;
       }
+    }
+    if (_sustain) {
+      // if a voice is allocated while sustain is pressed, but not released, the sustain should be reset until its released again, this should stop current notes being released on the pedal being released. 
+      // I think this should apply to every voice? not just new voices... 
+      VOICES[voice].sustained = false;
     }
     voice_on(voice, note, velocity);
   }

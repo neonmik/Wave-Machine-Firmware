@@ -4,19 +4,18 @@ Current nightly firmware for Wave Machine Hardware.
 
 
 - Alpha Release bugfixes:
-
-    
     
     - Uncofirmed Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can really replicate yet, just noticed it doing it when Joe was playing...
 
 
 - Updates and Bugfixes:
 
-    - Update vibrato to work right with pitch. Also plan for having a max setting.
+    - Bugfix: Update vibrato to work right with pitch. Also plan for having a max setting.
 
-    - Arp: Move back to HW core, and try and link beat clock...
-    - Arp: Streamline note adding/removal so that organistaion only happens once, and you only use for loops as far as needed (try and remove MAX_ARP's in for loops).
-    - Bugfix: quantize arp? so it always starts right, especially between changing divisions
+    - Arp:
+        - Move back to HW core, and try and link beat clock...
+        - Streamline note adding/removal so that organistaion only happens once, and you only use for loops as far as needed (try and remove MAX_ARP's in for loops).
+        - Feature: quantize arp? so it always starts right, especially between changing divisions
 
     
     - Feature: Check Sustain pedal functions. 
@@ -25,40 +24,33 @@ Current nightly firmware for Wave Machine Hardware.
 
     
 
-    - Improve Controls funtionality:
+    - Controls:
         - Change the layout of controls:
             - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
             - Holding Preset should save
             - Shift should be holding Page?
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
-    - Improve Oscillator script - current bugs include:
-        - Finesse soft start code - currently takes too long to get going and still isnt perfect.
+    - Oscillator:
+        - Bugfix: Finesse soft start code - currently takes too long to get going and still isnt perfect.
     
-    - Improve USB MIDI/ Implement MIDI hardware:
+    - USB MIDI/ MIDI:
 
+        - Tidy up MIDI processing code, could be more efficient.
+        - Map more CC values and check they're working. 
+        
+        - Add MIDI channel assignment to start up
+        - Add a MIDI settings structure and a way of saving persistant data (via EEPROM)
+        
         - Test UART-MIDI
         - Test UART
 
-        - Tidy up MIDI processing code, could be more efficient.
-
-        - Map more CC values and check they're working. 
-
-
-        - Add MIDI channel assignment to start up
-
-        - Add a MIDI settings structure and a way of saving persistant data (via EEPROM)
-
-
-
-        - Fix MIDI in CC calls (currently get stuck if page is open on hardware controls) - find a way to interface MIDI messages and hardware messages and find a way to assign different locks.
-        
-        - Add dynamic setting of MIDI CLOCK timeout. Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000?
+        - Change MIDI IN CC calls - currently use CONTROLS but gets stuck if page is active. Find a way to interface MIDI messages and hardware messages and find a way to assign different locks.
         
 
-        - Add MIDI Clock out. Needs to be 24ppqn, and have high priority timing wise, and obvs be in sync with the synth... 
-
-        
+    - Clock: 
+        - Feature: Add MIDI Clock out - Will be achieved by dividing internal clock to midi message.
+        - Bugfix: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
 
     - Prove hardware functions:
@@ -98,7 +90,7 @@ Current nightly firmware for Wave Machine Hardware.
         - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
     Improve Note Handling:
-        - Add Mono Mode - selectable at start up.
+        - Add actual Mono Mode - selectable at start up.
         
         - Add Portomento Mode: Should be added form the note-handling script (adding a portomento flag via the priority script, and having a new note, but dont clear old note freq in the message?) then a portamento time control, which then slides the note freq from old to new. 
             - check out yoshimi github

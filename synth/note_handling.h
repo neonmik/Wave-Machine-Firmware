@@ -18,7 +18,12 @@ namespace NOTE_HANDLING {
         FIRST,      // First/oldest notes stay the longest
         LAST,       // Last/newest notes stay the longest
         HIGHEST,    // Highest notes stay the longest
-        LOWEST      // Lowest notes stay the longest
+        LOWEST    ,  // Lowest notes stay the longest
+    };
+
+    enum class Mode {
+        MONO,
+        PARA,
     };
 
     namespace {
@@ -53,8 +58,8 @@ namespace NOTE_HANDLING {
         
         bool        _sustain;
         bool        _sustain_just_released;
-        // uint8_t     _held_notes[POLYPHONY];
-        // volatile uint8_t     _num_held_notes;
+
+        Mode        _mode  = Mode::PARA;
 
         int8_t     _voices_active = 0;
         bool       _filter_active = false;

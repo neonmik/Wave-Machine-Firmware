@@ -114,7 +114,7 @@ namespace CONTROLS {
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
             Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-                Page    sARP    {&ARP::set_gap,            &ARP::set_bpm,              nullptr,                    nullptr,                         nullptr};
+                Page    sARP    {&ARP::set_rest,           &ARP::set_bpm,              nullptr,                    nullptr,                         nullptr};
 
             //&ARP::set_gap
             
