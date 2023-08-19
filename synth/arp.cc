@@ -126,6 +126,7 @@ namespace ARP {
             }
             organise_notes();
             if (CLOCK::get_changed()) {
+
                 switch (note_state) {
 
                     case NOTE_ACTIVE:
@@ -138,9 +139,8 @@ namespace ARP {
                         if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                         
                     case IDLE:
-                        if (currentPlayIndex >= currentNoteCount) {
-                            currentPlayIndex = 0;
-                        }
+                        if (currentPlayIndex >= currentNoteCount) currentPlayIndex = 0;
+                        
                         if (arpVoices[currentPlayIndex].isActive()) {
                             currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
 
