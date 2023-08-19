@@ -46,7 +46,7 @@ namespace ARP {
                 ++currentPlayIndex;
                 if (currentPlayIndex >= currentNoteCount) {
                     currentPlayIndex = 0;
-                    update_range();
+                    updateOctave(true);
                 }
                 break;
             case DOWN:
@@ -54,11 +54,11 @@ namespace ARP {
                 if (currentNoteCount > 1) {
                     if (currentPlayIndex <= -1) {
                         currentPlayIndex = currentNoteCount - 1;
-                        update_range();
+                        updateOctave(true);
                     }
                 } else {
                     currentPlayIndex = 0;
-                    update_range();
+                    updateOctave(true);
                 }
                 break;
             case UP_DOWN:
@@ -73,7 +73,7 @@ namespace ARP {
                     if (currentPlayIndex < 0) {
                         currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
                         _switch = true;
-                        update_range();
+                        updateOctave(true);
                     }
                 }
                 break;
@@ -89,16 +89,24 @@ namespace ARP {
                     if (currentPlayIndex >= currentNoteCount) {
                         currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
                         _switch = true;
-                        update_range();
+                        updateOctave(true);
                     }
                 }
                 break;
         }
     }
-    void update_range () {
+    void updateOctave (bool rising) {
+        switch (rising) {
+            case true:
+                ++currentOctave;
+                if (currentOctave > _range) currentOctave = 0;
+                break;
+            case false:
+                --currentOctave;
+                if (currentOctave < _range) currentOctave = _range;
+                break;
+        }
         // add variable for direction for new arp modes (more similar in handling to JUNO)
-        ++currentOctave;
-        if (currentOctave > _range) currentOctave = 0;
     }
 
     void update (void) {
@@ -134,13 +142,13 @@ namespace ARP {
                         currentVoiceIndex++;
                         if (currentVoiceIndex >= POLYPHONY) currentVoiceIndex = 0;
 
-                        arpeggiate(_direction);
+                        arpeggiate(arpDirection);
                         note_state = IDLE;
                         if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                         
                     case IDLE:
                         if (currentPlayIndex >= currentNoteCount) currentPlayIndex = 0;
-                        
+
                         if (arpVoices[currentPlayIndex].isActive()) {
                             currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
 
@@ -157,6 +165,7 @@ namespace ARP {
 
  
     void add_note (uint8_t note) {
+        // if the note is already active, return.
         for (int i = 0; i < MAX_ARP; i++) { // change for count?
             if (arpVoices[i].note == note) {
                 _notes_changed = true;
@@ -177,6 +186,7 @@ namespace ARP {
         }
         _notes_changed = true;
     }
+
     void remove_note (uint8_t note) {
         if (isHoldEnabled) {
             for (int i = 0; i <= currentNoteCount; i++) {
@@ -322,16 +332,16 @@ namespace ARP {
         // bitshift to get 0-3 for the Arp direction
         switch (direction>>8) {
             case 0:
-                _direction = ArpDirection::UP;
+                arpDirection = ArpDirection::UP;
                 break;
             case 1:
-                _direction =  ArpDirection::DOWN;
+                arpDirection =  ArpDirection::DOWN;
                 break;
             case 2:
-                _direction =  ArpDirection::UP_DOWN;
+                arpDirection =  ArpDirection::UP_DOWN;
                 break;
             case 3:
-                _direction =  ArpDirection::DOWN_UP;
+                arpDirection =  ArpDirection::DOWN_UP;
                 break;
         }
     }

@@ -25,10 +25,14 @@ namespace ARP {
             UP,
             DOWN,
             UP_DOWN,
-            DOWN_UP
+            DOWN_UP,
+            // RAND,
+            // PLAY_ORDER
         };
 
-        ArpDirection _direction = UP;
+        ArpDirection arpDirection = UP;
+
+
 
         NoteState note_state = IDLE;
 
@@ -110,7 +114,7 @@ namespace ARP {
     void set_rest (uint16_t gap);
     void set_sustain (bool sus);
 
-    void update_range (void);
+    void updateOctave (bool rising);
     // void update_controls (void);
 
     void set_bpm (uint16_t bpm);
