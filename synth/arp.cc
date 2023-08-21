@@ -133,7 +133,7 @@ namespace ARP {
         // if arp is on, do arp stuff.
         if (isArpActive) {
             if (isSustainJustReleased) {
-                clear_all_notes();
+                clearSustainedNotes();
                 isSustainJustReleased = false;
             }
             transferNotes();
@@ -324,21 +324,32 @@ namespace ARP {
     
     void clearSustainedNotes (void) {
         uint8_t inputNotesRemoved;
+        uint8_t bufferSize; 
+        
+        if (inputBufferFull) {
+            bufferSize = POLYPHONY;
+        } else {
+            bufferSize = inputNoteCount;
+        }
 
-        for (int i = 0; i < POLYPHONY; ++i) {
+        for (int i = 0; i < bufferSize; ++i) {
             // If the note is active
             if (inputBuffer[i].isSustained()) {
                 // Set it to sustain
-                inputBuffer[i].remove();
-                // NOTE_HANDLING::voices_dec();
+
+                for (int swap = i; swap < bufferSize; ++swap) {
+                        inputBuffer[swap] = inputBuffer[swap + 1];
+                    }
+                // Remove the last inputBuffer
+                inputBuffer[bufferSize - 1].remove();
+                
+                NOTE_HANDLING::voices_dec();
 
                 ++inputNotesRemoved;
+                
 
                 inputNotesUpdated = true;
-                // dont break as there may be multiple notes?
-
-                // Exit loop as it's been found and marked
-                // break;
+                // dont break as there may be multiple notes
             }
         }
 
@@ -398,11 +409,11 @@ namespace ARP {
             isHoldEnabled = temp;
             if (!isHoldEnabled) {
                 // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
-                // isSustainJustReleased = true;
+                isSustainJustReleased = true;
                 // clear_held_notes();
                 
                 // new note clear function... test it.
-                clearSustainedNotes();
+                // clearSustainedNotes();
             }
         }
     }

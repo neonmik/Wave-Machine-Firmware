@@ -116,6 +116,7 @@ namespace ARP {
     void addNote (uint8_t note);
     void removeNote (uint8_t note);
     void clearNote (uint8_t slot);
+    void clearSustainedNotes (void);
     void transferNotes (void);
     void clear_all_notes (void);
     void pass_notes(void);
