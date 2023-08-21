@@ -247,7 +247,7 @@ namespace NOTE_HANDLING {
       _sustain = temp;
       if (ARP::get_state()) {
         // arp notes
-        ARP::set_sustain(_sustain); // ???
+        ARP::setSustain(_sustain); // ???
       } else {
         if (!_sustain) _sustain_just_released = true;
       }

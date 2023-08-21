@@ -3,8 +3,9 @@
 namespace ARP {
 
     ArpData arpVoices[MAX_ARP];
+    ArpData inputBuffer[MAX_ARP];
     
-    void init () {
+    void Init () {
         // nothing happens here, but it might?
     }
 
@@ -42,14 +43,14 @@ namespace ARP {
 
     void arpeggiate(ArpDirection direction) {
         switch (direction) {
-            case UP:
+            case ArpDirection::UP:
                 ++currentPlayIndex;
                 if (currentPlayIndex >= currentNoteCount) {
                     currentPlayIndex = 0;
                     updateOctave(true);
                 }
                 break;
-            case DOWN:
+            case ArpDirection::DOWN:
                 currentPlayIndex--;
                 if (currentNoteCount > 1) {
                     if (currentPlayIndex <= -1) {
@@ -61,7 +62,7 @@ namespace ARP {
                     updateOctave(true);
                 }
                 break;
-            case UP_DOWN:
+            case ArpDirection::UP_DOWN:
                 if (_switch) {
                     ++currentPlayIndex;
                     if (currentPlayIndex >= currentNoteCount) {
@@ -77,7 +78,7 @@ namespace ARP {
                     }
                 }
                 break;
-            case DOWN_UP:
+            case ArpDirection::DOWN_UP:
                 if (_switch) {
                     currentPlayIndex--;
                     if (currentPlayIndex < 0) {
@@ -109,9 +110,9 @@ namespace ARP {
         // add variable for direction for new arp modes (more similar in handling to JUNO)
     }
 
-    void update (void) {
+    void Update (void) {
         // always update clock, will be used for MIDI clock out.
-        CLOCK::update();
+        CLOCK::Update();
         // if arp is on, do arp stuff.
         if (isArpActive) {
             if (isSustainJustReleased) {
@@ -135,18 +136,18 @@ namespace ARP {
             organise_notes();
             if (CLOCK::get_changed()) {
 
-                switch (note_state) {
+                switch (currentNoteState) {
 
-                    case NOTE_ACTIVE:
+                    case NoteState::ACTIVE:
                         NOTE_HANDLING::voice_off(currentVoiceIndex, currentPlayNote, 0);
                         currentVoiceIndex++;
                         if (currentVoiceIndex >= POLYPHONY) currentVoiceIndex = 0;
 
                         arpeggiate(arpDirection);
-                        note_state = IDLE;
+                        currentNoteState = NoteState::IDLE;
                         if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                         
-                    case IDLE:
+                    case NoteState::IDLE:
                         if (currentPlayIndex >= currentNoteCount) currentPlayIndex = 0;
 
                         if (arpVoices[currentPlayIndex].isActive()) {
@@ -154,7 +155,7 @@ namespace ARP {
 
                             NOTE_HANDLING::voice_on(currentVoiceIndex, currentPlayNote, 127);
 
-                            note_state = NOTE_ACTIVE;
+                            currentNoteState = NoteState::ACTIVE;
                         }
                         break;
                 }
@@ -163,76 +164,147 @@ namespace ARP {
         }
     }
 
- 
-    void add_note (uint8_t note) {
-        // if the note is already active, return.
-        for (int i = 0; i < MAX_ARP; i++) { // change for count?
-            if (arpVoices[i].note == note) {
-                _notes_changed = true;
-                return;
+    
+
+    void addNote (uint8_t note) {
+        if (note == 0) {
+            return;
+        }
+        if (!inputBufferFull) {
+            // If the input buffer isn't full
+            for (int i = 0; i < POLYPHONY; ++i) {
+                // Check for the first empty slot
+                if (inputBuffer[i].note == 0) {
+                    // Set the empty slot as the new note
+                    inputBuffer[i].add(note);
+
+                    // Increment the note count
+                    ++inputNoteCount;
+
+                    // Cap the note count and set buffer full flag
+                    if (inputNoteCount >= POLYPHONY) {
+                        inputNoteCount = POLYPHONY;
+                        inputBufferFull = true;
+                    }
+
+                    // Mark that the input buffer notes have been changed
+                    inputNotesUpdated = true;
+
+                    // trigger Filter envelope
+                    NOTE_HANDLING::voices_inc();
+                    break;
+                }
             }
-        }
+        } else {
+            // Check if the note is already in use
+            for (int i = 0; i < POLYPHONY; ++i) {
+                if (inputBuffer[i].note == note) {
+                    // resets the note
+                    inputBuffer[i].add(note);
+                    inputNotesUpdated = true;
+                    return;
+                }
+            }
 
-        // played order - don't rearrange if you want played order.
-        arpVoices[_write_index].note = note;
-        ++currentNoteCount;
-        ++_write_index;
-        NOTE_HANDLING::voices_inc();
-        if (currentNoteCount >= MAX_ARP) {
-            currentNoteCount = MAX_ARP;
+            // Write the note to the last available slot
+            inputBuffer[inputWriteIndex].add(note);
+
+            // Increment and wrap the write index
+            inputWriteIndex = (inputWriteIndex + 1) % POLYPHONY;
+
+            // Mark that the input buffer notes have been changed
+            inputNotesUpdated = true;
+
+            // trigger Filter envelope
+            NOTE_HANDLING::voices_inc();
         }
-        if (_write_index >= MAX_ARP) {
-            _write_index = 0;
-        }
-        _notes_changed = true;
     }
+        // We now have a buffer that holds all the notes most recently played, and a flag that we can use to copy this input buffer to the play buffer. 
+        // the input buffer also holds the sustain values, so that if it note is being held down, it wont be marked as sustain to be released until it's released.
 
-    void remove_note (uint8_t note) {
+
+        // ++currentNoteCount;
+        // ++_write_index;
+        // NOTE_HANDLING::voices_inc();
+        // if (currentNoteCount >= MAX_ARP) {
+        //     currentNoteCount = MAX_ARP;
+        // }
+        // if (_write_index >= MAX_ARP) {
+        //     _write_index = 0;
+        // }
+        // _notes_changed = true;
+    void removeNote(uint8_t note) {
+        // If Hold/Sustain is on, we don't remove notes
         if (isHoldEnabled) {
-            for (int i = 0; i <= currentNoteCount; i++) {
-                if (arpVoices[i].note == note) {
-                    arpVoices[i].sustain();
-                    break; 
+            // Check if this note is in the buffer
+            for (int i = 0; i < POLYPHONY; ++i) {
+                // If the note is active
+                if (inputBuffer[i].note == note) {
+                    // Set it to sustain
+                    inputBuffer[i].sustain();
+                    inputNotesUpdated = true;
+                    // Exit loop as it's been found and marked
+                    break;
                 }
             }
-            _notes_changed = true;
+            // Exit function as there's nothing more to do
             return;
-        }
-        if (currentNoteCount == 0) {
-            return;
-        }
-        for (int i = 0; i <= currentNoteCount; i++) {
-            if (arpVoices[i].note == note) {
-                // Shift all the notes after the removed note back by one
-                for (int j = i; j < currentNoteCount; j++) {
-                    arpVoices[j].clear();
-                    arpVoices[j] = arpVoices[j + 1];
-                    arpVoices[j + 1].clear();
+        } else {
+            // If Hold/Sustain is not on, we remove notes
+            // If the input buffer isn't full
+            uint8_t bufferSize;
+
+            // If inputBuffer is full, use all the notes; if not, use however many there are
+            if (inputBufferFull)
+                bufferSize = POLYPHONY;
+            else
+                bufferSize = inputNoteCount;
+
+            // Check all the active notes
+            for (int index = 0; index < bufferSize; ++index) {
+                // If the note is here
+                if (inputBuffer[index].note == note) {
+                    // Shift elements to remove the note
+                    for (int swap = index; swap < bufferSize - 1; ++swap) {
+                        inputBuffer[swap] = inputBuffer[swap + 1];
+                    }
+                    // Remove the last inputBuffer
+                    inputBuffer[bufferSize - 1].remove();
+
+                    // Decrement the note count
+                    --inputNoteCount;
+
+                    if (inputBufferFull) inputBufferFull = false;
+                    else if (inputNoteCount < 0) inputNoteCount = 0;
+
+                    // Update inputWriteIndex if necessary
+                    if (inputWriteIndex == index) {
+                        inputWriteIndex = bufferSize - 1;
+                    } else if (inputWriteIndex > index) {
+                        --inputWriteIndex;
+                    }
+
+                    inputNotesUpdated = true;
+
+                    // Release Filter envelope
+                    NOTE_HANDLING::voices_dec();
+
+                    // If it's been removed, return
+                    return;
                 }
-                // Decrement currentNoteCount
-                --currentNoteCount;
-                --_write_index;
-                NOTE_HANDLING::voices_dec();
-                if (currentNoteCount < 0) currentNoteCount = 0; // maybe add a line here to reset range and play index? 
-                if (_write_index <= 0) _write_index = currentNoteCount;
-                _notes_changed = true;
-                //don't return here in case the note is in the list more than once
+                // If it's not here, don't worry, it's already been written over
             }
         }
     }
-    // void clear_note (uint8_t slot) {
-    //     arpVoices[slot].clear();
-    //     --currentNoteCount;
-    //     --_write_index;
-    //     NOTE_HANDLING::arpVoices_dec();
-    //     if (currentNoteCount < 0) currentNoteCount = 0; // maybe add a line here to reset range and play index? 
-    //     if (_write_index <= 0) _write_index = currentNoteCount;
-    //     _notes_changed = true;
-    // }
     void organise_notes () {
-        if (_notes_changed) {
+        if (inputNotesUpdated) {
             
-            uint8_t length      = currentNoteCount;   // how many entries in the array
+
+            for (int copy = 0; copy < POLYPHONY; copy++) {
+                arpVoices[copy] = inputBuffer[copy];
+            }
+
+            uint8_t length      = inputNoteCount;   // how many entries in the array
             ArpData swap;
 
             for (int i = 0; i < length; i++) {     
@@ -244,13 +316,15 @@ namespace ARP {
                     }     
                 }
             }
-            _notes_changed = false;
+            currentNoteCount = inputNoteCount;
+
+            inputNotesUpdated = false;
         }
     }
 
     void clear_all_notes () {
         for (int i = 0; i < MAX_ARP; i++) {
-            arpVoices[i].clear();
+            arpVoices[i].remove();
         }
         _write_index = 0;
         currentNoteCount = 0;
@@ -262,7 +336,7 @@ namespace ARP {
     void clear_held_notes () {
         for (int i = 0; i < MAX_ARP; i++) {
             if (arpVoices[i].sustained) {
-                arpVoices[i].clear();
+                arpVoices[i].remove();
                 NOTE_HANDLING::voices_dec();
                 currentNoteCount--;
                 // _write_index--;
@@ -279,7 +353,7 @@ namespace ARP {
     }
     void grab_notes () {
         for (int i = 0; i < MAX_ARP; i++) {
-            add_note(NOTE_HANDLING::voices_get(i));
+            addNote(NOTE_HANDLING::voices_get(i));
         }
         organise_notes();
     }
@@ -288,7 +362,7 @@ namespace ARP {
         NOTE_HANDLING::voices_stop();
     }
     
-    void set_hold (uint16_t hold) {
+    void setHold (uint16_t hold) {
         // if (hold == _last_hold) return;
         bool temp = (bool)(hold>>9);
         if (isHoldEnabled != temp) {
@@ -300,7 +374,7 @@ namespace ARP {
             }
         }
     }
-    void set_sustain (bool sus) {
+    void setSustain (bool sus) {
         if (isHoldEnabled != sus) {
             isHoldEnabled = sus;
             if (!isHoldEnabled) {
@@ -312,12 +386,12 @@ namespace ARP {
     }
 
     // working functions that dont need changing
-    void set_division (uint16_t division) {
+    void setDivision (uint16_t division) {
         if (division == _last_division) return;
         _last_division = division;
-        CLOCK::set_division(division);
+        CLOCK::setDivision(division);
     }
-    void set_range (uint16_t range) {
+    void setRange (uint16_t range) {
         if (range == _last_range) return;
         _last_range = range;
         // bit shift to get 0-4 octaves of range for the Arp
@@ -326,7 +400,7 @@ namespace ARP {
         // optional unquantized range changing:
         // if (currentOctave > _range) currentOctave = _range; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
     }   
-    void set_direction (uint16_t direction) {
+    void setDirection (uint16_t direction) {
         if (direction == _last_direction) return;
         _last_direction = direction;
         // bitshift to get 0-3 for the Arp direction
@@ -345,11 +419,11 @@ namespace ARP {
                 break;
         }
     }
-    void set_rest (uint16_t rest) {
+    void setRest (uint16_t rest) {
         bool temp = (bool)(rest >> 9);
         if (isRestEnabled != temp) isRestEnabled = temp;
     }
-    void set_bpm (uint16_t bpm) {
-        CLOCK::set_bpm(map(bpm, KNOB_MIN, KNOB_MAX, 30, 350));
+    void setBpm (uint16_t bpm) {
+        CLOCK::setBpm(map(bpm, KNOB_MIN, KNOB_MAX, 30, 350));
     }
 }
