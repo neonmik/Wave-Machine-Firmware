@@ -86,17 +86,17 @@ void set_shift (bool shift) {
   // ----------------------
 
 
-  void init (void) {
+  void Init (void) {
 
     printf("\nWelcome to the Wave...\n\n");
 
-    MIDI::init();
+    MIDI::Init();
 
-    LEDS::init();
-    KEYS::init();
-    ADC::init();
-    CONTROLS::init();
-    PAGINATION::init();
+    LEDS::Init();
+    KEYS::Init();
+    ADC::Init();
+    CONTROLS::Init();
+    PAGINATION::Init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;
@@ -107,18 +107,18 @@ void set_shift (bool shift) {
     poll_index = 0;
   }
 
-  void update (void) { 
+  void Update (void) { 
     switch (_mode) {
       case UI_MODE_NORMAL:
         switch(poll_index) {
           case 0:
-            NOTE_HANDLING::update();
+            NOTE_HANDLING::Update();
             break;
           case 1:
             KEYS::read();
             break;
           case 2:
-            KEYS::update();
+            KEYS::Update();
 
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
                 toggle_arp();
@@ -140,19 +140,19 @@ void set_shift (bool shift) {
             }
             break;
           case 3:
-            ADC::update();
+            ADC::Update();
             break;
           case 4:
-            PAGINATION::update();
+            PAGINATION::Update();
             break;
           case 5:
-            LEDS::update();
+            LEDS::Update();
             break;
           case 6:
-            CONTROLS::update();
+            CONTROLS::Update();
             break;
           case 7:
-            MIDI::update();
+            MIDI::Update();
             break;
           default:
             // do nothing
@@ -198,7 +198,7 @@ void set_shift (bool shift) {
     printf("Welcome to Factory Debug!\n\n");
     sleep_ms(300);
     printf("We will now test the hardware");
-    ADC::update();
+    ADC::Update();
     sleep_ms(300);
 
     printf(".");
@@ -215,19 +215,19 @@ void set_shift (bool shift) {
       printf("Please turn Knob %d to 0%\n", i);
       while (ADC::value(i) != 0) {
         sleep_ms(1);
-        ADC::update();
+        ADC::Update();
       }
       LEDS::KNOB_select(i, 1);
-      LEDS::update();
+      LEDS::Update();
 
       printf("Now turn Knob %d to 100%\n", i);
       
       while (ADC::value(i) != 1023) {
         sleep_ms(1);
-        ADC::update();
+        ADC::Update();
       }
       LEDS::KNOB_select(i, 0);
-      LEDS::update();
+      LEDS::Update();
       printf("Knob %d check is complete!\n", i);
     }
     printf("All Knobs working correctly!\n\n");

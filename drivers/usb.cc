@@ -1,11 +1,11 @@
 #include "usb.h"
 
 namespace USB {
-    void init () {
+    void Init () {
         tusb_init();
     }
 
-    void update () {
+    void Update () {
         tud_task(); // tinyusb device task
     }
     namespace MIDI {

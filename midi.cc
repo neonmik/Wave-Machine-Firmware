@@ -202,9 +202,9 @@ namespace MIDI {
     void sendActiveSense(void) {}
     void sendReset(void) {}
 
-    void init () {
-        USB::init();
-        // UART::init(); // eventual places for MIDI via UART initiation
+    void Init () {
+        USB::Init();
+        // UART::Init(); // eventual places for MIDI via UART initiation
     }
 
     void usb_midi_task (void) {
@@ -222,8 +222,8 @@ namespace MIDI {
         // handleMidiMessage(packet);
     }
 
-    void update () {
-        USB::update();
+    void Update () {
+        USB::Update();
         usb_midi_task();
         // midi_task();
     }

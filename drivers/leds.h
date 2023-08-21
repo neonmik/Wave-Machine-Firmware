@@ -36,7 +36,7 @@ namespace LEDS {
             }
             ~GPIO () { }
 
-            void init(){
+            void Init(){
                 gpio_init(_pin); // set LED pin
                 gpio_set_dir(_pin, GPIO_OUT); // set LED pin to out
             }
@@ -88,25 +88,25 @@ namespace LEDS {
             RGB () { }
             ~RGB () { }
 
-            void init (void) {
-                RGB_LED::init();
+            void Init (void) {
+                RGB_LED::Init();
                 colour(colours[0], colours[1], colours[2]);
                 on();
             }
             void on (void) {
                 _state = true;
                 RGB_LED::on();
-                RGB_LED::update();
+                RGB_LED::Update();
             }
             void colour (uint16_t red, uint16_t green, uint16_t blue) {
                 RGB_LED::set(red, green, blue);
-                RGB_LED::update();
+                RGB_LED::Update();
                 
             }
             void off (void) {
                 _state = false;
                 RGB_LED::off();
-                RGB_LED::update();
+                RGB_LED::Update();
             }
             void toggle (void) {
                 _state = !_state;
@@ -175,16 +175,16 @@ namespace LEDS {
             _state = !_state;
             ShiftReg::toggle_bit(_pin);
         }
-        void update () {
-            ShiftReg::update();
+        void Update () {
+            ShiftReg::Update();
         }
         void flash (int repeats, int delay){
             for (int r = 0; r < repeats; r++) {
                 toggle();
-                update();
+                Update();
                 sleep_ms(delay);
                 toggle();
-                update();
+                Update();
                 sleep_ms(delay);
             }
         }
@@ -209,7 +209,7 @@ namespace LEDS {
 
 
 
-    void init(void);
+    void Init(void);
     void on(void);
     void off(void);
     void KNOBS_off(void);
@@ -217,6 +217,6 @@ namespace LEDS {
     void PAGES_off(void);
     void flash(int repeats, int delay);
     void test(uint8_t delay);
-    void update(void);
+    void Update(void);
 
 }

@@ -4,8 +4,8 @@ namespace CONTROLS {
     CONTROL Control;
     PRESET Preset[MAX_PRESETS];
 
-    void init () {
-        EEPROM::init();
+    void Init () {
+        EEPROM::Init();
 
         _preset = _default_preset;
         load_preset(_preset);
@@ -181,9 +181,9 @@ namespace CONTROLS {
         return _shift;
     }
     
-    void update () {
+    void Update () {
         if (_changed) {
-            Control.update();
+            Control.Update();
             
             _changed = false;
         }

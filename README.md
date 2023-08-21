@@ -9,12 +9,8 @@ Current nightly firmware for Wave Machine Hardware.
 
 
 - Updates and Bugfixes:
-
-    - Bugfix: Update vibrato to work right with pitch. Also plan for having a max setting.
-
     - Arp:
-        - Move back to HW core, and try and link beat clock...
-        - Streamline note adding/removal so that organistaion only happens once, and you only use for loops as far as needed (try and remove MAX_ARP's in for loops).
+        - Feature: Add Sustain pedal code for arp - will require pretty much a rewrite for the addition and removal of notes.
         - Feature: quantize arp? so it always starts right, especially between changing divisions
 
     
@@ -32,7 +28,11 @@ Current nightly firmware for Wave Machine Hardware.
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Oscillator:
-        - Bugfix: Finesse soft start code - currently takes too long to get going and still isnt perfect.
+        - Improvement: Finesse soft start code - currently takes too long to get going and still isnt perfect.
+    - Mod:
+        - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) 
+        - Feature: Once LFO is balanced, add a MAX_RANGE setting for vibrato. 
+        - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths.
     
     - USB MIDI/ MIDI:
 
@@ -45,12 +45,12 @@ Current nightly firmware for Wave Machine Hardware.
         - Test UART-MIDI
         - Test UART
 
-        - Change MIDI IN CC calls - currently use CONTROLS but gets stuck if page is active. Find a way to interface MIDI messages and hardware messages and find a way to assign different locks.
+       
         
 
     - Clock: 
         - Feature: Add MIDI Clock out - Will be achieved by dividing internal clock to midi message.
-        - Bugfix: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
+        - Bug: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
 
     - Prove hardware functions:
@@ -76,7 +76,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Add a ramp down feature when switching between destinations - could be difficult. 
     
     - Improve Filter code: 
-        - Check ADSR setup in Filter - Seems to not update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
+        - Check ADSR setup in Filter - Seems to not Update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
         - Improve modulation inputs.
         
 
@@ -87,7 +87,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Re-add chord arp - will work great with patterns too.
         - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
         - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
-        - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
+        - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority Update loop.
 
     Improve Note Handling:
         - Add actual Mono Mode - selectable at start up.
@@ -128,7 +128,7 @@ Features/Bugfixes:
 
     + Proven hardware functions (Pots, LEDs, Keys, Audio)
         + USB-MIDI
-            + Improved the handling of USB-MIDI notes and there update calls.
+            + Improved the handling of USB-MIDI notes and there Update calls.
             + Finally added and tested
         + EEPROM
             + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
@@ -166,7 +166,7 @@ Features/Bugfixes:
         + Feature: Added a hardware control for Arp Gap. Basically gives you a choice between notes that lead straight into each other adn notes that have a gap between the same duration as the note duration.
         + Bugfix: Arp Sync now working properly. A Bug was highlighted when a bug in the MIDI handling code was fixed, the speed didnt align with the MIDI clock speed.
         + Bugfix: fixed bug in Arp noter removal logic that cause strange behaviour and a comile warning.
-        + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
+        + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the Update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
         + When the range is set to anything above 0 only the first octave of the arp has proper release - think it's to do with the note_clear function in the oscillator (definitely was)
         + fix control for preset/pagination - currently persists between presets no matter of the state of the new preset.
         + currently wont play only one note...
@@ -207,7 +207,7 @@ Features/Bugfixes:
         + Improved algorithm:-
             + Mad inputs tidier/more unified - created a struct to hold all of the config for each destination
             + this isn't going to work, it's easier to make each input accept signed 16bit number (direct from the oscillator) _Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)_
-        + Mod is now opperated by the Synth code -> Move update closer to synth/dac code:- could probably do with being intergrated like ADSR 
+        + Mod is now opperated by the Synth code -> Move Update closer to synth/dac code:- could probably do with being intergrated like ADSR 
         + Fix control for preset/pagination
         + Make outside variable updates go through functions
         + Make every function take 0-1023 for consistancy from the hardware layer
@@ -220,6 +220,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + USB MIDI/MIDI:
+        + Bugfix: MIDI IN CC calls no longer get stuck due to controls being live
         + Added UART code and associated MIDI call functions.
         + Bugfix: MIDI messages were being repeatedly called, turned out to be and issue with the way that the USB-MIDI queue was being checked for messages. Only found if during testing for Sustain Pedal Feature.
         + Bugfix: MIDI in note calls would fire if keybaord hadnt been pressed. changed the way they're called.

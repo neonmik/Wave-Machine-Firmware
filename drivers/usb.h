@@ -9,8 +9,8 @@ namespace USB {
 
     constexpr   uint8_t     USB_MIDI_CABLE_NUMBER =         0;
 
-    void init (void);
-    void update (void);
+    void Init (void);
+    void Update (void);
     namespace MIDI {
         uint32_t available (void);
         void get (uint8_t *packet);

@@ -48,8 +48,8 @@ namespace ShiftReg {
         }
     }
 
-    void init();
-    void update (void);
+    void Init();
+    void Update (void);
     void set (Pins pins);
     void on (void);
     void on_bit (Pins pin);

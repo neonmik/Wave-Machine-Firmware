@@ -61,8 +61,8 @@ namespace UI {
     //        HARDWARE
     // ----------------------
 
-    void init (void);
-    void update (void);
+    void Init (void);
+    void Update (void);
     void debug (void);
     void calibrate (void);
 }

@@ -33,7 +33,7 @@ void ADSREnvelope::stopped() {
     _adsr = 0;
 }
 
-void ADSREnvelope::update() {
+void ADSREnvelope::Update() {
     if(_phase == Phase::OFF) {
         return;
     } 

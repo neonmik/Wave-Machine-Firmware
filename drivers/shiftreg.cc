@@ -3,7 +3,7 @@
 #include "sn74595.pio.h"
 
 namespace ShiftReg {
-    void init() {
+    void Init() {
         gpio_set_drive_strength(SRPins::SR_CLK, GPIO_DRIVE_STRENGTH_2MA);
         gpio_set_drive_strength(SRPins::SR_DATA, GPIO_DRIVE_STRENGTH_2MA);
         gpio_set_drive_strength(SRPins::SR_LATCH, GPIO_DRIVE_STRENGTH_2MA);
@@ -14,7 +14,7 @@ namespace ShiftReg {
 
         sn74595::shiftreg_init();
     }
-    void update() {
+    void Update() {
         
         for (int i = 0; i < 8; i++) {
             sn74595::setOutput(0, i, (_buffer[0] & (1 << i)));
@@ -55,6 +55,6 @@ namespace ShiftReg {
     }
     void clear () {
         off();
-        update();
+        Update();
     }
 }

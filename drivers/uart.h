@@ -8,8 +8,8 @@
 #define UART_RX_PIN 5
 
 namespace UART {
-    void init (void);
-    void update (void);
+    void Init (void);
+    void Update (void);
     namespace MIDI {
         bool available (void);
         void get (uint8_t *packet);

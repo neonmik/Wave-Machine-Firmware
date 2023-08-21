@@ -56,7 +56,7 @@ namespace MOD {
             uint16_t    _wave;
             
             OutputDestinations _destination[4]{
-                // pointer of what to update, type of output, offset for output table
+                // pointer of what to Update, type of output, offset for output table
                 {&SYNTH::modulate_vibrato,  OutputType::SIGNED,     Dither::FULL},
                 {&SYNTH::modulate_tremelo,  OutputType::UNSIGNED,   Dither::LOW},
                 {&SYNTH::modulate_vector,   OutputType::UNSIGNED,   Dither::LOW},
@@ -93,7 +93,7 @@ namespace MOD {
             Modulation (uint32_t sample_rate) : _sample_rate(sample_rate) { }
             ~Modulation( ) { }
 
-            // control and update functions
+            // control and Update functions
             void set_state (bool state) {
                 if (_state != state) {
                     _state = state;
@@ -144,7 +144,7 @@ namespace MOD {
                 }
             }
             
-            void update () {
+            void Update () {
                 if (_state) {
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
                     _index = (_phase_accumulator >> LFO_SPEED::SLOW);    // Calculates the 8 bit index value for the wavetable. the bit shift creates diffeing results... see LFO_SPEED table
@@ -192,7 +192,7 @@ namespace MOD {
 
     extern Modulation LFO;
 
-    void init (void);
+    void Init (void);
 
     void set_state (bool input);
 
@@ -201,7 +201,7 @@ namespace MOD {
     void set_rate (uint16_t input);
     void set_shape (uint16_t input);
 
-    void update (void);
+    void Update (void);
     void clear (void);
 }
 

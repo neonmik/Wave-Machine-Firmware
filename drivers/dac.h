@@ -124,7 +124,7 @@ namespace DAC {
         
     }
 
-    void init (synth_function audio_process);
+    void Init (synth_function audio_process);
     void clear_state (void);
     bool get_state (void);
 }

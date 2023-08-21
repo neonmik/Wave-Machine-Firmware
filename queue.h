@@ -17,7 +17,7 @@ namespace QUEUE {
     extern queue_t trigger_queue;
     extern queue_t release_queue;
         
-    void init (void);
+    void Init (void);
 
     void trigger_send (uint8_t slot, uint8_t note, bool gate);
     void trigger_receive (uint8_t &slot, uint8_t &note, bool &gate);

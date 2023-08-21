@@ -4,7 +4,7 @@
 
 namespace NOTE_HANDLING {
 
-  voice_data_t VOICES[POLYPHONY];
+  VoiceData VOICES[POLYPHONY];
 
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
@@ -71,14 +71,12 @@ namespace NOTE_HANDLING {
     }    
   }
   void filter_off(void) {
-    // FOR MONO MODE
     if (_filter_active && !voices_active()) {
       QUEUE::trigger_send(FILTER_VOICE, 0, false);
       _filter_active = false;
     }
   }
   void filter_refresh (void) {
-    // a little function for refreshing the filter on more notes with arp
     _filter_active = false;
   }
 
@@ -207,7 +205,7 @@ namespace NOTE_HANDLING {
     }
   }
 
-  void update() {
+  void Update() {
 
     // Check the note-finished messages from Synth Core.
     check_release();
@@ -224,20 +222,20 @@ namespace NOTE_HANDLING {
     }
 
     // Update Arp notes if active.
-    ARP::update();
+    ARP::Update();
 
 
   }
   void note_on (uint8_t note, uint8_t velocity) {
     if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
     else {
-      ARP::add_note(note);
+      ARP::addNote(note);
     }
   }
   void note_off(uint8_t note, uint8_t velocity) {
     if (!ARP::get_state()) release(note, velocity); // synth voice allocation
     else {
-      ARP::remove_note(note);
+      ARP::removeNote(note);
     }
   }
   void sustain_pedal(uint16_t status) {
@@ -277,5 +275,13 @@ namespace NOTE_HANDLING {
   }
   bool        voices_active (void) {
     return _voices_active;
+  }
+
+  void setMode (bool mode) {
+    if (mode) {
+      _mode = Mode::PARA;
+    } else {
+      _mode = Mode::MONO;
+    }
   }
 }

@@ -137,8 +137,8 @@ namespace MIDI {
     };
 
     
-    void init(void);
-    void update(void);
+    void Init(void);
+    void Update(void);
     void midi_player(void);
 
     void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2);

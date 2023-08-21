@@ -2,7 +2,7 @@
 
 namespace UART {
 
-    void init (void) {
+    void Init (void) {
 
         // unsigned char midichar = 0; // midi character rx'd and/or to be tx'd
 
@@ -19,7 +19,7 @@ namespace UART {
         // disable cr/lf conversion on Tx
         uart_set_translate_crlf(UART_ID, false);
     }
-    void update (void) {
+    void Update (void) {
 
     }
     namespace MIDI {

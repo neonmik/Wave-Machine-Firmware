@@ -54,9 +54,9 @@ namespace SYNTH {
     channels[voice].note_off();
   }
   
-  void init () {
-    MOD::init();
-    FILTER::init();
+  void Init () {
+    MOD::Init();
+    FILTER::Init();
   }
 
   
@@ -94,7 +94,7 @@ namespace SYNTH {
       int32_t sample = 0;  // used to combine channel output
       int16_t clipped_sample = 0;
       
-      MOD::update();
+      MOD::Update();
 
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
@@ -113,7 +113,7 @@ namespace SYNTH {
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
           channel.waveform_offset += _vibrato;
 
-          channel.ADSR.update();
+          channel.ADSR.Update();
           if (channel.is_active() && channel.ADSR.isStopped()) {
             channel.note_stopped();
             QUEUE::release_send(c);
@@ -287,10 +287,10 @@ namespace SYNTH {
   }
 
   void modulate_vibrato (uint16_t vibrato) {
-    volatile int16_t signedInput = vibrato;
-    signedInput -= 0x7fff;
-    // _vibrato = static_cast<int8_t>(signedInput >> 8);
-    _vibrato = signedInput >> 8;
+    volatile int32_t signedInput = vibrato;
+    signedInput -= 0x7fff;  
+    _vibrato = static_cast<int8_t>(signedInput >> 8);
+    // _vibrato = signedInput >> 8;
   }
   void modulate_tremelo (uint16_t tremelo) {
     _tremelo = tremelo;

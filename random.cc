@@ -1,7 +1,7 @@
 #include "random.h"
 
 namespace RANDOM {
-    void update(uint16_t seed) {
+    void Update(uint16_t seed) {
         // Update the seed with the input (called from ADC)
         _seed += seed;
         // Perform some simple bitwise operations on the seed to generate a pseudo-random number

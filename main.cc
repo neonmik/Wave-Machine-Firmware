@@ -25,11 +25,11 @@ uint8_t voices_active;
 
 void hw_core() {
   
-  UI::init();
+  UI::Init();
 
   while (true) {
 
-    UI::update();
+    UI::Update();
 
   }
 }
@@ -37,9 +37,9 @@ void hw_core() {
 
 void synth_core() {
 
-  SYNTH::init();
-  DAC::init(SYNTH::get_audio_frame);
-  CLOCK::init();
+  SYNTH::Init();
+  DAC::Init(SYNTH::get_audio_frame);
+  CLOCK::Init();
   
   while (true) {
      if (DAC::get_state()) {
@@ -78,7 +78,7 @@ void synth_core() {
 
   stdio_init_all(); // has to be here to allow both cores to use the debug serial UART. 
 
-  QUEUE::init(); // has to be here to allow both cores access to QUEUE
+  QUEUE::Init(); // has to be here to allow both cores access to QUEUE
   
   multicore_launch_core1(hw_core); // launches the hardware core
 

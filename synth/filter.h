@@ -80,7 +80,7 @@ namespace FILTER {
 
     extern ADSREnvelope ADSR;
 
-    void init();
+    void Init();
     void set_cutoff(uint16_t frequency);
     void set_resonance(uint16_t resonance);
     void set_punch(uint16_t punch);

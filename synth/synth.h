@@ -168,7 +168,7 @@ namespace SYNTH {
   
   uint16_t get_audio_frame();
   bool is_audio_playing();
-  void init ();
+  void Init ();
 
   void set_waveshape (uint16_t shape);
   void set_wavevector (uint16_t vector);

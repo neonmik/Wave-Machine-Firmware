@@ -4,7 +4,7 @@ namespace QUEUE {
     queue_t trigger_queue;
     queue_t release_queue;
     
-    void init() {
+    void Init() {
         queue_init(&trigger_queue, sizeof(trigger_msg_t), 16);
         queue_init(&release_queue, sizeof(uint8_t), 16);
     }

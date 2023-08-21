@@ -16,10 +16,10 @@ namespace PAGINATION {
         last_value[value] = -1; //-1 so if the page/preset has changed, it's never the same value
       }
     }
-    void init() {
-      update();
+    void Init() {
+      Update();
     }
-    void update(){
+    void Update(){
       uint8_t temp_page;
 
       if(Buttons::PAGE.get(Buttons::State::SHORT)){

@@ -2,7 +2,7 @@
 
 namespace CLOCK {
 
-    void init () {
+    void Init () {
         _sample_rate = SAMPLE_RATE;
         _bpm = DEFAULT_BPM;
         calculate_division();
@@ -13,14 +13,14 @@ namespace CLOCK {
         calculate_division();
     } 
 
-    void set_bpm (uint16_t bpm) {
+    void setBpm (uint16_t bpm) {
         _bpm = bpm;
         calculate_division();
     }
     uint8_t get_bpm () {
         return _bpm;
     }
-    void set_division (uint16_t division) {
+    void setDivision (uint16_t division) {
         // set the division of the bpm clock...
         // currently /8 to get a 16th note, but rename the _samples_per_16th to _samples_per_division
         uint8_t temp = map(division, 0, 1023, 0, 10);
@@ -92,7 +92,7 @@ namespace CLOCK {
     void check_sample_clock (void) {
         
     }
-    void update (void) {
+    void Update (void) {
         // check_sample_clock();
         check_for_midi_clock();
     }

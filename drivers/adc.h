@@ -96,8 +96,8 @@ namespace ADC {
         }
     }
     
-    void init();
-    void update();
+    void Init();
+    void Update();
     uint16_t value(int knob);
     uint8_t noise();
 }

@@ -8,7 +8,7 @@
 
 namespace DAC {
 
-    void init (synth_function audio_process) {
+    void Init (synth_function audio_process) {
         process = audio_process;
 
         _clock_speed = clock_get_hz(clk_sys);

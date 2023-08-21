@@ -4,7 +4,7 @@ namespace FILTER {
 
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
 
-    void init() {
+    void Init() {
         _lowpass = 0;
         _bandpass = 0;
         _cutoff = 0;
@@ -85,14 +85,7 @@ namespace FILTER {
 
     void process(int32_t &sample) {
         if (_mode != Type::Off) {
-            // ADSR.update();
-            // for effeciency improvements, this allows the Envelope to run at a reduced sample rate of 6kHz.
-            // _index++;
-            // _index &= 0x7;
-            // if (_index == 0) ADSR.update();
-
-            ADSR.update();
-            // if (ADSR.isStopped()) QUEUE::release_send(POLYPHONY+1); // not really needed as it stands...
+            ADSR.Update();
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
             if (_dirty) {

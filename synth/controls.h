@@ -83,7 +83,7 @@ namespace CONTROLS {
                     uint16_t get(uint8_t control) {
                         return _input[control];
                     }
-                    void update() {
+                    void Update() {
                         // if (_active && _changed) {
                         if (_active) {
                             for (int i = 0; i < 4; i++) {
@@ -113,8 +113,8 @@ namespace CONTROLS {
             Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
-            Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-                Page    sARP    {&ARP::set_rest,           &ARP::set_bpm,              nullptr,                    nullptr,                         nullptr};
+            Page        ARP     {&ARP::setHold,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::set_state};
+                Page    sARP    {&ARP::setRest,           &ARP::setBpm,              nullptr,                    nullptr,                         nullptr};
 
             //&ARP::set_gap
             
@@ -134,7 +134,7 @@ namespace CONTROLS {
 
             
 
-            void init (void) { }
+            void Init (void) { }
 
             void set (uint8_t page, uint8_t control, uint16_t input) {
             switch (page) {
@@ -207,15 +207,15 @@ namespace CONTROLS {
             bool get_arp (void) {
                 return ARP.get_state();;
             }
-            void update (void) {
-                MAIN.update();
-                ADSR.update();
-                MOD1.update();
-                ARP.update();
-                FILT.update();
-                fENV.update();
-                SHFT.update();
-                sARP.update();
+            void Update (void) {
+                MAIN.Update();
+                ADSR.Update();
+                MOD1.Update();
+                ARP.Update();
+                FILT.Update();
+                fENV.Update();
+                SHFT.Update();
+                sARP.Update();
             }
     };
     
@@ -223,7 +223,7 @@ namespace CONTROLS {
     extern CONTROL Control;
     extern PRESET Preset[MAX_PRESETS];
     
-    void init (void);
+    void Init (void);
     
     void set_preset (uint8_t preset);
     uint8_t get_preset (void);
@@ -250,5 +250,5 @@ namespace CONTROLS {
     bool get_shift (void);
 
 
-    void update (void);
+    void Update (void);
 };
