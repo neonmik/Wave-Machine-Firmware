@@ -107,7 +107,7 @@ namespace SYNTH {
         if(channel._active) {
 
           // increment the waveform position counter.
-          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 9) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
