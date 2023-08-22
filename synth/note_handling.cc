@@ -8,16 +8,13 @@ namespace NOTE_HANDLING {
 
   // Synth Note Control
   void voice_on(int slot, int note, int velocity) {
-    if (note) {
-      VOICES[slot].on(note);
+    if (!note) return;
 
-      filter_on();
+    VOICES[slot].on(note, velocity);
 
-      MIDI::sendNoteOn(VOICES[slot].note, velocity);
-      QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
-    } else {
-      return;
-    }
+    filter_on();
+
+    QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
   }
   void voice_off(int slot, int note, int velocity) {
 
@@ -25,11 +22,11 @@ namespace NOTE_HANDLING {
 
     filter_off();
 
-    MIDI::sendNoteOff(VOICES[slot].note, velocity);
     QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
   }
 
   uint8_t voices_get (uint8_t slot) {
+    // return the note stored in the slot if currently playing
     if (VOICES[slot].gate) {
       return VOICES[slot].note;
     } else {
@@ -37,12 +34,27 @@ namespace NOTE_HANDLING {
     }
   }
 
+  void voice_stop (uint8_t note){
+    // stop the input note, whatever voice(s) it's on.
+    for (int i = 0; i < POLYPHONY; i++) {
+      if (VOICES[i].note == note) {
+        voice_off(i, note, 0);
+        // no return/break here incase its on more than once
+      }
+    }
+  }
+
   void voices_stop() {
-    // clears the notes from the synth, but not the array storing the info
+    // stop all of notes from the synth, but not the array storing the info
     for (int i = 0; i < POLYPHONY; i++) {
       QUEUE::trigger_send(i, 0, false);
     }
     filter_off();
+  }
+
+  void voices_stop_all (void) {
+    voices_stop();
+    voices_clr();
   }
 
   void voices_panic() {
@@ -83,6 +95,8 @@ namespace NOTE_HANDLING {
   // Priority Control
   void priority(int note, int velocity) {
     volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
+
+    MIDI::sendNoteOn(note, velocity);
 
     for (int i = 0; i < POLYPHONY; i++)  {
       // voice is being used, but by this note, so fire again
@@ -167,6 +181,9 @@ namespace NOTE_HANDLING {
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
         voice = priority_voice;
+        // if using a priority voice, make sure the last note has sent a midi note off before using the voice?
+        // for now do this, but could maybe do with a better implementation - mainly when using as a controler keyboard.
+        MIDI::sendNoteOff(VOICES[voice].note, velocity);
       }
     }
     if (_sustain) {
@@ -182,6 +199,7 @@ namespace NOTE_HANDLING {
       for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
         if (VOICES[voice].note == note)  {
           if (VOICES[voice].gate) voices_dec();
+          MIDI::sendNoteOff(note, velocity);
           voice_off(voice, note, velocity);
         }
       }
@@ -213,8 +231,9 @@ namespace NOTE_HANDLING {
     if (_sustain_just_released) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++) {
         if (VOICES[voice].sustained) {
-          voices_dec(); // clears the filter control
-          voice_off(voice, 0, 0); // clears the voice and sends note off midi messages
+          voices_dec(); // reduces the filter control
+          voice_off(voice, VOICES[voice].note, 0); // clears the voice
+          MIDI::sendNoteOff(VOICES[voice].note, 0); // sends midi note off
           VOICES[voice].sustained = false;
         }
       }
@@ -272,6 +291,7 @@ namespace NOTE_HANDLING {
   }
   void        voices_set (uint8_t voices) {
     _voices_active = voices;
+    filter_on();
   }
   bool        voices_active (void) {
     return _voices_active;

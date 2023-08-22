@@ -20,11 +20,9 @@ namespace CLOCK {
     uint8_t get_bpm () {
         return _bpm;
     }
-    void setDivision (uint16_t division) {
-        // set the division of the bpm clock...
-        // currently /8 to get a 16th note, but rename the _samples_per_16th to _samples_per_division
-        uint8_t temp = map(division, 0, 1023, 0, 10);
-        switch (temp) {
+    void setDivision (uint8_t division) {
+        // set the division of the bpm/midi clock
+        switch (division) {
             case 0: // Whole Note (1/1)
                 _division = 1;
                 midi_division = 96;
@@ -65,15 +63,14 @@ namespace CLOCK {
                 _division = 32;
                 midi_division = 3;
                 break;
-
-            // Note used yet... need to figure 1/64ths for 24ppqn
             case 10: // 32nd Note Triplet (1/48)
                 _division = 48;
                 midi_division = 2;
                 break;
+            // not used yet... 
             case 11: // 1/64 - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
                 _division = 64;
-                // midi_division = ?;
+                midi_division = 1.5;
                 break;
             default:
                 break;

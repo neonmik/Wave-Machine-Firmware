@@ -35,7 +35,7 @@ constexpr   uint8_t     MAX_ARP         =       POLYPHONY;
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 
-constexpr   uint8_t     DEFAULT_KEY     =       48;             // The Default first key on the keyboard (C3 == 48, C4 == 60, etc). 
+constexpr   uint8_t     DEFAULT_KEY     =       60;             // The Default first key on the keyboard (C3 == 60, C4 == 72, etc). 
                                                                 // 48 sets C3 as the lowest note one the keyboard, and the middle C on the keyboard as C4
 constexpr   uint8_t     DEFAULT_VEL     =       127;            
 

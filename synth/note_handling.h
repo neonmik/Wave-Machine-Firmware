@@ -67,13 +67,15 @@ namespace NOTE_HANDLING {
 
         struct VoiceData {
             uint8_t     note; // holds MIDI note number
+            uint8_t     velocity;
             bool        gate; // tracks whether note is being physcially played
             bool        active; // tracks whether the note is still sounding out
             uint32_t    activation_time; // time when the note was activated
             bool        sustained;
 
-            void on (uint8_t _note) {
+            void on (uint8_t _note, uint8_t _velocity) {
                 note = _note;
+                velocity = _velocity;
                 gate = true;
                 active = true;
                 activation_time = to_ms_since_boot(get_absolute_time());
@@ -84,6 +86,7 @@ namespace NOTE_HANDLING {
             }
             void clear (void) {
                 note = 0;
+                velocity = 0;
                 active = false;
                 activation_time = 0;
                 sustained = false;
@@ -162,8 +165,10 @@ namespace NOTE_HANDLING {
     void voice_on(int slot, int note, int velocity);
     void voice_off(int slot, int note, int velocity);
     uint8_t voices_get (uint8_t slot);
-    void voices_stop(void);
-    void voices_panic(void);
+    void voices_stop (void);
+    void voice_stop (uint8_t note);
+    void voices_stop_all (void);
+    void voices_panic (void);
 
     // filter env
     void filter_on (void);

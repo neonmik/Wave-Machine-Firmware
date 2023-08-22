@@ -5,20 +5,17 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes:
     
-    - Uncofirmed Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can really replicate yet, just noticed it doing it when Joe was playing...
+    - Uncofirmed Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can't really replicate yet, just noticed it doing it when Joe was playing...
 
 
 - Updates and Bugfixes:
     - Arp:
-        - Feature: Add Sustain pedal code for arp - will require pretty much a rewrite for the addition and removal of notes.
-        - Feature: quantize arp? so it always starts right, especially between changing divisions
-
+        - Bug: Hold knob looses pagination light (stil has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
+        - Feature: Latch of chords - add a timer within sustain that trakcs us/ms/tick, it removes the last lot and adds the new lot.
+        - Feature: quantize arp? so it always starts right, especially between changing divisions - this could be useful for turning the arp on and off too.
     
     - Feature: Check Sustain pedal functions. 
         - Bug: Normal Keys - When pressing notes *JUST* as you release the sustain, notes get released too. Still needs finessing
-        - Bug: 
-
-    
 
     - Controls:
         - Change the layout of controls:
@@ -35,7 +32,6 @@ Current nightly firmware for Wave Machine Hardware.
         - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths.
     
     - USB MIDI/ MIDI:
-
         - Tidy up MIDI processing code, could be more efficient.
         - Map more CC values and check they're working. 
         
@@ -140,6 +136,7 @@ Features/Bugfixes:
         + DAC
 
     + Oscillator:
+        + 
         + Removed all 64bit recasts
         + Added soft clip controls
         + Slighty improved tuning - There was anoticable drift in tuning between octaves/pitch shifts... I've imporved note code to be Q16 to improve accuracy, but still issues.
@@ -161,6 +158,8 @@ Features/Bugfixes:
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
 
     + Arp:
+        + Bugfix: State change algorithm rewritten to allow better handling of voice and MIDI notes across state changes. 
+        + Feature: Added Sustain pedal code for arp.
         + Feature: Added hardware control for internal BPM speed.
         + Change: Altered how the voice allocation is handled in Arp. Removes the need for note priority, and should allow for better control of Hold/Sustain.
         + Feature: Added a hardware control for Arp Gap. Basically gives you a choice between notes that lead straight into each other adn notes that have a gap between the same duration as the note duration.
@@ -220,6 +219,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + USB MIDI/MIDI:
+        + Bugfix: MIDI note on/off calls rewritten - the way in which MIDI not on/off calls were coming after note priority/arppegiator was causing a bug where no note off message would be sent if more than 8 voices were played. The update stops this from happening and also allows the sustain funtion to work properly.
         + Bugfix: MIDI IN CC calls no longer get stuck due to controls being live
         + Added UART code and associated MIDI call functions.
         + Bugfix: MIDI messages were being repeatedly called, turned out to be and issue with the way that the USB-MIDI queue was being checked for messages. Only found if during testing for Sustain Pedal Feature.

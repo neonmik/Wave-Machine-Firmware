@@ -10,6 +10,7 @@
 #include "note_handling.h"
 #include "clock.h"
 
+
 namespace ARP {
 
 
@@ -115,13 +116,15 @@ namespace ARP {
     
     void addNote (uint8_t note);
     void removeNote (uint8_t note);
-    void clearNote (uint8_t slot);
-    void clearSustainedNotes (void);
+
     void transferNotes (void);
-    void clear_all_notes (void);
-    void pass_notes(void);
-    void grab_notes(void);
-    void stop_all (void);
+
+    void clearSustainedNotes (void);
+    void clearAllNotes (void);
+
+    void passNotes(void);
+    void grabNotes(void);
+    void stopAllVoices (void);
     
     void set_state (bool state);
     bool get_state (void);
