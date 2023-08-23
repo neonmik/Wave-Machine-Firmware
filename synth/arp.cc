@@ -165,7 +165,7 @@ namespace ARP {
             if (inputBuffer[i].note == note) {
                 // resets the note
                 inputBuffer[i].add(note);
-                // printInputBuffer();
+                printNoteBuffer(inputBuffer);
                 inputNotesUpdated = true;
                 return;
             }
@@ -303,7 +303,7 @@ namespace ARP {
 
             inputNotesUpdated = false;
 
-            printNoteBuffer(arpVoices);
+            // printNoteBuffer(arpVoices);
         }
     }
     // Clear sustained notes from the input buffer and then update the the arpeggiator buffer

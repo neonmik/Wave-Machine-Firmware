@@ -11,8 +11,7 @@ Current nightly firmware for Wave Machine Hardware.
 - Updates and Bugfixes:
     - Arp:
         - Bug: Hold knob looses pagination light (stil has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
-        - Feature: Latch of chords - add a timer within sustain that trakcs us/ms/tick, it removes the last lot and adds the new lot.
-        - Feature: quantize arp? so it always starts right, especially between changing divisions - this could be useful for turning the arp on and off too.
+        - Feature: Add arp octave direction function for later use.
     
     - Feature: Check Sustain pedal functions. 
         - Bug: Normal Keys - When pressing notes *JUST* as you release the sustain, notes get released too. Still needs finessing
@@ -73,17 +72,19 @@ Current nightly firmware for Wave Machine Hardware.
     
     - Improve Filter code: 
         - Check ADSR setup in Filter - Seems to not Update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
-        - Improve modulation inputs.
+        - Improve modulation inputs - Cutoff mod could be applied with a switch [if (Filter::HighCut) 65535 - mod;]
+
         
 
     - Improve Arp code:
-        - Add a setting for Mono/Poly Filter
-        - Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
+        - Feature: Add a setting for Mono/Poly Filter
+        - Feature: Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
         - Feature: Add a swing feature.
-        - Re-add chord arp - will work great with patterns too.
-        - Add proper Latch feature that can work on a time based chord played type thing - I.e. you chould play two notes and then a few mills later play 5 notes and the original two notes would clear and it would hold the 5 new notes, and so on. might need some sort of time out feature.
-        - Keep Hold function (for sustain pedal CC64) but make sure it can clear any notes that arent playing when released
-        - With Hold/Latch engaged (only):- If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority Update loop.
+        - Feature: Add back Chord Arp - will work great with patterns too.
+        - Feature: Add proper Latch/Hold - add a timer within sustain that trakcs us/ms/tick, it removes the last lot and adds the new lot. Probably like the button timer.
+        - Feature: Add a function to quantize the Arp. could be that notes don't get updated until the counter resets, or just the next time the beat has changed.
+
+        - Bug: To do with Hold diverting add notes to only refresh - With Hold/Latch engaged (only): If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority Update loop.
 
     Improve Note Handling:
         - Add actual Mono Mode - selectable at start up.
@@ -136,7 +137,7 @@ Features/Bugfixes:
         + DAC
 
     + Oscillator:
-        + 
+        + Bugfix: Frequency/MIDI note alignment - Internal oscillator engine was out of tune with MIDI defined pitches. When Pitch control is central and Octave at 0, the first note on the keyboard is MIDI note 60 (C3/130Hz).
         + Removed all 64bit recasts
         + Added soft clip controls
         + Slighty improved tuning - There was anoticable drift in tuning between octaves/pitch shifts... I've imporved note code to be Q16 to improve accuracy, but still issues.
