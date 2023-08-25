@@ -125,9 +125,9 @@ namespace LEDS {
     }
     
     void Update() {
-        // ARP.update();
+        ARP.update();
         PRESET.update();
-        // PAGE_1.Update();
+        PAGE_1.Update();
         ShiftReg::Update();
     }
 }

@@ -119,25 +119,30 @@ void set_shift (bool shift) {
             break;
           case 2:
             KEYS::Update();
+            break;
+          case 3:
+            // this needs tidying.
 
-
-            set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
-
+            // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
                 // printf("Save!\n");
             }
-            // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-            //     LEDS::ARP.flash(4,50);
+            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
+                LEDS::ARP.flash(4,50);
 
-            //     // printf("Arp!\n");
-            // }
-            // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-            //     LEDS::PAGE_1.flash_set(4,50);
+                // printf("Arp!\n");
+            }
+            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
+                LEDS::PAGE_1.flash_set(4,50);
 
-            //     // printf("LFO!\n");
-            // }
+                // printf("LFO!\n");
+            }
+
+            
+            set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
+            
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
                 toggle_arp();
             }
@@ -146,19 +151,19 @@ void set_shift (bool shift) {
                 toggle_lfo();
             }
             break;
-          case 3:
+          case 4:
             ADC::Update();
             break;
-          case 4:
+          case 5:
             PAGINATION::Update();
             break;
-          case 5:
+          case 6:
             LEDS::Update();
             break;
-          case 6:
+          case 7:
             CONTROLS::Update();
             break;
-          case 7:
+          case 8:
             MIDI::Update();
             break;
           default:
@@ -167,7 +172,7 @@ void set_shift (bool shift) {
         }
 
         ++poll_index;
-        if (poll_index > 7) poll_index = 0;
+        if (poll_index > 8) poll_index = 0;
 
         break;
 
