@@ -40,23 +40,20 @@ namespace ShiftReg {
         uint8_t     _buffer[8];
         uint8_t     time            = 0;
         uint16_t    resolution      = 8;
-        bool        _send;
+        bool        needsSending;
 
         void tick (void) {
             ++time;
-            if (time == resolution) time = 0; 
+            if (time == resolution) {
+                time = 0;
+                needsSending = true;
+            }
         }
     }
 
     void Init();
     void Update (void);
-    void set (Pins pins);
-    void on (void);
-    void on_bit (Pins pin);
-    void toggle (void);
-    void toggle_bit (Pins pin);
-    void off (void);
-    void off_bit (Pins pin);
+    void set_bit(Pins pin, bool value);
     void clear (void);
 
 }

@@ -31,21 +31,24 @@ namespace LEDS {
         LFO.on();
         ARP.on();
         PRESET.on();
-        ShiftReg::on_bit(Pins::ALL);
+        _SR_state = true;
+        ShiftReg::set_bit(Pins::ALL, _SR_state);
     }
     void off(){
         PICO.off();
         LFO.off();
         ARP.off();
         PRESET.off();
-        ShiftReg::off_bit(Pins::ALL);
+        _SR_state = false;
+        ShiftReg::set_bit(Pins::ALL, _SR_state);
     }
     void toggle() {
         PICO.toggle();
         LFO.toggle();
         ARP.toggle();
         PRESET.toggle();
-        ShiftReg::toggle_bit(Pins::ALL);
+        _SR_state != _SR_state;
+        ShiftReg::set_bit(Pins::ALL, _SR_state);
     }
     
     void KNOBS_off(void) {
@@ -122,6 +125,9 @@ namespace LEDS {
     }
     
     void Update() {
+        // ARP.update();
+        PRESET.update();
+        // PAGE_1.Update();
         ShiftReg::Update();
     }
 }

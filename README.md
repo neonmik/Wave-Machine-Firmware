@@ -21,6 +21,7 @@ Current nightly firmware for Wave Machine Hardware.
             - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
             - Holding Preset should save
             - Shift should be holding Page?
+            - Envelope should be pressing 
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Oscillator:

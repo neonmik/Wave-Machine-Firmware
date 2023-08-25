@@ -120,23 +120,30 @@ void set_shift (bool shift) {
           case 2:
             KEYS::Update();
 
-            if (Buttons::ARP.get(Buttons::State::SHORT)) {
-                toggle_arp();
-            }
-
-            if (Buttons::LFO.get(Buttons::State::SHORT)) {
-                toggle_lfo();
-            }
 
             set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
 
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
+                // printf("Save!\n");
             }
-            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-                // CONTROLS::toggle_hold();
-                // LEDS::ARP.flash(2,50);
+            // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
+            //     LEDS::ARP.flash(4,50);
+
+            //     // printf("Arp!\n");
+            // }
+            // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
+            //     LEDS::PAGE_1.flash_set(4,50);
+
+            //     // printf("LFO!\n");
+            // }
+            if (Buttons::ARP.get(Buttons::State::SHORT)) {
+                toggle_arp();
+            }
+
+            if (Buttons::LFO.get(Buttons::State::SHORT)) {
+                toggle_lfo();
             }
             break;
           case 3:
