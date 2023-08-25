@@ -1918,16 +1918,17 @@ const int16_t wavetable[] = {
 };
 
 inline int16_t get_wavetable  (uint32_t index, uint16_t vector) {
-    // volatile uint16_t index_floor = (index >> 12) + vector; // Integer part of index
-    // volatile uint16_t index_frac = (index & 0xFFF); // Fractional part of index
+    // volatile uint16_t _index = index >> 12;
+    // volatile uint16_t frac = index & 0xFFF;
+
+    // // Get the two neighboring samples from the wavetable
+    // volatile int16_t sample1 = wavetable[_index];
+    // volatile int16_t sample2 = wavetable[(_index + 1) & 0xFF];
+
+    // // Linear interpolation
+    // volatile int16_t interpolatedSample = sample1 + ((sample2 - sample1) * frac >> 12);
     
-    // volatile int16_t sample1 = wavetable[(index_floor)];
-    // volatile int16_t sample2 = wavetable[(index_floor) + 1];
-
-    // // Linear interpolation calculation
-    // volatile int16_t interpolated_sample = (sample1 + sample2) >> 1;
-
-    // return interpolated_sample;
+    // return interpolatedSample;
     
     // un-interpolated output
     return wavetable[index + vector];

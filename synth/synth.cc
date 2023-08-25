@@ -107,7 +107,7 @@ namespace SYNTH {
         if(channel._active) {
 
           // increment the waveform position counter.
-          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+          channel.waveform_offset += ((((channel._frequency * _pitch_scale) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE; // << Q_SCALING_FACTOR
 
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
@@ -118,18 +118,12 @@ namespace SYNTH {
             channel.note_stopped();
             QUEUE::release_send(c);
           }
+          // uint8_t waveform_count = 0;
 
-          // if(channel.waveform_offset & 0x10000) {
-          //   // if the waveform offset overflows then generate a new
-          //   // random noise sample
-          //   channel.noise = prng_normal();
-          // }
-
-          channel.waveform_offset &= (0xffff0);
-
-          uint8_t waveform_count = 0;
           int32_t channel_sample = 0;
 
+          // pretty sure I can remove this if not using the otehr wave types. but also increasing it to 0xffff0 makes it large enough to not interupt my scaling.
+          channel.waveform_offset &= (0xffff0);
 
           // if (oscillator & Oscillator::NOISE) {
           //   channel_sample += channel.noise;

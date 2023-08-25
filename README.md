@@ -10,7 +10,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Updates and Bugfixes:
     - Arp:
-        - Bug: Hold knob looses pagination light (stil has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
+        - Bug: Hold knob looses pagination light (still has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
         - Feature: Add arp octave direction function for later use.
     
     - Feature: Check Sustain pedal functions. 
@@ -40,8 +40,6 @@ Current nightly firmware for Wave Machine Hardware.
         - Test UART-MIDI
         - Test UART
 
-       
-        
 
     - Clock: 
         - Feature: Add MIDI Clock out - Will be achieved by dividing internal clock to midi message.
@@ -65,6 +63,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Try to make the code more portable - currently the calculations for envelope times are done in the controling code to allow for multicore use, but check to see if it can be done in other ways.
     
     - Improve Mod code:
+        - Research: Look up Attenuveter and see if its any use for controlling LFO code.
         - Try making it Poly - I think the sample rate can be reduced by 8 (6kHz) and that should allow every voice to have its own poly Mod. Would probably need a reset for when notes are released, so that you can really hear the difference.
         - Add a tempo sync function.
         - Add ADSR... this could be implemented by initalising an ADSR class in the mod code applying to the final mod output, then include that in Note_Priority. This can be MOD::Attack() in the note on section and MOD::Release() in the note off, controlled by an "if (notes_active)" statment and a counter for how many voice are currently active.
