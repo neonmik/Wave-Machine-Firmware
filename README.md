@@ -5,16 +5,16 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes:
     
-    - Uncofirmed Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can't really replicate yet, just noticed it doing it when Joe was playing...
+    - Uncofirmed
+        - Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can't really replicate yet, just noticed it doing it when Joe was playing...
 
 
 - Updates and Bugfixes:
     - Arp:
+        - Bug: chordRefresh doesn't release notes if you play more than MAX_ARP.
         - Bug: Hold knob looses pagination light (still has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
         - Feature: Add arp octave direction function for later use.
     
-    - Feature: Check Sustain pedal functions. 
-        - Bug: Normal Keys - When pressing notes *JUST* as you release the sustain, notes get released too. Still needs finessing
 
     - Controls:
         - Change the layout of controls:
@@ -114,27 +114,13 @@ Current nightly firmware for Wave Machine Hardware.
 
 Changelog: 
 
+    25/08/2023:- Added a serial window on startup that tells you all the synth details (Unique ID, Firmware Version, and Core Temp).
+    24/08/2023:- Added the Sustaion pedal function.
     12/08/2023:- Added Changelog and Updated synth name.
 
 
 
-
-
-
 Features/Bugfixes:
-
-    + Proven hardware functions (Pots, LEDs, Keys, Audio)
-        + USB-MIDI
-            + Improved the handling of USB-MIDI notes and there Update calls.
-            + Finally added and tested
-        + EEPROM
-            + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
-        + LEDs
-            + Test script for LEDs
-                + Added function to show led test on startup if Preset button is held down
-        + Buttons
-        + Keys
-        + DAC
 
     + Oscillator:
         + Bugfix: Frequency/MIDI note alignment - Internal oscillator engine was out of tune with MIDI defined pitches. When Pitch control is central and Octave at 0, the first note on the keyboard is MIDI note 60 (C3/130Hz).
@@ -149,16 +135,32 @@ Features/Bugfixes:
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
     + Note Handling:
+        + Feature: Added code to handle the use of an external Sustain Pedal via MIDI as well as rewriting the code for how the Hold fucntion works in the Arp, and having the Sustain Pedal work that too. 
         + Bugfix: An error with the release message queue was causing the notes not to release properly. Only recognised during Sustain Pedal Feature testing.
         + Moved Note_priority back to HW core - Takes the time pressiure off the Audio core. Note assignments are now sent via a queue. 
         + Added a the bones of a paraphonic filter for Modulation and/or Filter. This is currently unstable, but will possibly be used in future pending some UI testing.
 
+    + Firmware:
+        + Added a dynamic version declaration in the CMake file.
+
     + Hardware:
-        - Bug: Fixed once I moved the note handling to the HW core and refactored the Note Priority code to remove the massive, now unnecessary for-loop. Fast movements can be missed on the pots. at frist I thought it was only down to multiple controls being active, but it seems to also randomly happen on preset 8. Example:- on preset 8, moving the decay really fast misses/looses the control. 
+        + Bugfix: Fast movements were missed on the controls - Fixed once I moved the note handling to the HW core and refactored the Note Priority code to remove the massive, now unnecessary for-loop.
         + Added a basic debug test function to test the pots and cycle for LEDs on start up - can currently be accessed by holding down preset/shift while powering up.
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
+        + USB-MIDI
+            + Improved the handling of USB-MIDI notes and there Update calls.
+            + Finally added and tested
+        + EEPROM
+            + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
+        + LEDs
+            + Test script for LEDs
+                + Added function to show led test on startup if Preset button is held down
+        + Buttons
+        + Keys
+        + DAC
 
     + Arp:
+        + Bigfix: Hold enabling when engaging Arp.
         + Bugfix: State change algorithm rewritten to allow better handling of voice and MIDI notes across state changes. 
         + Feature: Added Sustain pedal code for arp.
         + Feature: Added hardware control for internal BPM speed.

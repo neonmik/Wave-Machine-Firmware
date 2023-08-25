@@ -70,4 +70,7 @@ namespace ADC {
     uint8_t noise() {
         return _adc_noise;
     }
+    float temp (void) {
+        return _core_temp;
+    }
 }

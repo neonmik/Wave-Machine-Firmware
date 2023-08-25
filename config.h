@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+#include "version.h"
+
 // this file contains global definitions for systemwide variables and constants
-
-
 
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
@@ -34,6 +34,8 @@ constexpr   uint8_t     FILTER_VOICE    =       (POLYPHONY+1);  // Sets the Filt
 constexpr   uint8_t     MAX_ARP         =       POLYPHONY;
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
+
+constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
 
 constexpr   uint8_t     DEFAULT_KEY     =       60;             // The Default first key on the keyboard (C3 == 60, C4 == 72, etc). 
                                                                 // 48 sets C3 as the lowest note one the keyboard, and the middle C on the keyboard as C4

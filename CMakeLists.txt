@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
 
-project(wavemachine-firmware-v0.29 C CXX ASM)
+project(wavemachine LANGUAGES C CXX ASM VERSION 0.29)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
+
 
 
 
@@ -15,7 +16,7 @@ add_executable(${PROJECT_NAME}
 
     usb_descriptors.c
     drivers/usb.cc
-    
+
     drivers/adc.cc
     drivers/button.cc
     drivers/dac.cc
@@ -49,14 +50,16 @@ add_executable(${PROJECT_NAME}
     synth/resources.cc
     synth/synth.cc
     
-    )
-
+)
+    
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}
-        )
-
+    ${CMAKE_CURRENT_LIST_DIR}  "${PROJECT_BINARY_DIR}"
+    )
+    
+configure_file(version.h.in version.h @ONLY)
+    
 pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/drivers/sn74595.pio)
-
+    
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
 
@@ -69,6 +72,7 @@ target_link_libraries(${PROJECT_NAME}
                         pico_stdlib
                         pico_bootrom
                         pico_multicore
+                        pico_unique_id
                         
                         hardware_pwm
                         hardware_spi

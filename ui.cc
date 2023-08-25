@@ -86,12 +86,10 @@ void set_shift (bool shift) {
   // ----------------------
 
 
+
   void Init (void) {
 
-    printf("\nWelcome to the Wave...\n\n");
-
     MIDI::Init();
-
     LEDS::Init();
     KEYS::Init();
     ADC::Init();
@@ -103,7 +101,9 @@ void set_shift (bool shift) {
     }
     LEDS::LFO.set(get_lfo());
     LEDS::ARP.set(get_arp());
-
+    
+    print_startup();
+    
     poll_index = 0;
   }
 
@@ -189,6 +189,25 @@ void set_shift (bool shift) {
     }
   }
 
+  void print_startup (void) {
+    pico_unique_board_id_t board_id;
+    pico_get_unique_board_id(&board_id);
+
+    printf("\n\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("~ ~ ~ ~ ~ ~ ~ ~ ~ Welcome to the Wave.... ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("~							~\n");
+    printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", board_id.id[0], board_id.id[1], board_id.id[2], board_id.id[3], board_id.id[4], board_id.id[5], board_id.id[6], board_id.id[7]);
+    printf("~	Firmware -	v%01.02f	      			~\n", VERSION);
+    printf("~	Temp -		%02.01fºC				~\n", ADC::temp());
+    printf("~							~\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("~    		  © 2020-2023 NAMS Labs			~\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("\n\n");
+  }
+
   void calibrate (void) {
 
     LEDS::test(30);
@@ -202,7 +221,7 @@ void set_shift (bool shift) {
     printf("|				Wave Machine Prototype				|\n");
     printf("|				      2020-2023					|\n");
     printf("|										|\n");
-    printf("|		      Made by Nick Allott Musical Services (NAMS)		|\n");
+    printf("|		    Made by Nick Allott Musical Services (NAMS) Labs		|\n");
     printf("|										|\n");
     printf("|-------------------------------------------------------------------------------|\n");
     printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");

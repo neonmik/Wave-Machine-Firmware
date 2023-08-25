@@ -10,7 +10,7 @@ namespace ARP {
 
     void printNoteBuffer (ArpData *input) {
         printf("inputBuffer :");
-            for (int i = 0; i < POLYPHONY; i++) {
+            for (int i = 0; i < MAX_ARP; i++) {
                 printf("  %d:  %02d  |", i, input[i].note);
             }
             printf("\n");
@@ -128,9 +128,10 @@ namespace ARP {
 
                     case NoteState::ACTIVE:
                         NOTE_HANDLING::voice_off(currentVoiceIndex, currentPlayNote, 0);
-                        MIDI::sendNoteOff(currentPlayNote, 0);
-                        currentVoiceIndex++;
-                        if (currentVoiceIndex >= POLYPHONY) currentVoiceIndex = 0;
+                        MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
+                        
+                        currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
+
 
                         arpeggiate(arpDirection);
                         currentNoteState = NoteState::IDLE;
@@ -142,8 +143,8 @@ namespace ARP {
                         if (arpVoices[currentPlayIndex].isActive()) {
                             currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
 
-                            MIDI::sendNoteOn(currentPlayNote, 127);
                             NOTE_HANDLING::voice_on(currentVoiceIndex, currentPlayNote, 127);
+                            MIDI::sendNoteOn(currentPlayNote, 127);
 
                             currentNoteState = NoteState::ACTIVE;
                         }
@@ -161,11 +162,22 @@ namespace ARP {
             return;
         }
         // check if not is already playing
-        for (int i = 0; i < POLYPHONY; ++i) {
+        if (isHoldEnabled) {
+            // if the chord refresh option is enabled
+            if (chordRefresh) { 
+                // refresh timeout clock
+                clearAllNotes();
+                chordRefreshCount = 0;
+                chordRefresh = false;
+                // don't return, let it roll on and add new note
+            }   
+        }
+        for (int i = 0; i < MAX_ARP; ++i) {
             if (inputBuffer[i].note == note) {
                 // resets the note
                 inputBuffer[i].add(note);
-                printNoteBuffer(inputBuffer);
+                ++chordRefreshCount;
+                // printNoteBuffer(inputBuffer);
                 inputNotesUpdated = true;
                 return;
             }
@@ -173,37 +185,44 @@ namespace ARP {
         if (!inputBufferFull) {
 
             // If the input buffer isn't full
-            for (int i = 0; i < POLYPHONY; ++i) {
+            for (int i = 0; i < MAX_ARP; ++i) {
                 // Check for the first empty slot
                 if (inputBuffer[i].note == 0) {
                     // Set the empty slot as the new note
                     inputBuffer[i].add(note);
-                    // printInputBuffer();
 
                     // Increment the note count
-                    ++inputNoteCount;
 
                     // Cap the note count and set buffer full flag
-                    if (inputNoteCount >= POLYPHONY) {
-                        inputNoteCount = POLYPHONY;
-                        inputBufferFull = true;
-                    }
+                    // might need its own inc/loop behaviour
+                    ++chordRefreshCount;
+                    // if (chordRefreshCount == MAX_ARP) chordRefreshCount = MAX_ARP;
 
                     // Mark that the input buffer notes have been changed
                     inputNotesUpdated = true;
 
                     // trigger Filter envelope
                     NOTE_HANDLING::voices_inc();
+
+                    ++inputNoteCount;
+                    if (inputNoteCount >= MAX_ARP) {
+                        inputNoteCount = MAX_ARP;
+                        inputBufferFull = true;
+                    }
                     break;
                 }
             }
+            //return here so it doesnt roll over
+            // return;
         } else {
             // Write the note to the last available slot
             inputBuffer[inputWriteIndex].add(note);
-            printNoteBuffer(inputBuffer);
+            // printNoteBuffer(inputBuffer);
 
             // Increment and wrap the write index
-            inputWriteIndex = (inputWriteIndex + 1) % POLYPHONY;
+            inputWriteIndex = (inputWriteIndex + 1) % MAX_ARP;
+
+            ++chordRefreshCount;
 
             // Mark that the input buffer notes have been changed
             inputNotesUpdated = true;
@@ -214,44 +233,46 @@ namespace ARP {
     }
     // Remove notes to the arpeggiator input buffer
     void removeNote(uint8_t note) {
-        // If Hold/Sustain is on, we don't remove notes
-        if (isHoldEnabled) {
-            // Check if this note is in the buffer
-            for (int i = 0; i < POLYPHONY; ++i) {
-                // If the note is active
-                if (inputBuffer[i].note == note) {
+        // If Hold/Sustain is not on, we remove notes
+        // If the input buffer isn't full
+        volatile uint8_t bufferSize;
+
+        // If inputBuffer is full, use all the notes; if not, use however many there are
+        if (inputBufferFull) {
+            bufferSize = MAX_ARP;
+        } else {
+            bufferSize = inputNoteCount;
+        }
+        
+        // Check all the active notes
+        for (int i = 0; i < bufferSize; ++i) {
+            // If the note is here
+            if (inputBuffer[i].note == note) {
+                if (isHoldEnabled) {
+                    if (chordRefreshLatching) {
+                        
+                        // new chord type of arp latching - allows you to actually play it without a pedal
+                        chordRefreshCount--;
+                        if (chordRefreshCount <= 0) {
+                            chordRefreshCount = 0;
+                            chordRefresh = true;
+                        }
+                        // still carry on to mark as sustained
+                    }
+
                     // Set it to sustain
                     inputBuffer[i].sustain();
                     inputNotesUpdated = true;
 
                     // dont break as there may be multiple notes
-                }
-            }
-            // Once all notes are scanned, exit function so we dont remove any notes.
-            return;
-        } else {
-            // If Hold/Sustain is not on, we remove notes
-            // If the input buffer isn't full
-            volatile uint8_t bufferSize;
-
-            // If inputBuffer is full, use all the notes; if not, use however many there are
-            if (inputBufferFull) {
-                bufferSize = POLYPHONY;
-            } else {
-                bufferSize = inputNoteCount;
-            }
-            
-            // Check all the active notes
-            for (int i = 0; i < bufferSize; ++i) {
-                // If the note is here
-                if (inputBuffer[i].note == note) {
+                } else {
                     // Shift elements to remove the note
                     for (int swap = i; swap < bufferSize; ++swap) {
                         inputBuffer[swap] = inputBuffer[swap + 1];
                     }
                     // Remove the last inputBuffer
                     inputBuffer[bufferSize - 1].remove();
-                    printNoteBuffer(inputBuffer);
+                    // printNoteBuffer(inputBuffer);
 
                     // Decrement the note count
                     --inputNoteCount;
@@ -275,17 +296,15 @@ namespace ARP {
                     // dont break incase it's not been removed
                 }
             }
-            // If it's been removed, return
-            return;
         }
     }
     // Transfer notes from the arpeggiator input buffer to the playing arpeggiator
     void transferNotes () {
         if (inputNotesUpdated) {
             
-            for (int copy = 0; copy < POLYPHONY; copy++) {
-                arpVoices[copy] = inputBuffer[copy];
-            }
+            printNoteBuffer(inputBuffer);
+
+            memcpy(arpVoices, inputBuffer, sizeof(inputBuffer));
 
             uint8_t length      = inputNoteCount;   // how many entries in the array
             ArpData swap;
@@ -308,12 +327,12 @@ namespace ARP {
     }
     // Clear sustained notes from the input buffer and then update the the arpeggiator buffer
     void clearSustainedNotes (void) {
-        uint8_t notesToRemove[POLYPHONY];
+        uint8_t notesToRemove[MAX_ARP];
         uint8_t notesForRemoval;
         uint8_t bufferSize; 
         
         if (inputBufferFull) {
-            bufferSize = POLYPHONY;
+            bufferSize = MAX_ARP;
         } else {
             bufferSize = inputNoteCount;
         }
@@ -333,18 +352,19 @@ namespace ARP {
         // actually remove notes marked for removal
         for (int i = 0; i < notesForRemoval; ++i) {
             removeNote(notesToRemove[i]);
-            MIDI::sendNoteOff(notesToRemove[i], 0);
+            MIDI::sendNoteOff(notesToRemove[i], MIDI_DEFAULT_NOTE_OFF_VEL);
         }
         
         transferNotes();
     }
+    
     // Clear all notes from the input buffer and then update the arpeggiator buffer
     void clearAllNotes (void) {
-        uint8_t notesToRemove[POLYPHONY];
+        uint8_t notesToRemove[MAX_ARP];
         uint8_t notesForRemoval;
     
         // check every active note
-        for (int i = 0; i < POLYPHONY; ++i) {
+        for (int i = 0; i < MAX_ARP; ++i) {
             // If the note has a note
             if (inputBuffer[i].note != 0) {
                 // maybe add some sustain protection here? this should only be called on starting/stopping the arp
@@ -355,12 +375,20 @@ namespace ARP {
                 ++notesForRemoval;
             }
         }
-        isHoldEnabled = false; // temproarily disable the hold buffer while we clear the notes
-        // actually remove notes marked for removal
-        for (int i = 0; i < notesForRemoval; ++i) {
-            removeNote(notesToRemove[i]);
+        if (isHoldEnabled) {
+            isHoldEnabled = false; // temproarily disable the hold buffer while we clear the notes
+            // actually remove notes marked for removal
+            for (int i = 0; i < notesForRemoval; ++i) {
+                removeNote(notesToRemove[i]);
+                // probably not needed if arp is playing?
+                MIDI::sendNoteOff(notesToRemove[i], MIDI_DEFAULT_NOTE_OFF_VEL);
+            }
+            isHoldEnabled = true;
+        } else {
+            for (int i = 0; i < notesForRemoval; ++i) {
+                removeNote(notesToRemove[i]);
+            }
         }
-        isHoldEnabled = true; // reenable the hold buffer
         
         transferNotes();
 
@@ -392,7 +420,7 @@ namespace ARP {
             NOTE_HANDLING::voices_set(activeVoices);
         } else {
             // sustain is active - only release sustained notes, we want the notes that are held down to keep playing out
-            for (int i = 0; i < POLYPHONY; i++) {
+            for (int i = 0; i < MAX_ARP; i++) {
                 uint8_t note = inputBuffer[i].note;
                 // check there is a note numbe, if not, skip it
                 if (note == 0)  break;
@@ -406,7 +434,7 @@ namespace ARP {
                 } else {
                     // note is held with sustain, if it's playing, release it.
                     NOTE_HANDLING::voice_stop(note);
-                    MIDI::sendNoteOff(note, 0);
+                    MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
                 }
             }
             NOTE_HANDLING::voices_set(activeVoices);
@@ -429,15 +457,9 @@ namespace ARP {
         bool temp = (bool)(hold>>9);
 
         if (temp == _last_hold) return;
-
-        if (isHoldEnabled != temp) {
-            isHoldEnabled = temp;
-            if (!isHoldEnabled) {
-                // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
-                isSustainJustReleased = true;
-            }
-        }
         _last_hold = temp;
+        
+        setSustain(temp);
     }
     void setSustain (bool sus) {
         if (isHoldEnabled != sus) {
@@ -445,6 +467,8 @@ namespace ARP {
             if (!isHoldEnabled) {
                 // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
                 isSustainJustReleased = true;
+                // copy this over for tracking the held notes
+                // chordRefreshCount = inputNoteCount;
             } 
         }
     }

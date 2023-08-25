@@ -183,7 +183,7 @@ namespace NOTE_HANDLING {
         voice = priority_voice;
         // if using a priority voice, make sure the last note has sent a midi note off before using the voice?
         // for now do this, but could maybe do with a better implementation - mainly when using as a controler keyboard.
-        MIDI::sendNoteOff(VOICES[voice].note, velocity);
+        MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL);
       }
     }
     if (_sustain) {
@@ -199,7 +199,7 @@ namespace NOTE_HANDLING {
       for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
         if (VOICES[voice].note == note)  {
           if (VOICES[voice].gate) voices_dec();
-          MIDI::sendNoteOff(note, velocity);
+          MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
           voice_off(voice, note, velocity);
         }
       }
@@ -233,7 +233,7 @@ namespace NOTE_HANDLING {
         if (VOICES[voice].sustained) {
           voices_dec(); // reduces the filter control
           voice_off(voice, VOICES[voice].note, 0); // clears the voice
-          MIDI::sendNoteOff(VOICES[voice].note, 0); // sends midi note off
+          MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL); // sends midi note off
           VOICES[voice].sustained = false;
         }
       }
