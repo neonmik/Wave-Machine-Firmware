@@ -25,7 +25,7 @@ namespace PAGINATION {
       if(Buttons::PAGE.get(Buttons::State::SHORT)){
         uint8_t pages = MAX_PAGES;
 
-        page_change = true;
+        // page_change = true;
 
         ++current_page;
 
@@ -33,13 +33,13 @@ namespace PAGINATION {
         // doesnt work correctly, need to be selective about pages available, or use another method
         // if (!get_lfo_flag()) pages--;
         // ARP on
-        if (!UI::get_arp()) pages--;
+        if (!UI::get_arp()) pages = (MAX_PAGES - 1);
         
         // count the pages
         if (current_page >= pages) current_page = 0;
+        // else temp_page = current_page;
 
         
-        else temp_page = current_page;
         // if (Buttons::PRESET.get(Buttons::State::SHIFT)) current_page = 4;
         UI::set_page(current_page);
         refresh();

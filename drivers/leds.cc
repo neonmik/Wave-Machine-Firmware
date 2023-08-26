@@ -78,6 +78,28 @@ namespace LEDS {
         }
             
     }
+    void PAGE_select(uint8_t page) {
+        PAGE_1.off();
+        PAGE_2.off();
+        PAGE_3.off();
+        switch (page) {
+            case (0):
+                PAGE_1.on();
+                break;
+            case (1):
+                PAGE_2.on();
+                break;
+            case (2):
+                PAGE_3.on();
+                break;
+            case (3):
+                PAGE_1.on();
+                PAGE_2.on();
+                PAGE_3.on();
+                break;
+        }
+            
+    }
     void PAGES_off(void) {
         PAGE_1.off();
         PAGE_2.off();
@@ -127,7 +149,7 @@ namespace LEDS {
     void Update() {
         ARP.update();
         PRESET.update();
-        PAGE_1.Update();
+        // PAGE_1.Update();
         ShiftReg::Update();
     }
 }

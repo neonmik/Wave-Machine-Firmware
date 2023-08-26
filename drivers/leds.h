@@ -314,6 +314,7 @@ namespace LEDS {
     void KNOBS_off(void);
     void KNOB_select(uint8_t knob, bool state);
     void PAGES_off(void);
+    void PAGE_select(uint8_t page);
     void flash(int repeats, int delay);
     void test(uint8_t delay);
     void Update(void);

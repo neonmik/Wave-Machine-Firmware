@@ -10,26 +10,24 @@ namespace UI {
   void set_page (uint8_t value) {
     // using a switch here so that I can easily change the LEDs... find a better way?
     _page = value;
-    switch (_page) {
-      case 0:
-        LEDS::PAGES.off();
-        CONTROLS::set_page(_page);
-        break;
-      case 1:
-        LEDS::PAGE_1.toggle();
-        CONTROLS::set_page(_page);
-        break;
-      case 2:
-        LEDS::PAGE_1.toggle();
-        LEDS::PAGE_2.toggle();
-        CONTROLS::set_page(_page);
-        break;
-      case 3:
-        LEDS::PAGE_2.toggle();
-        LEDS::PAGE_3.toggle();
-        CONTROLS::set_page(_page);
-        break;
-    }
+    CONTROLS::set_page(_page);
+    LEDS::PAGE_select(_page);
+    // switch (_page) {
+    //   case 0:
+    //     LEDS::PAGES.off();
+    //     break;
+    //   case 1:
+    //     LEDS::PAGE_1.toggle();
+    //     break;
+    //   case 2:
+    //     LEDS::PAGE_2.toggle();
+    //     LEDS::PAGE_1.toggle();
+    //     break;
+    //   case 3:
+    //     LEDS::PAGE_2.toggle();
+    //     LEDS::PAGE_3.toggle();
+    //     break;
+    // }
   }
   uint8_t get_page(void) {
     return _page;

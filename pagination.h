@@ -22,7 +22,7 @@ namespace PAGINATION {
     };
     
     namespace {
-        bool page_change = false;
+        // bool page_change = false;
         uint8_t current_page = 0;
         
         KnobState _states[MAX_KNOBS];
