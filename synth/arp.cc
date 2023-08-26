@@ -171,12 +171,15 @@ namespace ARP {
                 chordRefresh = false;
                 // don't return, let it roll on and add new note
             }   
+            ++chordRefreshCount;
+            if (chordRefreshCount == MAX_ARP) chordRefreshCount = MAX_ARP;
+            printf("chordRefreshCount++ = %d\n", chordRefreshCount);
+
         }
         for (int i = 0; i < MAX_ARP; ++i) {
             if (inputBuffer[i].note == note) {
                 // resets the note
                 inputBuffer[i].add(note);
-                ++chordRefreshCount;
                 // printNoteBuffer(inputBuffer);
                 inputNotesUpdated = true;
                 return;
@@ -191,12 +194,6 @@ namespace ARP {
                     // Set the empty slot as the new note
                     inputBuffer[i].add(note);
 
-                    // Increment the note count
-
-                    // Cap the note count and set buffer full flag
-                    // might need its own inc/loop behaviour
-                    ++chordRefreshCount;
-                    // if (chordRefreshCount == MAX_ARP) chordRefreshCount = MAX_ARP;
 
                     // Mark that the input buffer notes have been changed
                     inputNotesUpdated = true;
@@ -204,6 +201,7 @@ namespace ARP {
                     // trigger Filter envelope
                     NOTE_HANDLING::voices_inc();
 
+                    // Increment the note count
                     ++inputNoteCount;
                     if (inputNoteCount >= MAX_ARP) {
                         inputNoteCount = MAX_ARP;
@@ -221,8 +219,6 @@ namespace ARP {
 
             // Increment and wrap the write index
             inputWriteIndex = (inputWriteIndex + 1) % MAX_ARP;
-
-            ++chordRefreshCount;
 
             // Mark that the input buffer notes have been changed
             inputNotesUpdated = true;
@@ -243,28 +239,29 @@ namespace ARP {
         } else {
             bufferSize = inputNoteCount;
         }
-        
+        if (isHoldEnabled) { 
+            if (chordRefreshLatching) {   
+                // new chord type of arp latching - allows you to actually play it without a pedal
+                chordRefreshCount--;
+                printf("chordRefreshCount-- = %d\n", chordRefreshCount);
+                if (chordRefreshCount <= 0) {
+                    chordRefreshCount = 0;
+                    chordRefresh = true;
+                }
+
+                // still carry on to mark as sustained
+            }
+        }
         // Check all the active notes
         for (int i = 0; i < bufferSize; ++i) {
             // If the note is here
             if (inputBuffer[i].note == note) {
                 if (isHoldEnabled) {
-                    if (chordRefreshLatching) {
-                        
-                        // new chord type of arp latching - allows you to actually play it without a pedal
-                        chordRefreshCount--;
-                        if (chordRefreshCount <= 0) {
-                            chordRefreshCount = 0;
-                            chordRefresh = true;
-                        }
-                        // still carry on to mark as sustained
-                    }
-
                     // Set it to sustain
                     inputBuffer[i].sustain();
                     inputNotesUpdated = true;
 
-                    // dont break as there may be multiple notes
+                    break;
                 } else {
                     // Shift elements to remove the note
                     for (int swap = i; swap < bufferSize; ++swap) {
@@ -295,7 +292,7 @@ namespace ARP {
                     NOTE_HANDLING::voices_dec();
                     // dont break incase it's not been removed
                 }
-            }
+            } 
         }
     }
     // Transfer notes from the arpeggiator input buffer to the playing arpeggiator
