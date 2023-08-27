@@ -378,7 +378,7 @@ namespace ARP {
             for (int i = 0; i < notesForRemoval; ++i) {
                 removeNote(notesToRemove[i]);
                 // probably not needed if arp is playing?
-                MIDI::sendNoteOff(notesToRemove[i], MIDI_DEFAULT_NOTE_OFF_VEL);
+                // MIDI::sendNoteOff(notesToRemove[i], MIDI_DEFAULT_NOTE_OFF_VEL); 
             }
             isHoldEnabled = true;
         } else {

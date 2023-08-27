@@ -3,22 +3,24 @@
 Current nightly firmware for Wave Machine Hardware.
 
 
-- Alpha Release bugfixes:
+- Alpha Release bugfixes
+
     
+
     - Uncofirmed
         - Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can't really replicate yet, just noticed it doing it when Joe was playing...
 
 
 - Updates and Bugfixes:
     - Arp:
-        - Bug: chordRefresh doesn't release notes if you play more than MAX_ARP.
+        - Bug: chordRefresh doesnt release via MIDI properly - happens when you hold one notea and press a load more, doesn't release all the way.
         - Bug: Hold knob looses pagination light (still has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
         - Feature: Add arp octave direction function for later use.
     
 
     - Controls:
         - Change the layout of controls:
-            - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions.
+            - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions(?).
             - Holding Preset should save
             - Shift should be holding Page?
             - Envelope should be pressing 
@@ -26,9 +28,10 @@ Current nightly firmware for Wave Machine Hardware.
         
     - Oscillator:
         - Improvement: Finesse soft start code - currently takes too long to get going and still isnt perfect.
+
     - Mod:
         - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) 
-        - Feature: Once LFO is balanced, add a MAX_RANGE setting for vibrato. 
+        - Feature: Once LFO is balanced, add a MAX_RANGE config asetting for vibrato. 
         - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths.
     
     - USB MIDI/ MIDI:
@@ -51,7 +54,12 @@ Current nightly firmware for Wave Machine Hardware.
         - MIDI
         - CV?
 
-
+    - EEPROM:
+        - Add factory calibration routine:
+            - Fetch Unique ID and store it? (kinda not needed as it's always there, but maybe) - could even be the ID of my memory chip?
+        - Add Storage routines for system settings:    
+            - Organise a way of storing all those settings in config, and being able to adjust them and re save them.
+            - Need a way of storing all settings/config related stuff persistanly (MIDI settings, Audio Engine settings, calibration?, etc.)
 
 
 
@@ -77,7 +85,7 @@ Current nightly firmware for Wave Machine Hardware.
         
 
     - Improve Arp code:
-        - Feature: Add a setting for Mono/Poly Filter
+        - Feature: Add a setting for Mono/Para Filter modes
         - Feature: Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
         - Feature: Add a swing feature.
         - Feature: Add back Chord Arp - will work great with patterns too.
@@ -160,6 +168,7 @@ Features/Bugfixes:
         + DAC
 
     + Arp:
+        + Bugfix: Latching was not releasing old notes when more than polyphony were played.
         + Bigfix: Hold enabling when engaging Arp.
         + Bugfix: State change algorithm rewritten to allow better handling of voice and MIDI notes across state changes. 
         + Feature: Added Sustain pedal code for arp.
@@ -177,6 +186,7 @@ Features/Bugfixes:
         + Add Arp mode
 
     + Settings/Controls:
+        + Bugfix: Page light wasn't acting correctly on start up.
         + Added starting shift functions:
             - Added in functions for Modulation  
             - Added in functions for Filter (Shift on LFO) and its ADSR (Shift on ADSR) - fixed issues with processing.
