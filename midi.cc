@@ -88,8 +88,8 @@ namespace MIDI {
     }
     void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
         if (channel == MIDI_CHANNEL) {
-            if (velocity > 0) NOTE_HANDLING::note_on(note, velocity);
-            else NOTE_HANDLING::note_off(note, velocity);
+            if (velocity == 0) NOTE_HANDLING::note_off(note, MIDI_DEFAULT_NOTE_OFF_VEL);
+            else NOTE_HANDLING::note_on(note, velocity);
         }
     }
     void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity) {

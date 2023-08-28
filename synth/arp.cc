@@ -159,6 +159,7 @@ namespace ARP {
     // Add notes to the arpeggiator input buffer
     void addNote (uint8_t note) {
         if (note == 0) {
+            printf("Wierd, empty addNote...\n"); 
             return;
         }
         // check if not is already playing
@@ -229,8 +230,6 @@ namespace ARP {
     }
     // Remove notes to the arpeggiator input buffer
     void removeNote(uint8_t note) {
-        // If Hold/Sustain is not on, we remove notes
-        // If the input buffer isn't full
         volatile uint8_t bufferSize;
 
         // If inputBuffer is full, use all the notes; if not, use however many there are
@@ -239,6 +238,7 @@ namespace ARP {
         } else {
             bufferSize = inputNoteCount;
         }
+        
         if (isHoldEnabled) { 
             if (chordRefreshLatching) {   
                 // new chord type of arp latching - allows you to actually play it without a pedal
@@ -391,6 +391,8 @@ namespace ARP {
 
         currentOctave = 0;
         currentPlayIndex = 0;
+
+        chordRefreshCount = 0;
 
 
         NOTE_HANDLING::voices_clr();
