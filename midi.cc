@@ -204,7 +204,7 @@ namespace MIDI {
 
     void Init () {
         USB::Init();
-        // UART::Init(); // eventual places for MIDI via UART initiation
+        UART::Init(); // eventual places for MIDI via UART initiation
     }
 
     void usb_midi_task (void) {
@@ -217,9 +217,9 @@ namespace MIDI {
     }
 
     void midi_task () {
-        // uint8_t packet[4];
-        // UART::MIDI::get(packet);
-        // handleMidiMessage(packet);
+        uint8_t packet[4];
+        UART::MIDI::get(packet);
+        handleMidiMessage(packet);
     }
 
     void Update () {

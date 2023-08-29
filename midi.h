@@ -3,7 +3,7 @@
 #include "pico/stdlib.h"
 
 #include "drivers/usb.h"
-// #include "drivers/uart.h"
+#include "drivers/uart.h"
 
 #include "synth/clock.h"
 #include "synth/controls.h"
