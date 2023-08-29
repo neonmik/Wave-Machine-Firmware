@@ -225,7 +225,7 @@ namespace MIDI {
     void Update () {
         USB::Update();
         usb_midi_task();
-        // midi_task();
+        // midi_task(); // TODO: #1 Implement and test UART MIDI code
     }
 
     void print (uint8_t *packet) {
