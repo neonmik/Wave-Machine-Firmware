@@ -41,10 +41,10 @@ namespace ARP {
 
         bool  isArpActive;
 
-        bool  chordRefreshLatching = true; // this is where I want chord changing latch
+        bool  latchEnabled = true; // this is where I want chord changing latch
 
-        bool  chordRefresh = false;
-        int8_t chordRefreshCount = 0;
+        bool  latchRefresh = false;
+        int8_t latchCount = 0;
         uint32_t chordRefreshTimeout;
         
         bool    inputBufferFull;

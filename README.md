@@ -13,7 +13,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Updates and Bugfixes:
     - Arp:
-        - Bug: chordRefresh doesnt release via MIDI properly 
+        - Bug: latchRefresh doesnt release via MIDI properly 
             - happens when you hold one note a and press a load more, doesn't release all the way. 
             - Also happens when playing more than 3 notes, for some reason the midi doesnt recieve all the off notes?
         - Bug: Hold knob looses pagination light (still has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
