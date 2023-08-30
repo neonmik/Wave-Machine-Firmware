@@ -9,7 +9,7 @@ namespace ARP {
 
 
     void printNoteBuffer (ArpData *input) {
-        printf("inputBuffer :");
+        printf("Arp Note Buffer :");
             for (int i = 0; i < MAX_ARP; i++) {
                 printf("  %d:  %02d  |", i, input[i].note);
             }
@@ -165,16 +165,16 @@ namespace ARP {
         // check if not is already playing
         if (isHoldEnabled) {
             // if the chord refresh option is enabled
-            if (chordRefresh) { 
+            if (latchRefresh) { 
                 // refresh timeout clock
                 clearAllNotes();
-                chordRefreshCount = 0;
-                chordRefresh = false;
+                latchCount = 0;
+                latchRefresh = false;
                 // don't return, let it roll on and add new note
             }   
-            ++chordRefreshCount;
-            if (chordRefreshCount == MAX_ARP) chordRefreshCount = MAX_ARP;
-            // printf("chordRefreshCount++ = %d\n", chordRefreshCount);
+            ++latchCount;
+            if (latchCount == MAX_ARP) latchCount = MAX_ARP;
+            printf("latchCount++ = %d\n", latchCount);
 
         }
         for (int i = 0; i < MAX_ARP; ++i) {
@@ -240,13 +240,13 @@ namespace ARP {
         }
         
         if (isHoldEnabled) { 
-            if (chordRefreshLatching) {   
+            if (latchEnabled) {
                 // new chord type of arp latching - allows you to actually play it without a pedal
-                chordRefreshCount--;
-                // printf("chordRefreshCount-- = %d\n", chordRefreshCount);
-                if (chordRefreshCount <= 0) {
-                    chordRefreshCount = 0;
-                    chordRefresh = true;
+                latchCount--;
+                printf("latchCount-- = %d\n", latchCount);
+                if (latchCount <= 0) {
+                    latchCount = 0;
+                    latchRefresh = true;
                 }
 
                 // still carry on to mark as sustained
@@ -392,7 +392,7 @@ namespace ARP {
         currentOctave = 0;
         currentPlayIndex = 0;
 
-        chordRefreshCount = 0;
+        latchCount = 0;
 
 
         NOTE_HANDLING::voices_clr();
@@ -468,7 +468,7 @@ namespace ARP {
                 // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
                 isSustainJustReleased = true;
                 // copy this over for tracking the held notes
-                // chordRefreshCount = inputNoteCount;
+                // latchCount = inputNoteCount;
             } 
         }
     }
