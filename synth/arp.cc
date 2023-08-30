@@ -102,11 +102,11 @@ namespace ARP {
         switch (rising) {
             case true:
                 ++currentOctave;
-                if (currentOctave > _range) currentOctave = 0;
+                if (currentOctave > octaveRange) currentOctave = 0;
                 break;
             case false:
                 --currentOctave;
-                if (currentOctave < _range) currentOctave = _range;
+                if (currentOctave < octaveRange) currentOctave = octaveRange;
                 break;
         }
         // add variable for direction for new arp modes (more similar in handling to JUNO)
@@ -164,18 +164,19 @@ namespace ARP {
         }
         // check if not is already playing
         if (isHoldEnabled) {
-            // if the chord refresh option is enabled
-            if (latchRefresh) { 
-                // refresh timeout clock
-                clearAllNotes();
-                latchCount = 0;
-                latchRefresh = false;
-                // don't return, let it roll on and add new note
-            }   
-            ++latchCount;
-            if (latchCount == MAX_ARP) latchCount = MAX_ARP;
-            printf("latchCount++ = %d\n", latchCount);
-
+            if (latchEnabled) {
+                // if the chord refresh option is enabled
+                if (latchRefresh) { 
+                    // refresh timeout clock
+                    clearAllNotes();
+                    latchCount = 0;
+                    latchRefresh = false;
+                    // don't return, let it roll on and add new note
+                }   
+                ++latchCount;
+                if (latchCount == MAX_ARP) latchCount = MAX_ARP;
+                printf("latchCount++ = %d\n", latchCount);
+            }
         }
         for (int i = 0; i < MAX_ARP; ++i) {
             if (inputBuffer[i].note == note) {
@@ -248,7 +249,6 @@ namespace ARP {
                     latchCount = 0;
                     latchRefresh = true;
                 }
-
                 // still carry on to mark as sustained
             }
         }
@@ -290,7 +290,7 @@ namespace ARP {
 
                     // Release Filter envelope
                     NOTE_HANDLING::voices_dec();
-                    // dont break incase it's not been removed
+                    // dont break incase theres multiple entries 
                 }
             } 
         }
@@ -318,8 +318,6 @@ namespace ARP {
             currentNoteCount = inputNoteCount;
 
             inputNotesUpdated = false;
-
-            // printNoteBuffer(arpVoices);
         }
     }
     // Clear sustained notes from the input buffer and then update the the arpeggiator buffer
@@ -460,6 +458,7 @@ namespace ARP {
         _last_hold = temp;
         
         setSustain(temp);
+        latchEnabled = temp; // perfromed here so it doesn't latch when using a sustain pedal.
     }
     void setSustain (bool sus) {
         if (isHoldEnabled != sus) {
@@ -468,7 +467,6 @@ namespace ARP {
                 // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
                 isSustainJustReleased = true;
                 // copy this over for tracking the held notes
-                // latchCount = inputNoteCount;
             } 
         }
     }
@@ -491,10 +489,10 @@ namespace ARP {
         if (range == _last_range) return;
         _last_range = range;
         // bit shift to get 0-4 octaves of range for the Arp
-        _range = range>>8;
+        octaveRange = range>>8;
 
         // optional unquantized range changing:
-        // if (currentOctave > _range) currentOctave = _range; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
+        // if (currentOctave > octaveRange) currentOctave = octaveRange; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
     }   
     void setDirection (uint16_t direction) {
         if (direction == _last_direction) return;

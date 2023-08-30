@@ -31,47 +31,40 @@ namespace ARP {
             // PLAY_ORDER
         };
 
-        ArpDirection arpDirection = ArpDirection::UP;
+        ArpDirection    arpDirection = ArpDirection::UP;
+        NoteState       currentNoteState = NoteState::IDLE;
 
+        bool            isRestEnabled = false;
 
+        bool            isArpActive;
 
-        NoteState currentNoteState = NoteState::IDLE;
-
-        bool isRestEnabled = false;
-
-        bool  isArpActive;
-
-        bool  latchEnabled = true; // this is where I want chord changing latch
-
-        bool  latchRefresh = false;
-        int8_t latchCount = 0;
-        uint32_t chordRefreshTimeout;
+        bool            latchEnabled; // This is used to enable/disable the chord latching feature... only found used in hold/latch not sustain (I think?)
+        bool            latchRefresh = false;
+        int8_t          latchCount = 0;
+        uint32_t        chordRefreshTimeout;
         
-        bool    inputBufferFull;
-        int8_t  inputNoteCount;
-        int8_t  inputWriteIndex;
+        bool            inputBufferFull;
+        bool            inputNotesUpdated;
+        int8_t          inputNoteCount;
+        int8_t          inputWriteIndex;
 
-        bool    inputNotesUpdated;
+        uint8_t         currentPlayNote;
+        int8_t          currentPlayIndex;
+        uint8_t         currentVoiceIndex;
+        int8_t          currentNoteCount;
+        int8_t          _write_index;
+        bool            _notes_changed = false;
 
-        uint8_t     currentPlayNote;
-        int8_t      currentPlayIndex;
-        uint8_t     currentVoiceIndex;
+        bool            isSustainJustReleased = false;
 
+        bool            isHoldEnabled;
+        uint16_t        _last_hold;
+        uint16_t        _last_division;
+        uint16_t        _last_range;
+        uint16_t        _last_direction;
 
-        int8_t      currentNoteCount;
-        int8_t      _write_index;
-        bool        _notes_changed = false;
-
-        bool        isSustainJustReleased = false;
-
-        bool        isHoldEnabled;
-        uint16_t    _last_hold;
-        uint16_t    _last_division;
-        uint16_t    _last_range;
-        uint16_t    _last_direction;
-
-        int8_t _range;
-        int8_t currentOctave;
+        int8_t          octaveRange;
+        int8_t          currentOctave;
 
         bool _switch = true;
     }
@@ -84,7 +77,7 @@ namespace ARP {
         void add (uint8_t input) {
             note = input;
             velocity = 127;
-            sustained = false; // resets the susainted marker every time the note is added
+            sustained = false; // resets the susainted marker every time the note is re-added
         }
 
         void sustain (void) {
@@ -145,7 +138,6 @@ namespace ARP {
     void setSustain (bool sus);
 
     void updateOctave (bool rising);
-    // void update_controls (void);
 
     void setBpm (uint16_t bpm);
 }
