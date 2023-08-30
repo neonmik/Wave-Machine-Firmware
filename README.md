@@ -238,6 +238,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + MIDI:
+        + Improved MIDI handling logic by moving the MIDI Channel verification earlier.
         + Bugfix: UART MIDI IN implentation cause false notes to be called.
         + Added UART MIDI IN.
         + Added UART MIDI OUT.
