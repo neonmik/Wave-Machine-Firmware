@@ -159,7 +159,7 @@ namespace ARP {
     // Add notes to the arpeggiator input buffer
     void addNote (uint8_t note) {
         if (note == 0) {
-            printf("Wierd, empty addNote...\n"); 
+            // printf("Wierd, empty addNote...\n"); 
             return;
         }
         // check if not is already playing
@@ -299,7 +299,7 @@ namespace ARP {
     void transferNotes () {
         if (inputNotesUpdated) {
             
-            printNoteBuffer(inputBuffer);
+            // printNoteBuffer(inputBuffer);
 
             memcpy(arpVoices, inputBuffer, sizeof(inputBuffer));
 
@@ -414,7 +414,8 @@ namespace ARP {
                 }
             }
             // just a little sanity check
-            if (activeVoices != inputNoteCount) printf("Passing Notes count mismatch!");
+            // if (activeVoices != inputNoteCount) printf("Passing Notes count mismatch!");
+
             // update the filter envelope
             NOTE_HANDLING::voices_set(activeVoices);
         } else {

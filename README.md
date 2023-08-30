@@ -5,7 +5,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes
 
-    
+    - Bug: Something is occasionally causing the Audio core to fall over. something to do with MIDI notes/CC or the amount of data traversing the cores in between DMA filling. May need to remove synth engine code from DMA interupt.
 
     - Uncofirmed
         - Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can't really replicate yet, just noticed it doing it when Joe was playing...
@@ -32,7 +32,8 @@ Current nightly firmware for Wave Machine Hardware.
         - Improvement: Finesse soft start code - currently takes too long to get going and still isnt perfect.
 
     - Mod:
-        - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) 
+        - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) but over that becomes noticably uneven.
+        
         - Feature: Once LFO is balanced, add a MAX_RANGE config asetting for vibrato. 
         - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths.
     
@@ -43,8 +44,6 @@ Current nightly firmware for Wave Machine Hardware.
         - Add MIDI channel assignment to start up
         - Add a MIDI settings structure and a way of saving persistant data (via EEPROM)
         
-        - Test UART-MIDI
-        - Test UART
 
 
     - Clock: 
@@ -53,7 +52,6 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Prove hardware functions:
-        - MIDI
         - CV?
 
     - EEPROM:
@@ -97,6 +95,8 @@ Current nightly firmware for Wave Machine Hardware.
         - Bug: To do with Hold diverting add notes to only refresh - With Hold/Latch engaged (only): If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority Update loop.
 
     Improve Note Handling:
+        - Bug: Held notes are being written over desipte some that some voices should be in release - Hold low octave on MIDI, and play fast pentatonic up and down
+
         - Add actual Mono Mode - selectable at start up.
         
         - Add Portomento Mode: Should be added form the note-handling script (adding a portomento flag via the priority script, and having a new note, but dont clear old note freq in the message?) then a portamento time control, which then slides the note freq from old to new. 
@@ -154,6 +154,10 @@ Features/Bugfixes:
         + Added a dynamic version declaration in the CMake file.
 
     + Hardware:
+        + MIDI:
+            + Proven MIDI IN.
+            + Proven MIDI OUT.
+            + Added code to interface the UART.
         + Bugfix: Fast movements were missed on the controls - Fixed once I moved the note handling to the HW core and refactored the Note Priority code to remove the massive, now unnecessary for-loop.
         + Added a basic debug test function to test the pots and cycle for LEDs on start up - can currently be accessed by holding down preset/shift while powering up.
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
@@ -233,7 +237,11 @@ Features/Bugfixes:
         + Created/reorganise layer between hardware and synth.
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
-    + USB MIDI/MIDI:
+    + MIDI:
+        + Improved MIDI handling logic by moving the MIDI Channel verification earlier.
+        + Bugfix: UART MIDI IN implentation cause false notes to be called.
+        + Added UART MIDI IN.
+        + Added UART MIDI OUT.
         + Bugfix: MIDI note on/off calls rewritten - the way in which MIDI not on/off calls were coming after note priority/arppegiator was causing a bug where no note off message would be sent if more than 8 voices were played. The update stops this from happening and also allows the sustain funtion to work properly.
         + Bugfix: MIDI IN CC calls no longer get stuck due to controls being live
         + Added UART code and associated MIDI call functions.

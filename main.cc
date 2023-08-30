@@ -80,9 +80,11 @@ void synth_core() {
 
   QUEUE::Init(); // has to be here to allow both cores access to QUEUE
   
-  multicore_launch_core1(hw_core); // launches the hardware core
+  multicore_launch_core1(synth_core); // launches the 2nd core
 
-  synth_core(); // launches the synth/audio core
+  // synth_core(); // launches the synth/audio core
+
+  hw_core(); // launch the hardware core
 
 } 
 
