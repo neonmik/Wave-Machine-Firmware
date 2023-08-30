@@ -70,7 +70,7 @@ namespace MIDI {
                 break;
             case MidiType::INVALID_TYPE:
                 // shouldn't happen very often, if at all. 
-                // printf("Invalid MIDI Message type!\n");
+                printf("Invalid MIDI Message type!\n");
                 break;
             default:
                 break;
@@ -80,7 +80,7 @@ namespace MIDI {
         uint8_t status = (type | channel);
         uint8_t msg[3] = { status, data1, data2 };
         USB::MIDI::send(msg);
-        // UART::MIDI::send(msg);
+        UART::MIDI::send(msg);
     }
     //  MIDI Callbacks
     void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity) {
@@ -204,7 +204,7 @@ namespace MIDI {
 
     void Init () {
         USB::Init();
-        UART::Init(); // eventual places for MIDI via UART initiation
+        UART::Init();
     }
 
     void usb_midi_task (void) {
@@ -217,15 +217,21 @@ namespace MIDI {
     }
 
     void midi_task () {
-        uint8_t packet[4];
-        UART::MIDI::get(packet);
-        handleMidiMessage(packet);
+        uint8_t packet[3];
+
+        packet[0] = 0;
+        packet[1] = 0;
+        packet[2] = 0;
+
+        if (UART::MIDI::get(packet)) {
+            handleMidiMessage(packet);
+        }
     }
 
     void Update () {
         USB::Update();
         usb_midi_task();
-        // midi_task(); // TODO: #1 Implement and test UART MIDI code
+        midi_task(); // TODO: #1 Implement and test UART MIDI code
     }
 
     void print (uint8_t *packet) {
