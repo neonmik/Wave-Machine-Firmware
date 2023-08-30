@@ -9,7 +9,7 @@ namespace ARP {
 
 
     void printNoteBuffer (ArpData *input) {
-        printf("inputBuffer :");
+        printf("Arp Note Buffer :");
             for (int i = 0; i < MAX_ARP; i++) {
                 printf("  %d:  %02d  |", i, input[i].note);
             }
