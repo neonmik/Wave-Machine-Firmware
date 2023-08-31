@@ -5,25 +5,32 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes
 
-    - Bug: Something is occasionally causing the Audio core to fall over. something to do with MIDI notes/CC or the amount of data traversing the cores in between DMA filling. May need to remove synth engine code from DMA interupt.
 
-    - Uncofirmed
-        - Bug: Notes and releases act strangly accross preset changes - some notes can get stuck. Can't really replicate yet, just noticed it doing it when Joe was playing...
+
+        - Bug: Preset changes doens't active handle note states properly:
+
+            - Changing preset with Latched notes:
+                - From Arp to Normal: WORKS
+
+            - Changing preset with Sustained notes: 
+                - From Arp to Normal: WORKS (Doesn't carry on playing sustain notes... if this what I want?)
+                - From Normal to Normal: WORKS
+                - From Normal to Arp: BROKEN - Have to press and release playing notes again to stop
+                - From Arp to Arp: BROKEN - Keeps Playing notes while sustain is active, then when sustain is released last note is still playing. Have to press and release to stop it.
+
+            - Changing preset with sustained notes into Latched Arp: BROKEN - Have to press and release playing notes again to stop, Latching mech doesnt work until you turn Hold on and off again.
 
 
 - Updates and Bugfixes:
     - Arp:
-        - These bugs definitely are all linked to the MIDI implementaion. Need to look at the Arduino MIDI library and see how they're handling single byte messages like clock and such.
-            - Bug: Controls are laggy after swapping USB and UART MIDI.
-            - Bug: Arp stops playing when DAW is stopped, should jump back to internal Tempo
-            - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI (this feels like its more of a MIDI specification problem in general than my synth)
-        - Bug: Arp misses random notes when release isn't 0.
-        - Bug: latchRefresh doesnt release via MIDI properly 
-            - happens when you hold one note a and press a load more, doesn't release all the way. 
-            - Also happens when playing more than 3 notes, for some reason the midi doesnt recieve all the off notes?
-        - Bug: Hold knob looses pagination light (still has control as it locks as it leave) when moving fast while _any_ notes are in a sustained state. 
-        - Feature: Add arp octave direction function for later use.
-    
+        - Feature: Add arp octave arp - needs refining. 
+            - improvemenst need to be made as notes sustain forever
+        
+        - Bug: write new code to handles Arp enable/disable, as used preset code which changed sustain setting which made Hold act wierd.
+
+        - Improvements: Improve the gap setting so it's not just on or off. 
+
+        - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
 
     - Controls:
         - Change the layout of controls:
@@ -43,6 +50,10 @@ Current nightly firmware for Wave Machine Hardware.
         - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths.
     
     - USB MIDI/ MIDI:
+        - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
+
+        - Bug: When switch sync modes in from USB to UART, MIDI messages get jumbled - Pitch bend gets shifted down, when no pitchbend messages should be being sent. Think this is an Ableton issue, but only happens with my synth.
+
         - Tidy up MIDI processing code, could be more efficient.
         - Map more CC values and check they're working. 
         
@@ -53,6 +64,7 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Clock: 
         - Feature: Add MIDI Clock out - Will be achieved by dividing internal clock to midi message.
+
         - Bug: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
 
@@ -179,6 +191,8 @@ Features/Bugfixes:
         + DAC
 
     + Arp:
+        + Bugfix: Latch wasn't releasing via MIDI properly. Happened when lost of notes were being pressed, especially when one was still held down.
+        + Bugfix: Notes and releases were getting stuck across preset changes.
         + Bugfix: Latching was not releasing old notes when more than polyphony were played.
         + Bigfix: Hold enabling when engaging Arp.
         + Bugfix: State change algorithm rewritten to allow better handling of voice and MIDI notes across state changes. 
@@ -243,6 +257,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + MIDI:
+        + Bugfix: Several bugs were caused by the UART MIDI implementation not formating messages correctly. This has been fixed by a major rewrite of the UART MIDI parsing code, along with an update to the MIDI message handling code.
         + Improved MIDI handling logic by moving the MIDI Channel verification earlier.
         + Bugfix: UART MIDI IN implentation cause false notes to be called.
         + Added UART MIDI IN.

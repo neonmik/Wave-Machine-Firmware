@@ -26,8 +26,8 @@ namespace NOTE_HANDLING {
   }
 
   uint8_t voices_get (uint8_t slot) {
-    // return the note stored in the slot if currently playing
-    if (VOICES[slot].gate) {
+    // return the note stored in the slot if currently playing, don't return sustained notes as it messes with it.
+  if (VOICES[slot].gate && !VOICES[slot].sustained) {
       return VOICES[slot].note;
     } else {
       return 0;
@@ -270,8 +270,10 @@ namespace NOTE_HANDLING {
       } else {
         if (!_sustain) _sustain_just_released = true;
       }
-      // still not right - if sustain is released just before pressing new notes, it clears the notes just pressed... this needs to be handled before new notes are added...
     }
+  }
+  bool getSustain (void) {
+    return _sustain;
   }
 
   void        voices_inc (void) {

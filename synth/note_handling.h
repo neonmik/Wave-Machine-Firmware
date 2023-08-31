@@ -188,6 +188,7 @@ namespace NOTE_HANDLING {
     uint8_t get_notes_on(void);
 
     void sustain_pedal (uint16_t status);
+    bool getSustain (void);
     void setMode (bool mode);
 }
 

@@ -22,6 +22,12 @@ namespace ARP {
             RELEASE,
         };
 
+        enum class ArpMode {
+            MONO,
+            PARA,
+            POLY,
+        };
+
         enum class ArpDirection {
             UP,
             DOWN,
@@ -32,6 +38,7 @@ namespace ARP {
         };
 
         ArpDirection    arpDirection = ArpDirection::UP;
+        ArpMode         arpMode = ArpMode::POLY;
         NoteState       currentNoteState = NoteState::IDLE;
 
         bool            isRestEnabled = false;
@@ -52,21 +59,25 @@ namespace ARP {
         int8_t          currentPlayIndex;
         uint8_t         currentVoiceIndex;
         int8_t          currentNoteCount;
-        int8_t          _write_index;
-        bool            _notes_changed = false;
+
+        uint8_t         currentPlayOct[POLYPHONY];
+        bool            octavePlaying = false;
 
         bool            isSustainJustReleased = false;
 
-        bool            isHoldEnabled;
-        uint16_t        _last_hold;
-        uint16_t        _last_division;
-        uint16_t        _last_range;
-        uint16_t        _last_direction;
+        bool            isSustainEnabled;
+        uint16_t        hold;
+        uint16_t        division;
+        uint16_t        range;
+        uint16_t        direction;
 
         int8_t          octaveRange;
         int8_t          currentOctave;
 
-        bool _switch = true;
+        // int8_t          _write_index;
+        // bool            _notes_changed = false;
+
+        bool changeDirection = true;
     }
 
     struct ArpData {
@@ -129,16 +140,17 @@ namespace ARP {
     bool get_state (void);
     void reset (void);
 
-    void setHold (uint16_t hold);
-    void setDivision (uint16_t division);
-    void setRange (uint16_t range);
-    void setDirection (uint16_t direction);
+    void setHold (uint16_t input);
+    void setDivision (uint16_t input);
+    void setRange (uint16_t input);
+    void setDirection (uint16_t input);
 
-    void setRest (uint16_t gap);
-    void setSustain (bool sus);
+    void setRest (uint16_t input);
+    void setSustain (bool input);
+    void setLatch (bool input);
 
     void updateOctave (bool rising);
 
-    void setBpm (uint16_t bpm);
+    void setBpm (uint16_t input);
 }
 

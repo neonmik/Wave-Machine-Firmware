@@ -8,7 +8,10 @@ namespace MIDI {
 
     void handleMidiMessage(MidiMessage& input) {
         switch (input.type) {
-            // at the top to give priority for timing
+            // at the top to not waste time.
+            case MidiType::InvalidType:         break; // handleInvalidType();
+
+            // near the top to give priority for timing
             case MidiType::Clock:               handleClock();                                              break;
             
             case MidiType::Start:               handleStart();                                              break;
@@ -43,9 +46,7 @@ namespace MIDI {
 
             case MidiType::SystemReset:         handleReset();                                              break;
 
-            case MidiType::InvalidType:         handleInvalidType(input);                                   break;
-
-            default:                            printf("UART MIDI Message type not found!");                break;
+            default:                            printf("MIDI Message type not found!");                     break;
                 
         }
     }
@@ -178,27 +179,21 @@ namespace MIDI {
                 // printf("MIDI IN: Volume - %d\n", temp);
                 break;
             case 70: // Wavetable
-                // printf("MIDI IN: Wavetable - %d\n", temp);
                 CONTROLS::set_value(CONTROLS::Controls::MAIN, 0, temp);
                 break;
             case 71: // Vector
-                // printf("MIDI IN: Vector - %d\n", temp);
                 CONTROLS::set_value(CONTROLS::Controls::MAIN, 1, temp);
                 break;
             case 72: // Release
-                // printf("MIDI IN: Release - %d\n", temp);
                 CONTROLS::set_value(CONTROLS::Controls::ADSR, 3, temp);
                 break;
             case 73: // Attack
-                // printf("MIDI IN: Attack - %d\n", temp);
                 CONTROLS::set_value(CONTROLS::Controls::ADSR, 0, temp);
                 break;
             case 75: // Decay
-                // printf("MIDI IN: Decay - %d\n", temp);
                 CONTROLS::set_value(CONTROLS::Controls::ADSR, 1, temp);
                 break;
             case 64: // Sustain pedal
-                // CONTROLS::set_value(CONTROLS::Controls::ARP, 0, temp); 
                 NOTE_HANDLING::sustain_pedal(temp);
                 break;
             default:
@@ -211,7 +206,8 @@ namespace MIDI {
     void handleAfterTouch(uint8_t velocity) {
     }
     void handlePitchBend(uint16_t pitch) {
-        uint16_t temp = pitch >> 4; // easy way to map 14 bit range to the needed internal 10 bit.
+        // easy way to map 14 bit range to the needed internal 10 bit.
+        uint16_t temp = pitch >> 4;
         CONTROLS::set_value(0, 3, temp);
     }
     void handleSysEx(MidiMessage message) {
@@ -304,9 +300,9 @@ namespace MIDI {
             inputMessageUSB.data1 =     packet[1];
             inputMessageUSB.data2 =     packet[2];
             
-            printf("USB:    ");
-            printMidiIn();
-            printMidiMessage(inputMessageUSB);
+            // `printf("USB:        ");
+            // printMidiIn();
+            // printMidiMessage(inputMessageUSB);
             
             handleNullVelocity(inputMessageUSB);
 
@@ -322,9 +318,9 @@ namespace MIDI {
         if (!parse())
             return;
 
-        printf("UART:   ");
-        printMidiIn();
-        printMidiMessage(inputMessageUART);
+        // printf("UART:       ");
+        // printMidiIn();
+        // printMidiMessage(inputMessageUART);
 
         handleNullVelocity(inputMessageUART);
 
@@ -678,12 +674,12 @@ namespace MIDI {
         usb_midi_task();
     }
 
-    // void print (uint8_t *packet) {
-    //     printf("MIDI IN: %02X", packet[0]);
-    //     printf(" %02X", packet[1]);
-    //     printf(" %02X", packet[2]);
-    //     printf(" %02X\n", packet[3]);
-    // }
+    void print (uint8_t *packet) {
+        printf("MIDI IN: %02X", packet[0]);
+        printf(" %02X", packet[1]);
+        printf(" %02X", packet[2]);
+        printf(" %02X\n", packet[3]);
+    }
     void printMidiIn (void) {
         printf("MIDI IN:    ");
     }

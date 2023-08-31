@@ -241,7 +241,7 @@ namespace MIDI {
     void sendActiveSense(void);
     void sendReset(void);
 
-    // void print (uint8_t *packet);
+    void print (uint8_t *packet);
 
     void printMidiIn (void);
     void printMidiOut (void);
