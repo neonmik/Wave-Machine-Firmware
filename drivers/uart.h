@@ -13,7 +13,7 @@ namespace UART {
     void Update (void);
     namespace MIDI {
         bool available (void);
-        bool get (uint8_t *packet);
+        uint8_t get (void);
         void send (uint8_t msg[3]);
     }
 }

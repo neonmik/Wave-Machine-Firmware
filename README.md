@@ -13,6 +13,11 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Updates and Bugfixes:
     - Arp:
+        - These bugs definitely are all linked to the MIDI implementaion. Need to look at the Arduino MIDI library and see how they're handling single byte messages like clock and such.
+            - Bug: Controls are laggy after swapping USB and UART MIDI.
+            - Bug: Arp stops playing when DAW is stopped, should jump back to internal Tempo
+            - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI (this feels like its more of a MIDI specification problem in general than my synth)
+        - Bug: Arp misses random notes when release isn't 0.
         - Bug: latchRefresh doesnt release via MIDI properly 
             - happens when you hold one note a and press a load more, doesn't release all the way. 
             - Also happens when playing more than 3 notes, for some reason the midi doesnt recieve all the off notes?

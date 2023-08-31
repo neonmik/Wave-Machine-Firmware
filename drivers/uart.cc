@@ -26,18 +26,13 @@ namespace UART {
     }
     namespace MIDI {
         bool available (void) {
-            return 0;
+            return uart_is_readable(MIDI_UART_ID);
         }
         uint32_t buffer_size (void) {
             return 0;
         }
-        bool get (uint8_t *packet) {
-            // check there's data in the buffer, dont want to wait if theres no data to be read.
-            if (uart_is_readable(MIDI_UART_ID)) {
-                uart_read_blocking(MIDI_UART_ID, packet, 3);
-                return true; // Data was successfully read
-            }
-            return false; // No data available to read
+        uint8_t get (void) {
+            return uart_getc(MIDI_UART_ID);
         }
         void send (uint8_t msg[3]) {
             uart_write_blocking(MIDI_UART_ID, msg, 3);
