@@ -33,77 +33,77 @@ namespace EEPROM {
         buffer[1] = address & 0xFF;
 
 
-        buffer[2] = (preset.Wave.shape >> 8) & 0xFF;
-        buffer[3] = preset.Wave.shape & 0xFF;
-        buffer[4] = (preset.Wave.vector >> 8) & 0xFF;
-        buffer[5] = preset.Wave.vector & 0xFF;
-        buffer[6] = (preset.Wave.octave >> 8) & 0xFF;
-        buffer[7] = preset.Wave.octave & 0xFF;
-        buffer[8] = (preset.Wave.pitch >> 8) & 0xFF;
-        buffer[9] = preset.Wave.pitch & 0xFF;
+        buffer[ADDRESS_SIZE + 0] = (preset.Wave.shape >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 1] = preset.Wave.shape & 0xFF;
+        buffer[ADDRESS_SIZE + 2] = (preset.Wave.vector >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 3] = preset.Wave.vector & 0xFF;
+        buffer[ADDRESS_SIZE + 4] = (preset.Wave.octave >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 5] = preset.Wave.octave & 0xFF;
+        buffer[ADDRESS_SIZE + 6] = (preset.Wave.pitch >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 7] = preset.Wave.pitch & 0xFF;
 
-        buffer[10] = (preset.Envelope.attack >> 8) & 0xFF;
-        buffer[11] = preset.Envelope.attack & 0xFF;
-        buffer[12] = (preset.Envelope.decay >> 8) & 0xFF;
-        buffer[13] = preset.Envelope.decay & 0xFF;
-        buffer[14] = (preset.Envelope.sustain >> 8) & 0xFF;
-        buffer[15] = preset.Envelope.sustain & 0xFF;
-        buffer[16] = (preset.Envelope.release >> 8) & 0xFF;
-        buffer[17] = preset.Envelope.release & 0xFF;
+        buffer[ADDRESS_SIZE + 8] = (preset.Envelope.attack >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 9] = preset.Envelope.attack & 0xFF;
+        buffer[ADDRESS_SIZE + 10] = (preset.Envelope.decay >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 11] = preset.Envelope.decay & 0xFF;
+        buffer[ADDRESS_SIZE + 12] = (preset.Envelope.sustain >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 13] = preset.Envelope.sustain & 0xFF;
+        buffer[ADDRESS_SIZE + 14] = (preset.Envelope.release >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 15] = preset.Envelope.release & 0xFF;
 
-        buffer[18] = preset.Modulation.state;
-        buffer[19] = (preset.Modulation.matrix >> 8) & 0xFF;
-        buffer[20] = preset.Modulation.matrix & 0xFF;
-        buffer[21] = (preset.Modulation.rate >> 8) & 0xFF;
-        buffer[22] = preset.Modulation.rate & 0xFF;
-        buffer[23] = (preset.Modulation.depth >> 8) & 0xFF;
-        buffer[24] = preset.Modulation.depth & 0xFF;
-        buffer[25] = (preset.Modulation.wave >> 8) & 0xFF;
-        buffer[26] = preset.Modulation.wave & 0xFF;
+        buffer[ADDRESS_SIZE + 16] = preset.Modulation.state;
+        buffer[ADDRESS_SIZE + 17] = (preset.Modulation.matrix >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 18] = preset.Modulation.matrix & 0xFF;
+        buffer[ADDRESS_SIZE + 19] = (preset.Modulation.rate >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 20] = preset.Modulation.rate & 0xFF;
+        buffer[ADDRESS_SIZE + 21] = (preset.Modulation.depth >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 22] = preset.Modulation.depth & 0xFF;
+        buffer[ADDRESS_SIZE + 23] = (preset.Modulation.wave >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 24] = preset.Modulation.wave & 0xFF;
 
-        buffer[27] = preset.Arpeggiator.state;
-        buffer[28] = (preset.Arpeggiator.hold >> 8) & 0xFF;
-        buffer[29] = preset.Arpeggiator.hold & 0xFF;
-        buffer[30] = (preset.Arpeggiator.divisions >> 8) & 0xFF;
-        buffer[31] = preset.Arpeggiator.divisions & 0xFF;
-        buffer[32] = (preset.Arpeggiator.range >> 8) & 0xFF;
-        buffer[33] = preset.Arpeggiator.range & 0xFF;
-        buffer[34] = (preset.Arpeggiator.direction >> 8) & 0xFF;
-        buffer[35] = preset.Arpeggiator.direction & 0xFF;
+        buffer[ADDRESS_SIZE + 25] = preset.Arpeggiator.state;
+        buffer[ADDRESS_SIZE + 26] = (preset.Arpeggiator.hold >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 27] = preset.Arpeggiator.hold & 0xFF;
+        buffer[ADDRESS_SIZE + 28] = (preset.Arpeggiator.divisions >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 29] = preset.Arpeggiator.divisions & 0xFF;
+        buffer[ADDRESS_SIZE + 30] = (preset.Arpeggiator.range >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 31] = preset.Arpeggiator.range & 0xFF;
+        buffer[ADDRESS_SIZE + 32] = (preset.Arpeggiator.direction >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 33] = preset.Arpeggiator.direction & 0xFF;
 
-        buffer[36] = preset.Filter.state;
-        buffer[37] = (preset.Filter.cutoff >> 8) & 0xFF;
-        buffer[38] = preset.Filter.cutoff & 0xFF;
-        buffer[39] = (preset.Filter.resonance >> 8) & 0xFF;
-        buffer[40] = preset.Filter.resonance & 0xFF;
-        buffer[41] = (preset.Filter.punch >> 8) & 0xFF;
-        buffer[42] = preset.Filter.punch & 0xFF;
-        buffer[43] = (preset.Filter.type >> 8) & 0xFF;
-        buffer[44] = preset.Filter.type & 0xFF;
+        buffer[ADDRESS_SIZE + 34] = preset.Filter.state;
+        buffer[ADDRESS_SIZE + 35] = (preset.Filter.cutoff >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 36] = preset.Filter.cutoff & 0xFF;
+        buffer[ADDRESS_SIZE + 37] = (preset.Filter.resonance >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 38] = preset.Filter.resonance & 0xFF;
+        buffer[ADDRESS_SIZE + 39] = (preset.Filter.punch >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 40] = preset.Filter.punch & 0xFF;
+        buffer[ADDRESS_SIZE + 41] = (preset.Filter.type >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 42] = preset.Filter.type & 0xFF;
 
-        buffer[45] = (preset.Filter.attack >> 8) & 0xFF;
-        buffer[46] = preset.Filter.attack & 0xFF;
-        buffer[47] = (preset.Filter.decay >> 8) & 0xFF;
-        buffer[48] = preset.Filter.decay & 0xFF;
-        buffer[49] = (preset.Filter.sustain >> 8) & 0xFF;
-        buffer[50] = preset.Filter.sustain & 0xFF;
-        buffer[51] = (preset.Filter.release >> 8) & 0xFF;
-        buffer[52] = preset.Filter.release & 0xFF;
+        buffer[ADDRESS_SIZE + 43] = (preset.Filter.attack >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 44] = preset.Filter.attack & 0xFF;
+        buffer[ADDRESS_SIZE + 45] = (preset.Filter.decay >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 46] = preset.Filter.decay & 0xFF;
+        buffer[ADDRESS_SIZE + 47] = (preset.Filter.sustain >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 48] = preset.Filter.sustain & 0xFF;
+        buffer[ADDRESS_SIZE + 49] = (preset.Filter.release >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 50] = preset.Filter.release & 0xFF;
 
-        buffer[53] = (preset.Effects.gain >> 8) & 0xFF;
-        buffer[54] = preset.Effects.gain & 0xFF;
-        buffer[55] = 0;
-        buffer[56] = 0;
-        buffer[57] = 0;
-        buffer[58] = 0;
-        buffer[59] = 0;
-        buffer[60] = 0;
-        buffer[61] = 0;
-        buffer[62] = 0;
+        buffer[ADDRESS_SIZE + 51] = (preset.Effects.gain >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 52] = preset.Effects.gain & 0xFF;
+        buffer[ADDRESS_SIZE + 53] = (preset.Arpeggiator.bpm >> 8) & 0xFF;
+        buffer[ADDRESS_SIZE + 54] = preset.Arpeggiator.bpm & 0xFF;
+        buffer[ADDRESS_SIZE + 55] = 0;
+        buffer[ADDRESS_SIZE + 56] = 0;
+        buffer[ADDRESS_SIZE + 57] = 0;
+        buffer[ADDRESS_SIZE + 58] = 0;
+        buffer[ADDRESS_SIZE + 59] = 0;
+        buffer[ADDRESS_SIZE + 60] = 0;
 
-        buffer[63] = 0;
-        buffer[64] = 0;
-        buffer[65] = 0xAF;
+        buffer[ADDRESS_SIZE + 61] = 0;
+        buffer[ADDRESS_SIZE + 62] = 0;
+        buffer[ADDRESS_SIZE + 63] = 0xAF;
 
         // maybe add some sort of padding here? 
         // 0xAF = After
@@ -201,6 +201,8 @@ namespace EEPROM {
         preset.Filter.release = (preset_buffer[49] << 8) | preset_buffer[50];
 
         preset.Effects.gain = (preset_buffer[51] << 8) | preset_buffer[52];
+
+        preset.Arpeggiator.bpm = (preset_buffer[53] << 8) | preset_buffer[54];
 
         
         // printf("Preset %d read from EEPROM!\n", slot);
