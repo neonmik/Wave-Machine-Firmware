@@ -28,6 +28,11 @@ struct PRESET {
         uint16_t divisions = 511;
         uint16_t range = 0;
         uint16_t direction = 0;
+
+        uint16_t rest = 0;
+        uint16_t bpm = 289; // 120bpm
+        uint16_t fMode = 0;
+        uint16_t octMode = 0;
     };
     struct Flt {
         bool state = true;
@@ -35,6 +40,7 @@ struct PRESET {
         uint16_t resonance = 0;
         uint16_t punch = 0;
         uint16_t type = 0;
+
         uint16_t attack = 2;
         uint16_t decay = 2;
         uint16_t sustain = 1023;
