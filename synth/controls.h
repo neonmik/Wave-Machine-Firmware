@@ -2,7 +2,6 @@
 
 #include "string.h"
 #include "pico/stdlib.h"
-// #include "hardware/sync.h"
 
 #include "preset.h"
 
@@ -84,7 +83,6 @@ namespace CONTROLS {
                         return _input[control];
                     }
                     void Update() {
-                        // if (_active && _changed) {
                         if (_active) {
                             for (int i = 0; i < 4; i++) {
                                 if (_changed[i]) {
@@ -93,10 +91,6 @@ namespace CONTROLS {
                                 }
                             }
                         }
-                        //     for (int i = 0; i < 4; i++) {
-                        //         if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
-                        //     }
-                        // }
                     }
             };
 
@@ -113,25 +107,8 @@ namespace CONTROLS {
             Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
                 Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
             
-            Page        ARP     {&ARP::setHold,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::set_state};
-                Page    sARP    {&ARP::setRest,           &ARP::setBpm,              nullptr,                    nullptr,                         nullptr};
-
-            //&ARP::set_gap
-            
-            // Ideas for changing controls layout.
-            // Page: 1 - 
-            //           OSC    Knob 1: Waveshape,      Knob 2: Wavevector,     Knob 3: Octave,     Knob 4: Pitchbend,      Button: ?
-            //           ENV    Knob 1: Attack,         Knob 2: Decay,          Knob 3: Sustain,    Knob 4: Release,        Button: Envelope Bypass 
-            // Page: 2 - 
-            //           LFO    Knob 1: Waveshape,      Knob 2: Rate,           Knob 3: Depth,      Knob 4: Destination,    Button: LFO BYPASS
-            //           ENV    Knob 1: Attack,         Knob 2: Decay,          Knob 3: Sustain,    Knob 4: Release,        Button: Envelope Bypass 
-            // Page: 3 - 
-            //           FLT    Knob 1: Cutoff,         Knob 2: Resonance,      Knob 3: Punch,      Knob 4: Mode,           Button: FLT BYPASS
-            //           ENV    Knob 1: Attack,         Knob 2: Decay,          Knob 3: Sustain,    Knob 4: Release,        Button: Envelope Bypass 
-            // Page: 4(ALL) - 
-            //           ARP    Knob 1: Hold,           Knob 2: Rate,           Knob 3: Range,      Knob 4: Direction,      Button: ?
-            //           ???    Knob 1: Gap,            Knob 2: BPM,            Knob 3: fMONO/PARA, Knob 4: unkown,         Button: unkown 
-
+            Page        ARP     {&ARP::setRest,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::set_state};
+                Page    sARP    {nullptr,                 &ARP::setBpm,              nullptr,                    nullptr,                         nullptr};
             
 
             void Init (void) { }
@@ -212,9 +189,9 @@ namespace CONTROLS {
                 ADSR.Update();
                 MOD1.Update();
                 ARP.Update();
-                FILT.Update();
-                fENV.Update();
                 SHFT.Update();
+                fENV.Update();
+                FILT.Update();
                 sARP.Update();
             }
     };

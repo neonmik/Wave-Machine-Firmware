@@ -112,9 +112,8 @@ void set_shift (bool shift) {
                 // printf("Save!\n");
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-                LEDS::ARP.flash(4,50);
-
-                // printf("Arp!\n");
+                // LEDS::ARP.flash(4,50);
+                // ARP::toggleHold();
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
                 LEDS::PAGE_1.flash_set(4,50);
@@ -125,6 +124,10 @@ void set_shift (bool shift) {
             
             set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
             
+            if (Buttons::ARP.get(Buttons::State::LONG)) {
+                LEDS::ARP.flash(4,50);
+                ARP::toggleHold();
+            }
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
                 toggle_arp();
             }

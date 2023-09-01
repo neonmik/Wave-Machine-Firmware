@@ -21,14 +21,16 @@ namespace ARP {
     }
 
     void set_state (bool state) {
-        if (state != isArpActive) {
-            isArpActive = state;
-            reset();  
-        }
+        if (isArpActive == state) return; // already set
+        
+        isArpActive = state;
+        reset();  
     }
     bool get_state (void) {
         return isArpActive;
     }
+
+
 
     void reset () {
         NOTE_HANDLING::voices_stop_all(); // clears the actual synth voices
@@ -42,72 +44,125 @@ namespace ARP {
             // setSustain(NOTE_HANDLING::getSustain()); // to make sure sustain gets passed on?
         }
 
+
     }
 
     void arpeggiate(ArpDirection direction) {
+        if (arpMode == ArpMode::POLY) {
+            switch (direction) {
+                case ArpDirection::UP:
+                    updateOctave(ArpDirection::UP);
+                    break;
+                case ArpDirection::DOWN:
+                    updateOctave(ArpDirection::DOWN);
+                    break;
+                case ArpDirection::UP_DOWN:
+                    updateOctave(ArpDirection::UP_DOWN);
+                    break;
+                case ArpDirection::DOWN_UP:
+                    updateOctave(ArpDirection::DOWN_UP);
+                    break;
+            }
+            return;
+        } else {
+            switch (direction) {
+                case ArpDirection::UP:
+                    ++currentPlayIndex;
+                    if (currentPlayIndex >= currentNoteCount) {
+                        currentPlayIndex = 0;
+                        updateOctave(ArpDirection::UP);
+                    }
+                    break;
+                case ArpDirection::DOWN:
+                    currentPlayIndex--;
+                    if (currentNoteCount > 1) {
+                        if (currentPlayIndex <= -1) {
+                            currentPlayIndex = currentNoteCount - 1;
+                            updateOctave(ArpDirection::UP);
+
+                        }
+                    } else {
+                        currentPlayIndex = 0;
+                        updateOctave(ArpDirection::UP);
+                    }
+                    break;
+                case ArpDirection::UP_DOWN:
+                    if (changeDirection) {
+                        ++currentPlayIndex;
+                        if (currentPlayIndex >= currentNoteCount) {
+                            currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
+                            if (octaveMode == OctaveMode::OLD) changeDirection = false;
+                            else updateOctave(ArpDirection::UP);
+                        }
+                    } else {
+                        --currentPlayIndex;
+                        if (currentPlayIndex < 0) {
+                            currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
+                            if (octaveMode == OctaveMode::OLD) {
+                                changeDirection = true;
+                                updateOctave(ArpDirection::UP);
+                            } else {
+                                updateOctave(ArpDirection::DOWN);
+                            }
+                        }
+                    }
+                    break;
+                case ArpDirection::DOWN_UP:
+                    if (changeDirection) {
+                        currentPlayIndex--;
+                        if (currentPlayIndex < 0) {
+                            currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
+                            if (octaveMode == OctaveMode::OLD) changeDirection = false;
+                            else updateOctave(ArpDirection::DOWN);
+                        }
+                    } else {
+                        ++currentPlayIndex;
+                        if (currentPlayIndex >= currentNoteCount) {
+                            currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
+                            if (octaveMode == OctaveMode::OLD) {
+                                changeDirection = true;
+                                updateOctave(ArpDirection::UP);
+                            } else {
+                                updateOctave(ArpDirection::UP);
+                            }
+                        }
+                    }
+                    break;
+                }
+        }
+    }
+    void updateOctave (ArpDirection direction) {
         switch (direction) {
             case ArpDirection::UP:
-                ++currentPlayIndex;
-                if (currentPlayIndex >= currentNoteCount) {
-                    currentPlayIndex = 0;
-                    updateOctave(true);
+                ++currentOctave;
+                if (currentOctave > octaveRange) {
+                    currentOctave = 0;
                 }
                 break;
             case ArpDirection::DOWN:
-                currentPlayIndex--;
-                if (currentNoteCount > 1) {
-                    if (currentPlayIndex <= -1) {
-                        currentPlayIndex = currentNoteCount - 1;
-                        updateOctave(true);
-                    }
-                } else {
-                    currentPlayIndex = 0;
-                    updateOctave(true);
+                --currentOctave;
+                if (currentOctave < 0) {
+                    currentOctave = octaveRange;
                 }
                 break;
             case ArpDirection::UP_DOWN:
-                if (changeDirection) {
-                    ++currentPlayIndex;
-                    if (currentPlayIndex >= currentNoteCount) {
-                        currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
-                        changeDirection = false;
-                    }
-                } else {
-                    --currentPlayIndex;
-                    if (currentPlayIndex < 0) {
-                        currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
-                        changeDirection = true;
-                        updateOctave(true);
-                    }
-                }
-                break;
             case ArpDirection::DOWN_UP:
-                if (changeDirection) {
-                    currentPlayIndex--;
-                    if (currentPlayIndex < 0) {
-                        currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
-                        changeDirection = false;
-                    }
-                } else {
-                    ++currentPlayIndex;
-                    if (currentPlayIndex >= currentNoteCount) {
-                        currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
-                        changeDirection = true;
-                        updateOctave(true);
-                    }
+                switch (octaveDirection) {
+                    case ArpDirection::UP:
+                        ++currentOctave;
+                        if (currentOctave >= octaveRange) {
+                            currentOctave = octaveRange;
+                            octaveDirection = ArpDirection::DOWN;
+                        }
+                        break;
+                    case ArpDirection::DOWN:
+                        --currentOctave;
+                        if (currentOctave <= 0) {
+                            currentOctave = 0;
+                            octaveDirection = ArpDirection::UP;
+                        }
+                        break;
                 }
-                break;
-        }
-    }
-    void updateOctave (bool rising) {
-        switch (rising) {
-            case true:
-                ++currentOctave;
-                if (currentOctave > octaveRange) currentOctave = 0;
-                break;
-            case false:
-                --currentOctave;
-                if (currentOctave < octaveRange) currentOctave = octaveRange;
                 break;
         }
         // add variable for direction for new arp modes (more similar in handling to JUNO)
@@ -122,25 +177,22 @@ namespace ARP {
                 clearSustainedNotes();
                 isSustainJustReleased = false;
             }
-            transferNotes();
             if (CLOCK::get_changed()) {
+                transferNotes(); // moving in here to quantize?
 
                 switch (currentNoteState) {
-
                     case NoteState::ACTIVE:
                         if (arpMode == ArpMode::POLY) {
-                            for (int i = 0; i < currentNoteCount; i++) {
-                                if (arpVoices[i].isActive()) {
+                            // Niether of these seem to work? MIDI ISSUES can possibly reduce POLYPHONY to currentNoteCount
+                            for (int i = 0; i < POLYPHONY; i++) {
+                                // Should be able to remove this check, as it shouldn't change between playing and releasing
+                                if (currentPlayOct[i]) {
                                     NOTE_HANDLING::voice_off(i, currentPlayOct[i], 0);
                                     MIDI::sendNoteOff(currentPlayOct[i], 0);
-                                    
-                                }
-                                octavePlaying = false;
-                                arpeggiate(arpDirection);
-                                currentNoteState = NoteState::IDLE;
-                                // if (!octavePlaying) {
-                                // }
+                                }   
                             }
+                            arpeggiate(arpDirection);
+                            currentNoteState = NoteState::IDLE;
                             if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                         } else {
                             NOTE_HANDLING::voice_off(currentVoiceIndex, currentPlayNote, 0);
@@ -162,12 +214,9 @@ namespace ARP {
 
                                     NOTE_HANDLING::voice_on(i, currentPlayOct[i], 127);
                                     MIDI::sendNoteOn(currentPlayOct[i], 127);
-
-                                    // octavePlaying = true;
                                 }
-                                // if (octavePlaying) 
-                                currentNoteState = NoteState::ACTIVE;
                             }
+                            currentNoteState = NoteState::ACTIVE;
                         } else {
                             if (currentPlayIndex >= currentNoteCount) currentPlayIndex = 0;
 
@@ -194,22 +243,23 @@ namespace ARP {
             // printf("Wierd, empty addNote...\n"); 
             return;
         }
-        // check if not is already playing
-        if (isSustainEnabled) {
-            if (latchEnabled) {
-                // if the chord refresh option is enabled
-                if (latchRefresh) { 
-                    // refresh timeout clock
-                    clearAllNotes();
-                    latchCount = 0;
-                    latchRefresh = false;
-                    // don't return, let it roll on and add new note
-                }   
-                ++latchCount;
-                if (latchCount == MAX_ARP) latchCount = MAX_ARP;
-                printf("latchCount++ = %d\n", latchCount);
-            }
+
+        if (latchEnabled) {
+            // if the chord refresh option is enabled
+            if (latchRefresh) { 
+                // refresh timeout
+                clearAllNotes();
+                latchRefresh = false;
+                // latchCount = 0; // don't think this is needed with proper removeNotes implementaion
+            }   
+
+            ++latchCount;
+            
+            printf("++latchCount: %d\n", latchCount);
+
+            if (latchCount == MAX_ARP) latchCount = MAX_ARP;
         }
+
         for (int i = 0; i < MAX_ARP; ++i) {
             if (inputBuffer[i].note == note) {
                 // resets the note
@@ -241,11 +291,11 @@ namespace ARP {
                         inputNoteCount = MAX_ARP;
                         inputBufferFull = true;
                     }
-                    break;
+                    
+                    // return at first free note.
+                    return;
                 }
             }
-            //return here so it doesnt roll over
-            // return;
         } else {
             // Write the note to the last available slot
             inputBuffer[inputWriteIndex].add(note);
@@ -272,18 +322,18 @@ namespace ARP {
             bufferSize = inputNoteCount;
         }
         
-        if (isSustainEnabled) { 
-            if (latchEnabled) {
-                // new chord type of arp latching - allows you to actually play it without a pedal
-                latchCount--;
-                printf("latchCount-- = %d\n", latchCount);
-                if (latchCount <= 0) {
-                    latchCount = 0;
-                    latchRefresh = true;
-                }
-                // still carry on to mark as sustained
+        if (latchEnabled) {
+            // new chord type of arp latching - allows you to actually play it without a pedal
+            latchCount--;
+
+            printf("--latchCount: %d\n", latchCount);
+            
+            if (latchCount <= 0) {
+                latchCount = 0;
+                latchRefresh = true;
             }
         }
+
         // Check all the active notes
         for (int i = 0; i < bufferSize; ++i) {
             // If the note is here
@@ -423,9 +473,6 @@ namespace ARP {
         currentPlayIndex = 0;
 
         latchCount = 0;
-
-
-        NOTE_HANDLING::voices_clr();
     }
 
     void passNotes (void) {
@@ -433,7 +480,7 @@ namespace ARP {
         uint8_t activeVoices;
 
         if (!isSustainEnabled) {
-            // sustain not active - release all notes
+            // sustain not active - send all actual notes
             for (int i = 0; i < MAX_ARP; i++) {
                 // copy all the notes form arp to normal voices
                 uint8_t note = arpVoices[i].note;
@@ -443,38 +490,56 @@ namespace ARP {
                     activeVoices++;
                 }
             }
-            // just a little sanity check
-            // if (activeVoices != inputNoteCount) printf("Passing Notes count mismatch!");
-
             // update the filter envelope
             NOTE_HANDLING::voices_set(activeVoices);
         } else {
-            // sustain is active - only release sustained notes, we want the notes that are held down to keep playing out
+            // sustain is active - only pass held notes, we want the sustained notes to ring out
             for (int i = 0; i < MAX_ARP; i++) {
                 uint8_t note = inputBuffer[i].note;
-                // check there is a note numbe, if not, skip it
+                // check there is a note number, if not, skip it
                 if (note == 0)  break;
                 
-                // if the note is not marked as being sustained, transfer it to the first available voice
-                if (!inputBuffer[i].isSustained()) {
-                    // note isn't marked as sustaining, therefore meaning the note is sill pressed down
-                    NOTE_HANDLING::voice_on(activeVoices, note, 127);
-                    MIDI::sendNoteOn(note, 127);
-                    activeVoices++;
-                } else {
-                    // note is held with sustain, if it's playing, release it.
-                    NOTE_HANDLING::voice_stop(note);
-                    MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
-                }
+                // pass the note out
+                NOTE_HANDLING::voice_on(activeVoices, note, 127);
+                MIDI::sendNoteOn(note, 127);
+
+                // mark the note as sustained if it is 
+                if (inputBuffer[i].isSustained()) NOTE_HANDLING::note_off(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
+
+                activeVoices++;
+
             }
             NOTE_HANDLING::voices_set(activeVoices);
         }
     }
 
     void grabNotes (void) {
+        uint8_t sustainNotes = 0;
+
         for (int i = 0; i < POLYPHONY; i++) {
-            // this loops through all the active voices, adding it to the inputBuffer. this internally places it in a correct voice.
-            addNote(NOTE_HANDLING::voices_get(i));
+            // this loops through all the active voices, adding it to the inputBuffer.
+            uint8_t note = NOTE_HANDLING::voices_get(i);
+            bool sustained = NOTE_HANDLING::voices_check(i);
+            addNote(note);
+            if (sustained) {
+                sustainNotes++;
+                for (int i = 0; i < MAX_ARP; i++) {
+                    if (inputBuffer[i].note == note) {
+                        inputBuffer[i].sustain(); // means if the note is already sustained, it logs that.
+                    }
+                    
+                }
+            }
+        }
+        if (latchEnabled) {
+            latchCount -= sustainNotes;
+
+            printf("grabNotes latchCount: %d\n", latchCount);
+            
+            if (latchCount <= 0) {
+                latchCount = 0;
+                latchRefresh = true;
+            }
         }
         transferNotes();
     }
@@ -484,26 +549,22 @@ namespace ARP {
     }
 
     
-    void setHold (uint16_t hold) {
-        bool temp = (bool)(hold>>9);
+    void toggleHold (void) {
+        isSustainEnabled = !isSustainEnabled; // toggle
 
-        if (temp == hold) return;
-        hold = temp;
+        updateSustain();
+    }
+    void toggleSustain (void) {
+        isSustainEnabled = !isSustainEnabled; // toggle
         
-        setSustain(hold);
-        setLatch(hold); // performed here so it doesn't latch when using a sustain pedal.
+        updateSustain();
     }
-    void setSustain (bool sus) {
-        if (isSustainEnabled != sus) {
-            isSustainEnabled = sus;
-            if (!isSustainEnabled) {
-                // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
-                isSustainJustReleased = true;
-            } 
-        }
-    }
-    void setLatch (bool input) {
-        latchEnabled = input;
+    void updateSustain (void) {
+
+        if (!isSustainEnabled) {
+            // Only clears the notes if hold has been disengaged - lets you play notes then engage whatevers being held
+            isSustainJustReleased = true;
+        } 
     }
 
     // working functions that dont need changing
@@ -512,36 +573,40 @@ namespace ARP {
         uint8_t temp = map(input, 0, 1023, 0, 10);
 
         
-        if (temp == division) return;
+        if (division == temp) return;
 
         division = temp;
         CLOCK::setDivision(temp);
     }
     void setRange (uint16_t input) {
-        if (input == range) return;
-        range = input;
+        if (range == (input >> 8)) return;
+        range = (input >> 8);
         // bit shift to get 0-4 octaves of range for the Arp
-        octaveRange = range>>8;
+        octaveRange = range;
 
         // optional unquantized range changing:
         // if (currentOctave > octaveRange) currentOctave = octaveRange; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
     }   
     void setDirection (uint16_t input) {
-        if (input == direction) return;
-        direction = input;
+        if (direction == (input>>8)) return;
+        direction = (input>>8);
         // bitshift to get 0-3 for the Arp direction
-        switch (direction>>8) {
+        switch (direction) {
             case 0:
                 arpDirection = ArpDirection::UP;
+                octaveDirection = ArpDirection::UP;
                 break;
             case 1:
                 arpDirection =  ArpDirection::DOWN;
+                octaveDirection = ArpDirection::DOWN;
                 break;
             case 2:
                 arpDirection =  ArpDirection::UP_DOWN;
+                octaveDirection = ArpDirection::UP;
                 break;
             case 3:
                 arpDirection =  ArpDirection::DOWN_UP;
+                octaveDirection = ArpDirection::DOWN;
                 break;
         }
     }

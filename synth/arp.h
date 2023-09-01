@@ -36,16 +36,30 @@ namespace ARP {
             // RAND,
             // PLAY_ORDER
         };
+        
+        enum class OctaveDirection {
+            UP,
+            DOWN,
+        };
+
+        enum class OctaveMode {
+            OLD, // Octave jumps always go up, on UP/DOWN settings the arp goes Up then Down, then changes upwards
+            NEW, // Juno style. Octave changes follow the direction - on DOWN starts at the top then works backwards, on UP/DOWN goes all the way to the top before coming back down.
+        };
 
         ArpDirection    arpDirection = ArpDirection::UP;
-        ArpMode         arpMode = ArpMode::POLY;
+        ArpMode         arpMode = ArpMode::MONO;
+
+        ArpDirection    octaveDirection = ArpDirection::UP;
+        OctaveMode      octaveMode = OctaveMode::OLD;
+
         NoteState       currentNoteState = NoteState::IDLE;
 
         bool            isRestEnabled = false;
 
         bool            isArpActive;
 
-        bool            latchEnabled; // This is used to enable/disable the chord latching feature... only found used in hold/latch not sustain (I think?)
+        bool            latchEnabled = true; // This is only used to enable/disable the chord latching feature within sustain
         bool            latchRefresh = false;
         int8_t          latchCount = 0;
         uint32_t        chordRefreshTimeout;
@@ -66,6 +80,7 @@ namespace ARP {
         bool            isSustainJustReleased = false;
 
         bool            isSustainEnabled;
+        bool            isHoldEnabled;
         uint16_t        hold;
         uint16_t        division;
         uint16_t        range;
@@ -73,9 +88,7 @@ namespace ARP {
 
         int8_t          octaveRange;
         int8_t          currentOctave;
-
-        // int8_t          _write_index;
-        // bool            _notes_changed = false;
+        uint8_t         startOctave;
 
         bool changeDirection = true;
     }
@@ -140,16 +153,16 @@ namespace ARP {
     bool get_state (void);
     void reset (void);
 
-    void setHold (uint16_t input);
+    void setRest (uint16_t input);
     void setDivision (uint16_t input);
     void setRange (uint16_t input);
     void setDirection (uint16_t input);
 
-    void setRest (uint16_t input);
-    void setSustain (bool input);
-    void setLatch (bool input);
+    void toggleHold (void);
+    void toggleSustain (void);
+    void updateSustain (void);
 
-    void updateOctave (bool rising);
+    void updateOctave (ArpDirection direction);
 
     void setBpm (uint16_t input);
 }

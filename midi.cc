@@ -733,8 +733,10 @@ namespace MIDI {
             printMidiType(message.type);
             printf(":");
             for (int i = 0; i < message.length; i++) {
-                if (i & 0x8) printf("\n");
                 printf(" %d", message.dataSysex[i]);
+                if ((i + 1) % 8 == 0) {
+                    printf("\n");
+                }
             }
             printf("\n");
         } else {

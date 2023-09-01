@@ -5,39 +5,24 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes
 
-
-
-        - Bug: Preset changes doens't active handle note states properly:
-
-            - Changing preset with Latched notes:
-                - From Arp to Normal: WORKS
-
-            - Changing preset with Sustained notes: 
-                - From Arp to Normal: WORKS (Doesn't carry on playing sustain notes... if this what I want?)
-                - From Normal to Normal: WORKS
-                - From Normal to Arp: BROKEN - Have to press and release playing notes again to stop
-                - From Arp to Arp: BROKEN - Keeps Playing notes while sustain is active, then when sustain is released last note is still playing. Have to press and release to stop it.
-
-            - Changing preset with sustained notes into Latched Arp: BROKEN - Have to press and release playing notes again to stop, Latching mech doesnt work until you turn Hold on and off again.
+    - Bug: Notes in sustain don't act as they should when 
 
 
 - Updates and Bugfixes:
     - Arp:
-        - Feature: Add arp octave arp - needs refining. 
-            - improvemenst need to be made as notes sustain forever
-        
-        - Bug: write new code to handles Arp enable/disable, as used preset code which changed sustain setting which made Hold act wierd.
-
         - Improvements: Improve the gap setting so it's not just on or off. 
+            - Bring back the old intermediate NoteState
+            - Add a timer function to clock.
 
         - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
 
     - Controls:
         - Change the layout of controls:
-            - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now), shift for all should be ENV control, and Active should control on off of all associated functions(?).
-            - Holding Preset should save
-            - Shift should be holding Page?
-            - Envelope should be pressing 
+            - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now)
+            - Holding Page should be Shift - this should expose extra features
+
+            - Holding Preset and page should save preset
+ 
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
         
     - Oscillator:
@@ -191,6 +176,12 @@ Features/Bugfixes:
         + DAC
 
     + Arp:
+        + Bugfix: Arp was getting stuck at top or bottom of range. Reworked Octave direction code, aswell as setDirection code.
+        + Feature: Added a new Arp mode! Octave Arp:- Plays all notes simultaneously up to POLYPHONY. If the Range setting is set more than 0, it will also Octavate in the same direction as the normal arp is set.
+        + Bugfix: The latching code now exsists outside of the sustain function, this should be better for future.
+        + Improvement: Quantized the adding and removal of notes to the Arp. The allows for a much better playing experience, along with better midi syncing. It's fun! Will add a setting for this in future, as I'm sure some people wouldnt want it. 
+        + Improvements and Bugfix: Added proper Sustain pedal behaviour to the Arp. this now allows a choice of either Momentary Sustain/Latch control, or a toggling behaviour, which works a little better for latch.
+        + Bugfix: When changing Presets, the Hold/Latch function wasn't acting correctly and would have hold on if a previous Preset had it enabled.
         + Bugfix: Latch wasn't releasing via MIDI properly. Happened when lost of notes were being pressed, especially when one was still held down.
         + Bugfix: Notes and releases were getting stuck across preset changes.
         + Bugfix: Latching was not releasing old notes when more than polyphony were played.

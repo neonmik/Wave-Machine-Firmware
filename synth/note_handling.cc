@@ -25,9 +25,16 @@ namespace NOTE_HANDLING {
     QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
   }
 
+  bool voices_check (uint8_t slot) {
+    if (VOICES[slot].sustained) { 
+      return true;
+    } else {
+      return false;
+    }
+  }
   uint8_t voices_get (uint8_t slot) {
     // return the note stored in the slot if currently playing, don't return sustained notes as it messes with it.
-  if (VOICES[slot].gate && !VOICES[slot].sustained) {
+    if (VOICES[slot].gate) { //}) && !VOICES[slot].sustained) {
       return VOICES[slot].note;
     } else {
       return 0;
@@ -258,18 +265,22 @@ namespace NOTE_HANDLING {
     }
   }
   void sustain_pedal(uint16_t status) {
+    
     // bit shift to binary number (yes or no)
     bool temp = (status >> 9);
 
     if (_sustain != temp) {
       // if the input is new, then set it.
       _sustain = temp;
-      if (ARP::get_state()) {
-        // arp notes
-        ARP::setSustain(_sustain); // ???
-      } else {
-        if (!_sustain) _sustain_just_released = true;
+
+      // this works like a momentary sustain pedal
+      // if (ARP::get_state()) ARP::toggleSustain(); 
+
+      // this should toggle it like  switch
+      if (_sustain) {
+        if (ARP::get_state()) ARP::toggleSustain(); 
       }
+      if (!_sustain) _sustain_just_released = true;
     }
   }
   bool getSustain (void) {

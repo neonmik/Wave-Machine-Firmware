@@ -9,11 +9,14 @@ namespace Buttons {
             _double = true;
         }
         _last_press_time = time_now;
-        _shift = !_shift;
+        _shift = true;
         _start = time_now;
     }
     void Button::released () {
-        _shift = !_shift;
+        // REMOVE THIS IF BOTH SHIFT AND LONG NEED TO HAPPEN
+        if (!_shift) return; // return because shift was turned off by long press
+        
+        _shift = false;
         _end = to_ms_since_boot(get_absolute_time());
         // short press
         if (_end - _start < LONG_PRESS_TIME) {
@@ -36,6 +39,15 @@ namespace Buttons {
                 if (_long) {
                     _long = false;
                     return true;
+                } 
+
+                // REMOVE THIS IF BOTH SHIFT AND LONG NEED TO HAPPEN
+                if (_shift) {
+                    uint32_t time_now = to_ms_since_boot(get_absolute_time());
+                    if (time_now - _start > LONG_PRESS_TIME && !_long) {
+                        _shift = false; // shutdown shift
+                        return true;
+                    }
                 }
                 break;
             case State::DOUBLE:

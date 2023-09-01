@@ -79,7 +79,7 @@ namespace NOTE_HANDLING {
                 gate = true;
                 active = true;
                 activation_time = to_ms_since_boot(get_absolute_time());
-                // sustained = false; // think this needs to be outside of this call so it isnt used by the ARP.
+                sustained = false; // think this needs to be outside of this call so it isnt used by the ARP.
             }
             void off (void) {
                 gate = false;
@@ -164,6 +164,7 @@ namespace NOTE_HANDLING {
     // actual synth voice notes, also add MIDI out here
     void voice_on(int slot, int note, int velocity);
     void voice_off(int slot, int note, int velocity);
+    bool voices_check (uint8_t slot);
     uint8_t voices_get (uint8_t slot);
     void voices_stop (void);
     void voice_stop (uint8_t note);
