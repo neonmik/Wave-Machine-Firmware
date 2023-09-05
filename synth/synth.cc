@@ -12,7 +12,7 @@ namespace SYNTH {
 
   uint8_t _released;
 
-  uint16_t oscillator = Oscillator::WAVETABLE; // | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
+  // uint16_t oscillator = Oscillator::WAVETABLE; // | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
 
   uint16_t _wave_shape;
   uint16_t _last_shape;
@@ -20,6 +20,8 @@ namespace SYNTH {
   uint16_t _wave_vector;
   uint16_t _vector_mod;
 
+  uint16_t   _detune;
+  uint16_t   _last_detune;
 
   uint32_t  _attack;
   uint32_t  _decay;
@@ -118,13 +120,14 @@ namespace SYNTH {
             channel.note_stopped();
             QUEUE::release_send(c);
           }
-          // uint8_t waveform_count = 0;
 
           int32_t channel_sample = 0;
 
-          // pretty sure I can remove this if not using the otehr wave types. but also increasing it to 0xffff0 makes it large enough to not interupt my scaling.
+          // pretty sure I can remove this if not using the other wave types. but also increasing it to 0xffff0 makes it large enough to not interupt my scaling.
           channel.waveform_offset &= (0xffff0);
 
+          // uint8_t waveform_count = 0;
+          
           // if (oscillator & Oscillator::NOISE) {
           //   channel_sample += channel.noise;
           //   ++waveform_count;
@@ -178,7 +181,8 @@ namespace SYNTH {
           //   ++waveform_count;
             
           // }
-          channel_sample += get_wavetable(channel.waveform_offset >> Q_SCALING_FACTOR, vector);
+          channel_sample += get_wavetable((channel.waveform_offset << _octave) >> Q_SCALING_FACTOR, vector);
+          // ++waveform_count;
 
           // Blueprint for future FM mode
           // if (oscillator & Oscillator::FM) {
@@ -235,9 +239,10 @@ namespace SYNTH {
   }
 
   void set_waveshape (uint16_t shape) {
-    if (shape == _last_shape) return;
-    _last_shape = shape;
-    _wave_shape = ((shape>>6)*256);
+    uint16_t temp = ((shape >> 6) << 8); // the double bit shifts here are to loose precision.
+    if (temp == _last_shape) return;
+    _last_shape = temp;
+    _wave_shape = temp;
   }
   void set_wavevector (uint16_t vector) {
     _wave_vector = vector;
