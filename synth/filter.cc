@@ -104,9 +104,7 @@ namespace FILTER {
                 uint16_t MAX_FREQ = (SAMPLE_RATE/2);
                 frequency = MAX_FREQ - (((MAX_FREQ - _frequency) * (ADSR.get())) >> 16);
             }
-
-
-            // frequency = (int32_t(_frequency) * int32_t(ADSR.get() >> 8)) >> 16;
+            
             if (frequency <= 15) frequency = 15;
 
             int32_t damp = _damp;
