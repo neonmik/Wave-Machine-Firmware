@@ -237,127 +237,108 @@ namespace ARP {
     }
 
     
-    // Add notes to the arpeggiator input buffer
+    // Add a note to the arpeggiator input buffer
     void addNote (uint8_t note) {
-        if (note == 0) {
-            // printf("Wierd, empty addNote...\n"); 
-            return;
-        }
+        // Check if the note is valid
+        if (note == 0) return; // Invalid note, nothing to do
 
         if (latchEnabled) {
-            // if the chord refresh option is enabled
+            // Handle latch behavior
             if (latchRefresh) { 
-                // refresh timeout
                 clearAllNotes();
                 latchRefresh = false;
-                // latchCount = 0; // don't think this is needed with proper removeNotes implementaion
             }   
 
             ++latchCount;
             
             printf("++latchCount: %d\n", latchCount);
 
-            if (latchCount == MAX_ARP) latchCount = MAX_ARP;
+            if (latchCount >= MAX_ARP) {
+            latchCount = MAX_ARP; // Cap latchCount at MAX_ARP
+        }
         }
 
+        // Check if the note already exists in the inputBuffer
         for (int i = 0; i < MAX_ARP; ++i) {
             if (inputBuffer[i].note == note) {
-                // resets the note
                 inputBuffer[i].add(note);
-                // printNoteBuffer(inputBuffer);
                 inputNotesUpdated = true;
-                return;
+                return; // Note found, no need to proceed further
             }
         }
         if (!inputBufferFull) {
-
-            // If the input buffer isn't full
+            // Find the first empty slot in the inputBuffer
             for (int i = 0; i < MAX_ARP; ++i) {
-                // Check for the first empty slot
                 if (inputBuffer[i].note == 0) {
-                    // Set the empty slot as the new note
                     inputBuffer[i].add(note);
-
-
-                    // Mark that the input buffer notes have been changed
                     inputNotesUpdated = true;
-
-                    // trigger Filter envelope
                     NOTE_HANDLING::voices_inc();
-
-                    // Increment the note count
                     ++inputNoteCount;
+
                     if (inputNoteCount >= MAX_ARP) {
                         inputNoteCount = MAX_ARP;
                         inputBufferFull = true;
                     }
-                    
-                    // return at first free note.
-                    return;
+
+                    return; // Note added to an empty slot
                 }
             }
         } else {
-            // Write the note to the last available slot
+            // Write the note to the last available slot and wrap the index
             inputBuffer[inputWriteIndex].add(note);
-            // printNoteBuffer(inputBuffer);
-
-            // Increment and wrap the write index
             inputWriteIndex = (inputWriteIndex + 1) % MAX_ARP;
-
-            // Mark that the input buffer notes have been changed
             inputNotesUpdated = true;
-
-            // trigger Filter envelope
             NOTE_HANDLING::voices_inc();
         }
     }
-    // Remove notes to the arpeggiator input buffer
+    // Remove a note from the arpeggiator input buffer
     void removeNote(uint8_t note) {
         volatile uint8_t bufferSize;
 
-        // If inputBuffer is full, use all the notes; if not, use however many there are
+        // Determine the buffer size based on whether it's full or not
         if (inputBufferFull) {
-            bufferSize = MAX_ARP;
+            bufferSize = MAX_ARP; // Use all available slots
         } else {
-            bufferSize = inputNoteCount;
+            bufferSize = inputNoteCount; // Use the number of active notes
         }
         
         if (latchEnabled) {
-            // new chord type of arp latching - allows you to actually play it without a pedal
-            latchCount--;
+            // Handle latch behavior
+            if (latchCount > 0) {
+                latchCount--;
 
-            printf("--latchCount: %d\n", latchCount);
-            
-            if (latchCount <= 0) {
-                latchCount = 0;
-                latchRefresh = true;
+                printf("--latchCount: %d\n", latchCount);
+
+                if (latchCount == 0) {
+                    latchRefresh = true;
+                }
             }
         }
 
-        // Check all the active notes
+        // Iterate through the active notes in the buffer
         for (int i = 0; i < bufferSize; ++i) {
-            // If the note is here
+            // Check if the note is in the buffer
             if (inputBuffer[i].note == note) {
                 if (isSustainEnabled) {
-                    // Set it to sustain
+                    // Set the note to sustain
                     inputBuffer[i].sustain();
                     inputNotesUpdated = true;
 
-                    break;
+                    break; // Exit the loop as we've handled the note
                 } else {
                     // Shift elements to remove the note
-                    for (int swap = i; swap < bufferSize; ++swap) {
+                    for (int swap = i; swap < bufferSize - 1; ++swap) {
                         inputBuffer[swap] = inputBuffer[swap + 1];
                     }
                     // Remove the last inputBuffer
                     inputBuffer[bufferSize - 1].remove();
-                    // printNoteBuffer(inputBuffer);
-
+                    
                     // Decrement the note count
                     --inputNoteCount;
 
-                    if (inputBufferFull) inputBufferFull = false;
-                    else if (inputNoteCount < 0) { 
+                    if (inputBufferFull) {
+                        inputBufferFull = false;
+                    } else if (inputNoteCount < 0) { 
                         inputNoteCount = 0;
                     }
 
@@ -372,16 +353,17 @@ namespace ARP {
 
                     // Release Filter envelope
                     NOTE_HANDLING::voices_dec();
-                    // dont break incase theres multiple entries 
+                    // Continue the loop in case there are multiple entries for the same note
                 }
             } 
         }
     }
+
     // Transfer notes from the arpeggiator input buffer to the playing arpeggiator
     void transferNotes () {
         if (inputNotesUpdated) {
             
-            // printNoteBuffer(inputBuffer);
+            // // printNoteBuffer(inputBuffer);
 
             memcpy(arpVoices, inputBuffer, sizeof(inputBuffer));
 
@@ -390,13 +372,14 @@ namespace ARP {
 
             for (int i = 0; i < length; i++) {     
                 for (int j = i+1; j < length; j++) {
-                    if(arpVoices[i].note > arpVoices[j].note) {    
+                    if(arpVoices[i].note > arpVoices[j].note) {
                         swap = arpVoices[i];    
-                        arpVoices[i] = arpVoices[j];    
+                        arpVoices[i] = arpVoices[j];
                         arpVoices[j] = swap;    
                     }     
                 }
             }
+
             currentNoteCount = inputNoteCount;
 
             inputNotesUpdated = false;
