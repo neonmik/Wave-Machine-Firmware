@@ -44,7 +44,7 @@ namespace CLOCK {
 
         void calculate_division (void) {
             // calculation for division using samples per bar, and then using the division from there.
-            _samples_per_division = (((60 * _sample_rate) / (_bpm / _beats)) / _division);
+            _samples_per_division = ((((60 * _sample_rate) << 2) /_bpm) / _division);
 
 
         }
