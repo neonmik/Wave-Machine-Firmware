@@ -5,6 +5,8 @@
 #include "pico/multicore.h"
 #include "pico/util/queue.h"
 
+#include "config.h"
+
 
 namespace QUEUE {
     struct trigger_msg_t {

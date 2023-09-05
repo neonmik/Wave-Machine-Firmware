@@ -166,7 +166,7 @@ namespace SYNTH {
   void voice_on (uint8_t voice, uint8_t note);
   void voice_off (uint8_t voice);
   
-  uint16_t get_audio_frame();
+  uint16_t process();
   bool is_audio_playing();
   void Init ();
 

@@ -17,11 +17,19 @@
 
 #include "drivers/dac.h"
 
+#include "../synth/clock.h"
+
 #include "ui.h"
 
 #include "queue.h"
 
-uint8_t voices_active;
+bool      isBufferFull;
+
+extern uint32_t    sample_clock;
+extern uint8_t     softwareIndex;
+extern uint8_t     hardwareIndex;
+extern uint16_t    playBuffer[];
+
 
 void hw_core() {
   
@@ -38,11 +46,23 @@ void hw_core() {
 void synth_core() {
 
   SYNTH::Init();
-  DAC::Init(SYNTH::get_audio_frame);
+  DAC::Init(SYNTH::process);
   CLOCK::Init();
   
   while (true) {
-     if (DAC::get_state()) {
+    if (softwareIndex != hardwareIndex) {
+      playBuffer[softwareIndex] = SYNTH::process();
+
+      ++softwareIndex;
+      softwareIndex &= 0xff;
+
+      ++sample_clock;
+
+      CLOCK::tick();
+    }
+
+
+    if (DAC::get_state()) {
       // tidy this...
       uint8_t temp = QUEUE::trigger_check_queue();
       if (temp) {

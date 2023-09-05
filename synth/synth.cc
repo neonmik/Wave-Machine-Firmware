@@ -75,7 +75,7 @@ namespace SYNTH {
     return any_channel_playing;
   }
 
-  uint16_t get_audio_frame() {
+  uint16_t process() {
     
     if (_soft_start) {
       ++_soft_start_index;

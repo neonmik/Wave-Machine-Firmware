@@ -5,8 +5,8 @@ namespace QUEUE {
     queue_t release_queue;
     
     void Init() {
-        queue_init(&trigger_queue, sizeof(trigger_msg_t), 16);
-        queue_init(&release_queue, sizeof(uint8_t), 16);
+        queue_init(&trigger_queue, sizeof(trigger_msg_t), ((POLYPHONY + 1) *2));
+        queue_init(&release_queue, sizeof(uint8_t), ((POLYPHONY + 1) *2));
     }
     
     void trigger_send (uint8_t slot, uint8_t note, bool gate) {

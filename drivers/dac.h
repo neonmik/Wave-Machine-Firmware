@@ -14,7 +14,7 @@
 
 #include "../ui.h"
 
-#include "../synth/clock.h"
+// #include "../synth/clock.h"
 
 #define DAC_DATA        11
 #define DAC_CLK         10
@@ -25,7 +25,10 @@
 
 #define size_bits       log2(BUFFER_SIZE * sizeof(uint16_t))
 
-extern uint32_t sample_clock;
+extern uint32_t    sample_clock;
+extern uint8_t     softwareIndex;
+extern uint8_t     hardwareIndex;
+extern uint16_t    playBuffer[];
 
 typedef uint16_t (*synth_function)();
 namespace DAC {
@@ -37,9 +40,9 @@ namespace DAC {
         
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
-        uint16_t     _buffer_size    = BUFFER_SIZE;
+        uint16_t    _buffer_size    = BUFFER_SIZE;
         uint16_t    _buffer[BUFFER_SIZE];
-
+            
         volatile uint16_t buf_a[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         volatile uint16_t buf_b[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         
@@ -49,9 +52,15 @@ namespace DAC {
 
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
-                buf[i] = (process()) | (DAC_CONFIG);
+                // new code that just copies from one buffer to the dma buffer
+                buf[i] = (playBuffer[hardwareIndex]) | (DAC_CONFIG);
+                ++hardwareIndex;
+                hardwareIndex &= 0xff;
+
                 // ++sample_clock;
-                CLOCK::tick();
+                // old code that fills the buffer in the interupt
+                // buf[i] = (process()) | (DAC_CONFIG);
+                // CLOCK::tick();
             }
             _full = true;
         }

@@ -10,10 +10,13 @@
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
 constexpr   uint32_t    SAMPLE_RATE     =       48000;
-constexpr   uint16_t    BUFFER_SIZE     =       32;             // Buffer size can be set at any interval (2/4/8/16/32/64/128/256)
-                                                                // but the higher the size, the worst the performance
+constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
+
 
 extern      uint32_t    sample_clock;
+extern      uint8_t     softwareIndex;
+extern      uint8_t     hardwareIndex;
+extern      uint16_t    playBuffer[];
 
 
 
@@ -27,6 +30,9 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 //      - runs at 6 voices with filter and modulation mostly
                                                                 // with Note Priority on HW core (Core: 144MHz/SR: 48000) :-
                                                                 //      - runs at 8 voices with both
+                                                                // with Synth code being handled outside of the DMA (Core: 144MHz/SR: 48000) :-
+                                                                //      - runs at 12 voice with both - maybe try adding a second oscillator?
+                                                                //      - runs at 10 with Arp going full speed.
 
 constexpr   uint8_t     FILTER_VOICE    =       (POLYPHONY+1);  // Sets the Filter envelope control to be outside of the Polyphony range. 
                                                                 // This makes sure it never gets in the way of the note handling.
