@@ -31,8 +31,9 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 // with Note Priority on HW core (Core: 144MHz/SR: 48000) :-
                                                                 //      - runs at 8 voices with both
                                                                 // with Synth code being handled outside of the DMA (Core: 144MHz/SR: 48000) :-
-                                                                //      - runs at 12 voice with both - maybe try adding a second oscillator?
+                                                                //      - runs at 12 with both - maybe try adding a second oscillator?
                                                                 //      - runs at 10 with Arp going full speed.
+                                                                //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
 
 constexpr   uint8_t     FILTER_VOICE    =       (POLYPHONY+1);  // Sets the Filter envelope control to be outside of the Polyphony range. 
                                                                 // This makes sure it never gets in the way of the note handling.

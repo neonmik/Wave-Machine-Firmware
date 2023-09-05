@@ -1,5 +1,5 @@
 #include "synth.h"
-#include <math.h>
+// #include <math.h>
 
 #include "modulation.h"
 #include "filter.h"
