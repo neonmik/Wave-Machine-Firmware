@@ -5,12 +5,12 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes
 
-    - Bug: Notes in sustain don't act as they should when 
+    - Bug: Notes in sustain don't act as they should when changing presets
 
 
 - Updates and Bugfixes:
     - Arp:
-        - Improvements: Improve the gap setting so it's not just on or off. 
+        - Improvements: Improve the gap (gate?) setting so it's not just on or off. 
             - Bring back the old intermediate NoteState
             - Add a timer function to clock.
 
