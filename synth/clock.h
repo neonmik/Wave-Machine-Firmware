@@ -27,7 +27,6 @@ namespace CLOCK {
 
         uint32_t _sample_rate;
         uint16_t _bpm = 120;
-        uint8_t  _beats = 4;
         uint8_t _division = 8;
 
         bool _midi_clock_present = false;
@@ -45,8 +44,6 @@ namespace CLOCK {
         void calculate_division (void) {
             // calculation for division using samples per bar, and then using the division from there.
             _samples_per_division = ((((60 * _sample_rate) << 2) /_bpm) / _division);
-
-
         }
     }
 
