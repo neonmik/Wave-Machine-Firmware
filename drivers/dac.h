@@ -55,14 +55,9 @@ namespace DAC {
                 // new code that just copies from one buffer to the dma buffer
                 buf[i] = (playBuffer[hardwareIndex]) | (DAC_CONFIG);
                 ++hardwareIndex;
-                hardwareIndex &= 0xff;
-
-                // ++sample_clock;
-                // old code that fills the buffer in the interupt
-                // buf[i] = (process()) | (DAC_CONFIG);
-                // CLOCK::tick();
+                hardwareIndex &= 0x1F;
             }
-            _full = true;
+            // _full = true;
         }
         void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
 
