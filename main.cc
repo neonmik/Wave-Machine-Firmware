@@ -26,6 +26,7 @@
 bool      isBufferFull;
 
 extern uint32_t    sample_clock;
+uint32_t           sample_clock_last;
 extern uint8_t     softwareIndex;
 extern uint8_t     hardwareIndex;
 extern uint16_t    playBuffer[];
@@ -54,16 +55,18 @@ void synth_core() {
       playBuffer[softwareIndex] = SYNTH::process();
 
       ++softwareIndex;
-      softwareIndex &= 0xff;
+      softwareIndex &= 0x1F; // loops the play buffer every 32 samples
 
       ++sample_clock;
 
       CLOCK::tick();
     }
 
+    if ((!(sample_clock & 0x3F)) && (sample_clock != sample_clock_last)){
 
-    if (DAC::get_state()) {
-      // tidy this...
+			// make sure this only happens once every 64 sample periods
+			sample_clock_last = sample_clock;
+
       uint8_t temp = QUEUE::trigger_check_queue();
       if (temp) {
         for (int i = 0; i < temp; i++){
@@ -86,9 +89,15 @@ void synth_core() {
           }
         }
       }
-
-      DAC::clear_state();
     }
+
+
+    // if (DAC::get_state()) {
+    //   // tidy this...
+      
+
+    //   DAC::clear_state();
+    // }
   }
 }
 
