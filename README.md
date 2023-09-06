@@ -32,7 +32,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) but over that becomes noticably uneven.
         
         - Feature: Once LFO is balanced, add a MAX_RANGE config asetting for vibrato. 
-        - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths.
+        - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths. - use similar code from normal wavetable.
     
     - USB MIDI/ MIDI:
         - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
@@ -135,6 +135,9 @@ Changelog:
 Features/Bugfixes:
 
     + Oscillator:
+
+        + Improvement: Added interpolation of wavetable samples for improved tuning.
+        + Improvement: Made some improvements and refactored Synth code for clarity. 
         + Bugfix: Frequency/MIDI note alignment - Internal oscillator engine was out of tune with MIDI defined pitches. When Pitch control is central and Octave at 0, the first note on the keyboard is MIDI note 60 (C3/130Hz).
         + Removed all 64bit recasts
         + Added soft clip controls
@@ -147,6 +150,7 @@ Features/Bugfixes:
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
     + Note Handling:
+        + Improvement: Moved Note message handling away from DMA into main loop for improved performance.
         + Feature: Added code to handle the use of an external Sustain Pedal via MIDI as well as rewriting the code for how the Hold fucntion works in the Arp, and having the Sustain Pedal work that too. 
         + Bugfix: An error with the release message queue was causing the notes not to release properly. Only recognised during Sustain Pedal Feature testing.
         + Moved Note_priority back to HW core - Takes the time pressiure off the Audio core. Note assignments are now sent via a queue. 
