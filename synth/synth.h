@@ -39,7 +39,7 @@ namespace SYNTH {
         1350154,				1430438,				1515497,				1605613,				1701088,				1802240,				1909406,				2022946,
         2143236,				2270680,				2405701,				2548752,				2700308,				2860877,				3030994,				3211226,
     };
-    inline uint32_t get_freq(uint8_t note) {
+    inline uint32_t getFreq(uint8_t note) {
         return note2freq[note];
     }
     constexpr uint8_t Q_SCALING_FACTOR = 12;
@@ -49,18 +49,6 @@ namespace SYNTH {
 
   extern uint8_t _released;
 
-  // enum Oscillator {
-  //   WAVETABLE = 256,
-  //   NOISE     = 128,
-  //   SQUARE    = 64,
-  //   SAW       = 32,
-  //   TRIANGLE  = 16,
-  //   SINE      = 8,
-  //   WAVE      = 1
-  // };
-
-
-  
   // used oscillator types, this can use multiple oscillators, although can't be currently adjusted by the hardware
   extern uint16_t   _oscillator;      // bitmask for enabled oscillator types (see Oscillator enum for values)
 
@@ -81,65 +69,58 @@ namespace SYNTH {
   extern int16_t    _vibrato;
   extern uint16_t   _tremelo;
 
-  extern uint16_t   _detune;
+  extern uint16_t   pitchBend;
 
-  extern uint16_t   _pitch_scale;
-
-  extern uint8_t _octave;
+  extern uint8_t    _octave;
 
   static bool _soft_start = true;
-  static uint8_t  _soft_start_index = 0;
+  static uint8_t _soft_start_index = 0;
   static int16_t _soft_start_sample = -32768;
-
-  extern bool      filter_enable;
-  extern uint16_t  filter_cutoff_frequency;
 
   struct Oscillators {
 
-    uint16_t  volume        = 0x7fff;    // channel volume (default 50%) - also could be called velocity
+    bool      changed           = false;  
 
+    uint16_t  volume            = 0x7fff;         // channel volume (default 50%) - also could be called velocity
 
-    bool      _gate         = false;  // used for tracking a note that's released, but not finished.
-    bool      _active       = false;  // used for whole duration of note, from the very start of attack right up until the voise is finished
-    uint32_t  activation_time  = 0;
+    bool      gate              = false;          // used for tracking a note that's released, but not finished.
+    bool      active            = false;          // used for whole duration of note, from the very start of attack right up until the voise is finished
 
-    uint8_t   _note         = 0;
-    uint32_t  _frequency    = 0;    // frequency of the voice (Hz)
-    uint32_t  _increment    = 0;
+    uint32_t  frequency         = 0;              // Frequency in Hz << 8
 
-    uint16_t  pulse_width   = 0x7fff; // duty cycle of square wave (default 50%)
-    int16_t   noise         = 0;      // current noise value
+    uint32_t  phaseIncrement    = 0;
+    uint32_t  phaseAccumulator  = 0; 
 
-    uint32_t  waveform_offset  = 0;   // voice offset (Q8)
-    uint32_t  waveform_offset1  = 0;   // voice offset (Q8)
+    void noteOn (uint8_t note) {
+      gate = true; // wouldn't be needed if core moved
+      active = true;
 
-    uint8_t   wave_buf_pos  = 0;      //
-    int16_t   wave_buffer[64];        // buffer for arbitrary waveforms. small as it's filled by user callback
-
-    void *user_data = nullptr;
-    // void (*wave_buffer_callback)(Oscillator &channel);
-
-    void note_on (uint8_t note) {
-      _gate = true; // wouldn't be needed if core moved
-      _active = true;
-
-      _note = note; // is this needed if freq is set now handled by 2nd core? probably not...
-      _frequency = get_freq(note);
+      frequency = getFreq(note);
     
-
       ADSR.trigger_attack();
+      
+      // changed = true;
     }
-    void note_off (void) {
-      _gate = false; // wouldn't be needed if core moved
+    void calcIncrement (void) {
+      // if (!changed) return; // if the frequency or pitch hasn't changed, return
+
+      phaseIncrement = ((((frequency * pitchBend) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+      // changed = false;
+    }
+    void noteOff (void) {
+      gate = false; // wouldn't be needed if core moved
       ADSR.trigger_release();
     }
-    void note_stopped (void) {
-      _active = false;
-      _note = 0; // is this needed if freq is set now handled by 2nd core? probably not...
-      _frequency = 0;
+    void noteStopped (void) {
+      active = false;
+      frequency = 0;
+
+      // reset - this may cause issues with wave form continuity
+      phaseIncrement = 0;
+      phaseAccumulator = 0;
     }
-    bool is_active (void) {
-      return _active;
+    bool isActive (void) {
+      return active;
     }
     
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
