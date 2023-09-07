@@ -69,7 +69,7 @@ namespace ARP {
                 case ArpDirection::UP:
                     ++currentPlayIndex;
                     if (currentPlayIndex >= currentNoteCount) {
-                        currentPlayIndex = 0;
+                        resetPlayIndex();
                         updateOctave(ArpDirection::UP);
                     }
                     break;
@@ -82,7 +82,7 @@ namespace ARP {
 
                         }
                     } else {
-                        currentPlayIndex = 0;
+                        resetPlayIndex();
                         updateOctave(ArpDirection::UP);
                     }
                     break;
@@ -178,7 +178,7 @@ namespace ARP {
                 isSustainJustReleased = false;
             }
             if (CLOCK::get_changed()) {
-                transferNotes(); // moving in here to quantize?
+                CLOCK::set_changed(false);
 
                 switch (currentNoteState) {
                     case NoteState::ACTIVE:
@@ -191,47 +191,49 @@ namespace ARP {
                                     MIDI::sendNoteOff(currentPlayOct[i], 0);
                                 }   
                             }
-                            arpeggiate(arpDirection);
-                            currentNoteState = NoteState::IDLE;
-                            if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                         } else {
                             NOTE_HANDLING::voice_off(currentVoiceIndex, currentPlayNote, 0);
                             MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
                             
                             currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
-
-
-                            arpeggiate(arpDirection);
-                            currentNoteState = NoteState::IDLE;
-                            if (isRestEnabled) break; // comment to remove gap between notes (goes stright into next switch function instead of waiting)
                         }
+                        arpeggiate(arpDirection);
+                        currentNoteState = NoteState::IDLE;
+                        
+                        if (isRestEnabled) break; // currently handles the note gate, but will be rewritten and moved to NoteState::RELEASE
+                    
+                    // case NoteState::RELEASE:
+                    //     break;
                         
                     case NoteState::IDLE:
+                        transferNotes(); // this is here so notes only get updated before the next loop... and should always get updated?
                         if (arpMode == ArpMode::POLY) {
                             for (int i = 0; i < currentNoteCount; i++) {
-                                if (arpVoices[i].isActive()) {
-                                    currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
+                                // check this
+                                if (!arpVoices[i].isActive()) break; 
 
-                                    NOTE_HANDLING::voice_on(i, currentPlayOct[i], 127);
-                                    MIDI::sendNoteOn(currentPlayOct[i], 127);
-                                }
+                                currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
+
+                                NOTE_HANDLING::voice_on(i, currentPlayOct[i], 127);
+                                MIDI::sendNoteOn(currentPlayOct[i], 127);
                             }
-                            currentNoteState = NoteState::ACTIVE;
                         } else {
-                            if (currentPlayIndex >= currentNoteCount) currentPlayIndex = 0;
+                            if (!arpVoices[currentPlayIndex].isActive()) return;
 
-                            if (arpVoices[currentPlayIndex].isActive()) {
-                                currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
-
-                                NOTE_HANDLING::voice_on(currentVoiceIndex, currentPlayNote, 127);
-                                MIDI::sendNoteOn(currentPlayNote, 127);
-
-                                currentNoteState = NoteState::ACTIVE;
+                            // This only gets called when gap is enabled, and latch is not, between holding a few notes and releasing... this is because it allows transferNotes to be called between releasing and triggering... 
+                            if (currentPlayIndex > currentNoteCount) {
+                                resetPlayIndex();
                             }
-                            break;
+
+
+                            currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
+
+                            NOTE_HANDLING::voice_on(currentVoiceIndex, currentPlayNote, 127);
+                            MIDI::sendNoteOn(currentPlayNote, 127);
+
                         }
+                        currentNoteState = NoteState::ACTIVE;
                 }
-                CLOCK::set_changed(false);
             }
         }
     }
@@ -247,11 +249,12 @@ namespace ARP {
             if (latchRefresh) { 
                 clearAllNotes();
                 latchRefresh = false;
+                refreshPlayIndex = true;
             }   
 
             ++latchCount;
             
-            printf("++latchCount: %d\n", latchCount);
+            // printf("++latchCount: %d\n", latchCount);
 
             if (latchCount >= MAX_ARP) {
             latchCount = MAX_ARP; // Cap latchCount at MAX_ARP
@@ -307,7 +310,7 @@ namespace ARP {
             if (latchCount > 0) {
                 latchCount--;
 
-                printf("--latchCount: %d\n", latchCount);
+                // printf("--latchCount: %d\n", latchCount);
 
                 if (latchCount == 0) {
                     latchRefresh = true;
@@ -363,11 +366,13 @@ namespace ARP {
     void transferNotes () {
         if (inputNotesUpdated) {
             
-            // // printNoteBuffer(inputBuffer);
+            // printNoteBuffer(inputBuffer);
 
             memcpy(arpVoices, inputBuffer, sizeof(inputBuffer));
 
             uint8_t length      = inputNoteCount;   // how many entries in the array
+
+            // if (!playedOrder) { // would allow the notes to not be organised for a mode, this should still mean all the zeros are at the top...
             ArpData swap;
 
             for (int i = 0; i < length; i++) {     
@@ -378,6 +383,17 @@ namespace ARP {
                         arpVoices[j] = swap;    
                     }     
                 }
+            }
+
+            // }
+
+            if (refreshPlayIndex) {
+                if (currentPlayIndex > 0) resetPlayIndex();
+                // resetOctave();
+                refreshPlayIndex = false;
+            }
+            if (currentPlayIndex > 0 && currentPlayIndex >= inputNoteCount) {
+                resetPlayIndex();
             }
 
             currentNoteCount = inputNoteCount;
@@ -450,12 +466,13 @@ namespace ARP {
             }
         }
         
-        transferNotes();
+        // transferNotes(); // should get called automatically by clock updating
 
-        currentOctave = 0;
-        currentPlayIndex = 0;
 
-        latchCount = 0;
+        currentOctave = 0; // may need to be done on transfer notes...
+        // currentPlayIndex = 0; gets done on transfer notes...
+
+        latchCount = 0; // should be handled on transfer notes...
     }
 
     void passNotes (void) {
@@ -517,14 +534,14 @@ namespace ARP {
         if (latchEnabled) {
             latchCount -= sustainNotes;
 
-            printf("grabNotes latchCount: %d\n", latchCount);
+            // printf("grabNotes latchCount: %d\n", latchCount);
             
             if (latchCount <= 0) {
                 latchCount = 0;
                 latchRefresh = true;
             }
         }
-        transferNotes();
+        // transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
     }
     void stopAllVoices () {
         NOTE_HANDLING::voices_clr();

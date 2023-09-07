@@ -279,7 +279,7 @@ namespace MIDI {
     void sendActiveSense(void) {}
     void sendReset(void) {}
 
-    void Init () {
+    void Init (void) {
         UART::Init();
         USB::Init();
     }

@@ -71,9 +71,23 @@ namespace ARP {
 
         uint8_t         currentPlayNote;
         int8_t          currentPlayIndex;
+
+        inline void     resetPlayIndex (void) {
+            currentPlayIndex = 0;
+        }
+        
+        bool            refreshPlayIndex = false;
         uint8_t         currentVoiceIndex;
         int8_t          currentNoteCount;
 
+
+        int8_t          octaveRange;
+        int8_t          currentOctave;
+
+        inline void     resetOctave (void) {
+            currentOctave = 0;
+        }
+        uint8_t         startOctave;
         uint8_t         currentPlayOct[POLYPHONY];
         bool            octavePlaying = false;
 
@@ -86,9 +100,6 @@ namespace ARP {
         uint16_t        range;
         uint16_t        direction;
 
-        int8_t          octaveRange;
-        int8_t          currentOctave;
-        uint8_t         startOctave;
 
         bool changeDirection = true;
     }

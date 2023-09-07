@@ -5,7 +5,9 @@
 #include "../config.h"
 #include "../functions.h"
 
-#define MIDI_CLOCK_TIMEOUT 670000 // time in us for 1 pulse at 24ppqn
+// (((Sample Rate * 60s) / Lowest BPM) / 4) / 24ppqn) = Longest possible dropout 
+#define MIDI_CLOCK_TIMEOUT 670000 // max time in us for 1 pulse at 24ppqn
+// #define MIDI_CLOCK_TIMEOUT 1000 // max time in samples for 1 pulse at 24ppqn
 
 
 
@@ -23,7 +25,8 @@ namespace CLOCK {
         uint8_t _beat = 0;
 
         bool _changed;
-        uint32_t _samples_per_division;
+        uint32_t samplesPerDivision;
+        uint32_t    samplesPerPulse;
 
         uint32_t _sample_rate;
         uint16_t _bpm = 120;
@@ -43,7 +46,10 @@ namespace CLOCK {
 
         void calculate_division (void) {
             // calculation for division using samples per bar, and then using the division from there.
-            _samples_per_division = ((((60 * _sample_rate) << 2) /_bpm) / _division);
+            samplesPerDivision = ((((60 * _sample_rate) << 2) /_bpm) / _division);
+        }
+        void calculatePulse (void) {
+            samplesPerPulse = (((60 * _sample_rate) << 2) /_bpm) / 96;
         }
     }
 

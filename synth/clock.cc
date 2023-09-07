@@ -80,7 +80,7 @@ namespace CLOCK {
 
     void tick (void) {
         ++_tick;
-        if (_tick >= _samples_per_division) {
+        if (_tick >= samplesPerDivision) {
             if (!_midi_clock_present) set_changed(true);
             _tick = 0;
         }
@@ -115,17 +115,21 @@ namespace CLOCK {
         ++_midi_clock_tick_count;
         if (_midi_clock_tick_count >= midi_division) {
             set_changed(true);
-            // printf("midi 1/4 \n");
+
             _midi_clock_tick_count = 0;
         }
     }
     
     void start_midi_clock (void) {
         _midi_clock_present = true;
+        set_changed(true);
     }
     void stop_midi_clock (void) {
         // maybe add some handling here to differentiate between drop out and stop. 
         _midi_clock_present =  false;
+
+        // both these should only happen in AUTO mode I think
+        _tick = 0; // reset tick
         set_changed(true); 
     }
 
