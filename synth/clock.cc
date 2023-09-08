@@ -68,9 +68,13 @@ namespace CLOCK {
                 midi_division = 2;
                 break;
             // not used yet... 
-            case 11: // 1/64 - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
+            case 11: // 64th Note - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
                 _division = 64;
                 midi_division = 1.5;
+                break;
+            case 12: // 64th Note Triplet
+                _division = 84;
+                midi_division = 1;
                 break;
             default:
                 break;

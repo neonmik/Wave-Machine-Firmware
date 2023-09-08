@@ -57,7 +57,7 @@ namespace DAC {
                 ++hardwareIndex;
                 hardwareIndex &= 0x1F;
             }
-            // _full = true;
+            _full = true;
         }
         void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
 
