@@ -62,8 +62,7 @@ void synth_core() {
       CLOCK::tick();
     }
 
-    // if ((!(sample_clock & 0x3F)) && (sample_clock != sample_clock_last)){
-    // if (DAC::get_state()) {
+    if ((!(sample_clock & 0x3F)) && (sample_clock != sample_clock_last)){
 			// make sure this only happens once every 64 sample periods
 			sample_clock_last = sample_clock;
 
@@ -89,14 +88,10 @@ void synth_core() {
           }
         }
       }
-      // DAC::clear_state();
-    // }
+    }
 
-
+    // old update method - tied to DMA
     // if (DAC::get_state()) {
-    //   // tidy this...
-      
-
     //   DAC::clear_state();
     // }
   }

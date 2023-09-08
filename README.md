@@ -5,9 +5,14 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Alpha Release bugfixes
 
-    - Bug: Issues with sample generation. This can be demonstrated in Preset 2 with any notes playing when it starts to get to the top of its modulation cycle it glitches out if certain controls are active (most noticeable on MOD or Arp BPM)... Must be to do with something multicore?
-        - Not DMA related
+    - Bug: Issues with sample generation. 
+        - This can be demonstrated in Preset 2 with any notes playing when it starts to get to the top of its modulation cycle it glitches out if certain controls are active (most noticeable on MOD or Arp BPM)...
         - Only happens in a pronnounced way with filter enabled
+        - Not DMA related
+        - Still happens in "stable" Version (main), but maybe less?
+        - Seems to be mostly connected to modulating Vector.
+        - Happens regardless of wavetable Interpolation, but maybe slightly less without it
+        : Could be due to the need to syncronise control updates between cores, make sure they happen outside of DMA / sample creation.
 
     - Bug: Notes in sustain don't act as they should when changing presets
 
