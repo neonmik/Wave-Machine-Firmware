@@ -140,12 +140,14 @@ namespace SYNTH {
 
           int32_t channelSample = 0;
 
-          // pretty sure I can remove this if not using the other wave types. but also increasing it to 0xffff0 makes it large enough to not interupt my scaling.
-          channel.phaseAccumulator &= (0xffff0);
+          // 0xffff0 makes it large enough to not interupt my scaling, anything more than like 0xffffff starst to go mad... might do all the waveforms?%
+          channel.phaseAccumulator &= (0x3fffff);
           
           channelSample += getWavetable(channel.phaseAccumulator, vector); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
-          // channelSample += getWavetable((channel.phaseAccumulator >> 1), vector); // Sub oscillator test
+          // channelSample += getWavetable((channel.phaseAccumulator >> 2), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
           
+          // channelSample /= 2;
+
           // apply ADSR
           channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
 

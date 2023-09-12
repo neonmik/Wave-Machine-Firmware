@@ -96,8 +96,12 @@ namespace SYNTH {
       gate = true; // wouldn't be needed if core moved
       active = true;
 
-      note = (input_note + (_octave * 12)); // sets the octave at the outset of the note...
-      // note = input_note;
+      // Original octave code - updates whenever its changed
+      note = input_note;
+
+      // Newer octave code - updates only with note on call
+      // note = (input_note + (_octave * 12)); // sets the octave at the outset of the note...
+
       frequency = getFreq(note);
     
       ADSR.trigger_attack();
@@ -107,8 +111,12 @@ namespace SYNTH {
     inline void calcIncrement (void) {
       // if (!changed) return; // if the frequency or pitch hasn't changed, return
 
-      // phaseIncrement = ((((frequency * pitchBend) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
-      phaseIncrement = (((frequency * pitchBend) >> 10) << Q_SCALING_FACTOR) / SAMPLE_RATE; // octave scaling achieved at note level
+      // Original octave code - updates whenever its changed
+      phaseIncrement = ((((frequency * pitchBend) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+
+      // Newer octave code - updates only with note on call
+      // phaseIncrement = (((frequency * pitchBend) >> 10) << Q_SCALING_FACTOR) / SAMPLE_RATE; // octave scaling achieved at note level
+
       // changed = false; // for eventual performance improvement of pitch fixing. 
     }
     void noteOff (void) {
