@@ -1,5 +1,5 @@
 /**
- *                Wave Machine Firmware v0.29
+ *                Wave Machine Firmware v0.30
  * 
  * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  
@@ -17,7 +17,7 @@
 
 #include "drivers/dac.h"
 
-#include "../synth/clock.h"
+#include "synth/clock.h"
 
 #include "ui.h"
 
@@ -66,26 +66,17 @@ void synth_core() {
 			// make sure this only happens once every 64 sample periods
 			sample_clock_last = sample_clock;
 
-      uint8_t temp = QUEUE::trigger_check_queue();
-      if (temp) {
-        for (int i = 0; i < temp; i++){
-          uint8_t slot_;
-          uint8_t note_;
-          bool gate_;
+      if (QUEUE::trigger_check_queue()) {
+        uint8_t slot, note;
+        bool gate;
 
-          QUEUE::trigger_receive(slot_, note_, gate_);
-          if (slot_ == FILTER_VOICE) {
-            if (gate_) FILTER::trigger_attack();
-            else FILTER::trigger_release();
-          } 
-          else {
-            if (gate_) {
-              SYNTH::voice_on(slot_, note_);
-            } else {
-              SYNTH::voice_off(slot_);
-            }
-            if (slot_ > POLYPHONY) printf("Voice Queue error! Out of bounds voice\n");
+        while (QUEUE::trigger_receive(slot, note, gate)) {
+          if (gate) {
+            SYNTH::voice_on(slot, note);
+          } else {
+            SYNTH::voice_off(slot);
           }
+          if (slot > POLYPHONY) printf("Voice Queue error! Out of bounds voice\n");
         }
       }
     }
@@ -105,10 +96,10 @@ void synth_core() {
 
   QUEUE::Init(); // has to be here to allow both cores access to QUEUE
   
-  multicore_launch_core1(synth_core); // launches the 2nd core
-
+  // multicore_launch_core1(hw_core); // launches the 2nd core
   // synth_core(); // launches the synth/audio core
 
+  multicore_launch_core1(synth_core); // launches the 2nd core
   hw_core(); // launch the hardware core
 
 } 
