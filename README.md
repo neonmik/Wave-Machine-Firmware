@@ -5,6 +5,8 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Release bugfixes
 
+    - BUG: When flipping through presets while actively playing (not just holding notes) notes get stuck on. Holding more than 8 notes clears it for now.
+
     - OSCILLATORS: Investigate why notes that have been pitched up and octaved up alias/pitch wrongly. Something to do with the overflow of the accumulator, I'm sure of it.
 
     - NOTE PRIORITY: Investigate moving MIDI::sendNoteOff to outside the note validation loop in release so it always gets called when it actually gets called. Might need to move sustain to keys file...
