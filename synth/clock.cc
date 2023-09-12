@@ -109,17 +109,26 @@ namespace CLOCK {
     }
    
     void midi_tick (void) {
-        // set current time in µs
-        // uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
-        uint32_t _current_time = sample_clock;
         // raise the flag to make it known we are now reciveing midi clock
         _midi_clock_present = true; 
-        // set the current time in µs for use in checking where its still here
+        
+        uint32_t _current_time = sample_clock; // current time in samples
+        
+        uint32_t actualSamplesPerTick = (_current_time - _midi_in_clock_last);
+        samplesSinceLastTick += actualSamplesPerTick;
+
+        // set the current time for use in checking where its still here
         _midi_in_clock_last = _current_time;
+
+
         // increase the clock tick so we can raise a flag at the correct divisions for 24ppqn
         ++_midi_clock_tick_count;
         if (_midi_clock_tick_count >= midi_division) {
             set_changed(true);
+
+            averageSamplesPerTick = samplesSinceLastTick / midi_division;
+
+            samplesSinceLastTick = 0;
 
             _midi_clock_tick_count = 0;
         }

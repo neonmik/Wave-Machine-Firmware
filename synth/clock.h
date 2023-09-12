@@ -41,6 +41,10 @@ namespace CLOCK {
         uint32_t _midi_clock_period;  // time in between midi clock ticks
         uint8_t _midi_clock_tick_count;
 
+
+        uint32_t samplesSinceLastTick;
+        uint32_t averageSamplesPerTick;
+
         void calculate_division (void) {
             // calculation for division using samples per bar, and then using the division from there.
             samplesPerDivision = ((((60 * _sample_rate) << 2) /_bpm) / _division);

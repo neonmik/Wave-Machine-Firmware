@@ -110,7 +110,6 @@ namespace NOTE_HANDLING {
       // Voice is free
       if (!VOICES[i].active) {
         voice = i;
-        // voices_inc();
         break;
       }
     }
@@ -118,7 +117,7 @@ namespace NOTE_HANDLING {
     // should skip this is a free voice is found
     if (voice < 0) {
       int8_t priority_voice = -1;
-      // volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
+
       volatile uint32_t time_now = sample_clock;
       
       switch (_priority) {

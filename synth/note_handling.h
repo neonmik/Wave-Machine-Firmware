@@ -56,7 +56,6 @@ namespace NOTE_HANDLING {
                 gate = true;
                 active = true;
                 activation_time = sample_clock;
-                // activation_time = to_ms_since_boot(get_absolute_time());
                 sustained = false; // think this needs to be outside of this call so it isnt used by the ARP.
             }
             void off (void) {
