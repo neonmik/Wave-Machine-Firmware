@@ -110,7 +110,8 @@ namespace CLOCK {
    
     void midi_tick (void) {
         // set current time in µs
-        uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
+        // uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
+        uint32_t _current_time = sample_clock;
         // raise the flag to make it known we are now reciveing midi clock
         _midi_clock_present = true; 
         // set the current time in µs for use in checking where its still here
@@ -139,7 +140,10 @@ namespace CLOCK {
 
     void check_for_midi_clock (void) {
         if (!_midi_clock_present) return; // check to see if the function still works if I use this. Just want it to not do this if it's already stopped. 
-        uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
+        // uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
+        uint32_t _current_time = sample_clock;
+
+
         if ((_current_time - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT) {
             _midi_clock_present = false;
         }

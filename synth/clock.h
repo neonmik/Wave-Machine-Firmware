@@ -6,10 +6,10 @@
 #include "../functions.h"
 
 // (((Sample Rate * 60s) / Lowest BPM) / 4) / 24ppqn) = Longest possible dropout 
-#define MIDI_CLOCK_TIMEOUT 670000 // max time in us for 1 pulse at 24ppqn
-// #define MIDI_CLOCK_TIMEOUT 1000 // max time in samples for 1 pulse at 24ppqn
+// #define MIDI_CLOCK_TIMEOUT 670000 // max time in us for 1 pulse at 24ppqn
+#define MIDI_CLOCK_TIMEOUT (SAMPLE_RATE * 0.67) // converted value from abov (us to samples)
 
-
+extern uint32_t sample_clock;
 
 namespace CLOCK {
 
@@ -40,9 +40,6 @@ namespace CLOCK {
         uint32_t _midi_in_clock_last;   // stores the system time of the last received midi clock
         uint32_t _midi_clock_period;  // time in between midi clock ticks
         uint8_t _midi_clock_tick_count;
-
-        uint32_t _delta;
-        bool _delta_flag = 0;
 
         void calculate_division (void) {
             // calculation for division using samples per bar, and then using the division from there.

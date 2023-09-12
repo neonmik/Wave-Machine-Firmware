@@ -9,10 +9,6 @@ Current nightly firmware for Wave Machine Hardware.
 
     - TODO: De-link Latch and Sustain in in Arp - Should lead to better understanding of sustain handling between presets.
     
-    
-    
-
-
 - Updates and Bugfixes:
     - Arp:
         - Improvements: Improve the gap (gate?) setting so it's not just on or off. 
@@ -153,7 +149,6 @@ Changelog:
 Features/Bugfixes:
 
     + Oscillator:
-
         + Improvement: Added interpolation of wavetable samples for improved tuning.
         + Improvement: Made some improvements and refactored Synth code for clarity. 
         + Bugfix: Frequency/MIDI note alignment - Internal oscillator engine was out of tune with MIDI defined pitches. When Pitch control is central and Octave at 0, the first note on the keyboard is MIDI note 60 (C3/130Hz).
@@ -273,6 +268,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + MIDI:
+        + Moved MIDI clock tracking to a sample based time instead of blocking MCU function.
         + Bugfix: Several bugs were caused by the UART MIDI implementation not formating messages correctly. This has been fixed by a major rewrite of the UART MIDI parsing code, along with an update to the MIDI message handling code.
         + Improved MIDI handling logic by moving the MIDI Channel verification earlier.
         + Bugfix: UART MIDI IN implentation cause false notes to be called.
