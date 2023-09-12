@@ -1,5 +1,5 @@
 /**
- *                Wave Machine Firmware v0.301
+ *                Wave Machine Firmware v0.31
  * 
  * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  
