@@ -5,7 +5,7 @@
 #include "pico/stdlib.h"
 #include "pico/time.h"
 
-#define LONG_PRESS_TIME     400
+#define LONG_PRESS_TIME     350
 #define DOUBLE_PRESS_TIME   150
 
 namespace Buttons {

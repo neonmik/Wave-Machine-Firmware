@@ -9,7 +9,7 @@
 
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
-constexpr   uint32_t    SAMPLE_RATE     =       48000;          // Can set to 48000Hz - 1.3345% (47359) to compenstate for tuning
+constexpr   uint32_t    SAMPLE_RATE     =       32000;          // Can set to 48000Hz - 1.3345% (47359) to compenstate for tuning
 constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
 
 

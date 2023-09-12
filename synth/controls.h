@@ -105,7 +105,7 @@ namespace CONTROLS {
                 Page    fENV    {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
             
             Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
-                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
+                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_type,               nullptr};
             
             Page        ARP     {&ARP::setRest,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::set_state};
                 Page    sARP    {nullptr,                 &ARP::setBpm,              nullptr,                    nullptr,                         nullptr};
