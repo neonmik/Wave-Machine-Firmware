@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
 
-project(wavemachine LANGUAGES C CXX ASM VERSION 0.29)
+project(wavemachine LANGUAGES C CXX ASM VERSION 0.30)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
