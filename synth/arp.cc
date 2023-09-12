@@ -275,7 +275,7 @@ namespace ARP {
                 if (inputBuffer[i].note == 0) {
                     inputBuffer[i].add(note);
                     inputNotesUpdated = true;
-                    NOTE_HANDLING::voices_inc();
+                    // NOTE_HANDLING::voices_inc();
                     ++inputNoteCount;
 
                     if (inputNoteCount >= MAX_ARP) {
@@ -291,7 +291,6 @@ namespace ARP {
             inputBuffer[inputWriteIndex].add(note);
             inputWriteIndex = (inputWriteIndex + 1) % MAX_ARP;
             inputNotesUpdated = true;
-            NOTE_HANDLING::voices_inc();
         }
     }
     // Remove a note from the arpeggiator input buffer
@@ -354,8 +353,6 @@ namespace ARP {
 
                     inputNotesUpdated = true;
 
-                    // Release Filter envelope
-                    NOTE_HANDLING::voices_dec();
                     // Continue the loop in case there are multiple entries for the same note
                 }
             } 
@@ -476,40 +473,33 @@ namespace ARP {
     }
 
     void passNotes (void) {
-        // for passing active notes through to voices when the arp is turned off...
-        uint8_t activeVoices;
-
         if (!isSustainEnabled) {
             // sustain not active - send all actual notes
             for (int i = 0; i < MAX_ARP; i++) {
                 // copy all the notes form arp to normal voices
                 uint8_t note = arpVoices[i].note;
                 if (note != 0) {
-                    NOTE_HANDLING::voice_on(activeVoices, note, 127);
+                    NOTE_HANDLING::voice_on(i, note, 127);
                     MIDI::sendNoteOn(note, 127);
-                    activeVoices++;
                 }
             }
-            // update the filter envelope
-            NOTE_HANDLING::voices_set(activeVoices);
         } else {
             // sustain is active - only pass held notes, we want the sustained notes to ring out
             for (int i = 0; i < MAX_ARP; i++) {
-                uint8_t note = inputBuffer[i].note;
+                // if it's sustained, don't pass it for now.
+                if (arpVoices[i].isSustained()) break;
+
+                uint8_t note = arpVoices[i].note;
                 // check there is a note number, if not, skip it
                 if (note == 0)  break;
                 
                 // pass the note out
-                NOTE_HANDLING::voice_on(activeVoices, note, 127);
+                NOTE_HANDLING::voice_on(i, note, 127);
                 MIDI::sendNoteOn(note, 127);
 
-                // mark the note as sustained if it is 
-                if (inputBuffer[i].isSustained()) NOTE_HANDLING::note_off(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
-
-                activeVoices++;
-
+                // // mark the note as sustained if it is 
+                // if (arpVoices[i].isSustained()) NOTE_HANDLING::note_off(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
             }
-            NOTE_HANDLING::voices_set(activeVoices);
         }
     }
 
@@ -527,7 +517,6 @@ namespace ARP {
                     if (inputBuffer[i].note == note) {
                         inputBuffer[i].sustain(); // means if the note is already sustained, it logs that.
                     }
-                    
                 }
             }
         }
@@ -544,7 +533,7 @@ namespace ARP {
         // transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
     }
     void stopAllVoices () {
-        NOTE_HANDLING::voices_clr();
+        // NOTE_HANDLING::voices_clr();
         NOTE_HANDLING::voices_stop();
     }
 
