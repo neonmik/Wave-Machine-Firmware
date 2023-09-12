@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
-# include(pico_extras_import.cmake)
 
-project(beepmachine-firmware-v0.27 C CXX ASM)
+project(wavemachine LANGUAGES C CXX ASM VERSION 0.30)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
+
 
 
 
@@ -16,7 +16,7 @@ add_executable(${PROJECT_NAME}
 
     usb_descriptors.c
     drivers/usb.cc
-    
+
     drivers/adc.cc
     drivers/button.cc
     drivers/dac.cc
@@ -25,6 +25,7 @@ add_executable(${PROJECT_NAME}
     drivers/leds.cc
     drivers/rgb.cc
     drivers/shiftreg.cc
+    drivers/uart.cc
     
     
     ui.cc
@@ -40,36 +41,38 @@ add_executable(${PROJECT_NAME}
     
     synth/adsr.cc
     synth/arp.cc
-    synth/beat_clock.cc
+    synth/clock.cc
+    synth/controls.cc
+    synth/filter.cc
+    synth/fx.cc
     synth/modulation.cc
     synth/note_handling.cc
-    synth/controls.cc
-    synth/synth.cc
     synth/resources.cc
+    synth/synth.cc
     
-    synth/fx.cc
-    synth/filter.cc
+)
     
-    # synth/oscillator.cc
-    )
-
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}
-        )
-
+    ${CMAKE_CURRENT_LIST_DIR}  "${PROJECT_BINARY_DIR}"
+    )
+    
+configure_file(version.h.in version.h @ONLY)
+    
 pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/drivers/sn74595.pio)
-
+    
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
+# target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DEBUG)  # add this line to enable debug output
 
 
 target_link_libraries(${PROJECT_NAME} 
                         pico_stdlib
                         pico_bootrom
                         pico_multicore
+                        pico_unique_id
                         
                         hardware_pwm
                         hardware_spi

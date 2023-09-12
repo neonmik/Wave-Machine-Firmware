@@ -5,20 +5,28 @@
 #include "../config.h"
 #include "../functions.h"
 
-#define MIDI_CLOCK_TIMEOUT 670000 // time in us for 1 pulse at 24ppqn
+// (((Sample Rate * 60s) / Lowest BPM) / 4) / 24ppqn) = Longest possible dropout 
+// #define MIDI_CLOCK_TIMEOUT 670000 // max time in us for 1 pulse at 24ppqn
+#define MIDI_CLOCK_TIMEOUT (SAMPLE_RATE * 0.67) // converted value from abov (us to samples)
 
-namespace BEAT_CLOCK {
+extern uint32_t sample_clock;
+
+namespace CLOCK {
 
     namespace {
 
+
+
         uint32_t _tick = 0;
+        uint32_t _tock = 0;
         uint32_t _last_tick = 0;
 
         uint8_t _max = 8; // 4/4 - 4 beats in a bar
         uint8_t _beat = 0;
 
         bool _changed;
-        uint32_t _samples_per_division;
+        uint32_t samplesPerDivision;
+        uint32_t    samplesPerPulse;
 
         uint32_t _sample_rate;
         uint16_t _bpm = 120;
@@ -33,22 +41,27 @@ namespace BEAT_CLOCK {
         uint32_t _midi_clock_period;  // time in between midi clock ticks
         uint8_t _midi_clock_tick_count;
 
-        uint32_t _delta;
-        bool _delta_flag = 0;
+
+        uint32_t samplesSinceLastTick;
+        uint32_t averageSamplesPerTick;
 
         void calculate_division (void) {
-            _samples_per_division = (60 * _sample_rate / _bpm) / _division;
+            // calculation for division using samples per bar, and then using the division from there.
+            samplesPerDivision = ((((60 * _sample_rate) << 2) /_bpm) / _division);
+        }
+        void calculatePulse (void) {
+            samplesPerPulse = (((60 * _sample_rate) << 2) /_bpm) / 96;
         }
     }
 
-    void init (void);
+    void Init (void);
     void set_samplerate (uint16_t sample_rate = SAMPLE_RATE); // provides a default sample_rate linked to the global sample rate... this could be useful for sample rate updatings in the future.
-    void set_bpm (uint16_t bpm);
+    void setBpm (uint16_t bpm);
     uint8_t get_bpm ();
-    void set_division (uint16_t division);
+    void setDivision (uint8_t division);
 
     void tick (void);
-    void update (void);
+    void Update (void);
     
     void set_changed(bool changed);
     bool get_changed (void);

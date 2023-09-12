@@ -8,28 +8,9 @@
 namespace UI {
 
   void set_page (uint8_t value) {
-    // using a switch here so that I can easily change the LEDs... find a better way?
     _page = value;
-    switch (_page) {
-      case 0:
-        LEDS::PAGES.off();
-        CONTROLS::set_page(_page);
-        break;
-      case 1:
-        LEDS::PAGE_1.toggle();
-        CONTROLS::set_page(_page);
-        break;
-      case 2:
-        LEDS::PAGE_1.toggle();
-        LEDS::PAGE_2.toggle();
-        CONTROLS::set_page(_page);
-        break;
-      case 3:
-        LEDS::PAGE_2.toggle();
-        LEDS::PAGE_3.toggle();
-        CONTROLS::set_page(_page);
-        break;
-    }
+    CONTROLS::set_page(_page);
+    LEDS::PAGE_select(_page);
   }
   uint8_t get_page(void) {
     return _page;
@@ -86,68 +67,89 @@ void set_shift (bool shift) {
   // ----------------------
 
 
-  void init (void) {
-    // stdio_init_all();
 
-    printf("\nWelcome to the jungle...\n\n");
-    // printf("\ncore1 here!\n");
-    MIDI::init();
+  void Init (void) {
 
-    LEDS::init();
-    KEYS::init();
-    ADC::init();
-    CONTROLS::init();
-    PAGINATION::init();
+    MIDI::Init();
+    LEDS::Init();
+    KEYS::Init();
+    ADC::Init();
+    CONTROLS::Init();
+    PAGINATION::Init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;
     }
+    set_page(_page);
     LEDS::LFO.set(get_lfo());
     LEDS::ARP.set(get_arp());
-
+    
+    print_startup();
+    
     poll_index = 0;
   }
 
-  void update (void) { 
+  void Update (void) { 
     switch (_mode) {
       case UI_MODE_NORMAL:
         switch(poll_index) {
           case 0:
-            KEYS::read();
+            NOTE_HANDLING::Update();
             break;
           case 1:
-            KEYS::update();
-            if (Buttons::ARP.get(Buttons::State::SHORT)) {
-                toggle_arp();
-            }
-            if (Buttons::LFO.get(Buttons::State::SHORT)) {
-                toggle_lfo();
-            }
-            set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
+            KEYS::read();
+            break;
+          case 2:
+            KEYS::Update();
+            break;
+          case 3:
+            // this needs tidying.
+
+            // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
                 LEDS::PRESET.flash(4,50);
                 CONTROLS::save();
+                // printf("Save!\n");
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-                // CONTROLS::toggle_hold();
-                // LEDS::ARP.flash(2,50);
+                // LEDS::ARP.flash(4,50);
+                // ARP::toggleHold();
+            }
+            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
+                LEDS::PAGE_1.flash_set(4,50);
+
+                // printf("LFO!\n");
+            }
+
+            
+            set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
+            
+            if (Buttons::ARP.get(Buttons::State::LONG)) {
+                LEDS::ARP.flash(4,50);
+                ARP::toggleHold();
+            }
+            if (Buttons::ARP.get(Buttons::State::SHORT)) {
+                toggle_arp();
+            }
+
+            if (Buttons::LFO.get(Buttons::State::SHORT)) {
+                toggle_lfo();
             }
             break;
-          case 2:
-            NOTE_HANDLING::update();
-          case 3:
-            ADC::update();
           case 4:
-            PAGINATION::update();
+            ADC::Update();
             break;
           case 5:
-            LEDS::update();
+            PAGINATION::Update();
             break;
           case 6:
-            CONTROLS::update();
+            LEDS::Update();
             break;
           case 7:
-            MIDI::update();
+            CONTROLS::Update();
+            break;
+          case 8:
+            MIDI::Update();
             break;
           default:
             // do nothing
@@ -155,7 +157,7 @@ void set_shift (bool shift) {
         }
 
         ++poll_index;
-        if (poll_index > 7) poll_index = 0;
+        if (poll_index > 8) poll_index = 0;
 
         break;
 
@@ -172,6 +174,25 @@ void set_shift (bool shift) {
     }
   }
 
+  void print_startup (void) {
+    pico_unique_board_id_t board_id;
+    pico_get_unique_board_id(&board_id);
+
+    printf("\n\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("~ ~ ~ ~ ~ ~ ~ ~ ~ Welcome to the Wave.... ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("~							~\n");
+    printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", board_id.id[0], board_id.id[1], board_id.id[2], board_id.id[3], board_id.id[4], board_id.id[5], board_id.id[6], board_id.id[7]);
+    printf("~	Firmware -	v%01.02f	      			~\n", VERSION);
+    printf("~	Temp -		%02.01fºC				~\n", ADC::temp());
+    printf("~							~\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("~    		  © 2020-2023 NAMS Labs			~\n");
+    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+    printf("\n\n");
+  }
+
   void calibrate (void) {
 
     LEDS::test(30);
@@ -182,10 +203,10 @@ void set_shift (bool shift) {
     printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
     printf("|-------------------------------------------------------------------------------|\n");
     printf("|										|\n");
-    printf("|				Beep Machine Prototype				|\n");
+    printf("|				Wave Machine Prototype				|\n");
     printf("|				      2020-2023					|\n");
     printf("|										|\n");
-    printf("|		      Made by Nick Allott Musical Services (NAMS)		|\n");
+    printf("|		    Made by Nick Allott Musical Services (NAMS) Labs		|\n");
     printf("|										|\n");
     printf("|-------------------------------------------------------------------------------|\n");
     printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
@@ -193,7 +214,7 @@ void set_shift (bool shift) {
     printf("Welcome to Factory Debug!\n\n");
     sleep_ms(300);
     printf("We will now test the hardware");
-    ADC::update();
+    ADC::Update();
     sleep_ms(300);
 
     printf(".");
@@ -210,19 +231,19 @@ void set_shift (bool shift) {
       printf("Please turn Knob %d to 0%\n", i);
       while (ADC::value(i) != 0) {
         sleep_ms(1);
-        ADC::update();
+        ADC::Update();
       }
       LEDS::KNOB_select(i, 1);
-      LEDS::update();
+      LEDS::Update();
 
       printf("Now turn Knob %d to 100%\n", i);
       
       while (ADC::value(i) != 1023) {
         sleep_ms(1);
-        ADC::update();
+        ADC::Update();
       }
       LEDS::KNOB_select(i, 0);
-      LEDS::update();
+      LEDS::Update();
       printf("Knob %d check is complete!\n", i);
     }
     printf("All Knobs working correctly!\n\n");

@@ -15,14 +15,26 @@
 
 namespace FILTER {
 
-    enum FilterType {
+    enum Type {
         Off,
         LowPass,
         BandPass,
         HighPass
     };
 
+    enum Direction {
+        Regular,
+        Inverted
+    };
+
+    enum Mode {
+        MONO,
+        PARA,
+    };
+
     namespace {
+        Mode        _mode  = Mode::PARA;
+
         uint8_t     _index;
 
         bool        _dirty;
@@ -48,8 +60,8 @@ namespace FILTER {
         uint16_t    _last_sustain = 1024;
         uint16_t    _last_release = 1024;
 
-
-        FilterType  _mode;
+        Type        _type;
+        Direction   _direction;
 
         inline uint16_t Interpolate824(const uint16_t* table, uint32_t phase) {
             uint32_t a = table[phase >> 24];
@@ -65,8 +77,30 @@ namespace FILTER {
         }
 
         uint32_t calc_end_frame (uint32_t milliseconds) {
-            return (milliseconds * (SAMPLE_RATE/8)) / 1000;
-            // return (milliseconds * SAMPLE_RATE) / 1000;
+            // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
+            return (milliseconds * SAMPLE_RATE) / 1000;
+        }
+
+        volatile int8_t     _voices_active;
+        bool       _filter_active = false;
+
+        void        voices_inc (void) {
+            ++_voices_active;
+            if (_voices_active > POLYPHONY) {
+                _voices_active = POLYPHONY;
+            }
+        }
+        void        voices_dec (void) {
+            --_voices_active;
+            if (_voices_active < 0) {
+                _voices_active = 0;
+            }
+        }
+        void        voices_clr (void) {
+            _voices_active = 0;
+        }
+        bool        voices_active (void) {
+            return _voices_active > 0;
         }
 
 
@@ -75,17 +109,20 @@ namespace FILTER {
 
     extern ADSREnvelope ADSR;
 
-    void init();
+    void Init();
     void set_cutoff(uint16_t frequency);
     void set_resonance(uint16_t resonance);
     void set_punch(uint16_t punch);
-    void set_mode(uint16_t mode);
+    void set_type(uint16_t type);
     void process(int32_t &sample);
 
     void set_attack (uint16_t attack);
     void set_decay (uint16_t decay);
     void set_sustain (uint16_t sustain);
     void set_release (uint16_t release);
+
+    void voicesIncrease (void);
+    void voicesDecrease (void);
 
     void trigger_attack (void);
     void trigger_release (void);

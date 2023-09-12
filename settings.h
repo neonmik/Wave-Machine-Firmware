@@ -32,7 +32,7 @@ namespace SETTINGS {
     namespace {
         PersistantData persistant_data_;
     }
-    void init (void);
+    void Init (void);
     void save (void);
     void load (void);
 }

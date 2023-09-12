@@ -21,7 +21,7 @@
 
 namespace ADC {
     namespace {
-        uint16_t _core_temp;
+        float _core_temp;
 
         uint16_t _adc_value;
         uint8_t  _adc_noise;
@@ -48,9 +48,9 @@ namespace ADC {
             const float conversionFactor = 3.3f / (1 << 12);
 
             float adc = (float)adc_read() * conversionFactor;
-            float tempC = 27.0f - (adc - 0.706f) / 0.001721f;
+            _core_temp = 27.0f - (adc - 0.706f) / 0.001721f;
 
-            printf("CPU temperature = %.02fºC\n", tempC);
+            // printf("Temp:       %.02fºC\n", _core_temp);
 
             adc_set_temp_sensor_enabled(false);
 
@@ -96,8 +96,9 @@ namespace ADC {
         }
     }
     
-    void init();
-    void update();
+    void Init();
+    void Update();
     uint16_t value(int knob);
+    float temp (void);
     uint8_t noise();
 }

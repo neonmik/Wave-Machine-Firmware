@@ -39,12 +39,12 @@ class ADSREnvelope {
         void trigger_release();
         void stopped();
         
-        void update(void);
+        void Update(void);
 
         bool isStopped() { return _phase == Phase::OFF; }
         bool isReleasing() { return _phase == Phase::RELEASE; }
 
-        uint32_t get_adsr() { return _adsr; }
+        uint32_t get() { return (_adsr >> 8); }
 
 };
 

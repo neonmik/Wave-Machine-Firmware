@@ -1,7 +1,7 @@
 #include "settings.h"
 
 namespace SETTINGS {
-    void init() {
+    void Init() {
         persistant_data_.midi_settings.channel = MIDI_CHANNEL;
 
         persistant_data_.audio_setting.sample_rate = SAMPLE_RATE;

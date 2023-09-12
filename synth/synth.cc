@@ -1,5 +1,5 @@
 #include "synth.h"
-#include <math.h>
+// #include <math.h>
 
 #include "modulation.h"
 #include "filter.h"
@@ -7,17 +7,14 @@
 
 namespace SYNTH {
 
-  uint8_t m;
-
-
-  uint16_t oscillator = Oscillator::WAVETABLE; // | Oscillator::TRIANGLE;      // bitmask for enabled waveforms (see AudioWaveform enum for values)
-
   uint16_t _wave_shape;
   uint16_t _last_shape;
 
   uint16_t _wave_vector;
   uint16_t _vector_mod;
 
+  uint16_t   _detune;
+  uint16_t   _last_detune;
 
   uint32_t  _attack;
   uint32_t  _decay;
@@ -32,7 +29,7 @@ namespace SYNTH {
   int16_t   _vibrato;
   uint16_t  _tremelo;
 
-  uint16_t _pitch_scale = 511;
+  uint16_t pitchBend = 511;
   int16_t   _pitch_bend;
   uint16_t _last_pitch;
 
@@ -42,19 +39,28 @@ namespace SYNTH {
   uint16_t volume = 0xFFFF;
   // const int16_t sine_waveform[256] = {-32768,-32758,-32729,-32679,-32610,-32522,-32413,-32286,-32138,-31972,-31786,-31581,-31357,-31114,-30853,-30572,-30274,-29957,-29622,-29269,-28899,-28511,-28106,-27684,-27246,-26791,-26320,-25833,-25330,-24812,-24279,-23732,-23170,-22595,-22006,-21403,-20788,-20160,-19520,-18868,-18205,-17531,-16846,-16151,-15447,-14733,-14010,-13279,-12540,-11793,-11039,-10279,-9512,-8740,-7962,-7180,-6393,-5602,-4808,-4011,-3212,-2411,-1608,-804,0,804,1608,2411,3212,4011,4808,5602,6393,7180,7962,8740,9512,10279,11039,11793,12540,13279,14010,14733,15447,16151,16846,17531,18205,18868,19520,20160,20788,21403,22006,22595,23170,23732,24279,24812,25330,25833,26320,26791,27246,27684,28106,28511,28899,29269,29622,29957,30274,30572,30853,31114,31357,31581,31786,31972,32138,32286,32413,32522,32610,32679,32729,32758,32767,32758,32729,32679,32610,32522,32413,32286,32138,31972,31786,31581,31357,31114,30853,30572,30274,29957,29622,29269,28899,28511,28106,27684,27246,26791,26320,25833,25330,24812,24279,23732,23170,22595,22006,21403,20788,20160,19520,18868,18205,17531,16846,16151,15447,14733,14010,13279,12540,11793,11039,10279,9512,8740,7962,7180,6393,5602,4808,4011,3212,2411,1608,804,0,-804,-1608,-2411,-3212,-4011,-4808,-5602,-6393,-7180,-7962,-8740,-9512,-10279,-11039,-11793,-12540,-13279,-14010,-14733,-15447,-16151,-16846,-17531,-18205,-18868,-19520,-20160,-20788,-21403,-22006,-22595,-23170,-23732,-24279,-24812,-25330,-25833,-26320,-26791,-27246,-27684,-28106,-28511,-28899,-29269,-29622,-29957,-30274,-30572,-30853,-31114,-31357,-31581,-31786,-31972,-32138,-32286,-32413,-32522,-32610,-32679,-32729,-32758};
 
-  Oscillators channels[MAX_VOICES];
+  Oscillators channels[POLYPHONY];
 
 
   void voice_on (uint8_t voice, uint8_t note) {
-    channels[voice].note_on(note);
+    if ((!channels[voice].isActive()) ||
+        (!channels[voice].isGate())) {
+      FILTER::voicesIncrease(); 
+    }
+    FILTER::trigger_attack();
+    channels[voice].noteOn(note);
   }
   void voice_off (uint8_t voice) {
-    channels[voice].note_off();
+    if (channels[voice].isGate()) {
+      FILTER::voicesDecrease(); 
+    }
+    FILTER::trigger_release();
+    channels[voice].noteOff();
   }
   
-  void init () {
-    MOD::init();
-    FILTER::init();
+  void Init () {
+    MOD::Init();
+    FILTER::Init();
   }
 
   
@@ -64,7 +70,7 @@ namespace SYNTH {
     }
 
     bool any_channel_playing = false;
-    for(int c = 0; c < MAX_VOICES; c++) {
+    for(int c = 0; c < POLYPHONY; c++) {
       if(channels[c].volume > 0 && channels[c].ADSR.isStopped()) {
         any_channel_playing = true;
       }
@@ -73,7 +79,21 @@ namespace SYNTH {
     return any_channel_playing;
   }
 
-  uint16_t get_audio_frame() {
+  // uint16_t softStart () {
+  //   ++_soft_start_index;
+
+  //   if (_soft_start_index >= 2) {
+  //     _soft_start_index = 0;
+  //     _soft_start_sample += 1;
+  //     if (_soft_start_sample > 0) {
+  //       _soft_start_sample = 0;
+  //     }
+  //   }
+
+  //   return (_soft_start_sample - INT16_MIN)>>4;
+  // }
+
+  uint16_t process() {
     
     if (_soft_start) {
       ++_soft_start_index;
@@ -89,168 +109,83 @@ namespace SYNTH {
     } 
 
     else {
-      int32_t sample = 0;  // used to combine channel output
-      int16_t clipped_sample = 0;
-
-      // for reduced speed poly lfo. To be used for making fully poly.
-      // m++;
-      // m &= 0x7;
-      // if (m == 0) MOD::update();
-      MOD::update();
+      int32_t outputSample = 0;  // used to combine channel output
+      
+      MOD::Update();
 
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
       uint16_t output_volume = (volume - _tremelo);
       
-      for(int c = 0; c < MAX_VOICES; c++) {
+      for(int c = 0; c < POLYPHONY; c++) {
 
         auto &channel = channels[c];
         // check if any waveforms are active for this channel
-        if(channel._active) {
-
+        if(channel.isActive()) {
+          
+          channel.calcIncrement();
           // increment the waveform position counter.
-          channel.waveform_offset += (((((uint64_t)channel._frequency * _pitch_scale) >> 9) << _octave)) / SAMPLE_RATE;
-          // channel.waveform_offset += channel._frequency / SAMPLE_RATE;
+          channel.phaseAccumulator += channel.phaseIncrement;
+
 
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
-          channel.waveform_offset += _vibrato;
+          channel.phaseAccumulator += _vibrato;
 
-          channel.ADSR.update();
-          if (channel.is_active() && channel.ADSR.isStopped()) {
-            channel.note_stopped();
+          channel.ADSR.Update();
+          if (channel.isActive() && channel.ADSR.isStopped()) {
+            channel.noteStopped();
             QUEUE::release_send(c);
+            continue; // save processing this channel any futher
           }
 
-          // if(channel.waveform_offset & 0x10000) {
-          //   // if the waveform offset overflows then generate a new
-          //   // random noise sample
-          //   channel.noise = prng_normal();
-          // }
+          int32_t channelSample = 0;
 
-          channel.waveform_offset &= 0xffff;
-
-          uint8_t waveform_count = 0;
-          int32_t channel_sample = 0;
-
-
-          // if (oscillator & Oscillator::NOISE) {
-          //   channel_sample += channel.noise;
-          //   ++waveform_count;
-          // }
-
-          // if (oscillator & Oscillator::SAW) {
-          //   channel_sample += (int32_t)channel.waveform_offset - 0x7fff;
-          //   ++waveform_count;
-          // }
-
-          // if (oscillator & Oscillator::TRIANGLE) {
-          //   if (channel.waveform_offset < 0x7fff) { // initial quarter up slope
-          //     channel_sample += int32_t(channel.waveform_offset * 2) - int32_t(0x7fff);
-          //   }
-          //   else { // final quarter up slope
-          //     channel_sample += int32_t(0x7fff) - ((int32_t(channel.waveform_offset) - int32_t(0x7fff)) * 2);
-          //   }
-          //   ++waveform_count;
-          // }
-
-          // if (oscillator & Oscillator::SQUARE) {
-          //   channel_sample += (channel.waveform_offset < channel.pulse_width) ? 0x7fff : -0x7fff;
-          //   ++waveform_count;
-          // }
+          // 0xffff0 makes it large enough to not interupt my scaling, anything more than like 0xffffff starst to go mad... might do all the waveforms?%
+          channel.phaseAccumulator &= (0x3fffff);
           
-          // if (oscillator & Oscillator::SINE) {
-          //   // the sine_waveform sample contains 256 samples in
-          //   // total so we'll just use the most significant bits
-          //   // of the current waveform position to index into it
-          //   channel_sample += sine_waveform[(channel.waveform_offset >> 8)];
-          //   ++waveform_count;
-          // }
-
-          // if (oscillator & Oscillator::ARBITARY) {
-          //   // OLD Arbitary Waveform? Not sure how it was meant to work, but it didnt...
-          //   // channel_sample += channel.wave_buffer[channel.wave_buf_pos];
-          //   // if (channel.wave_buf_pos == 64) {
-          //   //   channel.wave_buf_pos = 0;
-          //   //   if(channel.wave_buffer_callback)
-          //   //       channel.wave_buffer_callback(channel);
-          //   // }
-          //   // ++waveform_count;
-          // }
+          channelSample += getWavetable(channel.phaseAccumulator, vector); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
+          // channelSample += getWavetable((channel.phaseAccumulator >> 2), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
           
-          if (oscillator & Oscillator::WAVETABLE) {
+          // channelSample /= 2;
 
-            // the wavetable sample contains 256 samples in
-            // total so we'll just use the most significant bits
-            // of the current waveform position to index into it
-            channel_sample += get_wavetable((channel.waveform_offset >> 8) + vector);
-            ++waveform_count;
-            
-          }
-
-          // Blueprint for future FM mode
-          // if (oscillator & Oscillator::FM) {
-          //   phaseDeltaModulator = (pitch * harmonicity) >> 6;   // calculate modulator frequency for a  given harmonicity
-          //   phaseDeltaCarrier = pitch;                           // this is just pitch (although not in Hz)
-
-          //   // calculate frequency mod
-          //   phaseAccumModulator += phaseDeltaModulator;
-          //   indexModulator = phaseAccumModulator >> 8;
-          //   modulator = get_wavetable[indexModulator];
-          //   modulator = (modulator * modulatorDepth) >> 3;
-          //   modulatorSigned = modulator - ((128 * modulatorDepth) >> 3);   // center at 0
-
-          //   // get carrier frequency
-          //   phaseDeltaCarrier += modulatorSigned;
-
-          //   // calculate carrier
-          //   phaseAccumCarrier += phaseDeltaCarrier;
-          //   indexCarrier = phaseAccumCarrier >> 8;
-          //   channel_sample = get_wavetable[indexCarrier];
-          // }
-
-          // divide the sample by the amount of waveforms - good for multi oscillator voices
-          channel_sample = channel_sample / waveform_count;
-          
           // apply ADSR
-          channel_sample = (int32_t(channel_sample) * int32_t((channel.ADSR.get_adsr()) >> 8)) >> 16;
+          channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
 
           // apply channel volume
-          channel_sample = (int32_t(channel_sample) * int32_t(channel.volume)) >> 16;
+          channelSample = (int32_t(channelSample) * int32_t(channel.volume)) >> 16;
 
-          sample += channel_sample;
+          outputSample += channelSample;
         }
       }
 
-      // Atempt at normalising the volume when theres less than 8 voices, currently is just quiest and then gets louder.
-      // if (!voice_count) voice_count = 1;
-      // sample = sample / voice_count;
 
-      sample = (int32_t(sample >> 2) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
+      outputSample = (int32_t(outputSample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       // was meant to introduce lower sample rate filter, but makes a bit crushed effect...
       // m++;
       // m &= 0x7;
-      // if (m == 0) FILTER::process(sample);
+      // if (m == 0) FILTER::process(outputSample);
       
-      // working filter, have to define controls.
-      FILTER::process(sample);
+      // Filter
+      FILTER::process(outputSample);
 
-      // add soft soft clipping?
-      FX::SOFTCLIP::process(sample);
+      // Soft clipping
+      FX::SOFTCLIP::process(outputSample);
 
-      // hard clipping to 16-bit
-      FX::HARDCLIP::process(sample);
+      // Hard clipping to 16-bit
+      FX::HARDCLIP::process(outputSample);
       
       // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
-      return (sample - INT16_MIN)>>4;
+      return (outputSample - INT16_MIN)>>4;
     }
 
   }
 
   void set_waveshape (uint16_t shape) {
-    if (shape == _last_shape) return;
-    _last_shape = shape;
-    _wave_shape = ((shape>>6)*256);
+    uint16_t temp = ((shape >> 6) << 8); // the double bit shifts here are to loose precision.
+    if (temp == _last_shape) return;
+    _last_shape = temp;
+    _wave_shape = temp;
   }
   void set_wavevector (uint16_t vector) {
     _wave_vector = vector;
@@ -260,10 +195,10 @@ namespace SYNTH {
     _octave = (octave>>8);
     _last_octave = octave;
   }
-  void set_pitch_scale (uint16_t scale) {
-    if (scale == _last_pitch) return;
-    _pitch_scale = pitch_log(scale);
-    _last_pitch = scale;
+  void set_pitch_scale (uint16_t bend) {
+    if (bend == _last_pitch) return;
+    pitchBend = pitch_log(bend);
+    _last_pitch = bend;
   }
 
   void set_attack (uint16_t attack) {
@@ -294,9 +229,14 @@ namespace SYNTH {
   }
 
   void modulate_vibrato (uint16_t vibrato) {
-    volatile int16_t signedInput = vibrato;
-    signedInput -= 0x7fff;
+    volatile int32_t signedInput = vibrato;
+    signedInput -= 0x7fff;  
     _vibrato = static_cast<int8_t>(signedInput >> 8);
+
+    // doesnt work may need a different table
+    // int16_t temp = pitch_log(vibrato >> 6); // shift the u16 input to u10, then map it to pitch (256-1023)
+    // temp -= 0x200;
+    // _vibrato = pitch_log(vibrato >> 6);
   }
   void modulate_tremelo (uint16_t tremelo) {
     _tremelo = tremelo;

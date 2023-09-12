@@ -26,8 +26,6 @@
 
 #include "../synth/note_handling.h"
 
-// #include "../queue.h"
-// #include "../midi.h"
 
 namespace KEYS {
 
@@ -70,7 +68,7 @@ namespace KEYS {
             Keyboard() { }
             ~Keyboard() { }
 
-            void init();
+            void Init();
             void read();
             inline int32_t get() const {
                 return _current;
@@ -86,7 +84,9 @@ namespace KEYS {
     
     extern Keyboard Keys;
 
-    void init (void);
+    void Init (void);
     void read (void);
-    void update (void);
+    void Update (void);
+
+    void setOctave (uint16_t input);
 }

@@ -1,8 +1,8 @@
-#include "beat_clock.h"
+#include "clock.h"
 
-namespace BEAT_CLOCK {
+namespace CLOCK {
 
-    void init () {
+    void Init () {
         _sample_rate = SAMPLE_RATE;
         _bpm = DEFAULT_BPM;
         calculate_division();
@@ -13,18 +13,16 @@ namespace BEAT_CLOCK {
         calculate_division();
     } 
 
-    void set_bpm (uint16_t bpm) {
+    void setBpm (uint16_t bpm) {
         _bpm = bpm;
         calculate_division();
     }
     uint8_t get_bpm () {
         return _bpm;
     }
-    void set_division (uint16_t division) {
-        // set the division of the bpm clock...
-        // currently /8 to get a 16th note, but rename the _samples_per_16th to _samples_per_division
-        uint8_t temp = map(division, 0, 1023, 0, 9);
-        switch (temp) {
+    void setDivision (uint8_t division) {
+        // set the division of the bpm/midi clock
+        switch (division) {
             case 0: // Whole Note (1/1)
                 _division = 1;
                 midi_division = 96;
@@ -65,20 +63,19 @@ namespace BEAT_CLOCK {
                 _division = 32;
                 midi_division = 3;
                 break;
-            // Not been used, and I've not missed them.
-            // case 10: // 32nd Note Triplet (1/48)
-            //     _division = 48;
-            //     midi_division = 2;
-            //     break;
-            // case 11: // 1/64 - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
-            //     _division = 64;
-            //     // midi_division = 96;
-            //     break;
-
-            // case ?: // Dotted Half note (?) - Not currently possible in divisions, and I've not missed it.
-            //     _division = 1.333; // ~
-            //     midi_division = 72;
-            //     break;
+            case 10: // 32nd Note Triplet (1/48)
+                _division = 48;
+                midi_division = 2;
+                break;
+            // not used yet... 
+            case 11: // 64th Note - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
+                _division = 64;
+                midi_division = 1.5;
+                break;
+            case 12: // 64th Note Triplet
+                _division = 84;
+                midi_division = 1;
+                break;
             default:
                 break;
         }
@@ -87,12 +84,17 @@ namespace BEAT_CLOCK {
 
     void tick (void) {
         ++_tick;
-        if (_tick >= _samples_per_division) { // && (_tick != _last_tick)) {
+        if (_tick >= samplesPerDivision) {
             if (!_midi_clock_present) set_changed(true);
             _tick = 0;
         }
     }
-    void update (void) {
+
+    void check_sample_clock (void) {
+        
+    }
+    void Update (void) {
+        // check_sample_clock();
         check_for_midi_clock();
     }
 
@@ -107,32 +109,50 @@ namespace BEAT_CLOCK {
     }
    
     void midi_tick (void) {
-        // set current time in µs
-        uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
         // raise the flag to make it known we are now reciveing midi clock
         _midi_clock_present = true; 
-        // set the current time in µs for use in checking where its still here
+        
+        uint32_t _current_time = sample_clock; // current time in samples
+        
+        uint32_t actualSamplesPerTick = (_current_time - _midi_in_clock_last);
+        samplesSinceLastTick += actualSamplesPerTick;
+
+        // set the current time for use in checking where its still here
         _midi_in_clock_last = _current_time;
+
+
         // increase the clock tick so we can raise a flag at the correct divisions for 24ppqn
         ++_midi_clock_tick_count;
         if (_midi_clock_tick_count >= midi_division) {
             set_changed(true);
+
+            averageSamplesPerTick = samplesSinceLastTick / midi_division;
+
+            samplesSinceLastTick = 0;
+
             _midi_clock_tick_count = 0;
         }
     }
     
     void start_midi_clock (void) {
         _midi_clock_present = true;
+        set_changed(true);
     }
     void stop_midi_clock (void) {
         // maybe add some handling here to differentiate between drop out and stop. 
         _midi_clock_present =  false;
+
+        // both these should only happen in AUTO mode I think
+        _tick = 0; // reset tick
         set_changed(true); 
     }
 
     void check_for_midi_clock (void) {
         if (!_midi_clock_present) return; // check to see if the function still works if I use this. Just want it to not do this if it's already stopped. 
-        uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
+        // uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
+        uint32_t _current_time = sample_clock;
+
+
         if ((_current_time - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT) {
             _midi_clock_present = false;
         }
@@ -172,9 +192,3 @@ namespace BEAT_CLOCK {
 // ------------------------------------------------
 
 
-
-// 48000 ticks per minute
-// -----
-//    60 seconds
-//     
-// = 800 ticks per second

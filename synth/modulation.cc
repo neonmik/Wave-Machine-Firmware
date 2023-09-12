@@ -7,11 +7,11 @@ namespace MOD {
     // Modulation LFO(SAMPLE_RATE/8); // reduced speed poly LFO
     Modulation LFO(SAMPLE_RATE); // full speed mono LFO
 
-    void init () {
+    void Init () {
         LFO.set_matrix(0);
     }
-    void update () {
-        LFO.update();
+    void Update () {
+        LFO.Update();
     }
     void clear () {
         LFO.clear();

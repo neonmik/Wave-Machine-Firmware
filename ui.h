@@ -1,7 +1,7 @@
 #pragma once
 
-// #include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/unique_id.h"
 
 #include "midi.h"
 
@@ -58,12 +58,14 @@ namespace UI {
     void toggle_test_lfo (void);
     void toggle_test_arp (void);
 
+    void print_startup (void);
+
     // ----------------------
     //        HARDWARE
     // ----------------------
 
-    void init (void);
-    void update (void);
+    void Init (void);
+    void Update (void);
     void debug (void);
     void calibrate (void);
 }

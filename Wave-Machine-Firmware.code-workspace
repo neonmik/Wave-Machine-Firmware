@@ -1,7 +1,67 @@
 {
+<<<<<<< HEAD
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cmake.statusbar.advanced": {
+			"debug": {
+				"visibility": "hidden"
+			},
+			"launch": {
+				"visibility": "hidden"
+			},
+			"build": {
+				"visibility": "default"
+			},
+			"buildTarget": {
+				"visibility": "default"
+			}
+		},
+		"cortex-debug.openocdPath": "openocd",
+		"files.associations": {
+			"stdlib.h": "c",
+			"cmath": "cpp",
+			"compare": "cpp",
+			"concepts": "cpp",
+			"cstdarg": "cpp",
+			"cstdint": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"exception": "cpp",
+			"type_traits": "cpp",
+			"limits": "cpp",
+			"new": "cpp",
+			"*.tcc": "cpp",
+			"cinttypes": "cpp",
+			"typeinfo": "cpp",
+			"numeric": "cpp",
+			"__config": "cpp",
+			"__nullptr": "cpp",
+			"chrono": "cpp",
+			"usb_descriptors.c": "cpp",
+			"optional": "cpp",
+			"ostream": "cpp",
+			"ratio": "cpp",
+			"system_error": "cpp",
+			"array": "cpp",
+			"functional": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp",
+			"variant": "cpp",
+			"algorithm": "cpp",
+			"unordered_map": "cpp"
+		},
+		"cortex-debug.variableUseNaturalFormat": true,
+		"cortex-debug.registerUseNaturalFormat": true
+	}
+=======
     "folders": [
         {
             "path": "."
         }
     ]
+>>>>>>> 97a0aa9778b6d35cbcb9eb2f40064243b3aa15b9
 }

@@ -14,7 +14,7 @@
 
 #include "../ui.h"
 
-#include "../synth/beat_clock.h"
+// #include "../synth/clock.h"
 
 #define DAC_DATA        11
 #define DAC_CLK         10
@@ -24,6 +24,11 @@
 #define DAC_CONFIG      0b0111000000000000
 
 #define size_bits       log2(BUFFER_SIZE * sizeof(uint16_t))
+
+extern uint32_t    sample_clock;
+extern uint8_t     softwareIndex;
+extern uint8_t     hardwareIndex;
+extern uint16_t    playBuffer[];
 
 typedef uint16_t (*synth_function)();
 namespace DAC {
@@ -35,9 +40,9 @@ namespace DAC {
         
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
-        uint16_t     _buffer_size    = BUFFER_SIZE;
+        uint16_t    _buffer_size    = BUFFER_SIZE;
         uint16_t    _buffer[BUFFER_SIZE];
-
+            
         volatile uint16_t buf_a[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         volatile uint16_t buf_b[BUFFER_SIZE] __attribute__((aligned(BUFFER_SIZE * sizeof(uint16_t))));
         
@@ -47,11 +52,13 @@ namespace DAC {
 
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
-                buf[i] = (process()) | (DAC_CONFIG);
-                ++sample_clock;
-                BEAT_CLOCK::tick();
+                // new code that just copies from the play buffer to the dma buffer
+                buf[i] = (playBuffer[hardwareIndex]) | (DAC_CONFIG);
+                ++hardwareIndex;
+                hardwareIndex &= 0x1F;
             }
-            _full = true;
+            // old method of checking when to refresh controls.
+            // _full = true;
         }
         void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
 
@@ -122,7 +129,7 @@ namespace DAC {
         
     }
 
-    void init (synth_function audio_process);
+    void Init (synth_function audio_process);
     void clear_state (void);
     bool get_state (void);
 }

@@ -16,31 +16,21 @@ namespace PAGINATION {
         last_value[value] = -1; //-1 so if the page/preset has changed, it's never the same value
       }
     }
-    void init() {
-      update();
+    void Init() {
+      Update();
     }
-    void update(){
+    void Update(){
       uint8_t temp_page;
 
       if(Buttons::PAGE.get(Buttons::State::SHORT)){
+        
         uint8_t pages = MAX_PAGES;
+        if (!UI::get_arp()) pages = (MAX_PAGES - 1);
 
-        page_change = true;
 
         ++current_page;
-
-        // LFO on
-        // doesnt work correctly, need to be selective about pages available, or use another method
-        // if (!get_lfo_flag()) pages--;
-        // ARP on
-        if (!UI::get_arp()) pages--;
-        
-        // count the pages
         if (current_page >= pages) current_page = 0;
 
-        
-        else temp_page = current_page;
-        // if (Buttons::PRESET.get(Buttons::State::SHIFT)) current_page = 4;
         UI::set_page(current_page);
         refresh();
       }

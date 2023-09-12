@@ -2,7 +2,6 @@
 
 #include "string.h"
 #include "pico/stdlib.h"
-// #include "hardware/sync.h"
 
 #include "preset.h"
 
@@ -21,6 +20,7 @@ namespace CONTROLS {
         uint8_t _page;
         bool    _shift;
         bool    _changed;
+        uint8_t _poll;
 
         uint8_t _default_preset = 0;
 
@@ -32,7 +32,7 @@ namespace CONTROLS {
             SHFT = 4,
             fENV = 5,
             FILT = 6,
-            SPAR = 7,
+            sARP = 7,
         };
            
     }
@@ -41,8 +41,9 @@ namespace CONTROLS {
             class Page {
                 private:
                     volatile bool _active = true;
-                    volatile bool _changed = false;
+                    // volatile bool _changed = false;
                     uint16_t _input[4];
+                    bool     _changed[4];
                     void (*_update_funcs[4])(uint16_t);
                     void (*_toggle_func)(bool); // Optional function pointer to toggle the state
                 public:
@@ -67,7 +68,7 @@ namespace CONTROLS {
                     void set_state(bool state) {
                         if (_toggle_func != nullptr) {
                             _active = state;
-                            _changed = true;
+                            // _changed = true;
                             _toggle_func(_active);
                         }
                     }
@@ -76,17 +77,19 @@ namespace CONTROLS {
                     }
                     void set(uint8_t control, uint16_t input) {
                         _input[control] = input;
-                        _changed = true;
+                        _changed[control] = true;
                     }
                     uint16_t get(uint8_t control) {
                         return _input[control];
                     }
-                    void update() {
-                        if (_active && _changed) {
+                    void Update() {
+                        if (_active) {
                             for (int i = 0; i < 4; i++) {
-                                if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
+                                if (_changed[i]) {
+                                    if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
+                                    _changed[i] = false;
+                                }
                             }
-                            _changed = false;
                         }
                     }
             };
@@ -102,16 +105,13 @@ namespace CONTROLS {
                 Page    fENV    {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
             
             Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
-                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_mode,               nullptr};
+                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_type,               nullptr};
             
-            Page        ARP     {&ARP::set_hold,           &ARP::set_division,         &ARP::set_range,            &ARP::set_direction,             ARP::set_state};
-                // Page    SHFT    {nullptr,                nullptr,                    nullptr,                    nullptr,                        nullptr};
-            
-            
-            
+            Page        ARP     {&ARP::setRest,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::set_state};
+                Page    sARP    {nullptr,                 &ARP::setBpm,              nullptr,                    nullptr,                         nullptr};
             
 
-            void init (void) { }
+            void Init (void) { }
 
             void set (uint8_t page, uint8_t control, uint16_t input) {
             switch (page) {
@@ -136,6 +136,9 @@ namespace CONTROLS {
                     case 6:
                         FILT.set(control, input);
                         break;
+                    case 7:
+                        sARP.set(control, input);
+                        break;
                 }
             }
             uint16_t get (uint8_t page, uint16_t control) {
@@ -155,6 +158,8 @@ namespace CONTROLS {
                         return fENV.get(control);
                     case 6:
                         return FILT.get(control);
+                    case 7:
+                        return sARP.get(control);
                     default:
                         return 0;
                 }
@@ -179,14 +184,15 @@ namespace CONTROLS {
             bool get_arp (void) {
                 return ARP.get_state();;
             }
-            void update (void) {
-                MAIN.update();
-                ADSR.update();
-                MOD1.update();
-                ARP.update();
-                FILT.update();
-                fENV.update();
-                SHFT.update();
+            void Update (void) {
+                MAIN.Update();
+                ADSR.Update();
+                MOD1.Update();
+                ARP.Update();
+                SHFT.Update();
+                fENV.Update();
+                FILT.Update();
+                sARP.Update();
             }
     };
     
@@ -194,7 +200,7 @@ namespace CONTROLS {
     extern CONTROL Control;
     extern PRESET Preset[MAX_PRESETS];
     
-    void init (void);
+    void Init (void);
     
     void set_preset (uint8_t preset);
     uint8_t get_preset (void);
@@ -221,5 +227,5 @@ namespace CONTROLS {
     bool get_shift (void);
 
 
-    void update (void);
+    void Update (void);
 };

@@ -8,14 +8,14 @@ namespace RGB_LED {
 
     rgb Rgb(LEDR_PIN, LEDG_PIN, LEDB_PIN);
     
-    void init () {
-        Rgb.init();
+    void Init () {
+        Rgb.Init();
     }
     void on () {
         Rgb.set_buffer(_buffer[0], _buffer[1], _buffer[2]);
     }
-    void update () {
-        Rgb.update();
+    void Update () {
+        Rgb.Update();
     }
     void set (uint16_t red, uint16_t green, uint16_t blue) {
         _buffer[0] = red;

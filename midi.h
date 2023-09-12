@@ -3,8 +3,9 @@
 #include "pico/stdlib.h"
 
 #include "drivers/usb.h"
+#include "drivers/uart.h"
 
-#include "synth/beat_clock.h"
+#include "synth/clock.h"
 #include "synth/controls.h"
 
 
@@ -28,37 +29,37 @@ namespace MIDI {
 
     constexpr   uint16_t    EXTENDED_CONTROL_CHANGE_MAX =   16384;
 
+    constexpr   uint16_t    SYSEX_MAX_SIZE =                255;
 
-    namespace {
-        uint8_t channel_;
 
-        int recvMode_;
-        int recvByteCount_;
-        int recvEvent_;
-        int recvArg0_;
-        int recvBytesNeeded_;
-        int lastStatusSent_;
-    }
+    
     enum MidiType {
-        INVALID_TYPE            = 0x00,    ///< For notifying errors
-        NOTE_OFF                = 0x80,    ///< Note Off
-        NOTE_ON                 = 0x90,    ///< Note On
-        AFTERTOUCH_POLY         = 0xA0,    ///< Polyphonic AfterTouch
-        CONTROL_CHANGE          = 0xB0,    ///< Control Change / Channel Mode
-        PROGRAM_CHANGE          = 0xC0,    ///< Program Change
-        AFTERTOUCH_CHANNEL      = 0xD0,    ///< Channel (monophonic) AfterTouch
-        PITCH_BEND              = 0xE0,    ///< Pitch Bend
-        SYS_EX                  = 0xF0,    ///< System Exclusive
-        TIMECODE_QUATER_FRAME   = 0xF1,    ///< System Common - MIDI Time Code Quarter Frame
-        SONG_POSITION           = 0xF2,    ///< System Common - Song Position Pointer
-        SONG_SELECT             = 0xF3,    ///< System Common - Song Select
-        TUNE_REQUEST            = 0xF6,    ///< System Common - Tune Request
-        CLOCK                   = 0xF8,    ///< System Real Time - Timing Clock
-        START                   = 0xFA,    ///< System Real Time - Start
-        CONTINUE                = 0xFB,    ///< System Real Time - Continue
-        STOP                    = 0xFC,    ///< System Real Time - Stop
-        ACTIVE_SENSING          = 0xFE,    ///< System Real Time - Active Sensing
-        SYSTEM_RESET            = 0xFF,    ///< System Real Time - System Reset
+        InvalidType           = 0x00,    ///< For notifying errors
+        NoteOff               = 0x80,    ///< Channel Message - Note Off
+        NoteOn                = 0x90,    ///< Channel Message - Note On
+        AfterTouchPoly        = 0xA0,    ///< Channel Message - Polyphonic AfterTouch
+        ControlChange         = 0xB0,    ///< Channel Message - Control Change / Channel Mode
+        ProgramChange         = 0xC0,    ///< Channel Message - Program Change
+        AfterTouchChannel     = 0xD0,    ///< Channel Message - Channel (monophonic) AfterTouch
+        PitchBend             = 0xE0,    ///< Channel Message - Pitch Bend
+        SystemExclusive       = 0xF0,    ///< System Exclusive
+        SystemExclusiveStart  = SystemExclusive,   ///< System Exclusive Start
+        TimeCodeQuarterFrame  = 0xF1,    ///< System Common - MIDI Time Code Quarter Frame
+        SongPosition          = 0xF2,    ///< System Common - Song Position Pointer
+        SongSelect            = 0xF3,    ///< System Common - Song Select
+        Undefined_F4          = 0xF4,
+        Undefined_F5          = 0xF5,
+        TuneRequest           = 0xF6,    ///< System Common - Tune Request
+        SystemExclusiveEnd    = 0xF7,    ///< System Exclusive End
+        Clock                 = 0xF8,    ///< System Real Time - Timing Clock
+        Undefined_F9          = 0xF9,
+        Tick                  = Undefined_F9, ///< System Real Time - Timing Tick (1 tick = 10 milliseconds)
+        Start                 = 0xFA,    ///< System Real Time - Start
+        Continue              = 0xFB,    ///< System Real Time - Continue
+        Stop                  = 0xFC,    ///< System Real Time - Stop
+        Undefined_FD          = 0xFD,
+        ActiveSensing         = 0xFE,    ///< System Real Time - Active Sensing
+        SystemReset           = 0xFF,    ///< System Real Time - System Reset
     };
 
     enum MidiFilterMode
@@ -135,22 +136,79 @@ namespace MIDI {
         POLY_MODE_ON                    = 127
     };
 
-    
-    void init(void);
-    void update(void);
-    void midi_player(void);
+    struct MidiMessage {
+        MidiType    type = MidiType::InvalidType; // defaults to invalid
+        uint8_t     channel;
+        uint8_t     data1;
+        uint8_t     data2;
+        uint8_t     dataSysex[SYSEX_MAX_SIZE];
 
-    void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2);
-    void handleMidiMessage(uint8_t msg[4]);
+        uint8_t     length = 0;
+
+        bool        valid;
+ 
+        inline bool isSystemRealTime () const {
+            return (type & 0xf8) == 0xf8;
+        }
+        inline bool isSystemCommon () const {
+            return (type & 0xf8) == 0xf0;
+        }
+        inline bool isChannelMessage () const {
+            return (type & 0xf0) != 0xf0;
+        }
+    };
+
+    namespace {
+        // uint8_t channel_;
+
+        // int recvMode_;
+        // int recvByteCount_;
+        // int recvEvent_;
+        // int recvArg0_;
+        // int recvBytesNeeded_;
+        // int lastStatusSent_;
+        
+        bool Use1ByteParsing = false;
+        bool NullVelocityNoteOnAsNoteOff = true;
+
+        uint16_t    pendingMessageIndex;
+        uint16_t    pendingMessageExpectedLength;
+        uint8_t     pendingMessage[3];
+        
+        MidiType    runningStatus;
+
+        MidiMessage inputMessageUART;
+        MidiMessage inputMessageUSB;
+    }
+
+
+    
+
+    void Init(void);
+    void Update(void);
+
+    bool parse (void); // parsing - currently only used for UART
+    void resetInput (void);
+
+    bool inputFilter(MidiMessage message);
+    void handleNullVelocity(MidiMessage message);
+    MidiType getTypeFromStatusByte(uint8_t inStatus);
+    uint8_t getChannelFromStatusByte(uint8_t inStatus);
+    bool isChannelMessage(MidiType inType);
+
+
+    
+    // void handleMidiMessage(uint8_t msg[4]);
 
     // Functions for MIDI out
-    void handleNoteOff(uint8_t channel, uint8_t note, uint8_t velocity);
-    void handleNoteOn(uint8_t channel, uint8_t note, uint8_t velocity);
-    void handleVelocityChange(uint8_t channel, uint8_t note, uint8_t velocity);
-    void handleControlChange(uint8_t channel, uint8_t controller, uint8_t value);
-    void handleProgramChange(uint8_t channel, uint8_t program);
-    void handleAfterTouch(uint8_t channel, uint8_t velocity);
-    void handlePitchBend(uint8_t channel, uint16_t pitch);
+    void handleNoteOff(uint8_t note, uint8_t velocity);
+    void handleNoteOn(uint8_t note, uint8_t velocity);
+    void handleVelocityChange(uint8_t note, uint8_t velocity);
+    void handleControlChange(uint8_t controller, uint8_t value);
+    void handleProgramChange(uint8_t program);
+    void handleAfterTouch(uint8_t velocity);
+    void handlePitchBend(uint16_t pitch);
+    void handleSysEx(MidiMessage message);
     void handleSongPosition(uint8_t position_msb, uint8_t position_lsb);
     void handleSongSelect(uint8_t song);
     void handleTuneRequest(void);
@@ -160,8 +218,11 @@ namespace MIDI {
     void handleContinue(void);
     void handleActiveSense(void);
     void handleReset(void);
+    void handleInvalidType(MidiMessage message);
 
     // MIDI Out
+    void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2);
+
     // None of these functions have a MIDI channel input as that is controlled at the system level
     void sendNoteOff(uint8_t note, uint8_t velocity);
     void sendNoteOn(uint8_t note, uint8_t velocity);
@@ -180,6 +241,11 @@ namespace MIDI {
     void sendActiveSense(void);
     void sendReset(void);
 
-    
+    void print (uint8_t *packet);
+
+    void printMidiIn (void);
+    void printMidiOut (void);
+    void printMidiType (MidiType type);
+    void printMidiMessage (MidiMessage message);
 
 }

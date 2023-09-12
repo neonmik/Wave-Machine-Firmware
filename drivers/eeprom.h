@@ -118,7 +118,7 @@ namespace EEPROM {
         }
     }
 
-    void init (void);
+    void Init (void);
     void savePreset(uint8_t slot, PRESET &preset);
     void loadPreset (uint8_t slot, PRESET &preset);
     void restorePreset (uint8_t slot);

@@ -4,14 +4,14 @@ namespace FILTER {
 
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
 
-    void init() {
+    void Init() {
         _lowpass = 0;
         _bandpass = 0;
         _cutoff = 0;
         _resonance = 0;
         _dirty = true;
         _punch = 0;
-        _mode = LowPass;
+        _type = LowPass;
     }
 
     void set_cutoff(uint16_t cutoff) {
@@ -32,20 +32,23 @@ namespace FILTER {
         _punch = punch >> 2;
     }
 
-    void set_mode(uint16_t mode) {
-        uint8_t index = (mode>>8);
+    void set_type(uint16_t type) {
+        uint8_t index = (type>>8);
         switch (index) {
         case 0:
-            _mode = FilterType::Off;
+            _type = Type::Off;
             break;
         case 1:
-            _mode = FilterType::LowPass;
+            _type = Type::LowPass;
+            _direction = Direction::Regular;
             break;
         case 2:
-            _mode = FilterType::BandPass;
+            _type = Type::BandPass;
+            _direction = Direction::Regular;
             break;
         case 3:
-            _mode = FilterType::HighPass;
+            _type = Type::HighPass;
+            _direction = Direction::Inverted;
             break;
         default:
             break;
@@ -73,21 +76,39 @@ namespace FILTER {
         _release = calc_end_frame((release<<2)+2);
     }
 
+    void voicesIncrease (void) {
+        voices_inc();
+    }
+    void voicesDecrease (void) {
+        voices_dec();
+    }
+
     void trigger_attack (void) {
-        ADSR.trigger_attack();
+        if (!voices_active()) return;
+        switch (_mode) {
+            case Mode::MONO:
+                if (!_filter_active) { 
+                    ADSR.trigger_attack();
+                    _filter_active = true;
+                }
+                break;
+            case Mode::PARA:
+                ADSR.trigger_attack();
+                _filter_active = true;
+                break;
+        } 
+        
     }
     void trigger_release (void) {
-        ADSR.trigger_release();
+        if (_filter_active && !voices_active()) {
+            ADSR.trigger_release();
+            _filter_active = false;
+        }
     }
 
     void process(int32_t &sample) {
-        if (_mode != FilterType::Off) {
-            // ADSR.update();
-            // for future effecientcy improvements. Allows to reduce sample rate of ADSR.
-            _index++;
-            _index &= 0x7;
-            if (_index == 0) ADSR.update();
-            // if (ADSR.isStopped()) QUEUE::release_send(MAX_VOICES+1); // not really needed as it stands...
+        if (_type != Type::Off) {
+            ADSR.Update();
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
             if (_dirty) {
@@ -97,8 +118,16 @@ namespace FILTER {
             }
 
 
-            volatile int32_t frequency;
-            frequency = (int32_t(_frequency) * int32_t(ADSR.get_adsr() >> 8)) >> 16;
+            volatile int32_t frequency = 0 ;
+            
+            if (_direction == Direction::Regular) {
+                frequency = (_frequency * ADSR.get()) >> 16;
+            } 
+            if (_direction == Direction::Inverted) {
+                uint16_t MAX_FREQ = (SAMPLE_RATE/2);
+                frequency = MAX_FREQ - (((MAX_FREQ - _frequency) * (ADSR.get())) >> 16);
+            }
+            
             if (frequency <= 15) frequency = 15;
 
             int32_t damp = _damp;
@@ -116,7 +145,7 @@ namespace FILTER {
             _bandpass += frequency * highpass >> 15;
             FX::HARDCLIP::process(_bandpass);
 
-            switch (_mode) {
+            switch (_type) {
                 case LowPass:
                     sample = _lowpass;
                     break;
