@@ -7,20 +7,16 @@ namespace NOTE_HANDLING {
   VoiceData VOICES[POLYPHONY];
 
   // Synth Note Control
-  void voice_on(int slot, int note, int velocity) {
+  void voice_on(uint8_t slot, uint8_t note, uint8_t velocity) {
     if (!note) return;
 
     VOICES[slot].on(note, velocity);
 
-    filter_on();
-
     QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
   }
-  void voice_off(int slot, int note, int velocity) {
+  void voice_off(uint8_t slot, uint8_t note, uint8_t velocity) {
 
     VOICES[slot].off();
-
-    filter_off();
 
     QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
   }
@@ -56,51 +52,50 @@ namespace NOTE_HANDLING {
     for (int i = 0; i < POLYPHONY; i++) {
       QUEUE::trigger_send(i, 0, false);
     }
-    filter_off();
   }
 
   void voices_stop_all (void) {
     voices_stop();
-    voices_clr();
+    // voices_clr();
   }
 
   void voices_panic() {
     // clears the notes from the vocies, the synths array, and sends out midi note clearing... may need reworking for actual panic (all midi notes)
     for (int i = 0; i < POLYPHONY; i++) {
       voice_off(i, 0, 0);
-      voices_dec();
+      // voices_dec();
     }
-    filter_off();
+    // filter_off();
   }
 
-  void filter_on(void) {
-    switch (_mode) {
-      case Mode::MONO:
-        if (!_filter_active && voices_active()) { 
-          QUEUE::trigger_send(FILTER_VOICE, 0, true);
-          _filter_active = true;
-        }
-        break;
-      case Mode::PARA:
-        if (voices_active()) { 
-          QUEUE::trigger_send(FILTER_VOICE, 0, true);
-          _filter_active = true;
-        }
-        break;
-    }    
-  }
-  void filter_off(void) {
-    if (_filter_active && !voices_active()) {
-      QUEUE::trigger_send(FILTER_VOICE, 0, false);
-      _filter_active = false;
-    }
-  }
-  void filter_refresh (void) {
-    _filter_active = false;
-  }
+  // void filter_on(void) {
+  //   switch (_mode) {
+  //     case Mode::MONO:
+  //       if (!_filter_active && voices_active()) { 
+  //         QUEUE::trigger_send(FILTER_VOICE, 0, true);
+  //         _filter_active = true;
+  //       }
+  //       break;
+  //     case Mode::PARA:
+  //       if (voices_active()) { 
+  //         QUEUE::trigger_send(FILTER_VOICE, 0, true);
+  //         _filter_active = true;
+  //       }
+  //       break;
+  //   }    
+  // }
+  // void filter_off(void) {
+  //   if (_filter_active && !voices_active()) {
+  //     QUEUE::trigger_send(FILTER_VOICE, 0, false);
+  //     _filter_active = false;
+  //   }
+  // }
+  // void filter_refresh (void) {
+  //   _filter_active = false;
+  // }
 
   // Priority Control
-  void priority(int note, int velocity) {
+  void priority(uint8_t note, uint8_t velocity) {
     volatile int8_t voice = -1; // means if no free voices are left, it will be -1 still
 
     MIDI::sendNoteOn(note, velocity);
@@ -115,7 +110,7 @@ namespace NOTE_HANDLING {
       // Voice is free
       if (!VOICES[i].active) {
         voice = i;
-        voices_inc();
+        // voices_inc();
         break;
       }
     }
@@ -123,7 +118,8 @@ namespace NOTE_HANDLING {
     // should skip this is a free voice is found
     if (voice < 0) {
       int8_t priority_voice = -1;
-      volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
+      // volatile uint32_t time_now = to_ms_since_boot(get_absolute_time());
+      volatile uint32_t time_now = sample_clock;
       
       switch (_priority) {
         // When there are no free voices on the synth, this code uses various priority types to assign the new note to a voice.
@@ -148,7 +144,8 @@ namespace NOTE_HANDLING {
           uint32_t shortest_released_time = 0;
           uint32_t shortest_active_time = 0;
           for (int i = 0; i < POLYPHONY; i++)  {
-            if (!VOICES[i].active && (VOICES[i].activation_time>shortest_released_time)) { // released notes
+            // CHANGE!! from active to Gate?
+            if (!VOICES[i].gate && (VOICES[i].activation_time>shortest_released_time)) { // released notes
               shortest_released_time = VOICES[i].activation_time;
               voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
             }
@@ -159,6 +156,9 @@ namespace NOTE_HANDLING {
           }
           break;
         }
+
+        // These modes need checking, and I believe rewritting... probably can remove the active checker.
+        // They should only be none active if they make it here, does it need to be gate? I don't think so.
         case Priority::LOWEST: {
             // This mode assigns the new note only if the new note is lower than one of the persisting notes (the lowest notes have priority)
             uint8_t lowest_note = 127; // Initialize to the highest possible MIDI note value
@@ -182,14 +182,12 @@ namespace NOTE_HANDLING {
             break;
         }
       }
-      if (voice > 0) {
-        voices_inc();
-      }
       // No slots in release? Use the next priority appropriate active voice
       if (voice < 0) {
         voice = priority_voice;
         // if using a priority voice, make sure the last note has sent a midi note off before using the voice?
         // for now do this, but could maybe do with a better implementation - mainly when using as a controler keyboard.
+        // MAYBE just move MIDI::sendNoteOff outside of the check loop, so that its always called when it actually happens not at voice control stage.
         MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL);
       }
     }
@@ -201,11 +199,10 @@ namespace NOTE_HANDLING {
     voice_on(voice, note, velocity);
   }
 
-  void release(int note, int velocity) {
+  void release(uint8_t note, uint8_t velocity) {
     if (!_sustain) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
         if (VOICES[voice].note == note)  {
-          if (VOICES[voice].gate) voices_dec();
           MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
           voice_off(voice, note, velocity);
         }
@@ -238,7 +235,6 @@ namespace NOTE_HANDLING {
     if (_sustain_just_released) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++) {
         if (VOICES[voice].sustained) {
-          voices_dec(); // reduces the filter control
           voice_off(voice, VOICES[voice].note, 0); // clears the voice
           MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL); // sends midi note off
           VOICES[voice].sustained = false;
@@ -273,48 +269,23 @@ namespace NOTE_HANDLING {
       // if the input is new, then set it.
       _sustain = temp;
 
-      // this works like a momentary sustain pedal
-      // if (ARP::get_state()) ARP::toggleSustain(); 
-
-      // this should toggle it like  switch
-      if (_sustain) {
-        if (ARP::get_state()) ARP::toggleSustain(); 
-      }
+      // Code for Note Priority sustain
       if (!_sustain) _sustain_just_released = true;
+
+      // Code for Arp Latch:
+      if (ARP::get_state()) {
+        // this code is acts like a momentary switch, only latching when held
+        // ARP::toggleSustain(); 
+        
+        // this code toggles the Latch per press.
+        if (_sustain) {
+          ARP::toggleSustain(); 
+        }
+      }
+
     }
   }
   bool getSustain (void) {
     return _sustain;
-  }
-
-  void        voices_inc (void) {
-    ++_voices_active;
-    if (_voices_active > POLYPHONY) {
-        _voices_active = POLYPHONY;
-    }
-  }
-  void        voices_dec (void) {
-    --_voices_active;
-    if (_voices_active < 0) {
-        _voices_active = 0;
-    }
-  }
-  void        voices_clr (void) {
-    _voices_active = 0;
-  }
-  void        voices_set (uint8_t voices) {
-    _voices_active = voices;
-    filter_on();
-  }
-  bool        voices_active (void) {
-    return _voices_active;
-  }
-
-  void setMode (bool mode) {
-    if (mode) {
-      _mode = Mode::PARA;
-    } else {
-      _mode = Mode::MONO;
-    }
   }
 }
