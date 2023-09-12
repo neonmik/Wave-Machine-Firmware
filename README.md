@@ -3,19 +3,28 @@
 Current nightly firmware for Wave Machine Hardware.
 
 
-- Alpha Release bugfixes
+- Release bugfixes
+
+    - OSCILLATORS: Investigate why notes that have been pitched up and octaved up alias/pitch wrongly. Something to do with the overflow of the accumulator, I'm sure of it.
 
     - NOTE PRIORITY: Investigate moving MIDI::sendNoteOff to outside the note validation loop in release so it always gets called when it actually gets called. Might need to move sustain to keys file...
 
     - TODO: De-link Latch and Sustain in in Arp - Should lead to better understanding of sustain handling between presets.
-    
+
+
+
+
+
+
 - Updates and Bugfixes:
+
     - Arp:
         - Improvements: Improve the gap (gate?) setting so it's not just on or off. 
             - Bring back the old intermediate NoteState
             - Add a timer function to clock.
 
         - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
+
 
     - Controls:
         - Change the layout of controls:
@@ -25,11 +34,12 @@ Current nightly firmware for Wave Machine Hardware.
             - Holding Preset and page should save preset
  
         - Develop way of exporting Presets (probably needs to be linked in to either MIDI or, better yet, some kind of USB mounted storage)
-        
+
+
     - Oscillator:
         - Improvement: Finesse soft start code - currently takes too long to get going and still isnt perfect.
 
-        - Bug: Issues with sample generation. 
+        - Bug: Issues with sample generation. - easy fix is to lower the sample rate.
             - This can be demonstrated in Preset 2 with any notes playing when it starts to get to the top of its modulation cycle it glitches out if certain controls are active (most noticeable on MOD or Arp BPM)...
             - Not DMA related
             - Still happens in "stable" Version (main), but maybe less?
@@ -38,15 +48,15 @@ Current nightly firmware for Wave Machine Hardware.
             - Only happens with Arp on (test whether its just on fast modes or not, my assumption would be that it is)
             : Could be due to the need to syncronise control updates between cores, make sure they happen outside of DMA / sample creation.
 
+
     - Mod:
         - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) but over that becomes noticably uneven.
         
         - Feature: Once LFO is balanced, add a MAX_RANGE config asetting for vibrato. 
         - Feature: Add a smooth function (interpolation). This would be helpful for the S&H wave, but also to smooth out the steps in really long wavelengths. - use similar code from normal wavetable.
-    
+
+
     - USB MIDI/ MIDI:
-
-
         - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
 
         - Feature: Handle Song Position messages in a meaningful way - Use them to make sure the arp always starts at the top of the bar...
@@ -66,8 +76,6 @@ Current nightly firmware for Wave Machine Hardware.
         - Bug: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
 
-    - Prove hardware functions:
-        - CV?
 
     - EEPROM:
         - Add factory calibration routine:
@@ -78,30 +86,35 @@ Current nightly firmware for Wave Machine Hardware.
 
 
 
+
+
+
 - Future Implementaions and WIPs:
 
     - Add hardware controls for:
         - Factory Reset
 
+
     - Improve ADSR code:
         - Try to make the code more portable - currently the calculations for envelope times are done in the controling code to allow for multicore use, but check to see if it can be done in other ways.
-    
+
+
     - Improve Mod code:
         - Research: Look up Attenuveter and see if its any use for controlling LFO code.
         - Try making it Poly - I think the sample rate can be reduced by 8 (6kHz) and that should allow every voice to have its own poly Mod. Would probably need a reset for when notes are released, so that you can really hear the difference.
         - Add a tempo sync function.
         - Add ADSR? Maybe share with filter...
         - Add a ramp down feature when switching between destinations - could be difficult. 
-    
+
+
     - Improve Filter code: 
         - Check ADSR setup in Filter - Seems to not Update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
         - Improve modulation inputs - Cutoff mod could be applied with a switch [if (Filter::HighCut) 65535 - mod;]
 
-        
 
     - Improve Arp code:
-        - Feature: Add a control for Chord Arp
-        - Feature: Add a setting for Mono/Para Filter modes
+        - Improvement: Add a control for Chord Arp
+        - Improvement: Add a control for Mono/Para Filter modes
         - Feature: Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
         - Feature: Add a swing feature.
         - Feature: Add back Chord Arp - will work great with patterns too.
@@ -109,6 +122,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Feature: Add a function to quantize the Arp. could be that notes don't get updated until the counter resets, or just the next time the beat has changed.
 
         - Bug: To do with Hold diverting add notes to only refresh - With Hold/Latch engaged (only): If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority Update loop.
+
 
     - Improve Note Handling:
         - Bug: Held notes are being written over desipte some that some voices should be in release - Hold low octave on MIDI, and play fast pentatonic up and down
@@ -131,7 +145,12 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Start-up settings (MIDI channel, other funtions?)
 
+
     - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
+
+
+    - Test hardware function ideas:
+        - CV?
 
 
 
@@ -143,6 +162,9 @@ Changelog:
     25/08/2023:- Added a serial window on startup that tells you all the synth details (Unique ID, Firmware Version, and Core Temp).
     24/08/2023:- Added the Sustaion pedal function.
     12/08/2023:- Added Changelog and Updated synth name.
+
+
+
 
 
 
@@ -164,7 +186,7 @@ Features/Bugfixes:
 
     + Note Handling:
         + Bugfix: Notes that were held down or in sustain were acting strangely across presets. 
-        + Bugfix: Filter triggers did't count active notes right. 
+        + Bugfix: Filter triggers didn't count active notes right. 
         + Moved filter trigger code to the Audio core to reduce queue messages.
         + Improvement: Moved Note message handling away from DMA into main loop for improved performance.
         + Feature: Added code to handle the use of an external Sustain Pedal via MIDI as well as rewriting the code for how the Hold fucntion works in the Arp, and having the Sustain Pedal work that too. 
@@ -196,6 +218,7 @@ Features/Bugfixes:
         + DAC
 
     + Arp:
+        + Feature: Added a setting for Chord Arp along with its associated functions.
         + Bugfix: Arp was getting stuck at top or bottom of range. Reworked Octave direction code, aswell as setDirection code.
         + Feature: Added a new Arp mode! Octave Arp:- Plays all notes simultaneously up to POLYPHONY. If the Range setting is set more than 0, it will also Octavate in the same direction as the normal arp is set.
         + Bugfix: The latching code now exsists outside of the sustain function, this should be better for future.
@@ -296,6 +319,9 @@ Features/Bugfixes:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Feature: Added a setting for Mono/Para Filter modes - just needs a control now.
+        + Bugfix: Filter triggers didn't count active notes right.
+        + Moved filter trigger code to the Audio core to reduce queue messages.
         + Added a switch for direction of envelope.
         + Bugfix: Filter now releases properly (depending on mode). Was underflowing when adding more notes than polyphony then releasing.
         + Bugfix - Arp & Filter/Mod Envelope now have an option to be MONO or POLY, this allows the envelope to open slowly up on a playing Arp, or fire for every note.
