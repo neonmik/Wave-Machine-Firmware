@@ -86,26 +86,30 @@ namespace SYNTH {
     bool      gate              = false;          // used for tracking a note that's released, but not finished.
     bool      active            = false;          // used for whole duration of note, from the very start of attack right up until the voise is finished
 
+    uint8_t   note;                               // Midi Note number - used for filter voice
     uint32_t  frequency         = 0;              // Frequency in Hz << 8
 
     uint32_t  phaseIncrement    = 0;
     uint32_t  phaseAccumulator  = 0; 
 
-    void noteOn (uint8_t note) {
+    void noteOn (uint8_t input_note) {
       gate = true; // wouldn't be needed if core moved
       active = true;
 
+      note = (input_note + (_octave * 12)); // sets the octave at the outset of the note...
+      // note = input_note;
       frequency = getFreq(note);
     
       ADSR.trigger_attack();
       
-      // changed = true;
+      // changed = true; // for eventual performance improvement of pitch fixing. 
     }
-    void calcIncrement (void) {
+    inline void calcIncrement (void) {
       // if (!changed) return; // if the frequency or pitch hasn't changed, return
 
-      phaseIncrement = ((((frequency * pitchBend) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
-      // changed = false;
+      // phaseIncrement = ((((frequency * pitchBend) >> 10) << _octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+      phaseIncrement = (((frequency * pitchBend) >> 10) << Q_SCALING_FACTOR) / SAMPLE_RATE; // octave scaling achieved at note level
+      // changed = false; // for eventual performance improvement of pitch fixing. 
     }
     void noteOff (void) {
       gate = false; // wouldn't be needed if core moved
@@ -113,6 +117,8 @@ namespace SYNTH {
     }
     void noteStopped (void) {
       active = false;
+
+      note = 0;
       frequency = 0;
 
       // reset - this may cause issues with wave form continuity
@@ -122,6 +128,9 @@ namespace SYNTH {
     bool isActive (void) {
       return active;
     }
+    bool isGate (void) {
+      return gate;
+    }
     
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
   };
@@ -130,6 +139,9 @@ namespace SYNTH {
 
   void voice_on (uint8_t voice, uint8_t note);
   void voice_off (uint8_t voice);
+  bool isVoiceActive (uint8_t voice);
+  bool isGateActive (uint8_t voice);
+  bool noteCheck (uint8_t slot, uint8_t note);
   
   uint16_t process();
   bool is_audio_playing();

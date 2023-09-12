@@ -43,9 +43,18 @@ namespace SYNTH {
 
 
   void voice_on (uint8_t voice, uint8_t note) {
+    if ((!channels[voice].isActive()) ||
+        (!channels[voice].isGate())) {
+      FILTER::voicesIncrease(); 
+    }
+    FILTER::trigger_attack();
     channels[voice].noteOn(note);
   }
   void voice_off (uint8_t voice) {
+    if (channels[voice].isGate()) {
+      FILTER::voicesDecrease(); 
+    }
+    FILTER::trigger_release();
     channels[voice].noteOff();
   }
   
@@ -69,6 +78,20 @@ namespace SYNTH {
 
     return any_channel_playing;
   }
+
+  // uint16_t softStart () {
+  //   ++_soft_start_index;
+
+  //   if (_soft_start_index >= 2) {
+  //     _soft_start_index = 0;
+  //     _soft_start_sample += 1;
+  //     if (_soft_start_sample > 0) {
+  //       _soft_start_sample = 0;
+  //     }
+  //   }
+
+  //   return (_soft_start_sample - INT16_MIN)>>4;
+  // }
 
   uint16_t process() {
     
@@ -121,6 +144,7 @@ namespace SYNTH {
           channel.phaseAccumulator &= (0xffff0);
           
           channelSample += getWavetable(channel.phaseAccumulator, vector); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
+          // channelSample += getWavetable((channel.phaseAccumulator >> 1), vector); // Sub oscillator test
           
           // apply ADSR
           channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
