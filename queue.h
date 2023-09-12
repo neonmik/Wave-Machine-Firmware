@@ -22,8 +22,8 @@ namespace QUEUE {
     void Init (void);
 
     void trigger_send (uint8_t slot, uint8_t note, bool gate);
-    void trigger_receive (uint8_t &slot, uint8_t &note, bool &gate);
-    uint8_t trigger_check_queue (void);
+    bool trigger_receive (uint8_t &slot, uint8_t &note, bool &gate);
+    bool trigger_check_queue (void);
     
     void release_send (uint8_t slot);
     uint8_t release_receive (void);
