@@ -26,8 +26,6 @@
 
 #include "../synth/note_handling.h"
 
-// #include "../queue.h"
-// #include "../midi.h"
 
 namespace KEYS {
 
@@ -89,4 +87,6 @@ namespace KEYS {
     void Init (void);
     void read (void);
     void Update (void);
+
+    void setOctave (uint16_t input);
 }

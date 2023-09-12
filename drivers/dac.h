@@ -52,12 +52,13 @@ namespace DAC {
 
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
-                // new code that just copies from one buffer to the dma buffer
+                // new code that just copies from the play buffer to the dma buffer
                 buf[i] = (playBuffer[hardwareIndex]) | (DAC_CONFIG);
                 ++hardwareIndex;
                 hardwareIndex &= 0x1F;
             }
-            _full = true;
+            // old method of checking when to refresh controls.
+            // _full = true;
         }
         void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
 
