@@ -68,7 +68,6 @@ namespace CONTROLS {
                     void set_state(bool state) {
                         if (_toggle_func != nullptr) {
                             _active = state;
-                            // _changed = true;
                             _toggle_func(_active);
                         }
                     }

@@ -16,10 +16,6 @@ namespace ARP {
             printf("\n");
     }
 
-    void Init () {
-        // nothing happens here, but it might?
-    }
-
     void set_state (bool state) {
         if (isArpActive == state) return; // already set
         

@@ -139,12 +139,7 @@ namespace ARP {
     };
 
     extern ArpData arpVoices[MAX_ARP];
-
     extern ArpData inputBuffer[MAX_ARP];
-
-    
-
-    void Init (void);
     
     void Update(void);
     

@@ -79,6 +79,7 @@ void set_shift (bool shift) {
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;
+      Update(); // Call Update() here so you can go through the routine and jump back into the startup process afterwards.
     }
     set_page(_page);
     LEDS::LFO.set(get_lfo());
@@ -138,6 +139,8 @@ void set_shift (bool shift) {
             break;
           case 4:
             ADC::Update();
+            RANDOM::Update(ADC::noise());
+            // printf("Noise: %d\n", RANDOM::get());
             break;
           case 5:
             PAGINATION::Update();

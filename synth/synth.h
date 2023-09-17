@@ -8,6 +8,7 @@
 #include "../debug.h"
 #include "../config.h"               
 
+#include "../random.h"
 
 #include "adsr.h"
 

@@ -14,6 +14,10 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     main.cc
 
+    settings.cc
+    functions.cc
+    random.cc
+
     usb_descriptors.c
     drivers/usb.cc
 
@@ -31,11 +35,7 @@ add_executable(${PROJECT_NAME}
     ui.cc
     pagination.cc
     
-    settings.cc
-    functions.cc
     queue.cc
-    
-    random.cc
     
     midi.cc
     
@@ -49,7 +49,6 @@ add_executable(${PROJECT_NAME}
     synth/note_handling.cc
     synth/resources.cc
     synth/synth.cc
-    
 )
     
 target_include_directories(${PROJECT_NAME} PUBLIC
