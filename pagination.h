@@ -32,9 +32,19 @@ namespace PAGINATION {
 
         uint16_t knob_protection_threshold = 10; // the amount of protection the knob gets before unlocking.
         
-        void protect(int value);
-        void clear(int value);
-        void refresh(void);
+        void protect(int value) {
+            _states[value] = KnobState::PROTECTED;
+        }
+        void clear(int value) {
+            last_value[value] = -1; //-1 so if the page/preset has changed, it's never the same value
+        }
+        void refresh() {
+            LEDS::KNOBS.off();
+            for(int i=0; i < MAX_KNOBS; i++){ // loop through the array and set all the values to protected.
+            protect(i);
+            clear(i);
+            }
+        }
 
     }
     void Init(void);
