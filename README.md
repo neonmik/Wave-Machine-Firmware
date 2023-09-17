@@ -30,8 +30,26 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Controls:
         - Change the layout of controls:
-            - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now)
-            - Holding Page should be Shift - this should expose extra features
+            - Page Button 
+                - Pressing this should cycle between pages:
+                    - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now)
+                - Holding this should be SHIFT: 
+                    - This should expose extra features on the pages (like extra Arp/Mod Settings, most of which are still to be populated)
+                    - To be used for any feature that isn't really played with live (ARP: Played order, chord, filter Para/Mono, *octave jump before/after, FILTER: inverted envelope, and anthing else that might crop up)
+            - Button 1 [Old Mod Button]:
+                - Pressing this maybe should be envelope settings... links to the page  currently selected (this will be fine once ADSR is in Mod too)
+                - ??? LED shoud show that you're on the env page - maybe work out a hardware way to just make the page change to a colour
+                    - OR - LED should show current thing is active (state of ARP, LFO, FLT, not sure what OSC would be...)
+                - ??? Holding this should ???
+            - Button 2 [Old Arp Button]:
+                - Pressing this should turn on/off Arp
+                - ??? LED should show arp status
+                - Holding this should turn on and off latch, this should probably work sustain in none arp mode too? - how to show?
+            - Preset Button:
+                - Pressing this should cycle between presets 1-8
+                - 
+            
+
 
             - Holding Preset and page should save preset
  
