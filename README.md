@@ -5,6 +5,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Release bugfixes
 
+    - BUG: Filter env resets randomly - usually when playing arp with short release and longer attack (either mono or poly) it randomly resets. Seems to be fine with any release
     - BUG: When flipping through presets while actively playing (not just holding notes) notes get stuck on. Holding more than 8 notes clears it for now.
 
     - OSCILLATORS: Investigate why notes that have been pitched up and octaved up alias/pitch wrongly. Something to do with the overflow of the accumulator, I'm sure of it.
