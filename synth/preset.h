@@ -17,6 +17,8 @@ struct PRESET {
     };
     struct Lfo {
         bool state = false;
+        // 1 byte padding
+
         uint16_t matrix = 0;
         uint16_t rate = 0;
         uint16_t depth = 0;
@@ -24,6 +26,8 @@ struct PRESET {
     };
     struct Arp {
         bool state = false;
+        // 1 byte padding
+
         uint16_t hold = 0;
         uint16_t divisions = 511;
         uint16_t range = 0;
@@ -36,6 +40,8 @@ struct PRESET {
     };
     struct Flt {
         bool state = true;
+        // 1 byte padding
+        
         uint16_t cutoff = 1023;
         uint16_t resonance = 0;
         uint16_t punch = 0;
@@ -48,6 +54,7 @@ struct PRESET {
     };
     struct Fx {
         uint16_t gain = 0;
+
     };
     Wav Wave;
     Env Envelope;

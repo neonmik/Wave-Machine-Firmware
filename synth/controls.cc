@@ -7,13 +7,12 @@ namespace CONTROLS {
     void Init () {
         EEPROM::Init();
 
-        _preset = _default_preset;
+        _preset = DEFAULT_PRESET;
         load_preset(_preset);
+
     }
 
     void set_preset (uint8_t preset) {
-        // this is commented because I don't want it to save the preset setting without us doing it on purpose
-        // save_preset();
         _preset = preset;
 
         load_preset(_preset);
@@ -43,6 +42,7 @@ namespace CONTROLS {
             Preset[preset].Filter.release = Control.get(Controls::fENV, 3);
 
         Preset[preset].Modulation.state = Control.get_lfo();
+
         Preset[preset].Modulation.matrix = Control.get(Controls::MOD, 0);
         Preset[preset].Modulation.rate = Control.get(Controls::MOD, 1);
         Preset[preset].Modulation.depth = Control.get(Controls::MOD, 2);
@@ -54,23 +54,20 @@ namespace CONTROLS {
             Preset[preset].Filter.type = Control.get(Controls::FILT, 3);
 
         Preset[preset].Arpeggiator.state = Control.get_arp();
+
         Preset[preset].Arpeggiator.hold = Control.get(Controls::ARP, 0);
         Preset[preset].Arpeggiator.divisions = Control.get(Controls::ARP, 1);
         Preset[preset].Arpeggiator.range = Control.get(Controls::ARP, 2);
         Preset[preset].Arpeggiator.direction = Control.get(Controls::ARP, 3);
 
 
-
-
-
-
-
-
         
         EEPROM::savePreset(preset, Preset[preset]);
     }
     void load_preset (uint8_t preset) {
-
+        PRESET temp;
+        
+        // Preset[preset] = temp;
         EEPROM::loadPreset(preset, Preset[preset]);
 
         Control.set(Controls::MAIN, 0, Preset[preset].Wave.shape);
@@ -132,17 +129,36 @@ namespace CONTROLS {
         // send export_buffer somewhere?    - maybe save as a file that can be accessed in USB?
         //                                  - send over MIDI
     }
+
+    // Function for restoring the Factory Presets from the EEPROM to the main preset storage area.
     void factory_restore (void) {
 
-        printf("Factory Restore in progress!\n");
-        
+        printf("\nFactory Restore in progress!\n");
+
         for (int i = 0; i < MAX_PRESETS; i++) {
-            EEPROM::restorePreset(i);
+            EEPROM::restoreFactoryPreset(i);
         }
-        printf("Factory Settings restored!\n");
+        
+        printf("Factory Settings restored!\n\n");
         
         set_preset(_preset); // not sure if this needs to be here? just needs to make sure it updates the settings right after factory restore, seems like the safest way to do it
     }
+
+    // Function for writing current Presets to the Factory Preset storage area
+    void write_factory_presets (void) {
+
+        printf("Storing currrent presets to Factory Preset slots!\n");
+
+        for (int i = 0; i < MAX_PRESETS; i++) {
+            EEPROM::writeFactoryPreset(i);
+        }
+
+        printf("All Presets backed up!\n\n");
+
+
+    }
+
+    // Save current Preset
     void save () {
         save_preset(_preset);
     }

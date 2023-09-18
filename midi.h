@@ -159,14 +159,6 @@ namespace MIDI {
     };
 
     namespace {
-        // uint8_t channel_;
-
-        // int recvMode_;
-        // int recvByteCount_;
-        // int recvEvent_;
-        // int recvArg0_;
-        // int recvBytesNeeded_;
-        // int lastStatusSent_;
         
         bool Use1ByteParsing = false;
         bool NullVelocityNoteOnAsNoteOff = true;
@@ -195,10 +187,6 @@ namespace MIDI {
     MidiType getTypeFromStatusByte(uint8_t inStatus);
     uint8_t getChannelFromStatusByte(uint8_t inStatus);
     bool isChannelMessage(MidiType inType);
-
-
-    
-    // void handleMidiMessage(uint8_t msg[4]);
 
     // Functions for MIDI out
     void handleNoteOff(uint8_t note, uint8_t velocity);

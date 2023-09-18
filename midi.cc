@@ -111,8 +111,8 @@ namespace MIDI {
         CONTROLS::set_value(0, 3, temp);
     }
     void handleSysEx(MidiMessage message) {
-        printf("SysEx Message has nowhere to go...\n");
-        printMidiMessage(message);
+        // printf("SysEx Message has nowhere to go...\n");
+        // printMidiMessage(message);
     }
     void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {}
     void handleSongSelect(uint8_t song) {}

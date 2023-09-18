@@ -9,18 +9,8 @@
 
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
-constexpr   uint32_t    SAMPLE_RATE     =       32000;          // Can set to 48000Hz - 1.3345% (47359) to compenstate for tuning
+constexpr   uint16_t    SAMPLE_RATE     =       32000;          // Can set to 48000Hz - 1.3345% (47359) to compenstate for tuning
 constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
-
-
-extern      uint32_t    sample_clock;
-extern      uint8_t     softwareIndex;
-extern      uint8_t     hardwareIndex;
-extern      uint16_t    playBuffer[];
-
-
-
-constexpr   uint8_t     DEFAULT_BPM     =       120;
 
 constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "standard" value...
                                                                 // tracking performance (Core: 144MHz/SR: 48000) :- 
@@ -35,29 +25,53 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 //      - runs at 10 with Arp going full speed.
                                                                 //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
 
-constexpr   uint8_t     FILTER_VOICE    =       (POLYPHONY+1);  // Sets the Filter envelope control to be outside of the Polyphony range. 
-                                                                // This makes sure it never gets in the way of the note handling.
-
-constexpr   uint8_t     MAX_ARP         =       POLYPHONY;
+constexpr   uint8_t     MAX_ARP         =       POLYPHONY;      // For setting the maximum number of notes in the Arp
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
-
 constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
 
-constexpr   uint8_t     DEFAULT_KEY     =       60;             // The Default first key on the keyboard (C3 == 60, C4 == 72, etc). 
+
+// -------------------------------
+//      Wave machine defaults
+// -------------------------------
+// These are the settings that are assigned on startup, before any user settings are loaded from the EEPROM.
+
+constexpr   uint8_t     DEFAULT_BPM     =       120;            // The default BPM of the system
+
+constexpr   uint8_t     DEFAULT_KEY     =       60;             // The default first key on the keyboard (C3 == 60, C4 == 72, etc). 
                                                                 // 48 sets C3 as the lowest note one the keyboard, and the middle C on the keyboard as C4
-constexpr   uint8_t     DEFAULT_VEL     =       127;            
+constexpr   uint8_t     DEFAULT_VEL     =       127;            // The default velocity of the inbuilt keys
 
 constexpr   uint16_t    KNOB_MIN        =       0;
 constexpr   uint16_t    KNOB_MAX        =       1023;
 
-enum                    LFO_SPEED {                             // Hz = 1 (cycles) / seconds per full cycle
-                                        PAINFUL = 16,           // 0.00286Hz -   38.46Hz (5:49:497  - 0:00:0260)
-                                        SLOWER  = 15,           // 0.00572Hz -   76.92Hz (5:49:497  - 0:00:0130)
-                                        SLOW    = 14,           // 0.01144Hz -  153.84Hz (1:27:363  - 0:00:0065)
-                                        NORMAL  = 13,           // 0.02289Hz -  307.69Hz (0:43:628  - 0:00:00325)
-                                        FAST    = 12,           // 0.04578Hz -  615.38Hz (0:21:814  - 0:00:001625)
-                                        FASTER  = 11,           // 0.09156Hz - 1230.77Hz (0:10:907  - 0:00:0008125)
-                                        SILLY   = 10            // 0.18312Hz - 2461.54Hz (0:05.453  - 0:00:00040625)
-};
+constexpr   uint8_t     DEFAULT_PRESET  =       0;
 
+
+// -------------------------------
+//        Global Variables
+// ------------------------------- 
+// These are variables that are used globaly
+
+extern      uint32_t    sample_clock;
+extern      uint8_t     softwareIndex;
+extern      uint8_t     hardwareIndex;
+extern      uint16_t    playBuffer[];
+
+
+// example struct of the settings struct
+
+// struct SystemSettings {
+//     struct AudioSettings {
+//         uint16_t    sampleRate;
+//     };
+//     struct MIDISettings {
+//         uint8_t     midiChannel;
+//         bool Use1ByteParsing = false;
+//         bool NullVelocityNoteOnAsNoteOff = true;
+//     };
+//     struct HardwareSettings {
+//         uint8_t     startupPreset;
+
+//     };
+// };

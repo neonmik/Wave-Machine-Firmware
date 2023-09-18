@@ -34,6 +34,16 @@ namespace CONTROLS {
             FILT = 6,
             sARP = 7,
         };
+        // enum Controls {
+        //     MAIN = 0,
+        //     FILT = 1,
+        //     MOD  = 2,
+        //     ARP  = 3,
+        //     ADSR = 4,
+        //     fENV = 5,
+        //     SHFT = 6,
+        //     sARP = 7,
+        // };
            
     }
     class CONTROL {
@@ -41,7 +51,6 @@ namespace CONTROLS {
             class Page {
                 private:
                     volatile bool _active = true;
-                    // volatile bool _changed = false;
                     uint16_t _input[4];
                     bool     _changed[4];
                     void (*_update_funcs[4])(uint16_t);
@@ -114,50 +123,49 @@ namespace CONTROLS {
 
             void set (uint8_t page, uint8_t control, uint16_t input) {
             switch (page) {
-                    case 0:
+                    case Controls::MAIN:
                         MAIN.set(control, input);
                         break;
-                    case 1:
+                    case Controls::ADSR:
                         ADSR.set(control, input);
                         break;
-                    case 2:
+                    case Controls::MOD:
                         MOD1.set(control, input);
                         break;
-                    case 3:
+                    case Controls::ARP:
                         ARP.set(control, input);
                         break;
-                    case 4:
+                    case Controls::SHFT:
                         SHFT.set(control, input);
                         break;
-                    case 5:
+                    case Controls::fENV:
                         fENV.set(control, input);
                         break;
-                    case 6:
+                    case Controls::FILT:
                         FILT.set(control, input);
                         break;
-                    case 7:
+                    case Controls::sARP:
                         sARP.set(control, input);
                         break;
                 }
             }
             uint16_t get (uint8_t page, uint16_t control) {
-                uint16_t temp;
                 switch (page) {
-                    case 0:
+                    case Controls::MAIN:
                         return MAIN.get(control);
-                    case 1:
+                    case Controls::ADSR:
                         return ADSR.get(control);
-                    case 2:
+                    case Controls::MOD:
                         return MOD1.get(control);
-                    case 3:
+                    case Controls::ARP:
                         return ARP.get(control);
-                    case 4:
+                    case Controls::SHFT:
                         return SHFT.get(control);
-                    case 5:
+                    case Controls::fENV:
                         return fENV.get(control);
-                    case 6:
+                    case Controls::FILT:
                         return FILT.get(control);
-                    case 7:
+                    case Controls::sARP:
                         return sARP.get(control);
                     default:
                         return 0;
@@ -207,6 +215,7 @@ namespace CONTROLS {
     void load_preset (uint8_t preset);
     void export_presets (void);
     void factory_restore (void);
+    void write_factory_presets (void);
 
     void save (void);
 
