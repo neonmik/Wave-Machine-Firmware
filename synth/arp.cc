@@ -602,4 +602,12 @@ namespace ARP {
     void setBpm (uint16_t input) {
         CLOCK::setBpm(map(input, KNOB_MIN, KNOB_MAX, 30, 350));
     }
+    void setOctMode (uint16_t input) {
+        bool temp = (bool)(input >> 9);
+        if (polyMode != temp) {
+            polyMode = temp;
+            if (polyMode) arpMode = ArpMode::POLY;
+            else arpMode = ArpMode::MONO;
+        }
+    }
 }

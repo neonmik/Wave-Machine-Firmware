@@ -95,10 +95,14 @@ namespace ARP {
 
         bool            isSustainEnabled;
         bool            isHoldEnabled;
+
         uint16_t        hold;
         uint16_t        division;
         uint16_t        range;
         uint16_t        direction;
+
+
+        bool            polyMode = false;
 
 
         bool changeDirection = true;
@@ -171,5 +175,7 @@ namespace ARP {
     void updateOctave (ArpDirection direction);
 
     void setBpm (uint16_t input);
+    
+    void setOctMode (uint16_t input);
 }
 
