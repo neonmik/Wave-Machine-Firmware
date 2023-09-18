@@ -10,21 +10,21 @@
 
 #include "hardware/i2c.h"
 
-constexpr   uint8_t     EEPROM_SDA_PIN          =       2;
-constexpr   uint8_t     EEPROM_SCL_PIN          =       3;
+constexpr   uint8_t         EEPROM_SDA_PIN          =       2;
+constexpr   uint8_t         EEPROM_SCL_PIN          =       3;
 
-constexpr   i2c_inst_t* EEPROM_I2C_CHANNEL      =       i2c1;
-constexpr   uint8_t     EEPROM_I2C_ADDRESS      =       0x50;
+constexpr   i2c_inst_t*     EEPROM_I2C_CHANNEL      =       i2c1;
+constexpr   uint8_t         EEPROM_I2C_ADDRESS      =       0x50;
 
-constexpr   uint8_t     ADDRESS_SIZE            =       2;                  // The size of the EEPROM address
-constexpr   uint8_t     PAGE_SIZE               =       64;                 // The size of a Page in the EEPROM (64 bytes)
-constexpr   uint8_t     PRESET_SIZE             =       (PAGE_SIZE * 2);    // The size of a Preset (currently 64 bytes, but may become more in future, hence 128 bytes per preset)
+constexpr   uint8_t         ADDRESS_SIZE            =       2;                  // The size of the EEPROM address
+constexpr   uint8_t         PAGE_SIZE               =       64;                 // The size of a Page in the EEPROM (64 bytes)
+constexpr   uint8_t         PRESET_SIZE             =       (PAGE_SIZE * 2);    // The size of a Preset (currently 64 bytes, but may become more in future, hence 128 bytes per preset)
 
-constexpr   uint16_t    PRESET_ADDRESS          =       0x0;                // Pages 0    - 127 are for Presets
-constexpr   uint16_t    FACTORY_PRESET_ADDRESS  =       0x2000;             // Pages 128  - 255 are for Factory Presets
-constexpr   uint16_t    FREE_ADDRESS            =       0x4000;             // Pages 256  - 4091 are empty for now
-constexpr   uint16_t    SYSTEM_SETTINGS_ADDRESS =       0x7EFF;             // Pages 4092 - 4096 are for System Settings
-constexpr   uint16_t    MAX_ADDRESS             =       0x7FFF;             // The last readable address in the EEPROM
+constexpr   uint16_t        PRESET_ADDRESS          =       0x0;                // Pages 0    - 127 are for Presets
+constexpr   uint16_t        FACTORY_PRESET_ADDRESS  =       0x2000;             // Pages 128  - 255 are for Factory Presets
+constexpr   uint16_t        FREE_ADDRESS            =       0x4000;             // Pages 256  - 4091 are empty for now
+constexpr   uint16_t        SYSTEM_SETTINGS_ADDRESS =       0x7EFF;             // Pages 4092 - 4096 are for System Settings
+constexpr   uint16_t        MAX_ADDRESS             =       0x7FFF;             // The last readable address in the EEPROM
 
 
 
