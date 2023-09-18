@@ -7,11 +7,11 @@ namespace FILTER {
     void Init() {
         _lowpass = 0;
         _bandpass = 0;
-        _cutoff = 0;
-        _resonance = 0;
+        // _cutoff = 0;
+        // _resonance = 0;
         _dirty = true;
-        _punch = 0;
-        _type = LowPass;
+        // _punch = 0;
+        // _type = LowPass;
     }
 
     void set_cutoff(uint16_t cutoff) {
@@ -58,12 +58,12 @@ namespace FILTER {
     void set_attack (uint16_t attack) {
         if (attack == _last_attack) return;
         _last_attack = attack;
-        _attack = calc_end_frame((attack<<2)+2);
+        _attack = calc_end_frame(attack << 2);
     }
     void set_decay (uint16_t decay) {
         if (decay == _last_decay) return;
         _last_decay = decay;
-        _decay = calc_end_frame((decay<<2)+2);
+        _decay = calc_end_frame(decay << 2);
     }
     void set_sustain (uint16_t sustain) {
         if (sustain == _last_sustain) return;
@@ -73,7 +73,7 @@ namespace FILTER {
     void set_release (uint16_t release) {
         if (release == _last_release) return;
         _last_release = release;
-        _release = calc_end_frame((release<<2)+2);
+        _release = calc_end_frame(release << 2);
     }
 
     void voicesIncrease (void) {

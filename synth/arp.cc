@@ -595,7 +595,7 @@ namespace ARP {
                 break;
         }
     }
-    void setRest (uint16_t input) {
+    void setGate (uint16_t input) {
         bool temp = (bool)(input >> 9);
         if (isRestEnabled != temp) isRestEnabled = temp;
     }

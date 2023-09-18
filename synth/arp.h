@@ -159,7 +159,7 @@ namespace ARP {
     bool get_state (void);
     void reset (void);
 
-    void setRest (uint16_t input);
+    void setGate (uint16_t input);
     void setDivision (uint16_t input);
     void setRange (uint16_t input);
     void setDirection (uint16_t input);

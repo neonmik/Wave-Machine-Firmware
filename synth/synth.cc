@@ -210,13 +210,13 @@ namespace SYNTH {
     if (attack == _last_attack) return;
     _last_attack = attack;
     // _attack = (attack << 2) + 2;
-    _attack = calc_end_frame((attack<<2)+2);
+    _attack = calc_end_frame(attack << 2);
   }
   void set_decay (uint16_t decay) {
     if (decay == _last_decay) return;
     _last_decay = decay;
     // _decay = (decay << 2) + 2;
-    _decay = calc_end_frame((decay<<2)+2);
+    _decay = calc_end_frame(decay << 2);
   }
   void set_sustain (uint16_t sustain) {
     if (sustain == _last_sustain) return;
@@ -227,10 +227,10 @@ namespace SYNTH {
     if (release == _last_release) return;
     _last_release = release;
     // _release = (release << 2) + 2;
-    _release = calc_end_frame((release<<2)+2);
+    _release = calc_end_frame(release << 2);
   }
   uint32_t calc_end_frame (uint32_t milliseconds) {
-    return (milliseconds * SAMPLE_RATE) / 1000;
+    return ((milliseconds + 1) * SAMPLE_RATE) / 1000; // + 1 so that it can never be 0, as it just creates noise.
   }
 
   void modulate_vibrato (uint16_t vibrato) {
