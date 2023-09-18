@@ -26,24 +26,15 @@ namespace CONTROLS {
 
         enum Controls {
             MAIN = 0,
-            ADSR = 1,
+            FILT = 1,
             MOD  = 2,
             ARP  = 3,
-            SHFT = 4,
+
+            ADSR = 4,
             fENV = 5,
-            FILT = 6,
+            SHFT = 6,
             sARP = 7,
         };
-        // enum Controls {
-        //     MAIN = 0,
-        //     FILT = 1,
-        //     MOD  = 2,
-        //     ARP  = 3,
-        //     ADSR = 4,
-        //     fENV = 5,
-        //     SHFT = 6,
-        //     sARP = 7,
-        // };
            
     }
     class CONTROL {
@@ -107,16 +98,16 @@ namespace CONTROLS {
             ~CONTROL () { }
 
             Page        MAIN    {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,         nullptr};
-                Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::set_gain,    nullptr,                         nullptr};
+                Page    ADSR    {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,             nullptr};
             
-            Page        ADSR    {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,             nullptr};
+            Page        FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_type,               nullptr};
                 Page    fENV    {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
             
             Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
-                Page    FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_type,               nullptr};
+                Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::set_gain,    nullptr,                         nullptr};
             
-            Page        ARP     {&ARP::setRest,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::set_state};
-                Page    sARP    {nullptr,                 &ARP::setBpm,              nullptr,                    nullptr,                         nullptr};
+            Page        ARP     {&ARP::setGate,            &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,              ARP::set_state};
+                Page    sARP    {nullptr,                  &ARP::setBpm,               nullptr,                    nullptr,                         nullptr};
             
 
             void Init (void) { }
