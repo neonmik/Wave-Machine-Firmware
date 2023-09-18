@@ -107,7 +107,7 @@ namespace CONTROLS {
                 Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::set_gain,    nullptr,                         nullptr};
             
             Page        ARP     {&ARP::setGate,            &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,              ARP::set_state};
-                Page    sARP    {nullptr,                  &ARP::setBpm,               nullptr,                    nullptr,                         nullptr};
+                Page    sARP    {nullptr,                  &ARP::setBpm,               nullptr,                    &ARP::setOctMode,                nullptr};
             
 
             void Init (void) { }

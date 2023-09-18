@@ -28,7 +28,7 @@ struct PRESET {
         bool state = false;
         // 1 byte padding
 
-        uint16_t hold = 0;
+        uint16_t gate = 0;
         uint16_t divisions = 511;
         uint16_t range = 0;
         uint16_t direction = 0;

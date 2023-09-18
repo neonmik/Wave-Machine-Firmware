@@ -56,10 +56,8 @@ namespace EEPROM {
 
             printf("Writing to EEPROM address %d...\n", addr);
 
-            // Send the address to the EEPROM
-            // Write the data to the EEPROM
+            // Write the address and data to the EEPROM
             i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + len, false);
-            // i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, src, len, false);
         }
         void read (uint16_t addr, uint8_t *src, uint8_t len) {
             

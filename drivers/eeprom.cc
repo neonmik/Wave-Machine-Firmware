@@ -70,8 +70,8 @@ namespace EEPROM {
         buffer[24] = preset.Modulation.wave & 0xFF;
 
         buffer[25] = preset.Arpeggiator.state;
-        buffer[26] = (preset.Arpeggiator.hold >> 8) & 0xFF;
-        buffer[27] = preset.Arpeggiator.hold & 0xFF;
+        buffer[26] = (preset.Arpeggiator.gate >> 8) & 0xFF;
+        buffer[27] = preset.Arpeggiator.gate & 0xFF;
         buffer[28] = (preset.Arpeggiator.divisions >> 8) & 0xFF;
         buffer[29] = preset.Arpeggiator.divisions & 0xFF;
         buffer[30] = (preset.Arpeggiator.range >> 8) & 0xFF;
@@ -138,7 +138,7 @@ namespace EEPROM {
         printf("shape:      %d\n\n",    preset.Modulation.wave);
         
         printf("ARP state:  %d\n",      preset.Arpeggiator.state);
-        printf("matrix:     %d\n",      preset.Arpeggiator.hold);
+        printf("gate:       %d\n",      preset.Arpeggiator.gate);
         printf("rate:       %d\n",      preset.Arpeggiator.divisions);
         printf("depth:      %d\n",      preset.Arpeggiator.range);
         printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
@@ -158,6 +158,10 @@ namespace EEPROM {
     }
 
     void loadPreset (uint8_t slot, PRESET &preset) {
+        // uint8_t setPreset, setBank;
+        // setPreset = slot & 0xf;
+        // setBank = (slot >> 4);
+
         if (slot >= MAX_PRESETS) {
             printf("ERROR! Outside of Preset storage range!\n");
             return;
@@ -170,42 +174,46 @@ namespace EEPROM {
 
         read(address, preset_buffer, PAGE_SIZE);
 
-        preset.Wave.shape = (preset_buffer[0] << 8) | preset_buffer[1];
-        preset.Wave.vector = (preset_buffer[2] << 8) | preset_buffer[3];
-        preset.Wave.octave = (preset_buffer[4] << 8) | preset_buffer[5];
-        preset.Wave.pitch = (preset_buffer[6] << 8) | preset_buffer[7];
+        preset.Wave.shape               = (preset_buffer[0] << 8) | preset_buffer[1];
+        preset.Wave.vector              = (preset_buffer[2] << 8) | preset_buffer[3];
+        preset.Wave.octave              = (preset_buffer[4] << 8) | preset_buffer[5];
+        preset.Wave.pitch               = (preset_buffer[6] << 8) | preset_buffer[7];
 
-        preset.Envelope.attack = (preset_buffer[8] << 8) | preset_buffer[9];
-        preset.Envelope.decay = (preset_buffer[10] << 8) | preset_buffer[11];
-        preset.Envelope.sustain = (preset_buffer[12] << 8) | preset_buffer[13];
-        preset.Envelope.release = (preset_buffer[14] << 8) | preset_buffer[15];
+        preset.Envelope.attack          = (preset_buffer[8] << 8) | preset_buffer[9];
+        preset.Envelope.decay           = (preset_buffer[10] << 8) | preset_buffer[11];
+        preset.Envelope.sustain         = (preset_buffer[12] << 8) | preset_buffer[13];
+        preset.Envelope.release         = (preset_buffer[14] << 8) | preset_buffer[15];
 
-        preset.Modulation.state = preset_buffer[16];
-        preset.Modulation.matrix = (preset_buffer[17] << 8) | preset_buffer[18];
-        preset.Modulation.rate = (preset_buffer[19] << 8) | preset_buffer[20];
-        preset.Modulation.depth = (preset_buffer[21] << 8) | preset_buffer[22];
-        preset.Modulation.wave = (preset_buffer[23] << 8) | preset_buffer[24];
+        preset.Modulation.state         = preset_buffer[16];
+        preset.Modulation.matrix        = (preset_buffer[17] << 8) | preset_buffer[18];
+        preset.Modulation.rate          = (preset_buffer[19] << 8) | preset_buffer[20];
+        preset.Modulation.depth         = (preset_buffer[21] << 8) | preset_buffer[22];
+        preset.Modulation.wave          = (preset_buffer[23] << 8) | preset_buffer[24];
 
-        preset.Arpeggiator.state = preset_buffer[25];
-        preset.Arpeggiator.hold = (preset_buffer[26] << 8) | preset_buffer[27];
-        preset.Arpeggiator.divisions = (preset_buffer[28] << 8) | preset_buffer[29];
-        preset.Arpeggiator.range = (preset_buffer[30] << 8) | preset_buffer[31];
-        preset.Arpeggiator.direction = (preset_buffer[32] << 8) | preset_buffer[33];
+        preset.Arpeggiator.state        = preset_buffer[25];
+        preset.Arpeggiator.gate         = (preset_buffer[26] << 8) | preset_buffer[27];
+        preset.Arpeggiator.divisions    = (preset_buffer[28] << 8) | preset_buffer[29];
+        preset.Arpeggiator.range        = (preset_buffer[30] << 8) | preset_buffer[31];
+        preset.Arpeggiator.direction    = (preset_buffer[32] << 8) | preset_buffer[33];
 
-        preset.Filter.state = preset_buffer[34];
-        preset.Filter.cutoff = (preset_buffer[35] << 8) | preset_buffer[36];
-        preset.Filter.resonance = (preset_buffer[37] << 8) | preset_buffer[38];
-        preset.Filter.punch = (preset_buffer[39] << 8) | preset_buffer[40];
-        preset.Filter.type = (preset_buffer[41] << 8) | preset_buffer[42];
+        preset.Arpeggiator.rest         = (preset_buffer[53] << 8) | preset_buffer[54];
+        preset.Arpeggiator.bpm          = (preset_buffer[55] << 8) | preset_buffer[56];
+        preset.Arpeggiator.fMode        = (preset_buffer[57] << 8) | preset_buffer[58];
+        preset.Arpeggiator.octMode      = (preset_buffer[59] << 8) | preset_buffer[60];
 
-        preset.Filter.attack = (preset_buffer[43] << 8) | preset_buffer[44];
-        preset.Filter.decay = (preset_buffer[45] << 8) | preset_buffer[46];
-        preset.Filter.sustain = (preset_buffer[47] << 8) | preset_buffer[48];
-        preset.Filter.release = (preset_buffer[49] << 8) | preset_buffer[50];
+        preset.Filter.state             = preset_buffer[34];
+        preset.Filter.cutoff            = (preset_buffer[35] << 8) | preset_buffer[36];
+        preset.Filter.resonance         = (preset_buffer[37] << 8) | preset_buffer[38];
+        preset.Filter.punch             = (preset_buffer[39] << 8) | preset_buffer[40];
+        preset.Filter.type              = (preset_buffer[41] << 8) | preset_buffer[42];
 
-        preset.Effects.gain = (preset_buffer[51] << 8) | preset_buffer[52];
+        preset.Filter.attack            = (preset_buffer[43] << 8) | preset_buffer[44];
+        preset.Filter.decay             = (preset_buffer[45] << 8) | preset_buffer[46];
+        preset.Filter.sustain           = (preset_buffer[47] << 8) | preset_buffer[48];
+        preset.Filter.release           = (preset_buffer[49] << 8) | preset_buffer[50];
 
-        preset.Arpeggiator.bpm = (preset_buffer[53] << 8) | preset_buffer[54];
+        preset.Effects.gain             = (preset_buffer[51] << 8) | preset_buffer[52];
+
 
         
         
@@ -227,7 +235,7 @@ namespace EEPROM {
         printf("Shape:          %d\n\n",     preset.Modulation.wave);
         
         printf("ARP state:      %d\n",       preset.Arpeggiator.state);
-        printf("Hold:           %d\n",       preset.Arpeggiator.hold);
+        printf("Hold:           %d\n",       preset.Arpeggiator.gate);
         printf("Division:       %d\n",       preset.Arpeggiator.divisions);
         printf("Range:          %d\n",       preset.Arpeggiator.range);
         printf("Direction:      %d\n\n",     preset.Arpeggiator.direction);
