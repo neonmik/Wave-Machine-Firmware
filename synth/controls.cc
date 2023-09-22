@@ -10,6 +10,8 @@ namespace CONTROLS {
         _preset = DEFAULT_PRESET;
         load_preset(_preset);
 
+        EEPROM::test_save(Preset[2]);
+
     }
 
     void set_preset (uint8_t preset) {

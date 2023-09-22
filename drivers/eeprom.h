@@ -153,4 +153,6 @@ namespace EEPROM {
     void writeFactoryPreset (uint8_t slot);
 
     void transferPreset (uint16_t fromAddress, uint16_t toAddress);
+
+    void test_save (PRESET &preset);
 }
