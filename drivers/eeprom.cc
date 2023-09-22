@@ -28,6 +28,79 @@ namespace EEPROM {
         // Add code here for loading system settings
     }
 
+    void printPresetData (PRESET &preset) {
+
+        printf("\n----------------------------------------------------\n");
+        printf("                   OSCILLATOR\n");
+        printf("----------------------------------------------------\n\n");
+
+        printf("Waveshape:      %04d    |        ",      preset.Wave.shape);
+            printf("Attack:         %04d\n",      preset.Envelope.attack);
+        printf("Vector:         %04d    |        ",      preset.Wave.vector);
+            printf("Decay:          %04d\n",      preset.Envelope.decay);
+        printf("Octave:         %04d    |        ",      preset.Wave.octave);
+            printf("Sustain:        %04d\n",      preset.Envelope.sustain);
+        printf("Pitch:          %04d    |        ",    preset.Wave.pitch);
+            printf("Release:        %04d\n\n",    preset.Envelope.release);
+        
+
+        printf("----------------------------------------------------\n");
+        printf("                     FILTER\n");
+        printf("----------------------------------------------------\n\n");
+
+        printf("State:     ");
+        if (preset.Filter.state == true) { printf("Enabled\n"); }
+        else { printf("Disabled\n"); }
+
+        printf("Cutoff:         %04d    |        ",      preset.Filter.cutoff);
+            printf("Attack:         %04d\n",      preset.Filter.attack);
+        printf("Resonance:      %04d    |        ",      preset.Filter.resonance);
+            printf("Decay:          %04d\n",      preset.Filter.decay);
+        printf("Punch:          %04d    |        ",      preset.Filter.punch);
+            printf("Sustain:        %04d\n",      preset.Filter.sustain);
+        printf("Type:           %04d    |        ",    preset.Filter.type);
+            printf("Release:        %04d\n\n",    preset.Filter.release);
+
+
+        printf("----------------------------------------------------\n");
+        printf("                      LFO\n");
+        printf("----------------------------------------------------\n\n");
+
+        printf("State:      ");
+        if (preset.Modulation.state == true) { printf("Enabled\n"); }
+        else { printf("Disabled\n"); }
+
+        printf("Destination:    %04d\n",      preset.Modulation.matrix);
+        printf("Rate:           %04d\n",      preset.Modulation.rate);
+        printf("Depth:          %04d\n",      preset.Modulation.depth);
+        printf("Shape:          %04d\n\n",    preset.Modulation.wave);
+        
+
+        printf("----------------------------------------------------\n");
+        printf("                      ARP\n");
+        printf("----------------------------------------------------\n\n");
+
+        printf("State:      ");
+        if (preset.Arpeggiator.state == true) { printf("Enabled\n"); }
+        else { printf("Disabled\n"); }
+
+        printf("Gate:           %04d\n",      preset.Arpeggiator.gate);
+        printf("Rate/Division:  %04d\n",      preset.Arpeggiator.divisions);
+        printf("Depth:          %04d\n",      preset.Arpeggiator.range);
+        printf("Shape:          %04d\n\n",    preset.Arpeggiator.direction);
+
+        printf("Rest:           %04d\n",      preset.Arpeggiator.rest);
+        printf("BPM:            %04d\n",      preset.Arpeggiator.bpm);
+        printf("Filter Mode:    %04d\n",      preset.Arpeggiator.fMode);
+        printf("Octave Mode:    %04d\n\n",    preset.Arpeggiator.octMode);
+
+        printf("----------------------------------------------------\n");
+        printf("                      FX\n");
+        printf("----------------------------------------------------\n\n");
+
+        printf("Gain:           %04d\n\n",      preset.Effects.gain);
+    }
+
     void savePreset(uint8_t slot, PRESET &preset) {
         if (slot >= MAX_PRESETS) {
             printf("ERROR! Outside of Preset storage range!\n");
@@ -121,40 +194,7 @@ namespace EEPROM {
 
         
 
-        printf("Waveshape:  %d\n",      preset.Wave.shape);
-        printf("Vector:     %d\n",      preset.Wave.vector);
-        printf("Octave:     %d\n",      preset.Wave.octave);
-        printf("Pitch:      %d\n\n",    preset.Wave.pitch);
-        
-        printf("Attack:     %d\n",      preset.Envelope.attack);
-        printf("Decay:      %d\n",      preset.Envelope.decay);
-        printf("Sustain:    %d\n",      preset.Envelope.sustain);
-        printf("Release:    %d\n\n",    preset.Envelope.release);
-
-        printf("LFO state:  %d\n",      preset.Modulation.state);
-        printf("matriix:    %d\n",      preset.Modulation.matrix);
-        printf("rate:       %d\n",      preset.Modulation.rate);
-        printf("depth:      %d\n",      preset.Modulation.depth);
-        printf("shape:      %d\n\n",    preset.Modulation.wave);
-        
-        printf("ARP state:  %d\n",      preset.Arpeggiator.state);
-        printf("gate:       %d\n",      preset.Arpeggiator.gate);
-        printf("rate:       %d\n",      preset.Arpeggiator.divisions);
-        printf("depth:      %d\n",      preset.Arpeggiator.range);
-        printf("shape:      %d\n\n",    preset.Arpeggiator.direction);
-
-        printf("FILT state: %d\n",      preset.Filter.state);
-        printf("Cutoff:     %d\n",      preset.Filter.cutoff);
-        printf("Resonance:  %d\n",      preset.Filter.resonance);
-        printf("Punch:      %d\n",      preset.Filter.punch);
-        printf("Type:       %d\n\n",    preset.Filter.type);
-
-        printf("Attack:     %d\n",      preset.Filter.attack);
-        printf("Decay:      %d\n",      preset.Filter.decay);
-        printf("Sustain:    %d\n",      preset.Filter.sustain);
-        printf("Release:    %d\n\n",    preset.Filter.release);
-
-        printf("Gain:       %d\n\n",      preset.Effects.gain);
+        printPresetData(preset);
     }
 
     void loadPreset (uint8_t slot, PRESET &preset) {
@@ -215,45 +255,47 @@ namespace EEPROM {
         preset.Effects.gain             = (preset_buffer[51] << 8) | preset_buffer[52];
 
 
-        
-        
-
-        printf("Waveshape:      %d\n",       preset.Wave.shape);
-        printf("Vector:         %d\n",       preset.Wave.vector);
-        printf("Octave:         %d\n",       preset.Wave.octave);
-        printf("Pitch:          %d\n\n",     preset.Wave.pitch);
-        
-        printf("Attack:         %d\n",       preset.Envelope.attack);
-        printf("Decay:          %d\n",       preset.Envelope.decay);
-        printf("Sustain:        %d\n",       preset.Envelope.sustain);
-        printf("Release:        %d\n\n",     preset.Envelope.release);
-
-        printf("LFO state:      %d\n",       preset.Modulation.state);
-        printf("Destination:    %d\n",       preset.Modulation.matrix);
-        printf("Rate:           %d\n",       preset.Modulation.rate);
-        printf("Depth:          %d\n",       preset.Modulation.depth);
-        printf("Shape:          %d\n\n",     preset.Modulation.wave);
-        
-        printf("ARP state:      %d\n",       preset.Arpeggiator.state);
-        printf("Hold:           %d\n",       preset.Arpeggiator.gate);
-        printf("Division:       %d\n",       preset.Arpeggiator.divisions);
-        printf("Range:          %d\n",       preset.Arpeggiator.range);
-        printf("Direction:      %d\n\n",     preset.Arpeggiator.direction);
-
-        printf("FILT state:     %d\n",       preset.Filter.state);
-        printf("Cutoff:         %d\n",       preset.Filter.cutoff);
-        printf("Resonance:      %d\n",       preset.Filter.resonance);
-        printf("Punch:          %d\n",       preset.Filter.punch);
-        printf("Type:           %d\n\n",     preset.Filter.type);
-
-        printf("Attack:         %d\n",      preset.Filter.attack);
-        printf("Decay:          %d\n",      preset.Filter.decay);
-        printf("Sustain:        %d\n",      preset.Filter.sustain);
-        printf("Release:        %d\n\n",    preset.Filter.release);
-
-        printf("Gain:           %d\n\n",      preset.Effects.gain);
+        printPresetData(preset);
     }
     
+    void test_save (PRESET &preset) {
+        // Set up a Union for data splitting...
+        union MyUnion {
+            PRESET p;
+            uint8_t array[PAGE_SIZE];
+
+            MyUnion(PRESET input) : p(input) {}
+            MyUnion(const uint8_t* inputArray) {
+                // Use a pointer to directly access and copy data from the input array
+                memcpy(&p, inputArray, sizeof(PRESET));
+            }
+        };
+        // Copy the data into it
+        MyUnion temp(preset);
+
+        
+        // set the test address...
+        uint16_t test_address = FREE_ADDRESS + 128;
+
+        printf("Attempting to write test data...\n");
+
+        // write it to the eeprom
+        EEPROM::write(test_address, temp.array, PAGE_SIZE);
+
+        uint8_t temp_buffer[PAGE_SIZE];
+        PRESET read;
+
+        printf("Attempting to read test data...\n");
+        // read it from the eeprom...
+        EEPROM::read(test_address, temp_buffer, PAGE_SIZE);
+
+        MyUnion read_data(temp_buffer);
+
+        printPresetData(read_data.p);
+
+        // print it out to check it...
+
+    }
     void clearPreset (uint8_t slot) {
         uint16_t address = slot * PAGE_SIZE;
         uint8_t buffer[PAGE_SIZE] = {0};
