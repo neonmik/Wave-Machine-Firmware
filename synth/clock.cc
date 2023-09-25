@@ -2,168 +2,161 @@
 
 namespace CLOCK {
 
-    void Init () {
+    void init () {
         _sample_rate = SAMPLE_RATE;
         _bpm = DEFAULT_BPM;
-        calculate_division();
+        calculateDivision();
     }
 
-    void set_samplerate (uint16_t sample_rate) {
+    void setSampleRate (uint16_t sample_rate) {
         _sample_rate = sample_rate;
-        calculate_division();
+        calculateDivision();
     } 
 
-    void setBpm (uint16_t bpm) {
+    void setBPM (uint16_t bpm) {
         _bpm = bpm;
-        calculate_division();
+        calculateDivision();
     }
-    uint8_t get_bpm () {
+    uint8_t getBPM () {
         return _bpm;
     }
     void setDivision (uint8_t division) {
         // set the division of the bpm/midi clock
         switch (division) {
             case 0: // Whole Note (1/1)
-                _division = 1;
-                midi_division = 96;
+                clockDivision = 1;
+                midiDivision = 96;
                 break;
             case 1: // Half Note (1/2)
-                _division = 2;
-                midi_division = 48;
+                clockDivision = 2;
+                midiDivision = 48;
                 break;
             case 2: // Half note Triplet (1/3)
-                _division = 3;
-                midi_division = 32;
+                clockDivision = 3;
+                midiDivision = 32;
                 break;
             case 3: // Quarter Note (1/4)
-                _division = 4;
-                midi_division = 24;
+                clockDivision = 4;
+                midiDivision = 24;
                 break;
             case 4: // Quarter Note Triplet (1/6)
-                _division = 6;
-                midi_division = 16;
+                clockDivision = 6;
+                midiDivision = 16;
                 break;
             case 5: // 8th Note (1/8)
-                _division = 8;
-                midi_division = 12;
+                clockDivision = 8;
+                midiDivision = 12;
                 break;
             case 6: // 8th Note Triplet (1/12)
-                _division = 12;
-                midi_division = 8;
+                clockDivision = 12;
+                midiDivision = 8;
                 break;
             case 7: // 16th Note (1/16)
-                _division = 16;
-                midi_division = 6;
+                clockDivision = 16;
+                midiDivision = 6;
                 break;
             case 8: // 16th Note Triplet (1/24)
-                _division = 24;
-                midi_division = 4;
+                clockDivision = 24;
+                midiDivision = 4;
                 break;
             case 9: // 32nd Note (1/32)
-                _division = 32;
-                midi_division = 3;
+                clockDivision = 32;
+                midiDivision = 3;
                 break;
             case 10: // 32nd Note Triplet (1/48)
-                _division = 48;
-                midi_division = 2;
+                clockDivision = 48;
+                midiDivision = 2;
                 break;
             // not used yet... 
-            case 11: // 64th Note - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midi tick?
-                _division = 64;
-                midi_division = 1.5;
+            case 11: // 64th Note - Midi can't handle this, and I've not missed it. Could be possible if extrapolate the single midiTick?
+                clockDivision = 64;
+                midiDivision = 1.5;
                 break;
             case 12: // 64th Note Triplet
-                _division = 84;
-                midi_division = 1;
+                clockDivision = 84;
+                midiDivision = 1;
                 break;
             default:
                 break;
         }
-        calculate_division();
+        calculateDivision();
     }
 
-    void tick (void) {
-        ++_tick;
-        if (_tick >= samplesPerDivision) {
-            if (!_midi_clock_present) set_changed(true);
-            _tick = 0;
+    void sampleClockTick (void) {
+        ++clockTick;
+        if (clockTick >= samplesPerDivision) {
+            if (!midiClockPreset) setClockChanged(true);
+            clockTick = 0;
         }
     }
 
     void check_sample_clock (void) {
         
     }
-    void Update (void) {
+    void update (void) {
         // check_sample_clock();
-        check_for_midi_clock();
+        checkMidiClock();
     }
 
-    void set_changed(bool changed) {
+    void setClockChanged(bool changed) {
         _changed = changed;
     }
-    bool get_changed (void) {
+    bool getClockChanged (void) {
         return _changed;
     }
-    inline uint8_t get_beat (void) {
+    inline uint8_t getBeat (void) {
         return _beat;
     }
    
-    void midi_tick (void) {
+    void midiClockTick (void) {
         // raise the flag to make it known we are now reciveing midi clock
-        _midi_clock_present = true; 
+        midiClockPreset = true; 
         
-        uint32_t _current_time = sample_clock; // current time in samples
+        uint32_t currentTime = sampleClock; // current time in samples
         
-        uint32_t actualSamplesPerTick = (_current_time - _midi_in_clock_last);
-        samplesSinceLastTick += actualSamplesPerTick;
-
+        midiClockPeriod = currentTime - midiClockLast;
         // set the current time for use in checking where its still here
-        _midi_in_clock_last = _current_time;
+        midiClockLast = currentTime;
 
 
-        // increase the clock tick so we can raise a flag at the correct divisions for 24ppqn
-        ++_midi_clock_tick_count;
-        if (_midi_clock_tick_count >= midi_division) {
-            set_changed(true);
+        // increase the clock sampleClockTick so we can raise a flag at the correct divisions for 24ppqn
+        ++midiTick;
+        if (midiTick >= midiDivision) {
+            setClockChanged(true);
 
-            averageSamplesPerTick = samplesSinceLastTick / midi_division;
-
-            samplesSinceLastTick = 0;
-
-            _midi_clock_tick_count = 0;
+            midiTick = 0;
         }
     }
     
-    void start_midi_clock (void) {
-        _midi_clock_present = true;
-        set_changed(true);
+    void startMidiClock (void) {
+        midiClockPreset = true;
+        setClockChanged(true);
     }
-    void stop_midi_clock (void) {
+    void stopMidiClock (void) {
         // maybe add some handling here to differentiate between drop out and stop. 
-        _midi_clock_present =  false;
+        midiClockPreset =  false;
 
         // both these should only happen in AUTO mode I think
-        _tick = 0; // reset tick
-        set_changed(true); 
+        clockTick = 0; // reset sample ticktick
+        setClockChanged(true); 
     }
 
-    void check_for_midi_clock (void) {
-        if (!_midi_clock_present) return; // check to see if the function still works if I use this. Just want it to not do this if it's already stopped. 
-        // uint32_t _current_time = to_us_since_boot(get_absolute_time()); 
-        uint32_t _current_time = sample_clock;
+    void checkMidiClock (void) {
+        if (!midiClockPreset) return;
+ 
+        uint32_t currentTime = sampleClock;
 
-
-        if ((_current_time - _midi_in_clock_last) > MIDI_CLOCK_TIMEOUT) {
-            _midi_clock_present = false;
+        if ((currentTime - midiClockLast) > MIDI_CLOCK_TIMEOUT) {
+            midiClockPreset = false;
         }
     }
 
-    uint8_t midi_clock_present(void) {
-        return _midi_clock_present;
+    uint8_t isMidiClockPresent(void) {
+        return midiClockPreset;
     }
 
-    uint32_t get_midi_clock_period(void) {
-        return _midi_clock_period;
+    uint32_t getMidiClock(void) {
+        return midiClockPeriod;
     }
 }
 

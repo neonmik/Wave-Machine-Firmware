@@ -33,13 +33,13 @@ class ADSREnvelope {
         : _attack(attack), _decay(decay), _sustain(sustain), _release(release) { }
         ~ADSREnvelope ( ) { }
 
-        void trigger_attack();
-        void trigger_decay();
-        void trigger_sustain();
-        void trigger_release();
+        void triggerAttack();
+        void triggerDecay();
+        void triggerSustain();
+        void triggerRelease();
         void stopped();
         
-        void Update(void);
+        void update(void);
 
         bool isStopped() { return _phase == Phase::OFF; }
         bool isReleasing() { return _phase == Phase::RELEASE; }

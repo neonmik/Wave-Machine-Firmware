@@ -42,7 +42,7 @@ namespace ShiftReg {
         uint16_t    resolution      = 8;
         bool        needsSending;
 
-        void tick (void) {
+        void sampleClockTick (void) {
             ++time;
             if (time == resolution) {
                 time = 0;
@@ -51,8 +51,8 @@ namespace ShiftReg {
         }
     }
 
-    void Init();
-    void Update (void);
+    void init();
+    void update (void);
     void set_bit(Pins pin, bool value);
     void clear (void);
 

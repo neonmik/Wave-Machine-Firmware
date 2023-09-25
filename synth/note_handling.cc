@@ -7,28 +7,38 @@ namespace NOTE_HANDLING {
   VoiceData VOICES[POLYPHONY];
 
   // Synth Note Control
-  void voice_on(uint8_t slot, uint8_t note, uint8_t velocity) {
+  void voiceOn(uint8_t slot, uint8_t note, uint8_t velocity) {
     if (!note) return;
 
     VOICES[slot].on(note, velocity);
 
-    QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
+    QUEUE::triggerSend(slot, VOICES[slot].note, VOICES[slot].gate);
   }
-  void voice_off(uint8_t slot, uint8_t note, uint8_t velocity) {
+  void voiceOff(uint8_t slot, uint8_t note, uint8_t velocity) {
 
     VOICES[slot].off();
 
-    QUEUE::trigger_send(slot, VOICES[slot].note, VOICES[slot].gate);
+    QUEUE::triggerSend(slot, VOICES[slot].note, VOICES[slot].gate);
   }
 
-  bool voices_check (uint8_t slot) {
+  void voiceStop (uint8_t note){
+    // stop the input note, whatever voice(s) it's on.
+    for (int i = 0; i < POLYPHONY; i++) {
+      if (VOICES[i].note == note) {
+        voiceOff(i, note, 0);
+        // no return/break here incase its on more than once
+      }
+    }
+  }
+
+  bool voicesCheckSustain (uint8_t slot) {
     if (VOICES[slot].sustained) { 
       return true;
     } else {
       return false;
     }
   }
-  uint8_t voices_get (uint8_t slot) {
+  uint8_t voicesActiveNote (uint8_t slot) {
     // return the note stored in the slot if currently playing, don't return sustained notes as it messes with it.
     if (VOICES[slot].gate) { //}) && !VOICES[slot].sustained) {
       return VOICES[slot].note;
@@ -37,62 +47,20 @@ namespace NOTE_HANDLING {
     }
   }
 
-  void voice_stop (uint8_t note){
-    // stop the input note, whatever voice(s) it's on.
-    for (int i = 0; i < POLYPHONY; i++) {
-      if (VOICES[i].note == note) {
-        voice_off(i, note, 0);
-        // no return/break here incase its on more than once
-      }
-    }
-  }
-
-  void voices_stop() {
+  void voicesStop() {
     // stop all of notes from the synth, but not the array storing the info
     for (int i = 0; i < POLYPHONY; i++) {
-      QUEUE::trigger_send(i, 0, false);
+      QUEUE::triggerSend(i, 0, false);
     }
   }
 
-  void voices_stop_all (void) {
-    voices_stop();
-    // voices_clr();
-  }
 
-  void voices_panic() {
+  void voicesPanic() {
     // clears the notes from the vocies, the synths array, and sends out midi note clearing... may need reworking for actual panic (all midi notes)
     for (int i = 0; i < POLYPHONY; i++) {
-      voice_off(i, 0, 0);
-      // voices_dec();
+      voiceOff(i, 0, 0);
     }
-    // filter_off();
   }
-
-  // void filter_on(void) {
-  //   switch (_mode) {
-  //     case Mode::MONO:
-  //       if (!_filter_active && voices_active()) { 
-  //         QUEUE::trigger_send(FILTER_VOICE, 0, true);
-  //         _filter_active = true;
-  //       }
-  //       break;
-  //     case Mode::PARA:
-  //       if (voices_active()) { 
-  //         QUEUE::trigger_send(FILTER_VOICE, 0, true);
-  //         _filter_active = true;
-  //       }
-  //       break;
-  //   }    
-  // }
-  // void filter_off(void) {
-  //   if (_filter_active && !voices_active()) {
-  //     QUEUE::trigger_send(FILTER_VOICE, 0, false);
-  //     _filter_active = false;
-  //   }
-  // }
-  // void filter_refresh (void) {
-  //   _filter_active = false;
-  // }
 
   // Priority Control
   void priority(uint8_t note, uint8_t velocity) {
@@ -118,7 +86,7 @@ namespace NOTE_HANDLING {
     if (voice < 0) {
       int8_t priority_voice = -1;
 
-      volatile uint32_t time_now = sample_clock;
+      volatile uint32_t time_now = sampleClock;
       
       switch (_priority) {
         // When there are no free voices on the synth, this code uses various priority types to assign the new note to a voice.
@@ -195,7 +163,7 @@ namespace NOTE_HANDLING {
       // I think this should apply to every voice? not just new voices... 
       VOICES[voice].sustained = false;
     }
-    voice_on(voice, note, velocity);
+    voiceOn(voice, note, velocity);
   }
 
   void release(uint8_t note, uint8_t velocity) {
@@ -203,7 +171,7 @@ namespace NOTE_HANDLING {
       for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
         if (VOICES[voice].note == note)  {
           MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
-          voice_off(voice, note, velocity);
+          voiceOff(voice, note, velocity);
         }
       }
     } else {
@@ -215,51 +183,51 @@ namespace NOTE_HANDLING {
     }
   }
 
-  void check_release () {
-    uint8_t queue_level = QUEUE::release_check_queue();
-    if (queue_level) {
-      for (int i = 0; i < queue_level; i++) {
+  void checkReleaseMessages () {
+    uint8_t queueLength = QUEUE::releaseCheckQueue();
+    if (queueLength) {
+      for (int i = 0; i < queueLength; i++) {
         // receives the slot number thats released from the queue, and then clears the slot on this core.
-        uint8_t slot = QUEUE::release_receive();
+        uint8_t slot = QUEUE::releaseReceive();
         VOICES[slot].clear();
       }
     }
   }
 
-  void Update() {
+  void update() {
 
     // Check the note-finished messages from Synth Core.
-    check_release();
+    checkReleaseMessages();
 
-    if (_sustain_just_released) {
+    if (isSustainJustReleased) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++) {
         if (VOICES[voice].sustained) {
-          voice_off(voice, VOICES[voice].note, 0); // clears the voice
+          voiceOff(voice, VOICES[voice].note, 0); // clears the voice
           MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL); // sends midi note off
           VOICES[voice].sustained = false;
         }
       }
-      _sustain_just_released = false;
+      isSustainJustReleased = false;
     }
 
-    // Update Arp notes if active.
-    ARP::Update();
+    // update Arp notes if active.
+    ARP::update();
 
 
   }
-  void note_on (uint8_t note, uint8_t velocity) {
-    if (!ARP::get_state()) priority(note, velocity); // synth voice allocation
+  void noteOn (uint8_t note, uint8_t velocity) {
+    if (!ARP::getState()) priority(note, velocity); // synth voice allocation
     else {
       ARP::addNote(note);
     }
   }
-  void note_off(uint8_t note, uint8_t velocity) {
-    if (!ARP::get_state()) release(note, velocity); // synth voice allocation
+  void noteOff(uint8_t note, uint8_t velocity) {
+    if (!ARP::getState()) release(note, velocity); // synth voice allocation
     else {
       ARP::removeNote(note);
     }
   }
-  void sustain_pedal(uint16_t status) {
+  void setSustainPedal(uint16_t status) {
     
     // bit shift to binary number (yes or no)
     bool temp = (status >> 9);
@@ -269,10 +237,10 @@ namespace NOTE_HANDLING {
       _sustain = temp;
 
       // Code for Note Priority sustain
-      if (!_sustain) _sustain_just_released = true;
+      if (!_sustain) isSustainJustReleased = true;
 
       // Code for Arp Latch:
-      if (ARP::get_state()) {
+      if (ARP::getState()) {
         // this code is acts like a momentary switch, only latching when held
         // ARP::toggleSustain(); 
         
@@ -284,7 +252,7 @@ namespace NOTE_HANDLING {
 
     }
   }
-  bool getSustain (void) {
+  bool getSustainPedal (void) {
     return _sustain;
   }
 }

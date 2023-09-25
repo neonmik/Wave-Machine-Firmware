@@ -52,7 +52,7 @@ namespace RGB_LED {
             }
             ~rgb () { }
 
-            void Init (void) {
+            void init (void) {
 
 
                 pwm_pin_init(_pin[0]);
@@ -76,7 +76,7 @@ namespace RGB_LED {
                 _buffer[1] = 0;
                 _buffer[2] = 0;
             }
-            void Update (void) {
+            void update (void) {
                 set();
             }
         
@@ -84,9 +84,9 @@ namespace RGB_LED {
 
     extern rgb Rgb;
 
-    void Init (void);
+    void init (void);
     void on (void);
-    void Update (void);
+    void update (void);
     void set (uint16_t red, uint16_t green, uint16_t blue);
     void off (void);
     void clear (void);

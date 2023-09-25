@@ -10,7 +10,7 @@
 
 
 
-extern uint32_t sample_clock;
+extern uint32_t sampleClock;
 
 
 namespace NOTE_HANDLING {
@@ -34,12 +34,12 @@ namespace NOTE_HANDLING {
         uint8_t     _notes_on;
         
         bool        _sustain;
-        bool        _sustain_just_released;
+        bool        isSustainJustReleased;
 
         Mode        _mode  = Mode::MONO;
 
         int8_t     _voices_active = 0;
-        bool       _filter_active = false;
+        bool       filterActive = false;
 
 
         struct VoiceData {
@@ -55,7 +55,7 @@ namespace NOTE_HANDLING {
                 velocity = _velocity;
                 gate = true;
                 active = true;
-                activation_time = sample_clock;
+                activation_time = sampleClock;
                 sustained = false; // think this needs to be outside of this call so it isnt used by the ARP.
             }
             void off (void) {
@@ -73,30 +73,30 @@ namespace NOTE_HANDLING {
     
     extern VoiceData VOICES[POLYPHONY];
     // actual synth voice notes, also add MIDI out here
-    void voice_on(uint8_t slot, uint8_t note, uint8_t velocity);
-    void voice_off(uint8_t slot, uint8_t note, uint8_t velocity);
-    bool voices_check (uint8_t slot);
-    uint8_t voices_get (uint8_t slot);
-    void voices_stop (void);
-    void voice_stop (uint8_t note);
-    void voices_stop_all (void);
-    void voices_panic (void);
+    void voiceOn(uint8_t slot, uint8_t note, uint8_t velocity);
+    void voiceOff(uint8_t slot, uint8_t note, uint8_t velocity);
+    bool voicesCheckSustain (uint8_t slot);
+    uint8_t voicesActiveNote (uint8_t slot);
+    void voiceStop (uint8_t note);
+
+    void voicesStop (void);
+    void voicesPanic (void);
 
     // Note priority detection
-    void priority(uint8_t status, uint8_t note, uint8_t velocity);
+    void priority(uint8_t note, uint8_t velocity);
     void release(uint8_t note, uint8_t velocity);
 
-    void Update (void);
+    void update (void);
 
-    void check_release (void);
+    void checkReleaseMessages (void);
 
-    void note_on (uint8_t note, uint8_t velocity);
-    void note_off (uint8_t note, uint8_t velocity);
-    void notes_clear (void);
-    uint8_t get_notes_on(void);
+    void noteOn (uint8_t note, uint8_t velocity);
+    void noteOff (uint8_t note, uint8_t velocity);
+    // void notes_clear (void);
+    // uint8_t get_notes_on(void);
 
-    void sustain_pedal (uint16_t status);
-    bool getSustain (void);
+    void setSustainPedal (uint16_t status);
+    bool getSustainPedal (void);
 
     void setPriority (uint16_t input);
 

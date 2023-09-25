@@ -7,31 +7,31 @@ namespace MOD {
     // Modulation LFO(SAMPLE_RATE/8); // reduced speed poly LFO
     Modulation LFO(SAMPLE_RATE); // full speed mono LFO
 
-    void Init () {
-        LFO.set_matrix(0);
+    void init () {
+        LFO.setMatrix(0);
     }
-    void Update () {
-        LFO.Update();
+    void update () {
+        LFO.update();
     }
     void clear () {
         LFO.clear();
     }
 
-    void set_state (bool input) {
-        LFO.set_state(input);
+    void setState (bool input) {
+        LFO.setState(input);
     }
     
-    void set_matrix (uint16_t input) {
-        LFO.set_matrix(input);
+    void setMatrix (uint16_t input) {
+        LFO.setMatrix(input);
     }
-    void set_depth (uint16_t input) {
-        LFO.set_depth(input);
+    void setDepth (uint16_t input) {
+        LFO.setDepth(input);
     }
-    void set_rate (uint16_t input) {
-        LFO.set_rate(input);
+    void setRate (uint16_t input) {
+        LFO.setRate(input);
     }
-    void set_shape (uint16_t input) {
-        LFO.set_shape(input);
+    void setShape (uint16_t input) {
+        LFO.setShape(input);
     }
 
 

@@ -21,10 +21,10 @@ namespace SYNTH {
   uint32_t  _sustain;
   uint32_t  _release;
   // these are defaulted to outside the 10bit range so that when the EEPROM loads, it's always saved. (otherwise the attack/decay can be 0, which causes an overflow)
-  uint16_t   _last_attack = 1024;
-  uint16_t   _last_decay = 1024;
-  uint16_t   _last_sustain = 1024;
-  uint16_t   _last_release = 1024;
+  uint16_t   lastAttack = 1024;
+  uint16_t   lastDecay = 1024;
+  uint16_t   lastSustain = 1024;
+  uint16_t   lastRelease = 1024;
 
   int16_t   _vibrato;
   uint16_t  _tremelo;
@@ -41,80 +41,64 @@ namespace SYNTH {
   Oscillators channels[POLYPHONY];
 
 
-  void voice_on (uint8_t voice, uint8_t note) {
+  void voiceOn (uint8_t voice, uint8_t note) {
     if ((!channels[voice].isActive()) ||
         (!channels[voice].isGate())) {
       FILTER::voicesIncrease(); 
     }
-    FILTER::trigger_attack();
+    FILTER::triggerAttack();
     channels[voice].noteOn(note);
   }
-  void voice_off (uint8_t voice) {
+  void voiceOff (uint8_t voice) {
     if (channels[voice].isGate()) {
       FILTER::voicesDecrease(); 
     }
-    FILTER::trigger_release();
+    FILTER::triggerRelease();
     channels[voice].noteOff();
   }
   
-  void Init () {
-    MOD::Init();
-    FILTER::Init();
-  }
-
-  
-  bool is_audio_playing() {
-    if(volume == 0) {
-      return false;
-    }
-
-    bool any_channel_playing = false;
-    for(int c = 0; c < POLYPHONY; c++) {
-      if(channels[c].volume > 0 && channels[c].ADSR.isStopped()) {
-        any_channel_playing = true;
-      }
-    }
-
-    return any_channel_playing;
+  void init () {
+    MOD::init();
+    FILTER::init();
   }
 
   // uint16_t softStart () {
-  //   ++_soft_start_index;
+  //   ++softStartIndex;
 
-  //   if (_soft_start_index >= 2) {
-  //     _soft_start_index = 0;
-  //     _soft_start_sample += 1;
-  //     if (_soft_start_sample > 0) {
-  //       _soft_start_sample = 0;
+  //   if (softStartIndex >= 2) {
+  //     softStartIndex = 0;
+  //     softStartSample += 1;
+  //     if (softStartSample > 0) {
+  //       softStartSample = 0;
   //     }
   //   }
 
-  //   return (_soft_start_sample - INT16_MIN)>>4;
+  //   return (softStartSample - INT16_MIN)>>4;
   // }
 
   uint16_t process() {
     
-    if (_soft_start) {
-      ++_soft_start_index;
-      if (_soft_start_index >= 2) {
-        _soft_start_index = 0;
-        _soft_start_sample += 1;
-        if (_soft_start_sample >= 0) {
-          _soft_start_sample = 0;
-          _soft_start = false;
+    if (playSoftStart) {
+      ++softStartIndex;
+      if (softStartIndex >= 2) {
+        softStartIndex = 0;
+        softStartSample += 1;
+        if (softStartSample >= 0) {
+          softStartSample = 0;
+          playSoftStart = false;
         }
       }
-      return (_soft_start_sample - INT16_MIN)>>4;
+      return (softStartSample - INT16_MIN)>>4;
     } 
 
     else {
       int32_t outputSample = 0;  // used to combine channel output
       
-      MOD::Update();
+      MOD::update();
 
       // implemented this here so that it's set for the whole sample run...
       uint16_t vector = (_wave_shape + (_wave_vector + _vector_mod));
-      uint16_t output_volume = (volume - _tremelo);
+      uint16_t outputVolume = (volume - _tremelo);
       
       for(int c = 0; c < POLYPHONY; c++) {
 
@@ -130,10 +114,10 @@ namespace SYNTH {
           //this is where vibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
           channel.phaseAccumulator += _vibrato;
 
-          channel.ADSR.Update();
+          channel.ADSR.update();
           if (channel.isActive() && channel.ADSR.isStopped()) {
             channel.noteStopped();
-            QUEUE::release_send(c);
+            QUEUE::releaseSend(c);
             continue; // save processing this channel any futher
           }
 
@@ -164,7 +148,7 @@ namespace SYNTH {
       }
 
 
-      outputSample = (int32_t(outputSample >> 3) * int32_t(output_volume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
+      outputSample = (int32_t(outputSample >> 3) * int32_t(outputVolume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
 
       // was meant to introduce lower sample rate filter, but makes a bit crushed effect...
       // m++;
@@ -186,67 +170,62 @@ namespace SYNTH {
 
   }
 
-  void set_waveshape (uint16_t shape) {
+  void setWaveshape (uint16_t shape) {
     uint16_t temp = ((shape >> 6) << 8); // the double bit shifts here are to loose precision.
     if (temp == _last_shape) return;
     _last_shape = temp;
     _wave_shape = temp;
   }
-  void set_wavevector (uint16_t vector) {
+  void setWavevector (uint16_t vector) {
     _wave_vector = vector;
   }
-  void set_octave (uint16_t octave) {
+  void setOctave (uint16_t octave) {
     if (octave == _last_octave) return;
     _octave = (octave>>8);
     _last_octave = octave;
   }
-  void set_pitch_scale (uint16_t bend) {
+  void setPitchBend (uint16_t bend) {
     if (bend == _last_pitch) return;
-    pitchBend = pitch_log(bend);
+    pitchBend = logarithmicPitch(bend);
     _last_pitch = bend;
   }
 
-  void set_attack (uint16_t attack) {
-    if (attack == _last_attack) return;
-    _last_attack = attack;
+  void setAttack (uint16_t attack) {
+    if (attack == lastAttack) return;
+    lastAttack = attack;
     // _attack = (attack << 2) + 2;
-    _attack = calc_end_frame(attack << 2);
+    _attack = calculateEndFrame(attack << 2);
   }
-  void set_decay (uint16_t decay) {
-    if (decay == _last_decay) return;
-    _last_decay = decay;
+  void setDecay (uint16_t decay) {
+    if (decay == lastDecay) return;
+    lastDecay = decay;
     // _decay = (decay << 2) + 2;
-    _decay = calc_end_frame(decay << 2);
+    _decay = calculateEndFrame(decay << 2);
   }
-  void set_sustain (uint16_t sustain) {
-    if (sustain == _last_sustain) return;
-    _last_sustain = sustain;
+  void setSustain (uint16_t sustain) {
+    if (sustain == lastSustain) return;
+    lastSustain = sustain;
     _sustain = (sustain << 6);
   }
-  void set_release (uint16_t release) {
-    if (release == _last_release) return;
-    _last_release = release;
+  void setRelease (uint16_t release) {
+    if (release == lastRelease) return;
+    lastRelease = release;
     // _release = (release << 2) + 2;
-    _release = calc_end_frame(release << 2);
+    _release = calculateEndFrame(release << 2);
   }
-  uint32_t calc_end_frame (uint32_t milliseconds) {
+  uint32_t calculateEndFrame (uint32_t milliseconds) {
     return ((milliseconds + 1) * SAMPLE_RATE) / 1000; // + 1 so that it can never be 0, as it just creates noise.
   }
 
-  void modulate_vibrato (uint16_t vibrato) {
+  void modulateVibrato (uint16_t vibrato) {
     volatile int32_t signedInput = vibrato;
     signedInput -= 0x7fff;  
     _vibrato = static_cast<int8_t>(signedInput >> 8);
-
-    // doesnt work may need a different table
-    // int16_t temp = pitch_log(vibrato >> 6); // shift the u16 input to u10, then map it to pitch (256-1023)
-    // temp -= 0x200;
-    // _vibrato = pitch_log(vibrato >> 6);
   }
-  void modulate_tremelo (uint16_t tremelo) {
+  void modulateTremelo (uint16_t tremelo) {
     _tremelo = tremelo;
   }
-  void modulate_vector (uint16_t vector_mod) {
+  void modulateVector (uint16_t vector_mod) {
     _vector_mod = vector_mod >> 6;
   }
 

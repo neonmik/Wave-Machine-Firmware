@@ -8,7 +8,7 @@ namespace KEYS {
   
   Keyboard Keys;
 
-  void Keyboard::Init(){
+  void Keyboard::init(){
     // initiate pins for mux address
     gpio_init(MUX_SEL_A);
     gpio_init(MUX_SEL_B);
@@ -95,23 +95,23 @@ namespace KEYS {
 
   }
 
-  void Init () {
+  void init () {
     // initiate GPIO
-    Keys.Init();
+    Keys.init();
 
     // read the keys 8 times round to prime for the debounce
     for (int i = 0; i < 8; i++) {
       Keys.read();
     }
-    // Update before leaving initiation (needs to happen for start up settings)
-    Update();
+    // update before leaving initiation (needs to happen for start up settings)
+    update();
   }
 
   void read () {
     Keys.read();
   }
   
-  void Update () {
+  void update () {
     uint32_t keys, keys_last;
 
     keys = Keys.get();
@@ -119,10 +119,10 @@ namespace KEYS {
 
     for (int i = 0; i < MAX_KEYS; i++) {
       if ( (!((keys>>i) & 1)) &&  (((keys_last>>i) & 1))  )  {  // new key down
-        NOTE_HANDLING::note_on(i+DEFAULT_KEY, DEFAULT_VEL);
+        NOTE_HANDLING::noteOn(i+DEFAULT_KEY, DEFAULT_VEL);
       }
       if ( ((keys>>i) & 1) &&  (!((keys_last>>i) & 1))  )  {  // key up
-        NOTE_HANDLING::note_off(i+DEFAULT_KEY, DEFAULT_VEL);
+        NOTE_HANDLING::noteOff(i+DEFAULT_KEY, DEFAULT_VEL);
       }
     }
 

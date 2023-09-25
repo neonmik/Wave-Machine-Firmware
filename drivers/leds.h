@@ -44,7 +44,7 @@ namespace LEDS {
             }
             ~GPIO () { }
 
-            void Init(){
+            void init(){
                 gpio_init(_pin); // set LED pin
                 gpio_set_dir(_pin, GPIO_OUT); // set LED pin to out
             }
@@ -126,25 +126,25 @@ namespace LEDS {
             RGB () { }
             ~RGB () { }
 
-            void Init (void) {
-                RGB_LED::Init();
+            void init (void) {
+                RGB_LED::init();
                 colour(colours[0], colours[1], colours[2]);
                 on();
             }
             void on (void) {
                 _state = true;
                 RGB_LED::on();
-                RGB_LED::Update();
+                RGB_LED::update();
             }
             void colour (uint16_t red, uint16_t green, uint16_t blue) {
                 RGB_LED::set(red, green, blue);
-                RGB_LED::Update();
+                RGB_LED::update();
                 
             }
             void off (void) {
                 _state = false;
                 RGB_LED::off();
-                RGB_LED::Update();
+                RGB_LED::update();
             }
             void toggle (void) {
                 _state = !_state;
@@ -206,7 +206,7 @@ namespace LEDS {
                     
                     if (_flash_state) RGB_LED::on();
                     else RGB_LED::off();
-                    RGB_LED::Update();
+                    RGB_LED::update();
                     _flash_state = !_flash_state;
                     
                     _count = 0;
@@ -254,10 +254,10 @@ namespace LEDS {
         void flash (int repeats, int delay){
             for (int r = 0; r < repeats; r++) {
                 toggle();
-                Update();
+                update();
                 sleep_ms(delay);
                 toggle();
-                Update();
+                update();
                 sleep_ms(delay);
             }
         }
@@ -267,7 +267,7 @@ namespace LEDS {
             _flash_state = !_state; // sets opposite starting state so always flashes right. 
         }
 
-        void Update (void) {
+        void update (void) {
             ++_count; // Increments the flash counter. Being uint8_t should wrap at 256.
                 
             if (!_repeats) return;
@@ -308,7 +308,7 @@ namespace LEDS {
 
 
 
-    void Init(void);
+    void init(void);
     void on(void);
     void off(void);
     void KNOBS_off(void);
@@ -317,6 +317,6 @@ namespace LEDS {
     void PAGE_select(uint8_t page);
     void flash(int repeats, int delay);
     void test(uint8_t delay);
-    void Update(void);
+    void update(void);
 
 }

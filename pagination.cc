@@ -2,22 +2,22 @@
 
 namespace PAGINATION {
   
-    void Init() {
-      Update();
+    void init() {
+      update();
     }
-    void Update(){
+    void update(){
       uint8_t temp_page;
 
       if(Buttons::PAGE.get(Buttons::State::SHORT)){
         
         uint8_t pages = MAX_PAGES;
-        if (!UI::get_arp()) pages = (MAX_PAGES - 1);
+        if (!UI::getArp()) pages = (MAX_PAGES - 1);
 
 
         ++current_page;
         if (current_page >= pages) current_page = 0;
 
-        UI::set_page(current_page);
+        UI::setPage(current_page);
         refresh();
       }
 
@@ -38,7 +38,7 @@ namespace PAGINATION {
       for (int i = 0; i < MAX_KNOBS; i++){
         value = ADC::value(i);
 
-        in_sync = abs(value - CONTROLS::get_value(temp_page, i)) < knob_protection_threshold;
+        in_sync = abs(value - CONTROLS::getValue(temp_page, i)) < knob_protection_threshold;
 
         // enable knob when it matches the stored value
         if (in_sync && value != last_value[i]) {
@@ -50,7 +50,7 @@ namespace PAGINATION {
         if(_states[i] == KnobState::ACTIVE){
           LEDS::KNOB_select(i, 1);
           // this could be where you set the level for KNOB LED's faux PWM output
-          CONTROLS::set_value(temp_page, i, value);
+          CONTROLS::setValue(temp_page, i, value);
         }
       }
     }

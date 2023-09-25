@@ -7,6 +7,6 @@ namespace RANDOM {
     namespace {
         uint16_t _seed;
     }
-    void Update(uint16_t seed);
+    void update(uint16_t seed);
     uint16_t get();
 };

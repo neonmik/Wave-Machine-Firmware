@@ -145,7 +145,7 @@ namespace ARP {
     extern ArpData arpVoices[MAX_ARP];
     extern ArpData inputBuffer[MAX_ARP];
     
-    void Update(void);
+    void update(void);
     
     void addNote (uint8_t note);
     void removeNote (uint8_t note);
@@ -159,8 +159,8 @@ namespace ARP {
     void grabNotes(void);
     void stopAllVoices (void);
     
-    void set_state (bool state);
-    bool get_state (void);
+    void setState (bool state);
+    bool getState (void);
     void reset (void);
 
     void setGate (uint16_t input);
@@ -174,7 +174,7 @@ namespace ARP {
 
     void updateOctave (ArpDirection direction);
 
-    void setBpm (uint16_t input);
+    void setBPM (uint16_t input);
     
     void setOctMode (uint16_t input);
 }

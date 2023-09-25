@@ -54,7 +54,7 @@ constexpr   uint8_t     DEFAULT_PRESET  =       0;
 // ------------------------------- 
 // These are variables that are used globaly
 
-extern      uint32_t    sample_clock;
+extern      uint32_t    sampleClock;
 extern      uint8_t     softwareIndex;
 extern      uint8_t     hardwareIndex;
 extern      uint16_t    playBuffer[];

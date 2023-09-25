@@ -54,7 +54,6 @@ struct PRESET {
     };
     struct Fx {
         uint16_t gain = 0;
-
     };
     Wav Wave;
     Env Envelope;

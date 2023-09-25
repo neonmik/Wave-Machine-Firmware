@@ -4,35 +4,28 @@ namespace FILTER {
 
     ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
 
-    void Init() {
-        _lowpass = 0;
-        _bandpass = 0;
-        // _cutoff = 0;
-        // _resonance = 0;
-        _dirty = true;
-        // _punch = 0;
-        // _type = LowPass;
+    void init() {
+        lowPass = 0;
+        bandPass = 0;
+        needsUpdating = true;
     }
 
-    void set_cutoff(uint16_t cutoff) {
-        _cutoff = exp_freq(cutoff);
-        _dirty = true;
+    void setCutoff(uint16_t cutoff) {
+        _cutoff = exponentialFrequency(cutoff);
+        needsUpdating = true;
     }
 
-    void set_resonance(uint16_t resonance) {
+    void setResonance(uint16_t resonance) {
         _resonance = filter_damp(resonance);
-        _dirty = true;
+        needsUpdating = true;
     }
 
-    void modulate_cutoff(uint16_t cutoff) {
-        _mod = (cutoff >> 2);
-    }
 
-    void set_punch(uint16_t punch) {
+    void setPunch(uint16_t punch) {
         _punch = punch >> 2;
     }
 
-    void set_type(uint16_t type) {
+    void setType(uint16_t type) {
         uint8_t index = (type>>8);
         switch (index) {
         case 0:
@@ -55,25 +48,43 @@ namespace FILTER {
         }
     }
 
-    void set_attack (uint16_t attack) {
-        if (attack == _last_attack) return;
-        _last_attack = attack;
-        _attack = calc_end_frame(attack << 2);
+    void setDirection (uint16_t direction) {
+        uint8_t index = (direction>>9);
+        switch (index) {
+        case 0:
+            _direction = Direction::Regular;
+            break;
+        case 1:
+            _direction = Direction::Inverted;
+            break;
+        default:
+            break;
+        }
     }
-    void set_decay (uint16_t decay) {
-        if (decay == _last_decay) return;
-        _last_decay = decay;
-        _decay = calc_end_frame(decay << 2);
+
+    void modulateCutoff(uint16_t cutoff) {
+        _mod = (cutoff >> 2);
     }
-    void set_sustain (uint16_t sustain) {
-        if (sustain == _last_sustain) return;
-        _last_sustain = sustain;
+
+    void setAttack (uint16_t attack) {
+        if (attack == lastAttack) return;
+        lastAttack = attack;
+        _attack = calculateEndFrame(attack << 2);
+    }
+    void setDecay (uint16_t decay) {
+        if (decay == lastDecay) return;
+        lastDecay = decay;
+        _decay = calculateEndFrame(decay << 2);
+    }
+    void setSustain (uint16_t sustain) {
+        if (sustain == lastSustain) return;
+        lastSustain = sustain;
         _sustain = (sustain << 6);
     }
-    void set_release (uint16_t release) {
-        if (release == _last_release) return;
-        _last_release = release;
-        _release = calc_end_frame(release << 2);
+    void setRelease (uint16_t release) {
+        if (release == lastRelease) return;
+        lastRelease = release;
+        _release = calculateEndFrame(release << 2);
     }
 
     void voicesIncrease (void) {
@@ -83,38 +94,38 @@ namespace FILTER {
         voices_dec();
     }
 
-    void trigger_attack (void) {
-        if (!voices_active()) return;
+    void triggerAttack (void) {
+        if (!voicesActive()) return;
         switch (_mode) {
             case Mode::MONO:
-                if (!_filter_active) { 
-                    ADSR.trigger_attack();
-                    _filter_active = true;
+                if (!filterActive) { 
+                    ADSR.triggerAttack();
+                    filterActive = true;
                 }
                 break;
             case Mode::PARA:
-                ADSR.trigger_attack();
-                _filter_active = true;
+                ADSR.triggerAttack();
+                filterActive = true;
                 break;
         } 
         
     }
-    void trigger_release (void) {
-        if (_filter_active && !voices_active()) {
-            ADSR.trigger_release();
-            _filter_active = false;
+    void triggerRelease (void) {
+        if (filterActive && !voicesActive()) {
+            ADSR.triggerRelease();
+            filterActive = false;
         }
     }
 
     void process(int32_t &sample) {
         if (_type != Type::Off) {
-            ADSR.Update();
+            ADSR.update();
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
-            if (_dirty) {
+            if (needsUpdating) {
                 _frequency = _cutoff;
                 _damp = _resonance;
-                _dirty = false;
+                needsUpdating = false;
             }
 
 
@@ -132,28 +143,28 @@ namespace FILTER {
 
             int32_t damp = _damp;
             if (_punch) {
-                int32_t punch_signal = _lowpass > 4096 ? _lowpass : 2048;
+                int32_t punch_signal = lowPass > 4096 ? lowPass : 2048;
                 frequency += ((punch_signal >> 4) * _punch) >> 9;
                 damp += ((punch_signal - 2048) >> 3);
             }
 
-            int32_t notch = sample - (_bandpass * damp >> 15);
-            _lowpass += frequency * _bandpass >> 15;
-            FX::HARDCLIP::process(_lowpass);
+            int32_t notch = sample - (bandPass * damp >> 15);
+            lowPass += frequency * bandPass >> 15;
+            FX::HARDCLIP::process(lowPass);
             
-            int32_t highpass = notch - _lowpass;
-            _bandpass += frequency * highpass >> 15;
-            FX::HARDCLIP::process(_bandpass);
+            int32_t highPass = notch - lowPass;
+            bandPass += frequency * highPass >> 15;
+            FX::HARDCLIP::process(bandPass);
 
             switch (_type) {
                 case LowPass:
-                    sample = _lowpass;
+                    sample = lowPass;
                     break;
                 case BandPass:
-                    sample = _bandpass;
+                    sample = bandPass;
                     break;
                 case HighPass:
-                    sample = highpass;
+                    sample = highPass;
                     break;
                 default:
                     sample = sample;

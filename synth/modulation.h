@@ -66,10 +66,10 @@ namespace MOD {
             uint16_t    _wave;
             
             OutputDestinations _destination[4]{
-                // pointer of what to Update, type of output, offset for output table
-                {&SYNTH::modulate_vibrato,  OutputType::SIGNED,     Dither::FULL},
-                {&SYNTH::modulate_tremelo,  OutputType::UNSIGNED,   Dither::LOW},
-                {&SYNTH::modulate_vector,   OutputType::UNSIGNED,   Dither::LOW},
+                // pointer of what to update, type of output, offset for output table
+                {&SYNTH::modulateVibrato,  OutputType::SIGNED,     Dither::FULL},
+                {&SYNTH::modulateTremelo,  OutputType::UNSIGNED,   Dither::LOW},
+                {&SYNTH::modulateVector,   OutputType::UNSIGNED,   Dither::LOW},
                 {nullptr,                   OutputType::UNSIGNED,   Dither::OFF} // probably want something ? here, but we'll see...
             };
 
@@ -77,7 +77,7 @@ namespace MOD {
                 return input - INT16_MIN; // Using modular arithmatic!
             }
 
-            void reset_destination (uint8_t index) {
+            void resetDestination (uint8_t index) {
                 if (_destination[index].variable != NULL) {
                     switch (_destination[index].type) {
                         case OutputType::UNSIGNED:
@@ -95,7 +95,7 @@ namespace MOD {
                 _sample = 0;
 
                 for (int i = 0; i < 3; i++) {
-                    reset_destination(i);
+                    resetDestination(i);
                 }
             }
             
@@ -103,18 +103,18 @@ namespace MOD {
             Modulation (uint32_t sample_rate) : _sample_rate(sample_rate) { }
             ~Modulation( ) { }
 
-            // control and Update functions
-            void set_state (bool state) {
+            // control and update functions
+            void setState (bool state) {
                 if (_state != state) {
                     _state = state;
                     reset(); // aim to use this to ramp down values when switching states
                 }
             }
-            bool get_state (void) {
+            bool getState (void) {
                 return _state;
             }
             
-            void set_matrix (uint16_t matrix) {
+            void setMatrix (uint16_t matrix) {
                 volatile uint8_t temp = (matrix>>8);
                 if (_matrix != temp) {
                     // Store the current matrix value
@@ -124,14 +124,14 @@ namespace MOD {
                     _index = 0;
                     _phase_accumulator = 0;
                     
-                    // Update the previous destination output to the offset position
-                    reset_destination(prevMatrix);
-                    reset_destination(_matrix);
+                    // update the previous destination output to the offset position
+                    resetDestination(prevMatrix);
+                    resetDestination(_matrix);
                 }
             }
-            void set_rate (uint16_t rate) {
+            void setRate (uint16_t rate) {
                 // This uses a LUT for expoentially mapping 0-1023 to 1-10000 saving a load of processing power from the earlier function.
-                _rate = exp_freq(rate);
+                _rate = exponentialFrequency(rate);
                 
                 // Calculate the increment based on the scaled rate
                 _increment = (65535 * (uint32_t)_rate) / _sample_rate;
@@ -139,13 +139,13 @@ namespace MOD {
                 // don't want the increment dropping below 1, as it will stop the oscillation/cause weird behaviour
                 if (_increment < 1) _increment = 1;
             }
-            void set_depth (uint16_t depth) {
+            void setDepth (uint16_t depth) {
                 if (_depth != depth) {
                     // 10 bit depth setting
                     _depth = depth;
                 }
             }
-            void set_shape (uint16_t wave) {
+            void setShape (uint16_t wave) {
                 // map the 10 bit knob value to 0-5 (the amount of waveforms) and then map it to the wavetable size.
                 volatile uint16_t mapped_wave = (map(wave, KNOB_MIN, KNOB_MAX, 0, (MAX_MOD_WAVES - 1)) * WAVETABLE_SIZE);
                 if (_wave != mapped_wave) {
@@ -153,7 +153,7 @@ namespace MOD {
                 }
             }
             
-            void Update () {
+            void update () {
                 if (_state) {
                     _phase_accumulator += _increment; // Adds the increment to the accumulator
                     _index = (_phase_accumulator >> Speed::SLOW);    // Calculates the 8 bit index value for the wavetable. the bit shift creates diffeing results... see LFO_SPEED table
@@ -201,16 +201,16 @@ namespace MOD {
 
     extern Modulation LFO;
 
-    void Init (void);
+    void init (void);
 
-    void set_state (bool input);
+    void setState (bool input);
 
-    void set_matrix (uint16_t input);
-    void set_depth (uint16_t input);
-    void set_rate (uint16_t input);
-    void set_shape (uint16_t input);
+    void setMatrix (uint16_t input);
+    void setDepth (uint16_t input);
+    void setRate (uint16_t input);
+    void setShape (uint16_t input);
 
-    void Update (void);
+    void update (void);
     void clear (void);
 }
 

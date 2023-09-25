@@ -23,32 +23,32 @@
 
 #include "queue.h"
 
-bool      isBufferFull;
+// bool      isBufferFull;
 
-extern uint32_t    sample_clock;
-uint32_t           sample_clock_last;
+extern uint32_t    sampleClock;
+uint32_t           sampleClockLast;
 extern uint8_t     softwareIndex;
 extern uint8_t     hardwareIndex;
 extern uint16_t    playBuffer[];
 
 
-void hw_core() {
+void hardwareCore() {
   
-  UI::Init();
+  UI::init();
 
   while (true) {
 
-    UI::Update();
+    UI::update();
 
   }
 }
 
 
-void synth_core() {
+void synthCore() {
 
-  SYNTH::Init();
-  DAC::Init(SYNTH::process);
-  CLOCK::Init();
+  SYNTH::init();
+  DAC::init();
+  CLOCK::init();
   
   while (true) {
     if (softwareIndex != hardwareIndex) {
@@ -57,34 +57,29 @@ void synth_core() {
       ++softwareIndex;
       softwareIndex &= 0x1F; // loops the play buffer every 32 samples
 
-      ++sample_clock;
+      ++sampleClock;
 
-      CLOCK::tick();
+      CLOCK::sampleClockTick();
     }
 
-    if ((!(sample_clock & 0x3F)) && (sample_clock != sample_clock_last)){
+    if ((!(sampleClock & 0x3F)) && (sampleClock != sampleClockLast)){
 			// make sure this only happens once every 64 sample periods
-			sample_clock_last = sample_clock;
+			sampleClockLast = sampleClock;
 
-      if (QUEUE::trigger_check_queue()) {
+      if (QUEUE::triggerCheckQueue()) {
         uint8_t slot, note;
         bool gate;
 
-        while (QUEUE::trigger_receive(slot, note, gate)) {
+        while (QUEUE::triggerReceive(slot, note, gate)) {
           if (gate) {
-            SYNTH::voice_on(slot, note);
+            SYNTH::voiceOn(slot, note);
           } else {
-            SYNTH::voice_off(slot);
+            SYNTH::voiceOff(slot);
           }
-          if (slot > POLYPHONY) printf("Voice Queue error! Out of bounds voice\n");
+          if (slot > POLYPHONY) DEBUG::error("Out of bounds voice!");
         }
       }
     }
-
-    // old update method - tied to DMA
-    // if (DAC::get_state()) {
-    //   DAC::clear_state();
-    // }
   }
 }
 
@@ -94,13 +89,13 @@ void synth_core() {
 
   stdio_init_all(); // has to be here to allow both cores to use the debug serial UART. 
 
-  QUEUE::Init(); // has to be here to allow both cores access to QUEUE
+  QUEUE::init(); // has to be here to allow both cores access to QUEUE
   
-  // multicore_launch_core1(hw_core); // launches the 2nd core
-  // synth_core(); // launches the synth/audio core
+  // multicore_launch_core1(hardwareCore); // launches the 2nd core
+  // synthCore(); // launches the synth/audio core
 
-  multicore_launch_core1(synth_core); // launches the 2nd core
-  hw_core(); // launch the hardware core
+  multicore_launch_core1(synthCore); // launches the 2nd core
+  hardwareCore(); // launch the hardware core
 
 } 
 

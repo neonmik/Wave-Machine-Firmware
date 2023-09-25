@@ -17,13 +17,13 @@ namespace LEDS {
     SR  PAGE_3(Pins::PAGE_3);
     SR  SPARE(Pins::SPARE);
 
-    void Init(void)
+    void init(void)
     {
-        PICO.Init();
-        LFO.Init();
-        ARP.Init();
-        PRESET.Init();
-        ShiftReg::Init();
+        PICO.init();
+        LFO.init();
+        ARP.init();
+        PRESET.init();
+        ShiftReg::init();
 
     }
     void on(){
@@ -109,10 +109,10 @@ namespace LEDS {
     void flash(int repeats, int delay) {
         for (int r = 0; r < repeats; r++) {
             toggle();
-            Update();
+            update();
             sleep_ms(delay);
             toggle();
-            Update();
+            update();
             sleep_ms(delay);
         }
     }
@@ -146,10 +146,10 @@ namespace LEDS {
         PICO.flash(1, delay);
     }
     
-    void Update() {
+    void update() {
         ARP.update();
         PRESET.update();
-        // PAGE_1.Update();
-        ShiftReg::Update();
+        // PAGE_1.update();
+        ShiftReg::update();
     }
 }

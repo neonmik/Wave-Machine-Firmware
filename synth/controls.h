@@ -55,21 +55,21 @@ namespace CONTROLS {
                     }
                     ~Page() { }
                     void on() {
-                        set_state(true);
+                        setState(true);
                     }
                     void off() {
-                        set_state(false);
+                        setState(false);
                     }
                     void toggle() {
-                        set_state(!_active);
+                        setState(!_active);
                     }
-                    void set_state(bool state) {
+                    void setState(bool state) {
                         if (_toggle_func != nullptr) {
                             _active = state;
                             _toggle_func(_active);
                         }
                     }
-                    bool get_state() {
+                    bool getState() {
                         return _active;
                     }
                     void set(uint8_t control, uint16_t input) {
@@ -79,7 +79,7 @@ namespace CONTROLS {
                     uint16_t get(uint8_t control) {
                         return _input[control];
                     }
-                    void Update() {
+                    void update() {
                         if (_active) {
                             for (int i = 0; i < 4; i++) {
                                 if (_changed[i]) {
@@ -95,20 +95,20 @@ namespace CONTROLS {
             CONTROL () { }
             ~CONTROL () { }
 
-            Page        MAIN    {&SYNTH::set_waveshape,    &SYNTH::set_wavevector,     &SYNTH::set_octave,         &SYNTH::set_pitch_scale,         nullptr};
-                Page    ADSR    {&SYNTH::set_attack,       &SYNTH::set_decay,          &SYNTH::set_sustain,        &SYNTH::set_release,             nullptr};
+            Page        MAIN    {&SYNTH::setWaveshape,    &SYNTH::setWavevector,     &SYNTH::setOctave,         &SYNTH::setPitchBend,         nullptr};
+                Page    ADSR    {&SYNTH::setAttack,       &SYNTH::setDecay,          &SYNTH::setSustain,        &SYNTH::setRelease,             nullptr};
             
-            Page        FILT    {&FILTER::set_cutoff,      &FILTER::set_resonance,     &FILTER::set_punch,         &FILTER::set_type,               nullptr};
-                Page    fENV    {&FILTER::set_attack,      &FILTER::set_decay,         &FILTER::set_sustain,       &FILTER::set_release,            nullptr};
+            Page        FILT    {&FILTER::setCutoff,      &FILTER::setResonance,     &FILTER::setPunch,         &FILTER::setType,               nullptr};
+                Page    fENV    {&FILTER::setAttack,      &FILTER::setDecay,         &FILTER::setSustain,       &FILTER::setRelease,            nullptr};
             
-            Page        MOD1    {&MOD::set_matrix,         &MOD::set_rate,             &MOD::set_depth,            &MOD::set_shape,                 MOD::set_state};
-                Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::set_gain,    nullptr,                         nullptr};
+            Page        MOD1    {&MOD::setMatrix,         &MOD::setRate,             &MOD::setDepth,            &MOD::setShape,                 MOD::setState};
+                Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::setGain,    nullptr,                         nullptr};
             
-            Page        ARP     {&ARP::setGate,            &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,              ARP::set_state};
-                Page    sARP    {nullptr,                  &ARP::setBpm,               nullptr,                    &ARP::setOctMode,                nullptr};
+            Page        ARP     {&ARP::setGate,            &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,              ARP::setState};
+                Page    sARP    {nullptr,                  &ARP::setBPM,               nullptr,                    &ARP::setOctMode,                nullptr};
             
 
-            void Init (void) { }
+            void init (void) { }
 
             void set (uint8_t page, uint8_t control, uint16_t input) {
             switch (page) {
@@ -161,34 +161,34 @@ namespace CONTROLS {
                 }
             }
             
-            void toggle_lfo (void) {
+            void toggleLFO (void) {
                 MOD1.toggle();
             }
             void set_lfo (bool state) {
-                MOD1.set_state(state);
+                MOD1.setState(state);
             }
-            bool get_lfo (void) {
-                return MOD1.get_state();
+            bool getLFO (void) {
+                return MOD1.getState();
             }
             
-            void toggle_arp (void) {
+            void toggleArp (void) {
                 ARP.toggle();
             }
             void set_arp (bool state) {
-                ARP.set_state(state);
+                ARP.setState(state);
             }
-            bool get_arp (void) {
-                return ARP.get_state();;
+            bool getArp (void) {
+                return ARP.getState();;
             }
-            void Update (void) {
-                MAIN.Update();
-                ADSR.Update();
-                MOD1.Update();
-                ARP.Update();
-                SHFT.Update();
-                fENV.Update();
-                FILT.Update();
-                sARP.Update();
+            void update (void) {
+                MAIN.update();
+                ADSR.update();
+                MOD1.update();
+                ARP.update();
+                SHFT.update();
+                fENV.update();
+                FILT.update();
+                sARP.update();
             }
     };
     
@@ -196,33 +196,33 @@ namespace CONTROLS {
     extern CONTROL Control;
     extern PRESET Preset[MAX_PRESETS];
     
-    void Init (void);
+    void init (void);
     
     void set_preset (uint8_t preset);
     uint8_t get_preset (void);
     void save_preset (uint8_t preset);
     void load_preset (uint8_t preset);
-    void export_presets (void);
-    void factory_restore (void);
-    void write_factory_presets (void);
+    void exportPresets (void);
+    void factoryRestore (void);
+    void updateFactoryPresets (void);
 
     void save (void);
 
-    void set_page (uint8_t page);
-    uint8_t get_page (void);
+    void setPage (uint8_t page);
+    uint8_t getPage (void);
     
-    void set_value (uint8_t page, uint8_t control, uint16_t input);
-    uint16_t get_value (uint8_t page, uint8_t control);
+    void setValue (uint8_t page, uint8_t control, uint16_t input);
+    uint16_t getValue (uint8_t page, uint8_t control);
     
-    void toggle_lfo (void);
-    bool get_lfo (void);
+    void toggleLFO (void);
+    bool getLFO (void);
 
-    void toggle_arp (void);
-    bool get_arp (void);
+    void toggleArp (void);
+    bool getArp (void);
 
-    void toggle_shift (void);
-    bool get_shift (void);
+    void toggleShift (void);
+    bool getShift (void);
 
 
-    void Update (void);
+    void update (void);
 };

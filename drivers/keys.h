@@ -68,7 +68,7 @@ namespace KEYS {
             Keyboard() { }
             ~Keyboard() { }
 
-            void Init();
+            void init();
             void read();
             inline int32_t get() const {
                 return _current;
@@ -84,9 +84,9 @@ namespace KEYS {
     
     extern Keyboard Keys;
 
-    void Init (void);
+    void init (void);
     void read (void);
-    void Update (void);
+    void update (void);
 
     void setOctave (uint16_t input);
 }

@@ -156,7 +156,7 @@ namespace EEPROM {
                 // Write the address and data to the EEPROM
                 i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + write_len, false);
 
-                // Update variables
+                // update variables
                 remaining_len -= write_len;
                 current_address += write_len;
                 src += write_len;
@@ -186,7 +186,7 @@ namespace EEPROM {
                 // Read the data at the address
                 i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, src, read_len, false);
 
-                // Update variables
+                // update variables
                 remaining_len -= read_len;
                 current_address += read_len;
                 src += read_len;

@@ -16,20 +16,20 @@ namespace ARP {
             printf("\n");
     }
 
-    void set_state (bool state) {
+    void setState (bool state) {
         if (isArpActive == state) return; // already set
         
         isArpActive = state;
         reset();  
     }
-    bool get_state (void) {
+    bool getState (void) {
         return isArpActive;
     }
 
 
 
     void reset () {
-        NOTE_HANDLING::voices_stop_all(); // clears the actual synth voices
+        NOTE_HANDLING::voicesStop(); // clears the actual synth voices
         if (!isArpActive) {
             // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
             passNotes(); // passes any notes in the arp buffer that arent held on by sustain - may need reworking for sustain
@@ -37,7 +37,7 @@ namespace ARP {
         }
         if (isArpActive) {
             grabNotes(); // grabs any active notes from the voices, this includes sustained, which I think would be best?
-            // setSustain(NOTE_HANDLING::getSustain()); // to make sure sustain gets passed on?
+            // setSustain(NOTE_HANDLING::getSustainPedal()); // to make sure sustain gets passed on?
         }
 
 
@@ -164,17 +164,17 @@ namespace ARP {
         // add variable for direction for new arp modes (more similar in handling to JUNO)
     }
 
-    void Update (void) {
+    void update (void) {
         // always update clock, will be used for MIDI clock out.
-        CLOCK::Update();
+        CLOCK::update();
         // if arp is on, do arp stuff.
         if (isArpActive) {
             if (isSustainJustReleased) {
                 clearSustainedNotes();
                 isSustainJustReleased = false;
             }
-            if (CLOCK::get_changed()) {
-                CLOCK::set_changed(false);
+            if (CLOCK::getClockChanged()) {
+                CLOCK::setClockChanged(false);
 
                 switch (currentNoteState) {
                     case NoteState::ACTIVE:
@@ -183,12 +183,12 @@ namespace ARP {
                             for (int i = 0; i < POLYPHONY; i++) {
                                 // Should be able to remove this check, as it shouldn't change between playing and releasing
                                 if (currentPlayOct[i]) {
-                                    NOTE_HANDLING::voice_off(i, currentPlayOct[i], 0);
+                                    NOTE_HANDLING::voiceOff(i, currentPlayOct[i], 0);
                                     MIDI::sendNoteOff(currentPlayOct[i], 0);
                                 }   
                             }
                         } else {
-                            NOTE_HANDLING::voice_off(currentVoiceIndex, currentPlayNote, 0);
+                            NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
                             MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
                             
                             currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
@@ -210,7 +210,7 @@ namespace ARP {
 
                                 currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
 
-                                NOTE_HANDLING::voice_on(i, currentPlayOct[i], 127);
+                                NOTE_HANDLING::voiceOn(i, currentPlayOct[i], 127);
                                 MIDI::sendNoteOn(currentPlayOct[i], 127);
                             }
                         } else {
@@ -224,7 +224,7 @@ namespace ARP {
 
                             currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
 
-                            NOTE_HANDLING::voice_on(currentVoiceIndex, currentPlayNote, 127);
+                            NOTE_HANDLING::voiceOn(currentVoiceIndex, currentPlayNote, 127);
                             MIDI::sendNoteOn(currentPlayNote, 127);
 
                         }
@@ -340,7 +340,7 @@ namespace ARP {
                         inputNoteCount = 0;
                     }
 
-                    // Update inputWriteIndex if necessary
+                    // update inputWriteIndex if necessary
                     if (inputWriteIndex == i) {
                         inputWriteIndex = bufferSize - 1;
                     } else if (inputWriteIndex > i) {
@@ -475,7 +475,7 @@ namespace ARP {
                 // copy all the notes form arp to normal voices
                 uint8_t note = arpVoices[i].note;
                 if (note != 0) {
-                    NOTE_HANDLING::voice_on(i, note, 127);
+                    NOTE_HANDLING::voiceOn(i, note, 127);
                     MIDI::sendNoteOn(note, 127);
                 }
             }
@@ -490,11 +490,11 @@ namespace ARP {
                 if (note == 0)  break;
                 
                 // pass the note out
-                NOTE_HANDLING::voice_on(i, note, 127);
+                NOTE_HANDLING::voiceOn(i, note, 127);
                 MIDI::sendNoteOn(note, 127);
 
                 // // mark the note as sustained if it is 
-                // if (arpVoices[i].isSustained()) NOTE_HANDLING::note_off(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
+                // if (arpVoices[i].isSustained()) NOTE_HANDLING::noteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
             }
         }
     }
@@ -504,8 +504,8 @@ namespace ARP {
 
         for (int i = 0; i < POLYPHONY; i++) {
             // this loops through all the active voices, adding it to the inputBuffer.
-            uint8_t note = NOTE_HANDLING::voices_get(i);
-            bool sustained = NOTE_HANDLING::voices_check(i);
+            uint8_t note = NOTE_HANDLING::voicesActiveNote(i);
+            bool sustained = NOTE_HANDLING::voicesCheckSustain(i);
             addNote(note);
             if (sustained) {
                 sustainNotes++;
@@ -530,7 +530,7 @@ namespace ARP {
     }
     void stopAllVoices () {
         // NOTE_HANDLING::voices_clr();
-        NOTE_HANDLING::voices_stop();
+        NOTE_HANDLING::voicesStop();
     }
 
     
@@ -599,8 +599,8 @@ namespace ARP {
         bool temp = (bool)(input >> 9);
         if (isRestEnabled != temp) isRestEnabled = temp;
     }
-    void setBpm (uint16_t input) {
-        CLOCK::setBpm(map(input, KNOB_MIN, KNOB_MAX, 30, 350));
+    void setBPM (uint16_t input) {
+        CLOCK::setBPM(map(input, KNOB_MIN, KNOB_MAX, 30, 350));
     }
     void setOctMode (uint16_t input) {
         bool temp = (bool)(input >> 9);

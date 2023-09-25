@@ -47,7 +47,7 @@ namespace PAGINATION {
         }
 
     }
-    void Init(void);
-    void Update(void);
+    void init(void);
+    void update(void);
 }
   

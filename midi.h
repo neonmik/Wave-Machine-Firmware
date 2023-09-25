@@ -53,7 +53,7 @@ namespace MIDI {
         SystemExclusiveEnd    = 0xF7,    ///< System Exclusive End
         Clock                 = 0xF8,    ///< System Real Time - Timing Clock
         Undefined_F9          = 0xF9,
-        Tick                  = Undefined_F9, ///< System Real Time - Timing Tick (1 tick = 10 milliseconds)
+        Tick                  = Undefined_F9, ///< System Real Time - Timing Tick (1 sampleClockTick = 10 milliseconds)
         Start                 = 0xFA,    ///< System Real Time - Start
         Continue              = 0xFB,    ///< System Real Time - Continue
         Stop                  = 0xFC,    ///< System Real Time - Stop
@@ -176,8 +176,8 @@ namespace MIDI {
 
     
 
-    void Init(void);
-    void Update(void);
+    void init(void);
+    void update(void);
 
     bool parse (void); // parsing - currently only used for UART
     void resetInput (void);

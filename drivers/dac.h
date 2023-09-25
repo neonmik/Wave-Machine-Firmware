@@ -25,7 +25,7 @@
 
 #define size_bits       log2(BUFFER_SIZE * sizeof(uint16_t))
 
-extern uint32_t    sample_clock;
+extern uint32_t    sampleClock;
 extern uint8_t     softwareIndex;
 extern uint8_t     hardwareIndex;
 extern uint16_t    playBuffer[];
@@ -33,11 +33,6 @@ extern uint16_t    playBuffer[];
 typedef uint16_t (*synth_function)();
 namespace DAC {
     namespace {
-        
-        synth_function process;
-
-        bool        _full;
-        
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
         uint16_t    _buffer_size    = BUFFER_SIZE;
@@ -52,13 +47,10 @@ namespace DAC {
 
         void dma_buffer(uint16_t* buf) {
             for (int i = 0; i < _buffer_size; i++) {
-                // new code that just copies from the play buffer to the dma buffer
                 buf[i] = (playBuffer[hardwareIndex]) | (DAC_CONFIG);
                 ++hardwareIndex;
                 hardwareIndex &= 0x1F;
             }
-            // old method of checking when to refresh controls.
-            // _full = true;
         }
         void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {
 
@@ -129,9 +121,7 @@ namespace DAC {
         
     }
 
-    void Init (synth_function audio_process);
-    void clear_state (void);
-    bool get_state (void);
+    void init (void);
 }
 
 #endif 

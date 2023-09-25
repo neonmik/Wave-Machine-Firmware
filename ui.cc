@@ -9,21 +9,21 @@
 
 namespace UI {
 
-  void set_page (uint8_t value) {
+  void setPage (uint8_t value) {
     _page = value;
-    CONTROLS::set_page(_page);
+    CONTROLS::setPage(_page);
     LEDS::PAGE_select(_page);
   }
-  uint8_t get_page(void) {
+  uint8_t getPage(void) {
     return _page;
   }
  
-  void toggle_lfo(void) {
-    CONTROLS::toggle_lfo();
-    LEDS::LFO.set(CONTROLS::get_lfo());
+  void toggleLFO(void) {
+    CONTROLS::toggleLFO();
+    LEDS::LFO.set(CONTROLS::getLFO());
   }
-  bool get_lfo(void) {
-    return CONTROLS::get_lfo();
+  bool getLFO(void) {
+    return CONTROLS::getLFO();
   }
 
   void toggle_test_lfo (void) {
@@ -34,12 +34,12 @@ namespace UI {
   }
 
   
-  void toggle_arp(void) {
-    CONTROLS::toggle_arp();
-    LEDS::ARP.set(CONTROLS::get_arp());
+  void toggleArp(void) {
+    CONTROLS::toggleArp();
+    LEDS::ARP.set(CONTROLS::getArp());
   }
-  bool get_arp(void) {
-    return CONTROLS::get_arp();
+  bool getArp(void) {
+    return CONTROLS::getArp();
   }
 
   void change_preset(void) {
@@ -50,8 +50,8 @@ namespace UI {
 
     LEDS::ARP.off();
     LEDS::LFO.off();
-    if (CONTROLS::get_arp()) LEDS::ARP.on();
-    if (CONTROLS::get_lfo()) LEDS::LFO.on();
+    if (CONTROLS::getArp()) LEDS::ARP.on();
+    if (CONTROLS::getLFO()) LEDS::LFO.on();
   }
   uint8_t get_preset(void) {
     return _preset;
@@ -59,7 +59,7 @@ namespace UI {
 
 void set_shift (bool shift) {
   if (_shift != shift) {
-    CONTROLS::toggle_shift();
+    CONTROLS::toggleShift();
     _shift = shift;
   }
 }
@@ -70,59 +70,46 @@ void set_shift (bool shift) {
 
 
 
-  void Init (void) {
+  void init (void) {
 
-    LEDS::Init();
-    KEYS::Init();
-    ADC::Init();
-    CONTROLS::Init();
-    PAGINATION::Init();
+    LEDS::init();
+    KEYS::init();
+    ADC::init();
+    CONTROLS::init();
+    PAGINATION::init();
 
-    if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-      // toggle usb mode to enable MSC.
-      USB_MODE = !USB_MODE;
-    }
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;
-      Update(); // Call Update() here so you can go through the routine and jump back into the startup process afterwards.
+      update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
     }
-    set_page(_page);
-    LEDS::LFO.set(get_lfo());
-    LEDS::ARP.set(get_arp());
-    
-    MIDI::Init();
 
-    print_startup();
+    setPage(_page);
+
+    LEDS::LFO.set(getLFO());
+    LEDS::ARP.set(getArp());
     
-    poll_index = 0;
+    MIDI::init();
+
+    printStartUp();
+    
+    poll = 0;
   }
 
-  void Update (void) { 
+  void update (void) { 
     switch (_mode) {
       case UI_MODE_NORMAL:
-        switch(poll_index) {
+        switch(poll) {
           case 0:
-            NOTE_HANDLING::Update();
+            NOTE_HANDLING::update();
             break;
           case 1:
             KEYS::read();
             break;
           case 2:
-            KEYS::Update();
+            KEYS::update();
             break;
           case 3:
-            // this needs tidying.
-            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-              // toggle usb mode to enable MSC.
-              USB_MODE = !USB_MODE;
-
-              tud_disconnect();
-
-              tusb_init();
-              tud_task();
-
-              printf("USB mode changed!\n");
-            }
+            // this needs refactoring...
 
             // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
@@ -136,8 +123,6 @@ void set_shift (bool shift) {
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
                 LEDS::PAGE_1.flash_set(4,50);
-
-                // printf("LFO!\n");
             }
 
             
@@ -148,37 +133,36 @@ void set_shift (bool shift) {
                 ARP::toggleHold();
             }
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
-                toggle_arp();
+                toggleArp();
             }
 
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
-                toggle_lfo();
+                toggleLFO();
             }
             break;
           case 4:
-            ADC::Update();
-            RANDOM::Update(ADC::noise());
-            // printf("Noise: %d\n", RANDOM::get());
+            ADC::update();
+            RANDOM::update(ADC::noise());
             break;
           case 5:
-            PAGINATION::Update();
+            PAGINATION::update();
             break;
           case 6:
-            LEDS::Update();
+            LEDS::update();
             break;
           case 7:
-            CONTROLS::Update();
+            CONTROLS::update();
             break;
           case 8:
-            MIDI::Update();
+            MIDI::update();
             break;
           default:
             // do nothing
             break;
         }
 
-        ++poll_index;
-        if (poll_index > 8) poll_index = 0;
+        ++poll;
+        if (poll > 8) poll = 0;
 
         break;
 
@@ -195,7 +179,7 @@ void set_shift (bool shift) {
     }
   }
 
-  void print_startup (void) {
+  void printStartUp (void) {
     pico_unique_board_id_t board_id;
     pico_get_unique_board_id(&board_id);
 
@@ -235,7 +219,7 @@ void set_shift (bool shift) {
     printf("Welcome to Factory Debug!\n\n");
     sleep_ms(300);
     printf("We will now test the hardware");
-    ADC::Update();
+    ADC::update();
     sleep_ms(300);
 
     printf(".");
@@ -252,19 +236,19 @@ void set_shift (bool shift) {
       printf("Please turn Knob %d to 0%\n", i);
       while (ADC::value(i) != 0) {
         sleep_ms(1);
-        ADC::Update();
+        ADC::update();
       }
       LEDS::KNOB_select(i, 1);
-      LEDS::Update();
+      LEDS::update();
 
       printf("Now turn Knob %d to 100%\n", i);
       
       while (ADC::value(i) != 1023) {
         sleep_ms(1);
-        ADC::Update();
+        ADC::update();
       }
       LEDS::KNOB_select(i, 0);
-      LEDS::Update();
+      LEDS::update();
       printf("Knob %d check is complete!\n", i);
     }
     printf("All Knobs working correctly!\n\n");

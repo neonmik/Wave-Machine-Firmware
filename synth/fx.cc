@@ -2,7 +2,7 @@
 
 namespace FX {
     namespace SOFTCLIP {
-        void set_gain (uint16_t gain) {
+        void setGain (uint16_t gain) {
             _gain = (gain >> 5); // sets gain range from 1 - 31 (0 never outpus anything, 32+ overloads and never stops sustaining)
             if (_gain <=0) _gain = 1;
         }

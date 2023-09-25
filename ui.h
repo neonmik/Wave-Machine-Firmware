@@ -33,7 +33,7 @@ namespace UI {
         bool preset_flag            =           0;
         bool shift_flag             =           0;
 
-        uint8_t poll_index;
+        uint8_t poll;
         uint8_t poll_index_last;
 
         uint32_t time_start;
@@ -43,29 +43,25 @@ namespace UI {
         UiMode _mode;
     }
     
-    void set_page (uint8_t page);
-    bool get_page_flag(void);
+    void setPage (uint8_t page);
 
-    void toggle_lfo(void);
-    bool get_lfo(void);
+    void toggleLFO(void);
+    bool getLFO(void);
 
-    void toggle_arp(void);
-    bool get_arp(void);
+    void toggleArp(void);
+    bool getArp(void);
 
     void change_preset(void);
     uint8_t get_preset(void);
 
-    void toggle_test_lfo (void);
-    void toggle_test_arp (void);
-
-    void print_startup (void);
+    void printStartUp (void);
 
     // ----------------------
     //        HARDWARE
     // ----------------------
 
-    void Init (void);
-    void Update (void);
+    void init (void);
+    void update (void);
     void debug (void);
     void calibrate (void);
 }

@@ -1,7 +1,7 @@
 #include "adc.h"
 
 namespace ADC {
-    void Init() {
+    void init() {
 
         adc_init();
 
@@ -35,10 +35,10 @@ namespace ADC {
 
         // run the ADC 4 times to make sure the values are primed
         for (int i = 0; i > MAX_KNOBS; i++) {
-            Update();
+            update();
         }
     }
-    void Update() {
+    void update() {
         
         read_mux();
         
@@ -59,7 +59,7 @@ namespace ADC {
         // Improve this to have more random numbers, make the RNG better.
         _adc_noise = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
 
-        // RANDOM::Update(_adc_noise);
+        // RANDOM::update(_adc_noise);
 
         increment_mux_address();
     }

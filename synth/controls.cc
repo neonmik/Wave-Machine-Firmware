@@ -4,7 +4,7 @@ namespace CONTROLS {
     CONTROL Control;
     PRESET Preset[MAX_PRESETS];
 
-    void Init () {
+    void init () {
         EEPROM::init();
 
         _preset = DEFAULT_PRESET;
@@ -46,7 +46,7 @@ namespace CONTROLS {
             Preset[preset].Filter.sustain = Control.get(Controls::fENV, 2);
             Preset[preset].Filter.release = Control.get(Controls::fENV, 3);
 
-        Preset[preset].Modulation.state = Control.get_lfo();
+        Preset[preset].Modulation.state = Control.getLFO();
 
         Preset[preset].Modulation.matrix = Control.get(Controls::MOD, 0);
         Preset[preset].Modulation.rate = Control.get(Controls::MOD, 1);
@@ -56,7 +56,7 @@ namespace CONTROLS {
 
             Preset[preset].Effects.gain = Control.get(Controls::SHFT, 3);
 
-        Preset[preset].Arpeggiator.state = Control.get_arp();
+        Preset[preset].Arpeggiator.state = Control.getArp();
 
         Preset[preset].Arpeggiator.gate = Control.get(Controls::ARP, 0);
         Preset[preset].Arpeggiator.divisions = Control.get(Controls::ARP, 1);
@@ -124,7 +124,7 @@ namespace CONTROLS {
         _changed = true;
     
     }
-    void export_presets(void) {
+    void exportPresets(void) {
         PRESET export_buffer[MAX_PRESETS];
 
         for (int i = 0; i < MAX_PRESETS; i++) {
@@ -136,7 +136,7 @@ namespace CONTROLS {
     }
 
     // Function for restoring the Factory Presets from the EEPROM to the main preset storage area.
-    void factory_restore (void) {
+    void factoryRestore (void) {
 
         printf("\nFactory Restore in progress!\n");
 
@@ -150,7 +150,7 @@ namespace CONTROLS {
     }
 
     // Function for writing current Presets to the Factory Preset storage area
-    void write_factory_presets (void) {
+    void updateFactoryPresets (void) {
 
         printf("Storing currrent presets to Factory Preset slots!\n");
 
@@ -168,49 +168,49 @@ namespace CONTROLS {
         save_preset(_preset);
     }
 
-    void set_page (uint8_t page) {
+    void setPage (uint8_t page) {
         _changed = true;
         _page = page;
     }
-    uint8_t get_page () {
+    uint8_t getPage () {
         return _page;
     }
 
-    void set_value (uint8_t page, uint8_t control, uint16_t input) {
+    void setValue (uint8_t page, uint8_t control, uint16_t input) {
         _changed = true;
         Control.set(page, control, input);
     }
-    uint16_t get_value (uint8_t page, uint8_t control) {
+    uint16_t getValue (uint8_t page, uint8_t control) {
         return Control.get(page, control);
     }
        
-    void toggle_lfo () {
+    void toggleLFO () {
         _changed = true;
-        Control.toggle_lfo();
+        Control.toggleLFO();
     }
-    bool get_lfo () {
-        return Control.get_lfo();
+    bool getLFO () {
+        return Control.getLFO();
     }
 
-    void toggle_arp () {
+    void toggleArp () {
         _changed = true;
-        Control.toggle_arp();
+        Control.toggleArp();
     }
-    bool get_arp () {
-        return Control.get_arp();
+    bool getArp () {
+        return Control.getArp();
     }
 
-    void toggle_shift (void) {
+    void toggleShift (void) {
         _changed = true;
         _shift != _shift;
     }
-    bool get_shift (void) {
+    bool getShift (void) {
         return _shift;
     }
     
-    void Update () {
+    void update () {
         if (_changed) {
-            Control.Update();
+            Control.update();
             
             _changed = false;
         }

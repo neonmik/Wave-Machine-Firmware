@@ -5,7 +5,7 @@
 namespace EEPROM {
 
     void init () {
-        i2c_init(EEPROM_I2C_CHANNEL, 1000 * 1000); // Init i2c at 1MHz - runs higher as EEPROM chip is running at 3.3V instead of 5V
+        i2c_init(EEPROM_I2C_CHANNEL, 1000 * 1000); // init i2c at 1MHz - runs higher as EEPROM chip is running at 3.3V instead of 5V
         gpio_init(EEPROM_SDA_PIN);
         gpio_init(EEPROM_SCL_PIN);
 

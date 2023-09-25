@@ -53,11 +53,11 @@ namespace MIDI {
 
     //  MIDI Callbacks
     void handleNoteOff(uint8_t note, uint8_t velocity) {
-        NOTE_HANDLING::note_off(note, velocity);
+        NOTE_HANDLING::noteOff(note, velocity);
     }
     void handleNoteOn(uint8_t note, uint8_t velocity) {
-        if (velocity == 0) NOTE_HANDLING::note_off(note, MIDI_DEFAULT_NOTE_OFF_VEL);
-        else NOTE_HANDLING::note_on(note, velocity);
+        if (velocity == 0) NOTE_HANDLING::noteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
+        else NOTE_HANDLING::noteOn(note, velocity);
     }
     void handleVelocityChange(uint8_t note, uint8_t velocity) {
         return;
@@ -79,22 +79,22 @@ namespace MIDI {
                 // printf("MIDI IN: Volume - %d\n", temp);
                 break;
             case 70: // Wavetable
-                CONTROLS::set_value(CONTROLS::Controls::MAIN, 0, temp);
+                CONTROLS::setValue(CONTROLS::Controls::MAIN, 0, temp);
                 break;
             case 71: // Vector
-                CONTROLS::set_value(CONTROLS::Controls::MAIN, 1, temp);
+                CONTROLS::setValue(CONTROLS::Controls::MAIN, 1, temp);
                 break;
             case 72: // Release
-                CONTROLS::set_value(CONTROLS::Controls::ADSR, 3, temp);
+                CONTROLS::setValue(CONTROLS::Controls::ADSR, 3, temp);
                 break;
             case 73: // Attack
-                CONTROLS::set_value(CONTROLS::Controls::ADSR, 0, temp);
+                CONTROLS::setValue(CONTROLS::Controls::ADSR, 0, temp);
                 break;
             case 75: // Decay
-                CONTROLS::set_value(CONTROLS::Controls::ADSR, 1, temp);
+                CONTROLS::setValue(CONTROLS::Controls::ADSR, 1, temp);
                 break;
             case 64: // Sustain pedal
-                NOTE_HANDLING::sustain_pedal(temp);
+                NOTE_HANDLING::setSustainPedal(temp);
                 break;
             default:
                 break;
@@ -108,7 +108,7 @@ namespace MIDI {
     void handlePitchBend(uint16_t pitch) {
         // easy way to map 14 bit range to the needed internal 10 bit.
         uint16_t temp = pitch >> 4;
-        CONTROLS::set_value(0, 3, temp);
+        CONTROLS::setValue(0, 3, temp);
     }
     void handleSysEx(MidiMessage message) {
         // printf("SysEx Message has nowhere to go...\n");
@@ -118,13 +118,13 @@ namespace MIDI {
     void handleSongSelect(uint8_t song) {}
     void handleTuneRequest(void) {}
     void handleClock(void) {
-        CLOCK::midi_tick();
+        CLOCK::midiClockTick();
     }
     void handleStart(void) {
-        CLOCK::start_midi_clock();
+        CLOCK::startMidiClock();
     }
     void handleStop(void) {
-        CLOCK::stop_midi_clock();
+        CLOCK::stopMidiClock();
     }
     void handleContinue(void) {}
     void handleActiveSense(void) {}
@@ -179,9 +179,9 @@ namespace MIDI {
     void sendActiveSense(void) {}
     void sendReset(void) {}
 
-    void Init (void) {
-        UART::Init();
-        USB::Init();
+    void init (void) {
+        UART::init();
+        USB::init();
     }
 
     void usb_midi_task (void) {
@@ -563,13 +563,13 @@ namespace MIDI {
         }
     }
 
-    void Update () {
+    void update () {
         if (MIDI_CHANNEL >= MIDI_CHANNEL_OFF)
             return;
 
         midi_task(); // MIDI task goes first cause it's slower... keeps the timing more aligned.
 
-        USB::Update();
+        USB::update();
         usb_midi_task();
     }
 

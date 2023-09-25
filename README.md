@@ -129,7 +129,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Improve Filter code: 
-        - Check ADSR setup in Filter - Seems to not Update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
+        - Check ADSR setup in Filter - Seems to not update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
         - Improve modulation inputs - Cutoff mod could be applied with a switch [if (Filter::HighCut) 65535 - mod;]
 
 
@@ -139,10 +139,10 @@ Current nightly firmware for Wave Machine Hardware.
         - Feature: Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
         - Feature: Add a swing feature.
         - Feature: Add back Chord Arp - will work great with patterns too.
-        - Feature: Add proper Latch/Hold - add a timer within sustain that trakcs us/ms/tick, it removes the last lot and adds the new lot. Probably like the button timer.
+        - Feature: Add proper Latch/Hold - add a timer within sustain that trakcs us/ms/sampleClockTick, it removes the last lot and adds the new lot. Probably like the button timer.
         - Feature: Add a function to quantize the Arp. could be that notes don't get updated until the counter resets, or just the next time the beat has changed.
 
-        - Bug: To do with Hold diverting add notes to only refresh - With Hold/Latch engaged (only): If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority Update loop.
+        - Bug: To do with Hold diverting add notes to only refresh - With Hold/Latch engaged (only): If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
 
     - Improve Note Handling:
@@ -227,7 +227,7 @@ Features/Bugfixes:
         + Added a basic debug test function to test the pots and cycle for LEDs on start up - can currently be accessed by holding down preset/shift while powering up.
         + Create a better abstraction layer between the hardware and the software (synth) - currently theres issues passing hardware avriables to the software variables... ADSR/pitch. will also allow for better multicore support
         + USB-MIDI
-            + Improved the handling of USB-MIDI notes and there Update calls.
+            + Improved the handling of USB-MIDI notes and there update calls.
             + Finally added and tested
         + EEPROM
             + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
@@ -257,7 +257,7 @@ Features/Bugfixes:
         + Feature: Added a hardware control for Arp Gap. Basically gives you a choice between notes that lead straight into each other adn notes that have a gap between the same duration as the note duration.
         + Bugfix: Arp Sync now working properly. A Bug was highlighted when a bug in the MIDI handling code was fixed, the speed didnt align with the MIDI clock speed.
         + Bugfix: fixed bug in Arp noter removal logic that cause strange behaviour and a comile warning.
-        + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the Update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
+        + Arp can't keep up if at high speeds (above 1/16, or 1/32)... ONLY while on arp page:- MUST but the update of the controls is causing an issue, need to add multicore mailbox/greater issue of unstable controls... 
         + When the range is set to anything above 0 only the first octave of the arp has proper release - think it's to do with the note_clear function in the oscillator (definitely was)
         + fix control for preset/pagination - currently persists between presets no matter of the state of the new preset.
         + currently wont play only one note...
@@ -299,7 +299,7 @@ Features/Bugfixes:
         + Improved algorithm:-
             + Mad inputs tidier/more unified - created a struct to hold all of the config for each destination
             + this isn't going to work, it's easier to make each input accept signed 16bit number (direct from the oscillator) _Make a switchable output between signed and unsign methods (Vib == Signed, Trem||Vector == Unsigned)_
-        + Mod is now opperated by the Synth code -> Move Update closer to synth/dac code:- could probably do with being intergrated like ADSR 
+        + Mod is now opperated by the Synth code -> Move update closer to synth/dac code:- could probably do with being intergrated like ADSR 
         + Fix control for preset/pagination
         + Make outside variable updates go through functions
         + Make every function take 0-1023 for consistancy from the hardware layer
@@ -346,7 +346,7 @@ Features/Bugfixes:
         + Added a switch for direction of envelope.
         + Bugfix: Filter now releases properly (depending on mode). Was underflowing when adding more notes than polyphony then releasing.
         + Bugfix - Arp & Filter/Mod Envelope now have an option to be MONO or POLY, this allows the envelope to open slowly up on a playing Arp, or fire for every note.
-        + Improved Envelope output for highpass control of cutoff - it now applies the envlope downwards.
+        + Improved Envelope output for highPass control of cutoff - it now applies the envlope downwards.
         + Reduced the sample rate of the filter ADSR. 
         + Added a modulation input, but needs adjusting. Going on the back burner till the Filter and Mod can opperate together.
         + Fixed the inputs using the map_exp functions - now using LUT for speed.
