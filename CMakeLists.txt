@@ -49,6 +49,8 @@ add_executable(${PROJECT_NAME}
     synth/note_handling.cc
     synth/resources.cc
     synth/synth.cc
+
+    msc_disk.cc
 )
     
 target_include_directories(${PROJECT_NAME} PUBLIC

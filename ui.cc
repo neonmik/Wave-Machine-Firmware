@@ -5,6 +5,8 @@
 #include "drivers/button.h"
 #include "drivers/leds.h"
 
+#include "usb_descriptors.h"
+
 namespace UI {
 
   void set_page (uint8_t value) {
@@ -70,13 +72,16 @@ void set_shift (bool shift) {
 
   void Init (void) {
 
-    MIDI::Init();
     LEDS::Init();
     KEYS::Init();
     ADC::Init();
     CONTROLS::Init();
     PAGINATION::Init();
 
+    if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
+      // toggle usb mode to enable MSC.
+      USB_MODE = !USB_MODE;
+    }
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;
       Update(); // Call Update() here so you can go through the routine and jump back into the startup process afterwards.
@@ -85,6 +90,8 @@ void set_shift (bool shift) {
     LEDS::LFO.set(get_lfo());
     LEDS::ARP.set(get_arp());
     
+    MIDI::Init();
+
     print_startup();
     
     poll_index = 0;
@@ -105,6 +112,17 @@ void set_shift (bool shift) {
             break;
           case 3:
             // this needs tidying.
+            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
+              // toggle usb mode to enable MSC.
+              USB_MODE = !USB_MODE;
+
+              tud_disconnect();
+
+              tusb_init();
+              tud_task();
+
+              printf("USB mode changed!\n");
+            }
 
             // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
