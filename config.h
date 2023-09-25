@@ -26,6 +26,7 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
 
 constexpr   uint8_t     MAX_ARP         =       POLYPHONY;      // For setting the maximum number of notes in the Arp
+constexpr   uint8_t     MAX_PRESETS     =       8;
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;

@@ -3,10 +3,13 @@
 #include <stdio.h>
 
 #include "pico/stdlib.h"
-#include "pico/binary_info.h" // ??? Needed/What is it?
+#include <string.h> // for memcpy
 
-#include "../synth/controls.h"
+// #include "../synth/controls.h"
 #include "../synth/preset.h"
+
+#include "../debug.h"
+#include "../config.h"
 
 #include "hardware/i2c.h"
 
@@ -31,54 +34,203 @@ constexpr   uint16_t        MAX_ADDRESS             =       0x7FFF;             
 
 namespace EEPROM {
     namespace {
-        void checkLength (uint8_t len) {
-            if (len > PAGE_SIZE) {
-                printf ("WARNING! EEPROM length longer than 1 Page (64 bytes) which is currently not supported\n");
-                // could either force return here, or split message somehow?
+        // Prints
+        void printPresetData (PRESET &preset) {
+
+            printf("\n----------------------------------------------------\n");
+            printf("                   OSCILLATOR\n");
+            printf("----------------------------------------------------\n\n");
+
+            printf("Waveshape:      %04d    |        ",      preset.Wave.shape);
+                printf("Attack:         %04d\n",      preset.Envelope.attack);
+            printf("Vector:         %04d    |        ",      preset.Wave.vector);
+                printf("Decay:          %04d\n",      preset.Envelope.decay);
+            printf("Octave:         %04d    |        ",      preset.Wave.octave);
+                printf("Sustain:        %04d\n",      preset.Envelope.sustain);
+            printf("Pitch:          %04d    |        ",    preset.Wave.pitch);
+                printf("Release:        %04d\n\n",    preset.Envelope.release);
+            
+
+            printf("----------------------------------------------------\n");
+            printf("                     FILTER\n");
+            printf("----------------------------------------------------\n\n");
+
+            printf("State:          ");
+            if (preset.Filter.state == true) { printf("Enabled\n"); }
+            else { printf("Disabled\n"); }
+
+            printf("Cutoff:         %04d    |        ",      preset.Filter.cutoff);
+                printf("Attack:         %04d\n",      preset.Filter.attack);
+            printf("Resonance:      %04d    |        ",      preset.Filter.resonance);
+                printf("Decay:          %04d\n",      preset.Filter.decay);
+            printf("Punch:          %04d    |        ",      preset.Filter.punch);
+                printf("Sustain:        %04d\n",      preset.Filter.sustain);
+            printf("Type:           %04d    |        ",    preset.Filter.type);
+                printf("Release:        %04d\n\n",    preset.Filter.release);
+
+
+            printf("----------------------------------------------------\n");
+            printf("                      LFO\n");
+            printf("----------------------------------------------------\n\n");
+
+            printf("State:          ");
+            if (preset.Modulation.state == true) { printf("Enabled\n"); }
+            else { printf("Disabled\n"); }
+
+            printf("Destination:    %04d\n",      preset.Modulation.matrix);
+            printf("Rate:           %04d\n",      preset.Modulation.rate);
+            printf("Depth:          %04d\n",      preset.Modulation.depth);
+            printf("Shape:          %04d\n\n",    preset.Modulation.wave);
+            
+
+            printf("----------------------------------------------------\n");
+            printf("                      ARP\n");
+            printf("----------------------------------------------------\n\n");
+
+            printf("State:          ");
+            if (preset.Arpeggiator.state == true) { printf("Enabled\n"); }
+            else { printf("Disabled\n"); }
+
+            printf("Gate:           %04d    |        ",      preset.Arpeggiator.gate);
+                printf("Rest:           %04d\n",      preset.Arpeggiator.rest);
+            printf("Rate/Division:  %04d    |        ",      preset.Arpeggiator.divisions);
+                printf("BPM:            %04d\n",      preset.Arpeggiator.bpm);
+            printf("Depth:          %04d    |        ",      preset.Arpeggiator.range);
+                printf("Filter Mode:    %04d\n",      preset.Arpeggiator.fMode);
+            printf("Shape:          %04d    |        ",    preset.Arpeggiator.direction);
+                printf("Octave Mode:    %04d\n\n",    preset.Arpeggiator.octMode);
+
+
+            printf("----------------------------------------------------\n");
+            printf("                      FX\n");
+            printf("----------------------------------------------------\n\n");
+
+            printf("Gain:           %04d\n\n",      preset.Effects.gain);
+        }
+
+        // Checks
+        bool checkLength (uint8_t len) {
+            if (len > PRESET_SIZE) {
+                DEBUG::warning("EEPROM length longer than 2 Pages (128 bytes) which is not supported");
+                return false;
             } else if (len == 0) {
-                printf ("WARNING! EEPROM length of 0... No data will be sent\n");
-                return;
+                DEBUG::warning("EEPROM length of 0... No data will be sent");
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        bool checkSlot (uint8_t slot) {
+            if (slot >= MAX_PRESETS) {
+                DEBUG::error("Outside of Preset storage range!");
+                return false;
+            } else {
+                return true;
             }
         }
         
-        void write (uint16_t addr, uint8_t *src, uint8_t len) {
-
-            checkLength(len);
-
-            // Format address - is this needed?
-            uint8_t buffer[ADDRESS_SIZE + len];
-            buffer[0] = ((addr >> 8) & 0xFF);
-            buffer[1] = (addr & 0xFF);
-
-            for (int i = 0; i < len; i++) {
-                buffer[ADDRESS_SIZE + i] = src[i];
+        // Functions
+        void write (uint16_t address, uint8_t *src, uint8_t len) {
+            if (!checkLength(len)) {
+                return; // Don't proceed if the length is invalid.
             }
 
-            printf("Writing to EEPROM address %d...\n", addr);
+            uint16_t remaining_len = len;
+            uint16_t current_address = address;
 
-            // Write the address and data to the EEPROM
-            i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + len, false);
+            while (remaining_len > 0) {
+                uint8_t write_len = remaining_len > PAGE_SIZE ? PAGE_SIZE : remaining_len;
+
+                // Format address
+                uint8_t buffer[ADDRESS_SIZE + PAGE_SIZE];
+                buffer[0] = ((current_address >> 8) & 0xFF);
+                buffer[1] = (current_address & 0xFF);
+
+                for (int i = 0; i < write_len; i++) {
+                    buffer[ADDRESS_SIZE + i] = src[i];
+                }
+
+                // printf("Writing to EEPROM address %d...\n", current_address);
+
+                // Write the address and data to the EEPROM
+                i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, buffer, ADDRESS_SIZE + write_len, false);
+
+                // Update variables
+                remaining_len -= write_len;
+                current_address += write_len;
+                src += write_len;
+            }
         }
-        void read (uint16_t addr, uint8_t *src, uint8_t len) {
+        void read (uint16_t address, uint8_t *src, uint8_t len) {
+            if (!checkLength(len)) {
+                return; // Abort if the length is invalid
+            }
+
+            uint16_t remaining_len = len;
+            uint16_t current_address = address;
+
+            while (remaining_len > 0) {
+                uint8_t read_len = remaining_len > PAGE_SIZE ? PAGE_SIZE : remaining_len;
+
+                // Format address
+                uint8_t addr[ADDRESS_SIZE];
+                addr[0] = ((current_address >> 8) & 0xFF);
+                addr[1] = (current_address & 0xFF);
+
+                // printf("Reading from EEPROM address %d...\n", current_address);
+
+                // Send address to the EEPROM
+                i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, addr, ADDRESS_SIZE, false);
+
+                // Read the data at the address
+                i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, src, read_len, false);
+
+                // Update variables
+                remaining_len -= read_len;
+                current_address += read_len;
+                src += read_len;
+            }
+        }
+        
+        void writePreset (uint16_t address, PRESET &preset) {
+            // Create a buffer to hold the data - we use a preset size (2 pages/128 bytes) to ensure data is spaced properly
+            // We init with 0 to make sure theres no data pulled from elsewhere.
+            uint8_t buffer[PRESET_SIZE] = {0};
+
+            // Use memcpy to copy the data from preset to buffer
+            memcpy(buffer, &preset, sizeof(PRESET));
+
+            // Write the data in buffer to EEPROM
+            EEPROM::write(address, buffer, PRESET_SIZE);
+        }
+        void readPreset (uint16_t address, PRESET &preset) {
+            // Create a buffer to hold the data - currently using sizeof to make sure we don't overflow the actual struct allocation.
+            uint8_t buffer[PRESET_SIZE];
             
-            checkLength(len);
+            // Read the data from the EEPROM address
+            EEPROM::read(address, buffer, PRESET_SIZE);
 
-            // Format address - is this needed?
-            uint8_t address[ADDRESS_SIZE];
-            address[0] = ((addr >> 8) & 0xFF);
-            address[1] = (addr & 0xFF);
+            memcpy(&preset, buffer, sizeof(PRESET));
+        }
+        
+        void writeSettings (uint16_t address) {
 
-            printf("Reading from EEPROM address %d...\n", addr);
+        }
+        void readSettings (uint16_t address) {
 
-            // Send address to the EEPROM
-            i2c_write_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, address, ADDRESS_SIZE, false);
-            // Read the data at the address
-            i2c_read_blocking(EEPROM_I2C_CHANNEL, EEPROM_I2C_ADDRESS, src, len, false);
+        }
+        
+        void clearAddress (uint16_t address, uint8_t length) {
+            // clear the buffer
+            uint8_t buffer[length]; 
+            for (int i = 0; i < length; i++) {
+                buffer[i] = 255;
+            }
+            // write both pages
+            write(address, buffer, length);
         }
 
-        void clear (uint16_t address) {
-            write(address, 0, 1);
-        }
         // EEPROM test functions
         void test (void) {
             // currently commented as was using old API.
@@ -93,7 +245,7 @@ namespace EEPROM {
             printf("Current Memory: %d \n", temp);
             
             // clear memory address
-            clear(address);
+            clearAddress(address, 1);
             
             // read it and print it again to check its clear
             read(address, &empty, sizeof(empty));
@@ -144,15 +296,15 @@ namespace EEPROM {
         }
     }
 
-    void Init (void);
-    void savePreset(uint8_t slot, PRESET &preset);
-    void loadPreset (uint8_t slot, PRESET &preset);
-    void clearPreset (uint8_t slot);
+    void init (void);
+    void savePreset             (uint8_t slot, PRESET &preset);
+    void loadPreset             (uint8_t slot, PRESET &preset);
+    void clearPreset            (uint8_t slot);
 
-    void restoreFactoryPreset (uint8_t slot);
-    void writeFactoryPreset (uint8_t slot);
+    void restoreFactoryPreset   (uint8_t slot);
+    void writeFactoryPreset     (uint8_t slot);
 
-    void transferPreset (uint16_t fromAddress, uint16_t toAddress);
+    void transferPreset         (uint16_t from, uint16_t to);
 
-    void test_save (PRESET &preset);
+    void clearFreeMemory (void);
 }

@@ -5,13 +5,11 @@ namespace CONTROLS {
     PRESET Preset[MAX_PRESETS];
 
     void Init () {
-        EEPROM::Init();
+        EEPROM::init();
 
         _preset = DEFAULT_PRESET;
+        
         load_preset(_preset);
-
-        // EEPROM::test_save(Preset[0]);
-
     }
 
     void set_preset (uint8_t preset) {
@@ -70,14 +68,11 @@ namespace CONTROLS {
             Preset[preset].Arpeggiator.fMode = Control.get(Controls::sARP, 2);
             Preset[preset].Arpeggiator.octMode = Control.get(Controls::sARP, 3);
 
-
-        
         EEPROM::savePreset(preset, Preset[preset]);
     }
     void load_preset (uint8_t preset) {
         PRESET temp;
         
-        // Preset[preset] = temp;
         EEPROM::loadPreset(preset, Preset[preset]);
 
         Control.set(Controls::MAIN, 0, Preset[preset].Wave.shape);
@@ -125,11 +120,6 @@ namespace CONTROLS {
             Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.bpm);
             Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.fMode);
             Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.octMode);
-        
-        // Control.set(Controls::SPAR, 0, 0);
-        // Control.set(Controls::SPAR, 1, 0);
-        // Control.set(Controls::SPAR, 2, 0);
-        // Control.set(Controls::SPAR, 3, 0);
 
         _changed = true;
     

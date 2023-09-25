@@ -12,8 +12,6 @@
 
 #include "../drivers/eeprom.h"
 
-#define MAX_PRESETS     8
-
 namespace CONTROLS {
     namespace {
         uint8_t _preset;
