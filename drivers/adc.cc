@@ -5,31 +5,14 @@ namespace ADC {
 
         adc_init();
 
+        // Before setting up the pots, do a quick read of the startup temp
         read_onboard_temperature();
 
-        adc_mux_init();
-
-        gpio_init(MUX_SEL_A);
-        gpio_init(MUX_SEL_B);
-        gpio_init(MUX_SEL_C);
-        gpio_init(MUX_SEL_D);
-        // set the pins direction
-        gpio_set_dir(MUX_SEL_A, GPIO_OUT);
-        gpio_set_dir(MUX_SEL_B, GPIO_OUT);
-        gpio_set_dir(MUX_SEL_C, GPIO_OUT);
-        gpio_set_dir(MUX_SEL_D, GPIO_OUT);
-        // set the slew rate slow (for reducing amount of cross talk on address changes... hopefully)
-        gpio_set_slew_rate(MUX_SEL_A, GPIO_SLEW_RATE_SLOW);
-        gpio_set_slew_rate(MUX_SEL_B, GPIO_SLEW_RATE_SLOW);
-        gpio_set_slew_rate(MUX_SEL_C, GPIO_SLEW_RATE_SLOW);
-        gpio_set_slew_rate(MUX_SEL_D, GPIO_SLEW_RATE_SLOW);
-
-        gpio_set_drive_strength(MUX_SEL_A, GPIO_DRIVE_STRENGTH_2MA);
-        gpio_set_drive_strength(MUX_SEL_B, GPIO_DRIVE_STRENGTH_2MA);
-        gpio_set_drive_strength(MUX_SEL_C, GPIO_DRIVE_STRENGTH_2MA);
-        gpio_set_drive_strength(MUX_SEL_D, GPIO_DRIVE_STRENGTH_2MA);
-
-        // adc pin setup
+        // Setup the mux pins
+        pin_init(MUX_SEL_A);
+        pin_init(MUX_SEL_B);
+        pin_init(MUX_SEL_C);
+        pin_init(MUX_SEL_D);
 
         _mux_address = 0;
 
@@ -58,8 +41,6 @@ namespace ADC {
 
         // Improve this to have more random numbers, make the RNG better.
         _adc_noise = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
-
-        // RANDOM::update(_adc_noise);
 
         increment_mux_address();
     }

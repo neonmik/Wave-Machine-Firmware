@@ -39,6 +39,16 @@ namespace ADC {
             adc_gpio_init(MUX_OUT_ADC);
             adc_select_input(0);
         }
+        void pin_init (uint8_t pin) {
+            gpio_init(pin);
+            // set the pins direction
+            gpio_set_dir(pin, GPIO_OUT);
+
+            // set the slew rate slow (for reducing amount of cross talk on address changes...)
+            gpio_set_slew_rate(pin, GPIO_SLEW_RATE_SLOW);
+
+            gpio_set_drive_strength(pin, GPIO_DRIVE_STRENGTH_2MA);
+        }
 
         void read_onboard_temperature(void) {
 
