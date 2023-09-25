@@ -48,7 +48,7 @@ namespace EEPROM {
         printf("                     FILTER\n");
         printf("----------------------------------------------------\n\n");
 
-        printf("State:     ");
+        printf("State:          ");
         if (preset.Filter.state == true) { printf("Enabled\n"); }
         else { printf("Disabled\n"); }
 
@@ -66,7 +66,7 @@ namespace EEPROM {
         printf("                      LFO\n");
         printf("----------------------------------------------------\n\n");
 
-        printf("State:      ");
+        printf("State:          ");
         if (preset.Modulation.state == true) { printf("Enabled\n"); }
         else { printf("Disabled\n"); }
 
@@ -80,19 +80,19 @@ namespace EEPROM {
         printf("                      ARP\n");
         printf("----------------------------------------------------\n\n");
 
-        printf("State:      ");
+        printf("State:          ");
         if (preset.Arpeggiator.state == true) { printf("Enabled\n"); }
         else { printf("Disabled\n"); }
 
-        printf("Gate:           %04d\n",      preset.Arpeggiator.gate);
-        printf("Rate/Division:  %04d\n",      preset.Arpeggiator.divisions);
-        printf("Depth:          %04d\n",      preset.Arpeggiator.range);
-        printf("Shape:          %04d\n\n",    preset.Arpeggiator.direction);
+        printf("Gate:           %04d    |        ",      preset.Arpeggiator.gate);
+            printf("Rest:           %04d\n",      preset.Arpeggiator.rest);
+        printf("Rate/Division:  %04d    |        ",      preset.Arpeggiator.divisions);
+            printf("BPM:            %04d\n",      preset.Arpeggiator.bpm);
+        printf("Depth:          %04d    |        ",      preset.Arpeggiator.range);
+            printf("Filter Mode:    %04d\n",      preset.Arpeggiator.fMode);
+        printf("Shape:          %04d    |        ",    preset.Arpeggiator.direction);
+            printf("Octave Mode:    %04d\n\n",    preset.Arpeggiator.octMode);
 
-        printf("Rest:           %04d\n",      preset.Arpeggiator.rest);
-        printf("BPM:            %04d\n",      preset.Arpeggiator.bpm);
-        printf("Filter Mode:    %04d\n",      preset.Arpeggiator.fMode);
-        printf("Octave Mode:    %04d\n\n",    preset.Arpeggiator.octMode);
 
         printf("----------------------------------------------------\n");
         printf("                      FX\n");
@@ -258,44 +258,64 @@ namespace EEPROM {
         printPresetData(preset);
     }
     
-    void test_save (PRESET &preset) {
-        // Set up a Union for data splitting...
-        union MyUnion {
-            PRESET p;
-            uint8_t array[PAGE_SIZE];
+    void test_save (uint8_t address, PRESET &preset) {
+        printf("Copying data to uint8_t* buffer\n");
 
-            MyUnion(PRESET input) : p(input) {}
-            MyUnion(const uint8_t* inputArray) {
-                // Use a pointer to directly access and copy data from the input array
-                memcpy(&p, inputArray, sizeof(PRESET));
-            }
-        };
-        // Copy the data into it
-        MyUnion temp(preset);
-
-        
-        // set the test address...
         uint16_t test_address = FREE_ADDRESS + 128;
+
+        // Create a buffer to hold the data
+        uint8_t buffer_save[sizeof(PRESET)];
+
+        // Use memcpy to copy the data from 'preset' to 'buffer_save'
+        memcpy(buffer_save, &preset, sizeof(PRESET));
 
         printf("Attempting to write test data...\n");
 
-        // write it to the eeprom
-        EEPROM::write(test_address, temp.array, PAGE_SIZE);
+        // Write the data in 'buffer_save' to EEPROM
+        EEPROM::write(test_address, buffer_save, sizeof(PRESET));
 
-        uint8_t temp_buffer[PAGE_SIZE];
-        PRESET read;
+        // printf("Casting data to uint8_t* buffer");
 
-        printf("Attempting to read test data...\n");
-        // read it from the eeprom...
-        EEPROM::read(test_address, temp_buffer, PAGE_SIZE);
+        // uint16_t test_address = FREE_ADDRESS + 128;
+        
+        // uint8_t *buffer_save = (uint8_t*)&preset;
 
-        MyUnion read_data(temp_buffer);
+        // printf("Attempting to write test data...\n");
 
-        printPresetData(read_data.p);
-
-        // print it out to check it...
+        // EEPROM::write(test_address, buffer_save, PAGE_SIZE);
 
     }
+
+    void test_load (PRESET &preset) {
+
+        uint16_t test_address = FREE_ADDRESS + 128;
+
+        uint8_t buffer_load[sizeof(PRESET)];
+        // PRESET* read;
+
+        PRESET read;
+
+        printf("Attempting to read test data... ");
+        // read it from the eeprom...
+        EEPROM::read(test_address, buffer_load, PAGE_SIZE);
+        
+        // read = (PRESET*) &buffer_load;
+        // printPresetData(*read);
+        printf("Assigning test data via memcpy...   ");
+
+        if (sizeof(PRESET) <= PAGE_SIZE) {
+            memcpy(&read, buffer_load, sizeof(PRESET));
+        } else {
+            // Handle error: The struct won't fit in the buffer
+            printf("Error: PRESET struct size exceeds buffer size.\n");
+        }
+
+        printf("Data assigned! Print out to check...\n\n");
+
+        printPresetData(read);
+    }
+
+    
     void clearPreset (uint8_t slot) {
         uint16_t address = slot * PAGE_SIZE;
         uint8_t buffer[PAGE_SIZE] = {0};
