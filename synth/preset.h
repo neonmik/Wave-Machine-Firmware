@@ -23,6 +23,13 @@ struct PRESET {
         uint16_t rate = 0;
         uint16_t depth = 0;
         uint16_t wave = 0;
+
+        // commented until they're worked into the Preset saving layout
+        
+        // uint16_t attack = 2;
+        // uint16_t decay = 2;
+        // uint16_t sustain = 1023;
+        // uint16_t release = 10;
     };
     struct Arp {
         bool state = false;
