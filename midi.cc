@@ -206,7 +206,6 @@ namespace MIDI {
             
             handleNullVelocity(inputMessageUSB);
 
-            // handleMidiMessage(packet); // old midi note handling.
             const bool channelMatch = inputFilter(inputMessageUART);
             if (channelMatch)
                 handleMidiMessage(inputMessageUSB);

@@ -18,8 +18,6 @@ namespace UART {
 
         // disable cr/lf conversion on Tx
         uart_set_translate_crlf(MIDI_UART_ID, false);
-        // if (uart_is_enabled(MIDI_UART_ID)) printf("UART ENABLED\n");
-
     }
     void Update (void) {
 
