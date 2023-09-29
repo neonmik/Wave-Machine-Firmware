@@ -158,7 +158,7 @@ namespace NOTE_HANDLING {
         MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL);
       }
     }
-    if (_sustain) {
+    if (sustainPedal) {
       // if a voice is allocated while sustain is pressed, but not released, the sustain should be reset until its released again, this should stop current notes being released on the pedal being released. 
       // I think this should apply to every voice? not just new voices... 
       VOICES[voice].sustained = false;
@@ -167,7 +167,7 @@ namespace NOTE_HANDLING {
   }
 
   void release(uint8_t note, uint8_t velocity) {
-    if (!_sustain) {
+    if (!sustainPedal) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
         if (VOICES[voice].note == note)  {
           MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
@@ -232,12 +232,12 @@ namespace NOTE_HANDLING {
     // bit shift to binary number (yes or no)
     bool temp = (status >> 9);
 
-    if (_sustain != temp) {
+    if (sustainPedal != temp) {
       // if the input is new, then set it.
-      _sustain = temp;
+      sustainPedal = temp;
 
       // Code for Note Priority sustain
-      if (!_sustain) isSustainJustReleased = true;
+      if (!sustainPedal) isSustainJustReleased = true;
 
       // Code for Arp Latch:
       if (ARP::getState()) {
@@ -245,7 +245,7 @@ namespace NOTE_HANDLING {
         // ARP::toggleSustain(); 
         
         // this code toggles the Latch per press.
-        if (_sustain) {
+        if (sustainPedal) {
           ARP::toggleSustain(); 
         }
       }
@@ -253,6 +253,6 @@ namespace NOTE_HANDLING {
     }
   }
   bool getSustainPedal (void) {
-    return _sustain;
+    return sustainPedal;
   }
 }

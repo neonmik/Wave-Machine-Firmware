@@ -271,7 +271,7 @@ namespace ARP {
                 if (inputBuffer[i].note == 0) {
                     inputBuffer[i].add(note);
                     inputNotesUpdated = true;
-                    // NOTE_HANDLING::voices_inc();
+                    // NOTE_HANDLING::voicesIncrease();
                     ++inputNoteCount;
 
                     if (inputNoteCount >= MAX_ARP) {
@@ -529,7 +529,7 @@ namespace ARP {
         // transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
     }
     void stopAllVoices () {
-        // NOTE_HANDLING::voices_clr();
+        // NOTE_HANDLING::voicesClear();
         NOTE_HANDLING::voicesStop();
     }
 

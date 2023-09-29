@@ -25,7 +25,7 @@ namespace CONTROLS {
         enum Page {
             MAIN = 0,
             FILT = 1,
-            MOD  = 2,
+            LFO  = 2,
             ARP  = 3,
 
             ADSR = 4,
@@ -90,7 +90,7 @@ namespace CONTROLS {
                     void toggleButton (void) {
                         setButton(!buttonState);
                     }
-                    uint16_t getButton (void) {
+                    bool getButton (void) {
                         return buttonState;
                     }
                     void update() {
@@ -132,7 +132,7 @@ namespace CONTROLS {
                     case Page::ADSR:
                         ADSR.setKnob(control, value);
                         break;
-                    case Page::MOD:
+                    case Page::LFO:
                         LFO.setKnob(control, value);
                         break;
                     case Page::ARP:
@@ -158,7 +158,7 @@ namespace CONTROLS {
                         return MAIN.getKnob(control);
                     case Page::ADSR:
                         return ADSR.getKnob(control);
-                    case Page::MOD:
+                    case Page::LFO:
                         return LFO.getKnob(control);
                     case Page::ARP:
                         return ARP.getKnob(control);
@@ -176,13 +176,82 @@ namespace CONTROLS {
             }
             
             void setButton (uint8_t page, bool state) {
-
+                switch (page) {
+                    case Page::MAIN:
+                        MAIN.setButton(state);
+                        break;
+                    case Page::ADSR:
+                        ADSR.setButton(state);
+                        break;
+                    case Page::LFO:
+                        LFO.setButton(state);
+                        break;
+                    case Page::ARP:
+                        ARP.setButton(state);
+                        break;
+                    case Page::SHFT:
+                        SHFT.setButton(state);
+                        break;
+                    case Page::fENV:
+                        fENV.setButton(state);
+                        break;
+                    case Page::FILT:
+                        FILT.setButton(state);
+                        break;
+                    case Page::sARP:
+                        sARP.setButton(state);
+                        break;
+                }
             }
             void toggleButton (uint8_t page) {
-
+                switch (page) {
+                    case Page::MAIN:
+                        MAIN.toggleButton();
+                        break;
+                    case Page::ADSR:
+                        ADSR.toggleButton();
+                        break;
+                    case Page::LFO:
+                        LFO.toggleButton();
+                        break;
+                    case Page::ARP:
+                        ARP.toggleButton();
+                        break;
+                    case Page::SHFT:
+                        SHFT.toggleButton();
+                        break;
+                    case Page::fENV:
+                        fENV.toggleButton();
+                        break;
+                    case Page::FILT:
+                        FILT.toggleButton();
+                        break;
+                    case Page::sARP:
+                        sARP.toggleButton();
+                        break;
+                }
             }
-            void getButton (uint8_t page) {
-
+            bool getButton (uint8_t page) {
+                switch (page) {
+                    case Page::MAIN:
+                        return MAIN.getButton();
+                    case Page::ADSR:
+                        return ADSR.getButton();
+                    case Page::LFO:
+                        return LFO.getButton();
+                    case Page::ARP:
+                        return ARP.getButton();
+                    case Page::SHFT:
+                        return SHFT.getButton();
+                    case Page::fENV:
+                        return fENV.getButton();
+                    case Page::FILT:
+                        return FILT.getButton();
+                    case Page::sARP:
+                        return sARP.getButton();
+                    default:
+                        return false;
+                }
             }
             void toggleLFO (void) {
                 LFO.toggleButton();

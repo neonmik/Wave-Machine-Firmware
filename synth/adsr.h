@@ -21,11 +21,11 @@ class ADSREnvelope {
         uint32_t&   _sustain;
         uint32_t&   _release;
         
-        uint32_t    _frame            = 0;      // number of frames into the current ADSR phase
-        uint32_t    _end_frame        = 0;      // frame target at which the ADSR changes to the next phase
-        uint32_t    _adsr             = 0;
-        int32_t     _step             = 0;
-        Phase       _phase            = Phase::OFF;
+        uint32_t    currentFrame        = 0;
+        uint32_t    endFrame            = 0;
+        uint32_t    adsr                = 0;
+        int32_t     increment           = 0;
+        Phase       phase               = Phase::OFF;
 
     public:
 
@@ -41,10 +41,10 @@ class ADSREnvelope {
         
         void update(void);
 
-        bool isStopped() { return _phase == Phase::OFF; }
-        bool isReleasing() { return _phase == Phase::RELEASE; }
+        bool isStopped() { return phase == Phase::OFF; }
+        bool isReleasing() { return phase == Phase::RELEASE; }
 
-        uint32_t get() { return (_adsr >> 8); }
+        uint32_t get() { return (adsr >> 8); }
 
 };
 

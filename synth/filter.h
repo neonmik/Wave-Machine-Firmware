@@ -13,121 +13,115 @@
 #include "adsr.h"
 #include "fx.h"
 
-namespace FILTER {
+namespace FILTER
+{
 
-    enum Type {
+    enum Type
+    {
         Off,
         LowPass,
         BandPass,
         HighPass
     };
 
-    enum Direction {
+    enum Direction
+    {
         Regular,
         Inverted
     };
 
-    enum Mode {
+    enum Mode
+    {
         MONO,
         PARA,
     };
 
-    namespace {
-        Mode        _mode  = Mode::PARA;
-
-        uint8_t     _index;
+    namespace
+    {
+        bool        state;
+        Mode        mode = Mode::PARA;
 
         bool        needsUpdating;
 
-        int16_t     _cutoff;
-        int16_t     _resonance;
+        int16_t     cutoff;
+        int16_t     resonance;
 
         uint16_t    _mod;
 
-        int32_t     _punch;
-        int32_t     _frequency;
-        int32_t     _damp;
+        int32_t     punch;
+        int32_t     frequency;
+        int32_t     damp;
 
         int32_t     lowPass;
         int32_t     bandPass;
 
-        uint32_t    _attack;
-        uint32_t    _decay;
-        uint32_t    _sustain;
-        uint32_t    _release;
+        uint32_t    attack;
+        uint32_t    decay;
+        uint32_t    sustain;
+        uint32_t    release;
         uint16_t    lastAttack = 1024;
         uint16_t    lastDecay = 1024;
         uint16_t    lastSustain = 1024;
         uint16_t    lastRelease = 1024;
 
-        Type        _type;
-        Direction   _direction;
+        Type        type;
+        Direction   direction;
 
-        inline uint16_t Interpolate824(const uint16_t* table, uint32_t phase) {
-            uint32_t a = table[phase >> 24];
-            uint32_t b = table[(phase >> 24) + 1];
-            return a + ((b - a) * static_cast<uint32_t>((phase >> 8) & 0xffff) >> 16);
-        }
-
-        inline int16_t Interpolate824(const uint8_t* table, uint32_t phase) {
-            int32_t a = table[phase >> 24];
-            int32_t b = table[(phase >> 24) + 1];
-            return (a << 8) + \
-                ((b - a) * static_cast<int32_t>(phase & 0xffffff) >> 16) - 32768;
-        }
-
-        uint32_t calculateEndFrame (uint32_t milliseconds) {
+        uint32_t calculateEndFrame(uint32_t milliseconds){
             // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
             return ((milliseconds + 1) * SAMPLE_RATE) / 1000;
         }
 
-        volatile int8_t     _voices_active;
-        bool       filterActive = false;
+        volatile int8_t activeVoice;
+        bool filterActive = false;
 
-        void        voices_inc (void) {
-            ++_voices_active;
-            if (_voices_active > POLYPHONY) {
-                _voices_active = POLYPHONY;
-            }
-        }
-        void        voices_dec (void) {
-            --_voices_active;
-            if (_voices_active < 0) {
-                _voices_active = 0;
-            }
-        }
-        void        voices_clr (void) {
-            _voices_active = 0;
-        }
-        bool        voicesActive (void) {
-            return _voices_active > 0;
-        }
-
+        // TODO: remove this, don't need this function anymore
+        // void voicesIncrease(void) {
+        //     ++activeVoice;
+        //     if (activeVoice > POLYPHONY)
+        //     {
+        //         activeVoice = POLYPHONY;
+        //     }
+        // }
+        // void voicesDecrease(void) {
+        //     --activeVoice;
+        //     if (activeVoice < 0)
+        //     {
+        //         activeVoice = 0;
+        //     }
+        // }
+        // void voicesClear(void) {
+        //     activeVoice = 0;
+        // }
+        
 
     }
-    
 
     extern ADSREnvelope ADSR;
 
     void init();
-    void setCutoff(uint16_t frequency);
-    void setResonance(uint16_t resonance);
-    void setPunch(uint16_t punch);
-    void setType(uint16_t type);
+
     void process(int32_t &sample);
 
-    void setAttack (uint16_t attack);
-    void setDecay (uint16_t decay);
-    void setSustain (uint16_t sustain);
-    void setRelease (uint16_t release);
+    void setState(bool input);
 
-    void voicesIncrease (void);
-    void voicesDecrease (void);
+    void setCutoff(uint16_t input);
+    void setResonance(uint16_t input);
+    void setPunch(uint16_t input);
+    void setType(uint16_t input);
 
-    void triggerAttack (void);
-    void triggerRelease (void);
+    void setAttack(uint16_t input);
+    void setDecay(uint16_t input);
+    void setSustain(uint16_t input);
+    void setRelease(uint16_t input);
 
-    void modulateCutoff(uint16_t cutoff);
-    void modulate_resonance(uint16_t resonance);
+    void voicesIncrease(void);
+    void voicesDecrease(void);
+
+    void triggerAttack(void);
+    void triggerRelease(void);
+
+    void modulateCutoff(uint16_t input);
+    void modulateResonance(uint16_t input);
 
 }

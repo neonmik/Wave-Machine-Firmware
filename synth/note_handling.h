@@ -23,22 +23,14 @@ namespace NOTE_HANDLING {
         LOWEST    ,  // Lowest notes stay the longest
     };
 
-    enum class Mode {
-        MONO,
-        PARA,
-    };
-
     namespace {
         Priority    _priority = Priority::LAST;
 
         uint8_t     _notes_on;
         
-        bool        _sustain;
+        bool        sustainPedal;
         bool        isSustainJustReleased;
 
-        Mode        _mode  = Mode::MONO;
-
-        int8_t     _voices_active = 0;
         bool       filterActive = false;
 
 

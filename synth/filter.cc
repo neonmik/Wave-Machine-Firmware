@@ -2,7 +2,7 @@
 
 namespace FILTER {
 
-    ADSREnvelope ADSR{_attack, _decay, _sustain, _release};
+    ADSREnvelope ADSR{attack, decay, sustain, release};
 
     void init() {
         lowPass = 0;
@@ -10,93 +10,103 @@ namespace FILTER {
         needsUpdating = true;
     }
 
-    void setCutoff(uint16_t cutoff) {
-        _cutoff = exponentialFrequency(cutoff);
+    void setState (bool input) {
+        state = input;
+    }
+
+    void setCutoff(uint16_t input) {
+        cutoff = exponentialFrequency(input);
+    }
+
+    void setResonance(uint16_t input) {
+        resonance = filter_damp(input);
         needsUpdating = true;
     }
 
-    void setResonance(uint16_t resonance) {
-        _resonance = filter_damp(resonance);
-        needsUpdating = true;
+
+    void setPunch(uint16_t input) {
+        punch = input >> 2;
     }
 
-
-    void setPunch(uint16_t punch) {
-        _punch = punch >> 2;
-    }
-
-    void setType(uint16_t type) {
-        uint8_t index = (type>>8);
+    void setType(uint16_t input) {
+        uint8_t index = (input>>8);
         switch (index) {
         case 0:
-            _type = Type::Off;
+            type = Type::Off;
             break;
         case 1:
-            _type = Type::LowPass;
-            _direction = Direction::Regular;
+            type = Type::LowPass;
+            direction = Direction::Regular;
             break;
         case 2:
-            _type = Type::BandPass;
-            _direction = Direction::Regular;
+            type = Type::BandPass;
+            direction = Direction::Regular;
             break;
         case 3:
-            _type = Type::HighPass;
-            _direction = Direction::Inverted;
+            type = Type::HighPass;
+            direction = Direction::Inverted;
             break;
         default:
             break;
         }
     }
 
-    void setDirection (uint16_t direction) {
-        uint8_t index = (direction>>9);
+    void setDirection (uint16_t input) {
+        uint8_t index = (input>>9);
         switch (index) {
         case 0:
-            _direction = Direction::Regular;
+            direction = Direction::Regular;
             break;
         case 1:
-            _direction = Direction::Inverted;
+            direction = Direction::Inverted;
             break;
         default:
             break;
         }
     }
 
-    void modulateCutoff(uint16_t cutoff) {
-        _mod = (cutoff >> 2);
+    void modulateCutoff(uint16_t input) {
+        _mod = (input >> 2);
     }
 
-    void setAttack (uint16_t attack) {
-        if (attack == lastAttack) return;
-        lastAttack = attack;
-        _attack = calculateEndFrame(attack << 2);
+    void setAttack (uint16_t input) {
+        if (input == lastAttack) return;
+        lastAttack = input;
+        attack = calculateEndFrame(input << 2);
     }
-    void setDecay (uint16_t decay) {
-        if (decay == lastDecay) return;
-        lastDecay = decay;
-        _decay = calculateEndFrame(decay << 2);
+    void setDecay (uint16_t input) {
+        if (input == lastDecay) return;
+        lastDecay = input;
+        decay = calculateEndFrame(input << 2);
     }
-    void setSustain (uint16_t sustain) {
-        if (sustain == lastSustain) return;
-        lastSustain = sustain;
-        _sustain = (sustain << 6);
+    void setSustain (uint16_t input) {
+        if (input == lastSustain) return;
+        lastSustain = input;
+        sustain = (input << 6);
     }
-    void setRelease (uint16_t release) {
-        if (release == lastRelease) return;
-        lastRelease = release;
-        _release = calculateEndFrame(release << 2);
+    void setRelease (uint16_t input) {
+        if (input == lastRelease) return;
+        lastRelease = input;
+        release = calculateEndFrame(input << 2);
     }
 
     void voicesIncrease (void) {
-        voices_inc();
+        // voicesIncrease();
+        ++activeVoice;
+        if (activeVoice > POLYPHONY) activeVoice = POLYPHONY;
     }
     void voicesDecrease (void) {
-        voices_dec();
+        // voicesDecrease();
+        --activeVoice;
+        if (activeVoice < 0) activeVoice = 0;
+    }
+    bool voicesActive(void) {
+        return activeVoice > 0;
     }
 
     void triggerAttack (void) {
         if (!voicesActive()) return;
-        switch (_mode) {
+        switch (mode) {
             case Mode::MONO:
                 if (!filterActive) { 
                     ADSR.triggerAttack();
@@ -118,33 +128,34 @@ namespace FILTER {
     }
 
     void process(int32_t &sample) {
-        if (_type != Type::Off) {
+        if (type != Type::Off) {
             ADSR.update();
             
             // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
-            if (needsUpdating) {
-                _frequency = _cutoff;
-                _damp = _resonance;
-                needsUpdating = false;
-            }
+            // if (needsUpdating) {
+            //     frequency = cutoff;
+            //     damp = resonance;
+            //     needsUpdating = false;
+            // }
 
 
-            volatile int32_t frequency = 0 ;
+            // volatile int32_t frequency = 0;
             
-            if (_direction == Direction::Regular) {
-                frequency = (_frequency * ADSR.get()) >> 16;
+            if (direction == Direction::Regular) {
+                frequency = (cutoff * ADSR.get()) >> 16;
             } 
-            if (_direction == Direction::Inverted) {
-                uint16_t MAX_FREQ = (SAMPLE_RATE/2);
-                frequency = MAX_FREQ - (((MAX_FREQ - _frequency) * (ADSR.get())) >> 16);
+            if (direction == Direction::Inverted) {
+                uint16_t MAX_FREQ = (NYQUIST);
+                frequency = MAX_FREQ - (((MAX_FREQ - cutoff) * (ADSR.get())) >> 16);
             }
             
-            if (frequency <= 15) frequency = 15;
+            if (frequency < 15) frequency = 15;
+            if (frequency > (NYQUIST)) frequency = NYQUIST;
 
-            int32_t damp = _damp;
-            if (_punch) {
+            int32_t damp = resonance;
+            if (punch) {
                 int32_t punch_signal = lowPass > 4096 ? lowPass : 2048;
-                frequency += ((punch_signal >> 4) * _punch) >> 9;
+                frequency += ((punch_signal >> 4) * punch) >> 9;
                 damp += ((punch_signal - 2048) >> 3);
             }
 
@@ -156,7 +167,7 @@ namespace FILTER {
             bandPass += frequency * highPass >> 15;
             FX::HARDCLIP::process(bandPass);
 
-            switch (_type) {
+            switch (type) {
                 case LowPass:
                     sample = lowPass;
                     break;

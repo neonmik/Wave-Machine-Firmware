@@ -46,17 +46,16 @@ namespace CONTROLS {
             Preset[preset].Filter.sustain = Control.getKnob(Page::fENV, 2);
             Preset[preset].Filter.release = Control.getKnob(Page::fENV, 3);
 
-        Preset[preset].Modulation.state = Control.getLFO();
+        Preset[preset].Modulation.state = Control.getButton(Page::LFO);
 
-        Preset[preset].Modulation.matrix = Control.getKnob(Page::MOD, 0);
-        Preset[preset].Modulation.rate = Control.getKnob(Page::MOD, 1);
-        Preset[preset].Modulation.depth = Control.getKnob(Page::MOD, 2);
-        Preset[preset].Modulation.wave = Control.getKnob(Page::MOD, 3);
-
+        Preset[preset].Modulation.matrix = Control.getKnob(Page::LFO, 0);
+        Preset[preset].Modulation.rate = Control.getKnob(Page::LFO, 1);
+        Preset[preset].Modulation.depth = Control.getKnob(Page::LFO, 2);
+        Preset[preset].Modulation.wave = Control.getKnob(Page::LFO, 3);
 
             Preset[preset].Effects.gain = Control.getKnob(Page::SHFT, 3);
 
-        Preset[preset].Arpeggiator.state = Control.getArp();
+        Preset[preset].Arpeggiator.state = Control.getButton(Page::ARP);
 
         Preset[preset].Arpeggiator.gate = Control.getKnob(Page::ARP, 0);
         Preset[preset].Arpeggiator.divisions = Control.getKnob(Page::ARP, 1);
@@ -98,11 +97,13 @@ namespace CONTROLS {
             Control.setKnob(Page::fENV, 3, Preset[preset].Filter.release);
 
 
-        Control.set_lfo(Preset[preset].Modulation.state);
-        Control.setKnob(Page::MOD, 0, Preset[preset].Modulation.matrix);
-        Control.setKnob(Page::MOD, 1, Preset[preset].Modulation.rate);
-        Control.setKnob(Page::MOD, 2, Preset[preset].Modulation.depth);
-        Control.setKnob(Page::MOD, 3, Preset[preset].Modulation.wave);
+        // Control.set_lfo(Preset[preset].Modulation.state);
+        Control.setButton(Page::LFO, Preset[preset].Modulation.state);
+
+        Control.setKnob(Page::LFO, 0, Preset[preset].Modulation.matrix);
+        Control.setKnob(Page::LFO, 1, Preset[preset].Modulation.rate);
+        Control.setKnob(Page::LFO, 2, Preset[preset].Modulation.depth);
+        Control.setKnob(Page::LFO, 3, Preset[preset].Modulation.wave);
 
             Control.setKnob(Page::SHFT, 0, 0);
             Control.setKnob(Page::SHFT, 1, 0);
@@ -110,7 +111,9 @@ namespace CONTROLS {
             Control.setKnob(Page::SHFT, 3, 0);
 
 
-        Control.set_arp(Preset[preset].Arpeggiator.state);
+        // Control.set_arp(Preset[preset].Arpeggiator.state);
+        Control.setButton(Page::ARP, Preset[preset].Arpeggiator.state);
+
         Control.setKnob(Page::ARP, 0, Preset[preset].Arpeggiator.gate);
         Control.setKnob(Page::ARP, 1, Preset[preset].Arpeggiator.divisions);
         Control.setKnob(Page::ARP, 2, Preset[preset].Arpeggiator.range);
@@ -184,27 +187,30 @@ namespace CONTROLS {
         return Control.getKnob(page, control);
     }
 
-    void toggleButton (uint8_t page) {
-        
+    void setButton (uint8_t page, bool state) {
+        Control.setButton(page, state);
     }
-    void getButton (uint8_t page) {
-
+    void toggleButton (uint8_t page) {
+        Control.toggleButton(page);
+    }
+    bool getButton (uint8_t page) {
+        return Control.getButton(page);
     }
        
     void toggleLFO () {
         _changed = true;
-        Control.toggleLFO();
+        Control.toggleButton(Page::LFO);
     }
     bool getLFO () {
-        return Control.getLFO();
+        return Control.getButton(Page::LFO);
     }
 
     void toggleArp () {
         _changed = true;
-        Control.toggleArp();
+        Control.toggleButton(Page::ARP);
     }
     bool getArp () {
-        return Control.getArp();
+        return Control.getButton(Page::ARP);
     }
 
     void toggleShift (void) {

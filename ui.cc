@@ -25,14 +25,6 @@ namespace UI {
   bool getLFO(void) {
     return CONTROLS::getLFO();
   }
-
-  void toggle_test_lfo (void) {
-    LEDS::LFO.toggle();
-  }
-  void toggle_test_arp (void) {
-    LEDS::ARP.toggle();
-  }
-
   
   void toggleArp(void) {
     CONTROLS::toggleArp();

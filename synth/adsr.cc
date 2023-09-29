@@ -1,44 +1,44 @@
 #include "adsr.h"
 
 void ADSREnvelope::triggerAttack()  {
-    _frame = 0;
-    _phase = Phase::ATTACK;
-    _end_frame = _attack;
-    _step = (int32_t(0xffffff) - int32_t(_adsr)) / int32_t(_end_frame);
+    currentFrame = 0;
+    phase = Phase::ATTACK;
+    endFrame = _attack;
+    increment = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(endFrame);
 }
 void ADSREnvelope::triggerDecay() {
-    _frame = 0;
-    _phase = Phase::DECAY;
-    _end_frame = _decay;
-    _step = (int32_t(_sustain << 8) - int32_t(_adsr)) / int32_t(_end_frame);
+    currentFrame = 0;
+    phase = Phase::DECAY;
+    endFrame = _decay;
+    increment = (int32_t(_sustain << 8) - int32_t(adsr)) / int32_t(endFrame);
 }
 void ADSREnvelope::triggerSustain() {
-    _frame = 0;
-    _phase = Phase::SUSTAIN;
-    _end_frame = 0;
-    _step = 0;
+    currentFrame = 0;
+    phase = Phase::SUSTAIN;
+    endFrame = 0;
+    increment = 0;
 }
 void ADSREnvelope::triggerRelease() {
-    _frame = 0;
-    _phase = Phase::RELEASE;
-    _end_frame = _release;
-    _step = (int32_t(0) - int32_t(_adsr)) / int32_t(_end_frame);
+    currentFrame = 0;
+    phase = Phase::RELEASE;
+    endFrame = _release;
+    increment = (int32_t(0) - int32_t(adsr)) / int32_t(endFrame);
 }
 
 void ADSREnvelope::stopped() {
-    _frame = 0;
-    _phase = Phase::OFF;
-    _end_frame = 0;
-    _step = 0;
-    _adsr = 0;
+    currentFrame = 0;
+    phase = Phase::OFF;
+    endFrame = 0;
+    increment = 0;
+    adsr = 0;
 }
 
 void ADSREnvelope::update() {
-    if(_phase == Phase::OFF) {
+    if(phase == Phase::OFF) {
         return;
     } 
-    if ((_frame >= _end_frame) && (_phase != Phase::SUSTAIN)) {
-        switch (_phase) {
+    if ((currentFrame >= endFrame) && (phase != Phase::SUSTAIN)) {
+        switch (phase) {
             case Phase::ATTACK:
                 triggerDecay();
                 break;
@@ -53,6 +53,6 @@ void ADSREnvelope::update() {
             }
     }
     
-    _adsr += _step;
-    ++_frame;
+    adsr += increment;
+    ++currentFrame;
 }
