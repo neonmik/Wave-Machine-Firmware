@@ -22,7 +22,7 @@ namespace CONTROLS {
 
         uint8_t _default_preset = 0;
 
-        enum Controls {
+        enum Page {
             MAIN = 0,
             FILT = 1,
             MOD  = 2,
@@ -37,57 +37,71 @@ namespace CONTROLS {
     }
     class CONTROL {
         private:
-            class Page {
+            class PAGE {
                 private:
-                    volatile bool _active = true;
-                    uint16_t _input[4];
-                    bool     _changed[4];
-                    void (*_update_funcs[4])(uint16_t);
-                    void (*_toggle_func)(bool); // Optional function pointer to toggle the state
+                    // volatile bool isActive = true;
+                    uint16_t    knobValue[4];
+                    bool        isChanged[4];
+                    void        (*knobFunctions[4])(uint16_t);
+                    bool        buttonState = true;
+                    void        (*buttonFunction)(bool); // Optional function pointer to toggle the state
                 public:
-                    Page(void (*func1)(uint16_t), void (*func2)(uint16_t), void (*func3)(uint16_t), void (*func4)(uint16_t), void (*toggle_func)(bool) = nullptr) {
-                        _update_funcs[0] = func1;
-                        _update_funcs[1] = func2;
-                        _update_funcs[2] = func3;
-                        _update_funcs[3] = func4;
-                        _toggle_func = toggle_func;
-                        if (_toggle_func != nullptr) _active = false;
+                    PAGE(void (*function1)(uint16_t), void (*function2)(uint16_t), void (*function3)(uint16_t), void (*function4)(uint16_t), void (*functionB)(bool) = nullptr) {
+                        knobFunctions[0] = function1;
+                        knobFunctions[1] = function2;
+                        knobFunctions[2] = function3;
+                        knobFunctions[3] = function4;
+                        buttonFunction = functionB;
+                        if (buttonFunction != nullptr) buttonState = false;
+                        // if (buttonFunction != nullptr) isActive = false;
                     }
-                    ~Page() { }
-                    void on() {
-                        setState(true);
+                    ~PAGE() { }
+                    // void on() {
+                    //     setState(true);
+                    // }
+                    // void off() {
+                    //     setState(false);
+                    // }
+                    // void toggle() {
+                    //     setState(!isActive);
+                    // }
+                    // void setState(bool state) {
+                    //     if (buttonFunction != nullptr) {
+                    //         isActive = state;
+                    //         buttonFunction(isActive);
+                    //     }
+                    // }
+                    // bool getState (void) {
+                    //     return isActive;
+                    // }
+                    void setKnob (uint8_t control, uint16_t value) {
+                        knobValue[control] = value;
+                        isChanged[control] = true;
                     }
-                    void off() {
-                        setState(false);
+                    uint16_t getKnob (uint8_t control) {
+                        return knobValue[control];
                     }
-                    void toggle() {
-                        setState(!_active);
-                    }
-                    void setState(bool state) {
-                        if (_toggle_func != nullptr) {
-                            _active = state;
-                            _toggle_func(_active);
+                    void setButton (bool state) {
+                        if (buttonFunction != nullptr) {
+                            buttonState = state;
+                            buttonFunction(buttonState);
                         }
                     }
-                    bool getState() {
-                        return _active;
+                    void toggleButton (void) {
+                        setButton(!buttonState);
                     }
-                    void set(uint8_t control, uint16_t input) {
-                        _input[control] = input;
-                        _changed[control] = true;
-                    }
-                    uint16_t get(uint8_t control) {
-                        return _input[control];
+                    uint16_t getButton (void) {
+                        return buttonState;
                     }
                     void update() {
-                        if (_active) {
+                        // if (isActive) {
                             for (int i = 0; i < 4; i++) {
-                                if (_changed[i]) {
-                                    if (_update_funcs[i] != nullptr) _update_funcs[i](_input[i]);
-                                    _changed[i] = false;
+                                if (isChanged[i]) {
+                                    if (knobFunctions[i] != nullptr) knobFunctions[i](knobValue[i]);
+                                    isChanged[i] = false;
                                 }
                             }
-                        }
+                        // }
                     }
             };
 
@@ -95,95 +109,104 @@ namespace CONTROLS {
             CONTROL () { }
             ~CONTROL () { }
 
-            Page        MAIN    {&SYNTH::setWaveshape,    &SYNTH::setWavevector,     &SYNTH::setOctave,         &SYNTH::setPitchBend,         nullptr};
-                Page    ADSR    {&SYNTH::setAttack,       &SYNTH::setDecay,          &SYNTH::setSustain,        &SYNTH::setRelease,             nullptr};
+            PAGE        MAIN    {&SYNTH::setWaveshape,    &SYNTH::setWavevector,     &SYNTH::setOctave,         &SYNTH::setPitchBend,           nullptr};
+                PAGE    ADSR    {&SYNTH::setAttack,       &SYNTH::setDecay,          &SYNTH::setSustain,        &SYNTH::setRelease,             nullptr};
             
-            Page        FILT    {&FILTER::setCutoff,      &FILTER::setResonance,     &FILTER::setPunch,         &FILTER::setType,               nullptr};
-                Page    fENV    {&FILTER::setAttack,      &FILTER::setDecay,         &FILTER::setSustain,       &FILTER::setRelease,            nullptr};
+            PAGE        FILT    {&FILTER::setCutoff,      &FILTER::setResonance,     &FILTER::setPunch,         &FILTER::setType,               nullptr};
+                PAGE    fENV    {&FILTER::setAttack,      &FILTER::setDecay,         &FILTER::setSustain,       &FILTER::setRelease,            nullptr};
             
-            Page        MOD1    {&MOD::setMatrix,         &MOD::setRate,             &MOD::setDepth,            &MOD::setShape,                 MOD::setState};
-                Page    SHFT    {nullptr,                  nullptr,                    &FX::SOFTCLIP::setGain,    nullptr,                         nullptr};
+            PAGE        LFO     {&MOD::setMatrix,         &MOD::setRate,             &MOD::setDepth,            &MOD::setShape,                 MOD::setState};
+                PAGE    SHFT    {nullptr,                 nullptr,                   &FX::SOFTCLIP::setGain,    nullptr,                        nullptr};
             
-            Page        ARP     {&ARP::setGate,            &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,              ARP::setState};
-                Page    sARP    {nullptr,                  &ARP::setBPM,               nullptr,                    &ARP::setOctMode,                nullptr};
+            PAGE        ARP     {&ARP::setGate,           &ARP::setDivision,         &ARP::setRange,            &ARP::setDirection,             ARP::setState};
+                PAGE    sARP    {nullptr,                 &ARP::setBPM,              nullptr,                   &ARP::setOctMode,               nullptr};
             
 
             void init (void) { }
 
-            void set (uint8_t page, uint8_t control, uint16_t input) {
-            switch (page) {
-                    case Controls::MAIN:
-                        MAIN.set(control, input);
+            void setKnob (uint8_t page, uint8_t control, uint16_t value) {
+                switch (page) {
+                    case Page::MAIN:
+                        MAIN.setKnob(control, value);
                         break;
-                    case Controls::ADSR:
-                        ADSR.set(control, input);
+                    case Page::ADSR:
+                        ADSR.setKnob(control, value);
                         break;
-                    case Controls::MOD:
-                        MOD1.set(control, input);
+                    case Page::MOD:
+                        LFO.setKnob(control, value);
                         break;
-                    case Controls::ARP:
-                        ARP.set(control, input);
+                    case Page::ARP:
+                        ARP.setKnob(control, value);
                         break;
-                    case Controls::SHFT:
-                        SHFT.set(control, input);
+                    case Page::SHFT:
+                        SHFT.setKnob(control, value);
                         break;
-                    case Controls::fENV:
-                        fENV.set(control, input);
+                    case Page::fENV:
+                        fENV.setKnob(control, value);
                         break;
-                    case Controls::FILT:
-                        FILT.set(control, input);
+                    case Page::FILT:
+                        FILT.setKnob(control, value);
                         break;
-                    case Controls::sARP:
-                        sARP.set(control, input);
+                    case Page::sARP:
+                        sARP.setKnob(control, value);
                         break;
                 }
             }
-            uint16_t get (uint8_t page, uint16_t control) {
+            uint16_t getKnob (uint8_t page, uint16_t control) {
                 switch (page) {
-                    case Controls::MAIN:
-                        return MAIN.get(control);
-                    case Controls::ADSR:
-                        return ADSR.get(control);
-                    case Controls::MOD:
-                        return MOD1.get(control);
-                    case Controls::ARP:
-                        return ARP.get(control);
-                    case Controls::SHFT:
-                        return SHFT.get(control);
-                    case Controls::fENV:
-                        return fENV.get(control);
-                    case Controls::FILT:
-                        return FILT.get(control);
-                    case Controls::sARP:
-                        return sARP.get(control);
+                    case Page::MAIN:
+                        return MAIN.getKnob(control);
+                    case Page::ADSR:
+                        return ADSR.getKnob(control);
+                    case Page::MOD:
+                        return LFO.getKnob(control);
+                    case Page::ARP:
+                        return ARP.getKnob(control);
+                    case Page::SHFT:
+                        return SHFT.getKnob(control);
+                    case Page::fENV:
+                        return fENV.getKnob(control);
+                    case Page::FILT:
+                        return FILT.getKnob(control);
+                    case Page::sARP:
+                        return sARP.getKnob(control);
                     default:
                         return 0;
                 }
             }
             
+            void setButton (uint8_t page, bool state) {
+
+            }
+            void toggleButton (uint8_t page) {
+
+            }
+            void getButton (uint8_t page) {
+
+            }
             void toggleLFO (void) {
-                MOD1.toggle();
+                LFO.toggleButton();
             }
             void set_lfo (bool state) {
-                MOD1.setState(state);
+                LFO.setButton(state);
             }
             bool getLFO (void) {
-                return MOD1.getState();
+                return LFO.getButton();
             }
             
             void toggleArp (void) {
-                ARP.toggle();
+                ARP.toggleButton();
             }
             void set_arp (bool state) {
-                ARP.setState(state);
+                ARP.setButton(state);
             }
             bool getArp (void) {
-                return ARP.getState();;
+                return ARP.getButton();;
             }
             void update (void) {
                 MAIN.update();
                 ADSR.update();
-                MOD1.update();
+                LFO.update();
                 ARP.update();
                 SHFT.update();
                 fENV.update();
@@ -211,8 +234,8 @@ namespace CONTROLS {
     void setPage (uint8_t page);
     uint8_t getPage (void);
     
-    void setValue (uint8_t page, uint8_t control, uint16_t input);
-    uint16_t getValue (uint8_t page, uint8_t control);
+    void setKnob (uint8_t page, uint8_t control, uint16_t value);
+    uint16_t getKnob (uint8_t page, uint8_t control);
     
     void toggleLFO (void);
     bool getLFO (void);

@@ -79,19 +79,19 @@ namespace MIDI {
                 // printf("MIDI IN: Volume - %d\n", temp);
                 break;
             case 70: // Wavetable
-                CONTROLS::setValue(CONTROLS::Controls::MAIN, 0, temp);
+                CONTROLS::setKnob(CONTROLS::Page::MAIN, 0, temp);
                 break;
             case 71: // Vector
-                CONTROLS::setValue(CONTROLS::Controls::MAIN, 1, temp);
+                CONTROLS::setKnob(CONTROLS::Page::MAIN, 1, temp);
                 break;
             case 72: // Release
-                CONTROLS::setValue(CONTROLS::Controls::ADSR, 3, temp);
+                CONTROLS::setKnob(CONTROLS::Page::ADSR, 3, temp);
                 break;
             case 73: // Attack
-                CONTROLS::setValue(CONTROLS::Controls::ADSR, 0, temp);
+                CONTROLS::setKnob(CONTROLS::Page::ADSR, 0, temp);
                 break;
             case 75: // Decay
-                CONTROLS::setValue(CONTROLS::Controls::ADSR, 1, temp);
+                CONTROLS::setKnob(CONTROLS::Page::ADSR, 1, temp);
                 break;
             case 64: // Sustain pedal
                 NOTE_HANDLING::setSustainPedal(temp);
@@ -108,7 +108,7 @@ namespace MIDI {
     void handlePitchBend(uint16_t pitch) {
         // easy way to map 14 bit range to the needed internal 10 bit.
         uint16_t temp = pitch >> 4;
-        CONTROLS::setValue(0, 3, temp);
+        CONTROLS::setKnob(0, 3, temp);
     }
     void handleSysEx(MidiMessage message) {
         // printf("SysEx Message has nowhere to go...\n");

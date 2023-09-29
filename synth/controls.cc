@@ -24,49 +24,49 @@ namespace CONTROLS {
 
     void save_preset (uint8_t preset) {
 
-        Preset[preset].Wave.shape = Control.get(Controls::MAIN, 0);
-        Preset[preset].Wave.vector = Control.get(Controls::MAIN, 1);
-        Preset[preset].Wave.octave = Control.get(Controls::MAIN, 2);
-        Preset[preset].Wave.pitch = Control.get(Controls::MAIN, 3);
+        Preset[preset].Wave.shape = Control.getKnob(Page::MAIN, 0);
+        Preset[preset].Wave.vector = Control.getKnob(Page::MAIN, 1);
+        Preset[preset].Wave.octave = Control.getKnob(Page::MAIN, 2);
+        Preset[preset].Wave.pitch = Control.getKnob(Page::MAIN, 3);
 
-            Preset[preset].Envelope.attack = Control.get(Controls::ADSR, 0);
-            Preset[preset].Envelope.decay = Control.get(Controls::ADSR, 1);
-            Preset[preset].Envelope.sustain = Control.get(Controls::ADSR, 2);
-            Preset[preset].Envelope.release = Control.get(Controls::ADSR, 3);
+            Preset[preset].Envelope.attack = Control.getKnob(Page::ADSR, 0);
+            Preset[preset].Envelope.decay = Control.getKnob(Page::ADSR, 1);
+            Preset[preset].Envelope.sustain = Control.getKnob(Page::ADSR, 2);
+            Preset[preset].Envelope.release = Control.getKnob(Page::ADSR, 3);
 
         Preset[preset].Filter.state = true;
 
-        Preset[preset].Filter.cutoff = Control.get(Controls::FILT, 0);
-        Preset[preset].Filter.resonance = Control.get(Controls::FILT, 1);
-        Preset[preset].Filter.punch = Control.get(Controls::FILT, 2);
-        Preset[preset].Filter.type = Control.get(Controls::FILT, 3);
+        Preset[preset].Filter.cutoff = Control.getKnob(Page::FILT, 0);
+        Preset[preset].Filter.resonance = Control.getKnob(Page::FILT, 1);
+        Preset[preset].Filter.punch = Control.getKnob(Page::FILT, 2);
+        Preset[preset].Filter.type = Control.getKnob(Page::FILT, 3);
 
-            Preset[preset].Filter.attack = Control.get(Controls::fENV, 0);
-            Preset[preset].Filter.decay = Control.get(Controls::fENV, 1);
-            Preset[preset].Filter.sustain = Control.get(Controls::fENV, 2);
-            Preset[preset].Filter.release = Control.get(Controls::fENV, 3);
+            Preset[preset].Filter.attack = Control.getKnob(Page::fENV, 0);
+            Preset[preset].Filter.decay = Control.getKnob(Page::fENV, 1);
+            Preset[preset].Filter.sustain = Control.getKnob(Page::fENV, 2);
+            Preset[preset].Filter.release = Control.getKnob(Page::fENV, 3);
 
         Preset[preset].Modulation.state = Control.getLFO();
 
-        Preset[preset].Modulation.matrix = Control.get(Controls::MOD, 0);
-        Preset[preset].Modulation.rate = Control.get(Controls::MOD, 1);
-        Preset[preset].Modulation.depth = Control.get(Controls::MOD, 2);
-        Preset[preset].Modulation.wave = Control.get(Controls::MOD, 3);
+        Preset[preset].Modulation.matrix = Control.getKnob(Page::MOD, 0);
+        Preset[preset].Modulation.rate = Control.getKnob(Page::MOD, 1);
+        Preset[preset].Modulation.depth = Control.getKnob(Page::MOD, 2);
+        Preset[preset].Modulation.wave = Control.getKnob(Page::MOD, 3);
 
 
-            Preset[preset].Effects.gain = Control.get(Controls::SHFT, 3);
+            Preset[preset].Effects.gain = Control.getKnob(Page::SHFT, 3);
 
         Preset[preset].Arpeggiator.state = Control.getArp();
 
-        Preset[preset].Arpeggiator.gate = Control.get(Controls::ARP, 0);
-        Preset[preset].Arpeggiator.divisions = Control.get(Controls::ARP, 1);
-        Preset[preset].Arpeggiator.range = Control.get(Controls::ARP, 2);
-        Preset[preset].Arpeggiator.direction = Control.get(Controls::ARP, 3);
+        Preset[preset].Arpeggiator.gate = Control.getKnob(Page::ARP, 0);
+        Preset[preset].Arpeggiator.divisions = Control.getKnob(Page::ARP, 1);
+        Preset[preset].Arpeggiator.range = Control.getKnob(Page::ARP, 2);
+        Preset[preset].Arpeggiator.direction = Control.getKnob(Page::ARP, 3);
 
-            Preset[preset].Arpeggiator.rest = Control.get(Controls::sARP, 0);
-            Preset[preset].Arpeggiator.bpm = Control.get(Controls::sARP, 1);
-            Preset[preset].Arpeggiator.fMode = Control.get(Controls::sARP, 2);
-            Preset[preset].Arpeggiator.octMode = Control.get(Controls::sARP, 3);
+            Preset[preset].Arpeggiator.rest = Control.getKnob(Page::sARP, 0);
+            Preset[preset].Arpeggiator.bpm = Control.getKnob(Page::sARP, 1);
+            Preset[preset].Arpeggiator.fMode = Control.getKnob(Page::sARP, 2);
+            Preset[preset].Arpeggiator.octMode = Control.getKnob(Page::sARP, 3);
 
         EEPROM::savePreset(preset, Preset[preset]);
     }
@@ -75,51 +75,51 @@ namespace CONTROLS {
         
         EEPROM::loadPreset(preset, Preset[preset]);
 
-        Control.set(Controls::MAIN, 0, Preset[preset].Wave.shape);
-        Control.set(Controls::MAIN, 1, Preset[preset].Wave.vector);
-        Control.set(Controls::MAIN, 2, Preset[preset].Wave.octave);
-        Control.set(Controls::MAIN, 3, Preset[preset].Wave.pitch);
+        Control.setKnob(Page::MAIN, 0, Preset[preset].Wave.shape);
+        Control.setKnob(Page::MAIN, 1, Preset[preset].Wave.vector);
+        Control.setKnob(Page::MAIN, 2, Preset[preset].Wave.octave);
+        Control.setKnob(Page::MAIN, 3, Preset[preset].Wave.pitch);
 
-            Control.set(Controls::ADSR, 0, Preset[preset].Envelope.attack);
-            Control.set(Controls::ADSR, 1, Preset[preset].Envelope.decay);
-            Control.set(Controls::ADSR, 2, Preset[preset].Envelope.sustain);
-            Control.set(Controls::ADSR, 3, Preset[preset].Envelope.release);
+            Control.setKnob(Page::ADSR, 0, Preset[preset].Envelope.attack);
+            Control.setKnob(Page::ADSR, 1, Preset[preset].Envelope.decay);
+            Control.setKnob(Page::ADSR, 2, Preset[preset].Envelope.sustain);
+            Control.setKnob(Page::ADSR, 3, Preset[preset].Envelope.release);
 
         // Control.set_filter(Preset[preset].Filter.state);
 
-        Control.set(Controls::FILT, 0, Preset[preset].Filter.cutoff);
-        Control.set(Controls::FILT, 1, Preset[preset].Filter.resonance);
-        Control.set(Controls::FILT, 2, Preset[preset].Filter.punch);
-        Control.set(Controls::FILT, 3, Preset[preset].Filter.type);
+        Control.setKnob(Page::FILT, 0, Preset[preset].Filter.cutoff);
+        Control.setKnob(Page::FILT, 1, Preset[preset].Filter.resonance);
+        Control.setKnob(Page::FILT, 2, Preset[preset].Filter.punch);
+        Control.setKnob(Page::FILT, 3, Preset[preset].Filter.type);
 
-            Control.set(Controls::fENV, 0, Preset[preset].Filter.attack);
-            Control.set(Controls::fENV, 1, Preset[preset].Filter.decay);
-            Control.set(Controls::fENV, 2, Preset[preset].Filter.sustain);
-            Control.set(Controls::fENV, 3, Preset[preset].Filter.release);
+            Control.setKnob(Page::fENV, 0, Preset[preset].Filter.attack);
+            Control.setKnob(Page::fENV, 1, Preset[preset].Filter.decay);
+            Control.setKnob(Page::fENV, 2, Preset[preset].Filter.sustain);
+            Control.setKnob(Page::fENV, 3, Preset[preset].Filter.release);
 
 
         Control.set_lfo(Preset[preset].Modulation.state);
-        Control.set(Controls::MOD, 0, Preset[preset].Modulation.matrix);
-        Control.set(Controls::MOD, 1, Preset[preset].Modulation.rate);
-        Control.set(Controls::MOD, 2, Preset[preset].Modulation.depth);
-        Control.set(Controls::MOD, 3, Preset[preset].Modulation.wave);
+        Control.setKnob(Page::MOD, 0, Preset[preset].Modulation.matrix);
+        Control.setKnob(Page::MOD, 1, Preset[preset].Modulation.rate);
+        Control.setKnob(Page::MOD, 2, Preset[preset].Modulation.depth);
+        Control.setKnob(Page::MOD, 3, Preset[preset].Modulation.wave);
 
-            Control.set(Controls::SHFT, 0, 0);
-            Control.set(Controls::SHFT, 1, 0);
-            Control.set(Controls::SHFT, 2, Preset[preset].Effects.gain);
-            Control.set(Controls::SHFT, 3, 0);
+            Control.setKnob(Page::SHFT, 0, 0);
+            Control.setKnob(Page::SHFT, 1, 0);
+            Control.setKnob(Page::SHFT, 2, Preset[preset].Effects.gain);
+            Control.setKnob(Page::SHFT, 3, 0);
 
 
         Control.set_arp(Preset[preset].Arpeggiator.state);
-        Control.set(Controls::ARP, 0, Preset[preset].Arpeggiator.gate);
-        Control.set(Controls::ARP, 1, Preset[preset].Arpeggiator.divisions);
-        Control.set(Controls::ARP, 2, Preset[preset].Arpeggiator.range);
-        Control.set(Controls::ARP, 3, Preset[preset].Arpeggiator.direction);
+        Control.setKnob(Page::ARP, 0, Preset[preset].Arpeggiator.gate);
+        Control.setKnob(Page::ARP, 1, Preset[preset].Arpeggiator.divisions);
+        Control.setKnob(Page::ARP, 2, Preset[preset].Arpeggiator.range);
+        Control.setKnob(Page::ARP, 3, Preset[preset].Arpeggiator.direction);
 
-            Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.rest);
-            Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.bpm);
-            Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.fMode);
-            Control.set(Controls::sARP, 0, Preset[preset].Arpeggiator.octMode);
+            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.rest);
+            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.bpm);
+            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.fMode);
+            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.octMode);
 
         _changed = true;
     
@@ -176,12 +176,19 @@ namespace CONTROLS {
         return _page;
     }
 
-    void setValue (uint8_t page, uint8_t control, uint16_t input) {
+    void setKnob (uint8_t page, uint8_t control, uint16_t input) {
         _changed = true;
-        Control.set(page, control, input);
+        Control.setKnob(page, control, input);
     }
-    uint16_t getValue (uint8_t page, uint8_t control) {
-        return Control.get(page, control);
+    uint16_t getKnob (uint8_t page, uint8_t control) {
+        return Control.getKnob(page, control);
+    }
+
+    void toggleButton (uint8_t page) {
+        
+    }
+    void getButton (uint8_t page) {
+
     }
        
     void toggleLFO () {
