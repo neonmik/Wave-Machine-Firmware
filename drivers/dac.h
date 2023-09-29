@@ -1,20 +1,13 @@
-#ifndef DAC_H_
-#define DAC_H_
+#pragma once
 
-#include <math.h>
-
-#include "pico/stdlib.h"
+#include "../config.h"
 
 #include "hardware/irq.h"
 #include "hardware/spi.h"
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
 
-#include "../config.h"
-
 #include "../ui.h"
-
-// #include "../synth/clock.h"
 
 #define DAC_DATA        11
 #define DAC_CLK         10
@@ -123,5 +116,3 @@ namespace DAC {
 
     void init (void);
 }
-
-#endif 

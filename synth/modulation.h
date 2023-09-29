@@ -1,11 +1,10 @@
 #pragma once
 
-#include "pico/stdlib.h"
-#include <math.h>
+#include "../config.h"
+#include "../functions.h"
 
 #include "../random.h"
 
-#include "../functions.h"
 
 #include "synth.h"
 #include "arp.h"

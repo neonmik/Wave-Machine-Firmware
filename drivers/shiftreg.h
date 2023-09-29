@@ -1,16 +1,10 @@
 #pragma once
 
-#include <stdio.h>
-#include "pico/stdlib.h"
-#include "pico/time.h"
+#include "../config.h"
 
 #include "hardware/gpio.h"
 #include "hardware/dma.h"
 #include "hardware/irq.h"
-// #include "hardware/timer.h"
-
-#include "../debug.h"
-
 
 enum SRPins : uint8_t {
         SR_DATA     = 18,

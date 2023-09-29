@@ -1,10 +1,5 @@
 #pragma once
 
-// #include <stdio.h>
-// #include <algorithm>
-#include "pico/stdlib.h"
-
-#include "../functions.h"
 #include "../config.h"
 
 #include "note_handling.h"

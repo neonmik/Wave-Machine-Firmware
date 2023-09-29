@@ -1,17 +1,10 @@
 #pragma once
 
-#include <stdio.h>
-
-#include "pico/stdlib.h"
-#include <string.h> // for memcpy
-
-// #include "../synth/controls.h"
-#include "../synth/preset.h"
-
-#include "../debug.h"
 #include "../config.h"
 
 #include "hardware/i2c.h"
+
+#include "../synth/preset.h"
 
 constexpr   uint8_t         EEPROM_SDA_PIN          =       2;
 constexpr   uint8_t         EEPROM_SCL_PIN          =       3;

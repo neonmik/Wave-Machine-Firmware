@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pico/stdlib.h"
-
 #include "config.h"
 
 #include "drivers/eeprom.h"

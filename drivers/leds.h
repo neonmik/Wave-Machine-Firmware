@@ -1,8 +1,6 @@
 #pragma once
 
-#include <stdio.h>
-#include "pico/stdlib.h"
-// #include "hardware/pwm.h"
+#include "../config.h"
 
 #include "rgb.h"
 #include "shiftreg.h"

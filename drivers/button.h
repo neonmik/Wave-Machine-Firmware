@@ -1,8 +1,7 @@
 #pragma once
 
-#include <stdio.h>
+#include "../config.h"
 
-#include "pico/stdlib.h"
 #include "pico/time.h"
 
 #define LONG_PRESS_TIME     350

@@ -13,6 +13,9 @@ namespace FILTER {
     void setState (bool input) {
         state = input;
     }
+    bool getState () {
+        return state;
+    }
 
     void setCutoff(uint16_t input) {
         cutoff = exponentialFrequency(input);

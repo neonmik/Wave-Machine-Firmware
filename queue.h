@@ -1,11 +1,11 @@
 #pragma once
 
-#include "pico/stdlib.h"
+
+#include "config.h"
 
 #include "pico/multicore.h"
 #include "pico/util/queue.h"
 
-#include "config.h"
 
 
 namespace QUEUE {

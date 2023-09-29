@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "../config.h"
 
 struct PRESET {
     struct Wav {

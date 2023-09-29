@@ -1,9 +1,8 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "../config.h"
 
 #include "../queue.h"
-#include "../config.h"
 
 #include "arp.h"
 

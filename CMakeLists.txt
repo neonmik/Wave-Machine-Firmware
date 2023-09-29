@@ -34,6 +34,7 @@ add_executable(${PROJECT_NAME}
     
     ui.cc
     pagination.cc
+    controls.cc
     
     queue.cc
     
@@ -42,7 +43,6 @@ add_executable(${PROJECT_NAME}
     synth/adsr.cc
     synth/arp.cc
     synth/clock.cc
-    synth/controls.cc
     synth/filter.cc
     synth/fx.cc
     synth/modulation.cc

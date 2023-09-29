@@ -1,18 +1,13 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "config.h"
+#include "functions.h"
 
 #include "drivers/usb.h"
 #include "drivers/uart.h"
 
 #include "synth/clock.h"
-#include "synth/controls.h"
-
-
-#include "debug.h"
-
-#include "config.h"
-#include "functions.h"
+#include "controls.h"
 
 namespace MIDI {
 

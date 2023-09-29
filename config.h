@@ -1,17 +1,20 @@
 #pragma once
 
-#include <stdio.h>
 #include "pico/stdlib.h"
+#include "stdio.h"
+#include "string.h"
+#include "math.h"
 
 #include "version.h"
 
+#include "debug.h"
+#include "functions.h"
+
 // this file contains global definitions for systemwide variables and constants
 
-constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
-
-constexpr   uint16_t    SAMPLE_RATE     =       32000;          // Can set to 48000Hz - 1.3345% (47359) to compenstate for tuning
-constexpr   uint16_t    NYQUIST         =       SAMPLE_RATE/2;
-constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
+// -------------------------------
+//        Software Defines
+// -------------------------------
 
 constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "standard" value...
                                                                 // tracking performance (Core: 144MHz/SR: 48000) :- 
@@ -27,11 +30,28 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
 
 constexpr   uint8_t     MAX_ARP         =       POLYPHONY;      // For setting the maximum number of notes in the Arp
-constexpr   uint8_t     MAX_PRESETS     =       8;
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
 
+// -------------------------------
+//        Hardware Defines
+// -------------------------------
+// These are the settings which are used to define the hardware interfaces
+
+constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
+
+constexpr   uint16_t    SAMPLE_RATE     =       32000;          // Can set to 48000Hz - 1.3345% (47359) to compenstate for tuning
+constexpr   uint16_t    NYQUIST         =       SAMPLE_RATE/2;
+constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
+
+constexpr   uint8_t     MAX_PAGES       =       4;
+constexpr   uint8_t     MAX_KNOBS       =       4;
+
+constexpr   uint8_t     MAX_PRESETS     =       8;
+
+constexpr   uint16_t    KNOB_MIN        =       0;
+constexpr   uint16_t    KNOB_MAX        =       1023;
 
 // -------------------------------
 //      Wave machine defaults
@@ -44,8 +64,6 @@ constexpr   uint8_t     DEFAULT_KEY     =       60;             // The default f
                                                                 // 48 sets C3 as the lowest note one the keyboard, and the middle C on the keyboard as C4
 constexpr   uint8_t     DEFAULT_VEL     =       127;            // The default velocity of the inbuilt keys
 
-constexpr   uint16_t    KNOB_MIN        =       0;
-constexpr   uint16_t    KNOB_MAX        =       1023;
 
 constexpr   uint8_t     DEFAULT_PRESET  =       0;
 
@@ -63,17 +81,12 @@ extern      uint16_t    playBuffer[];
 
 // example struct of the settings struct
 
-// struct SystemSettings {
-//     struct AudioSettings {
-//         uint16_t    sampleRate;
-//     };
-//     struct MIDISettings {
-//         uint8_t     midiChannel;
-//         bool Use1ByteParsing = false;
-//         bool NullVelocityNoteOnAsNoteOff = true;
-//     };
-//     struct HardwareSettings {
-//         uint8_t     startupPreset;
+// namespace CONFIG {
+//     struct SETTINGS {
+//         struct HARDWARE {
+//             char ID[16];
 
-//     };
-// };
+//         };
+        
+//     }
+// }

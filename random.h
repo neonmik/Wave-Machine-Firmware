@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pico/stdlib.h"
-
+#include "config.h"
 
 namespace RANDOM {
     namespace {

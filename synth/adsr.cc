@@ -1,16 +1,29 @@
 #include "adsr.h"
 
+void setAttack (uint16_t input) {
+
+}
+void setDecay (uint16_t input) {
+
+}
+void setSustain (uint16_t input) {
+
+}
+void setRelease (uint16_t input) {
+
+}
+
 void ADSREnvelope::triggerAttack()  {
     currentFrame = 0;
     phase = Phase::ATTACK;
-    endFrame = _attack;
-    increment = (int32_t(0xffffff) - int32_t(adsr)) / int32_t(endFrame);
+    endFrame = attack;
+    increment = (int32_t(MAX_ATTACK) - int32_t(adsr)) / int32_t(endFrame);
 }
 void ADSREnvelope::triggerDecay() {
     currentFrame = 0;
     phase = Phase::DECAY;
-    endFrame = _decay;
-    increment = (int32_t(_sustain << 8) - int32_t(adsr)) / int32_t(endFrame);
+    endFrame = decay;
+    increment = (int32_t(sustain << 8) - int32_t(adsr)) / int32_t(endFrame);
 }
 void ADSREnvelope::triggerSustain() {
     currentFrame = 0;
@@ -21,7 +34,7 @@ void ADSREnvelope::triggerSustain() {
 void ADSREnvelope::triggerRelease() {
     currentFrame = 0;
     phase = Phase::RELEASE;
-    endFrame = _release;
+    endFrame = release;
     increment = (int32_t(0) - int32_t(adsr)) / int32_t(endFrame);
 }
 

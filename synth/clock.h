@@ -1,9 +1,6 @@
 #pragma once    
 
-#include "pico/stdlib.h"
-
 #include "../config.h"
-#include "../functions.h"
 
 // (((Sample Rate * 60s) / Lowest BPM) / 4) / 24ppqn) = Longest possible dropout 
 // #define MIDI_CLOCK_TIMEOUT 670000 // max time in us for 1 pulse at 24ppqn

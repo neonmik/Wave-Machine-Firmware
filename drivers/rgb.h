@@ -1,7 +1,6 @@
 #pragma once
 
-#include <stdio.h>
-#include "pico/stdlib.h"
+#include "../config.h"
 
 #include "hardware/pwm.h"
 

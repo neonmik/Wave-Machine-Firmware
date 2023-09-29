@@ -7,22 +7,24 @@ namespace CONTROLS {
     void init () {
         EEPROM::init();
 
-        _preset = DEFAULT_PRESET;
+        currentPreset = DEFAULT_PRESET;
         
-        load_preset(_preset);
+        loadPreset(currentPreset);
     }
 
-    void set_preset (uint8_t preset) {
-        _preset = preset;
+    void setPreset (uint8_t preset) {
+        currentPreset = preset;
 
-        load_preset(_preset);
+        loadPreset(currentPreset);
+
+        PAGINATION::refresh();
     }
     
-    uint8_t get_preset () {
-        return _preset;
+    uint8_t getPreset () {
+        return currentPreset;
     }
 
-    void save_preset (uint8_t preset) {
+    void savePreset (uint8_t preset) {
 
         Preset[preset].Wave.shape = Control.getKnob(Page::MAIN, 0);
         Preset[preset].Wave.vector = Control.getKnob(Page::MAIN, 1);
@@ -69,7 +71,7 @@ namespace CONTROLS {
 
         EEPROM::savePreset(preset, Preset[preset]);
     }
-    void load_preset (uint8_t preset) {
+    void loadPreset (uint8_t preset) {
         PRESET temp;
         
         EEPROM::loadPreset(preset, Preset[preset]);
@@ -124,7 +126,7 @@ namespace CONTROLS {
             Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.fMode);
             Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.octMode);
 
-        _changed = true;
+        needsUpdating = true;
     
     }
     void exportPresets(void) {
@@ -149,7 +151,7 @@ namespace CONTROLS {
         
         printf("Factory Settings restored!\n\n");
         
-        set_preset(_preset); // not sure if this needs to be here? just needs to make sure it updates the settings right after factory restore, seems like the safest way to do it
+        setPreset(currentPreset); // not sure if this needs to be here? just needs to make sure it updates the settings right after factory restore, seems like the safest way to do it
     }
 
     // Function for writing current Presets to the Factory Preset storage area
@@ -168,19 +170,21 @@ namespace CONTROLS {
 
     // Save current Preset
     void save () {
-        save_preset(_preset);
+        savePreset(currentPreset);
     }
 
     void setPage (uint8_t page) {
-        _changed = true;
-        _page = page;
+        needsUpdating = true;
+        currentPage = page;
+
+        PAGINATION::refresh();
     }
-    uint8_t getPage () {
-        return _page;
+    uint8_t getPage (void) {
+        return currentPage;
     }
 
     void setKnob (uint8_t page, uint8_t control, uint16_t input) {
-        _changed = true;
+        needsUpdating = true;
         Control.setKnob(page, control, input);
     }
     uint16_t getKnob (uint8_t page, uint8_t control) {
@@ -198,7 +202,7 @@ namespace CONTROLS {
     }
        
     void toggleLFO () {
-        _changed = true;
+        needsUpdating = true;
         Control.toggleButton(Page::LFO);
     }
     bool getLFO () {
@@ -206,7 +210,7 @@ namespace CONTROLS {
     }
 
     void toggleArp () {
-        _changed = true;
+        needsUpdating = true;
         Control.toggleButton(Page::ARP);
     }
     bool getArp () {
@@ -214,18 +218,20 @@ namespace CONTROLS {
     }
 
     void toggleShift (void) {
-        _changed = true;
-        _shift != _shift;
+        needsUpdating = true;
+        shift = !shift;
+
+        PAGINATION::refresh();
     }
     bool getShift (void) {
-        return _shift;
+        return shift;
     }
     
     void update () {
-        if (_changed) {
+        if (needsUpdating) {
             Control.update();
             
-            _changed = false;
+            needsUpdating = false;
         }
     }
     

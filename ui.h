@@ -1,11 +1,12 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "config.h"
+
 #include "pico/unique_id.h"
 
 #include "midi.h"
 
-#include "synth/controls.h"
+#include "controls.h"
 
 #include "pagination.h"
 
@@ -22,23 +23,11 @@ namespace UI {
     };
 
     namespace {
-        // preset, page and event flags
-        uint8_t _preset              =           0;
-        uint8_t _page                =           0;
-        bool    _shift;
-        
-        bool page_flag              =           0;
-        bool lfo_flag               =           0;
-        bool arp_flag               =           0;
-        bool preset_flag            =           0;
-        bool shift_flag             =           0;
+        uint8_t currentPreset              =           0;
+        uint8_t currentPage                =           0;
+        bool    shift;
 
         uint8_t poll;
-        uint8_t poll_index_last;
-
-        uint32_t time_start;
-        uint32_t time_end;
-        uint32_t time_taken;
 
         UiMode _mode;
     }
@@ -51,8 +40,8 @@ namespace UI {
     void toggleArp(void);
     bool getArp(void);
 
-    void change_preset(void);
-    uint8_t get_preset(void);
+    void changePreset(void);
+    uint8_t getPreset(void);
 
     void printStartUp (void);
 

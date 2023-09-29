@@ -1,5 +1,12 @@
 #pragma once
 
+
+#include "../config.h"
+
+#include "button.h"
+
+#include "../synth/note_handling.h"
+
 #define MUX_SEL_A       12
 #define MUX_SEL_B       13
 #define MUX_SEL_C       14
@@ -16,16 +23,6 @@
 #define DEBUG_PIN       2
 
 #define LONG_PRESS      400
-
-#include "pico/stdlib.h"
-
-#include "../config.h"
-
-
-#include "button.h"
-
-#include "../synth/note_handling.h"
-
 
 namespace KEYS {
 

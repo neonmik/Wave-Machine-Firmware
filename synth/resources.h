@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "../config.h"
 
 extern const uint16_t lut_exp_freq[];
 extern const uint16_t lut_filter_damp[];

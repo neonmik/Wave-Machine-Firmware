@@ -1,7 +1,6 @@
 #pragma once
 
-#include "pico/stdlib.h"
-#include "stdio.h"
+#include "../config.h"
 
 #define MIDI_UART_ID uart1
 #define MIDI_BAUD_RATE 31250

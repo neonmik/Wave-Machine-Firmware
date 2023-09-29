@@ -1,8 +1,7 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "../config.h"
 
-#include "bsp/board.h"
 #include "tusb.h"
 
 namespace USB {

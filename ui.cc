@@ -9,13 +9,23 @@
 
 namespace UI {
 
+  void updatePage(void) {
+    PAGINATION::setPage(currentPage);
+    CONTROLS::setPage(currentPage);
+    LEDS::PAGE_select(currentPage);
+  }
   void setPage (uint8_t value) {
-    _page = value;
-    CONTROLS::setPage(_page);
-    LEDS::PAGE_select(_page);
+    currentPage = value;
+    updatePage();
+  }
+  void changePage (void) {
+    currentPage++;
+    if (currentPage >= MAX_PAGES) currentPage = 0;
+
+    updatePage();
   }
   uint8_t getPage(void) {
-    return _page;
+    return currentPage;
   }
  
   void toggleLFO(void) {
@@ -34,25 +44,25 @@ namespace UI {
     return CONTROLS::getArp();
   }
 
-  void change_preset(void) {
-    ++_preset;
-    if (_preset >= MAX_PRESETS) _preset = 0;
-    CONTROLS::set_preset(_preset);
-    LEDS::PRESET.preset(_preset);
+  void changePreset(void) {
+    ++currentPreset;
+    if (currentPreset >= MAX_PRESETS) currentPreset = 0;
+    CONTROLS::setPreset(currentPreset);
+    LEDS::PRESET.preset(currentPreset);
 
     LEDS::ARP.off();
     LEDS::LFO.off();
     if (CONTROLS::getArp()) LEDS::ARP.on();
     if (CONTROLS::getLFO()) LEDS::LFO.on();
   }
-  uint8_t get_preset(void) {
-    return _preset;
+  uint8_t getPreset(void) {
+    return currentPreset;
   }
 
-void set_shift (bool shift) {
-  if (_shift != shift) {
+void setShift (bool input) {
+  if (shift != input) {
     CONTROLS::toggleShift();
-    _shift = shift;
+    shift = input;
   }
 }
 
@@ -75,7 +85,7 @@ void set_shift (bool shift) {
       update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
     }
 
-    setPage(_page);
+    setPage(currentPage);
 
     LEDS::LFO.set(getLFO());
     LEDS::ARP.set(getArp());
@@ -105,31 +115,36 @@ void set_shift (bool shift) {
 
             // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
-                LEDS::PRESET.flash(4,50);
-                CONTROLS::save();
-                // printf("Save!\n");
+              LEDS::PRESET.flash(4,50);
+              CONTROLS::save();
+              // printf("Save!\n");
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-                // LEDS::ARP.flash(4,50);
-                // ARP::toggleHold();
+              // LEDS::ARP.flash(4,50);
+              // ARP::toggleHold();
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-                LEDS::PAGE_1.flash_set(4,50);
+              LEDS::PAGE_1.flash_set(4,50);
             }
 
-            
-            set_shift(Buttons::PAGE.get(Buttons::State::SHIFT));
+            setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
             
             if (Buttons::ARP.get(Buttons::State::LONG)) {
-                LEDS::ARP.flash(4,50);
-                ARP::toggleHold();
+              LEDS::ARP.flash(4,50);
+              ARP::toggleHold();
             }
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
-                toggleArp();
+              toggleArp();
             }
 
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
-                toggleLFO();
+              toggleLFO();
+            }
+            if(Buttons::PAGE.get(Buttons::State::SHORT)) {
+              changePage();
+            }
+            if(Buttons::PRESET.get(Buttons::State::SHORT)) {
+              changePreset();
             }
             break;
           case 4:

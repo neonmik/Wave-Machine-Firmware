@@ -1,11 +1,9 @@
 #pragma once
 
-#include "pico/stdlib.h"
-
-#include <math.h>
 
 #include "../config.h"
 #include "../functions.h"
+
 #include "../queue.h"
 
 #include "resources.h"
@@ -104,6 +102,7 @@ namespace FILTER
     void process(int32_t &sample);
 
     void setState(bool input);
+    bool getState (void);
 
     void setCutoff(uint16_t input);
     void setResonance(uint16_t input);

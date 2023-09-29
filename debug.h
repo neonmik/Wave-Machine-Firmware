@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pico/stdlib.h"
-
 #ifdef ENABLE_DEBUG
 #define DebugPrint(message) \
     do { \

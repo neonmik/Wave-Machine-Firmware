@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "config.h"
 
 #define MAX_ATTACK  0xFFFFFF
 
@@ -14,12 +14,16 @@ enum class Phase : uint8_t {
 
 class ADSREnvelope {
     private:
-        // uint32_t&   _sample_rate;
+        // uint32_t   sampleRate;
 
-        uint32_t&   _attack;
-        uint32_t&   _decay;
-        uint32_t&   _sustain;
-        uint32_t&   _release;
+        uint32_t&    attack;
+        uint32_t&    decay;
+        uint32_t&    sustain;
+        uint32_t&    release;
+        // uint32_t    lastAttack;
+        // uint32_t    lastDecay;
+        // uint32_t    lastSustain;
+        // uint32_t    lastRelease;
         
         uint32_t    currentFrame        = 0;
         uint32_t    endFrame            = 0;
@@ -27,24 +31,34 @@ class ADSREnvelope {
         int32_t     increment           = 0;
         Phase       phase               = Phase::OFF;
 
+        // uint32_t calculateEndFrame(uint32_t milliseconds){
+        //     return ((milliseconds + 1) * SAMPLE_RATE) / 1000;
+        // }
+
     public:
 
         ADSREnvelope(uint32_t& attack, uint32_t& decay, uint32_t& sustain, uint32_t& release) 
-        : _attack(attack), _decay(decay), _sustain(sustain), _release(release) { }
+        : attack(attack), decay(decay), sustain(sustain), release(release) { }
+        // ADSREnvelope(uint32_t samplerate) 
         ~ADSREnvelope ( ) { }
 
-        void triggerAttack();
-        void triggerDecay();
-        void triggerSustain();
-        void triggerRelease();
-        void stopped();
+        // void setAttack (uint16_t input);
+        // void setDecay (uint16_t input);
+        // void setSustain (uint16_t input);
+        // void setRelease (uint16_t input);
+
+        void triggerAttack(void);
+        void triggerDecay(void);
+        void triggerSustain(void);
+        void triggerRelease(void);
+        void stopped(void);
         
         void update(void);
 
-        bool isStopped() { return phase == Phase::OFF; }
-        bool isReleasing() { return phase == Phase::RELEASE; }
+        bool isStopped(void) { return phase == Phase::OFF; }
+        bool isReleasing(void) { return phase == Phase::RELEASE; }
 
-        uint32_t get() { return (adsr >> 8); }
+        uint32_t get(void) { return (adsr >> 8); }
 
 };
 
