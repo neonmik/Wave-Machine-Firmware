@@ -26,59 +26,62 @@ namespace LEDS {
     class GPIO {
         private:
             uint8_t     _pin;
-            bool        _state;
+            bool        state;
             uint16_t    _count;
             uint8_t     _repeats;
             uint16_t     _duration;
             bool        _flash_state;
 
-            void put (bool state) {
-                gpio_put(_pin, state);
+            void put (bool input) {
+                gpio_put(_pin, input);
             }
 
         public:
-            GPIO (uint8_t pin) {
-                _pin = pin;
+            GPIO (uint8_t input) {
+                _pin = input;
             }
             ~GPIO () { }
 
             void init(){
                 gpio_init(_pin); // set LED pin
                 gpio_set_dir(_pin, GPIO_OUT); // set LED pin to out
+                // off();
             }
             void on () {
-                _state = true;
-                put(_state);
+                state = true;
+                put(state);
             }
             void off (){
-                _state = false;
-                put(_state);
+                state = false;
+                put(state);
             }
             void toggle (void) {
-                _state = !_state;
-                put(_state);
+                state = !state;
+                put(state);
             }
-            void set (bool state) {
-                _state = state;
-                put(_state);
+            void set (bool input) {
+                state = input;
+                put(state);
+            } 
+            void flashDelay (int repeats, int delay){
+                for (int r = 0; r < repeats; r++) {
+                    toggle();
+                    update();
+                    sleep_ms(delay);
+                    toggle();
+                    update();
+                    sleep_ms(delay);
+                }
             }
-            // void flash (int repeats, int delay) {
-            //     for (int r = 0; r < repeats; r++) {
-            //         toggle();
-            //         sleep_ms(delay);
-            //         toggle();
-            //         sleep_ms(delay);
-            //     }
-            // }
             void flash (uint8_t repeats, uint8_t duration) {
                 _repeats = repeats << 1; // number of times it repeats
                 _duration = (duration << 3); // 0 being no duration, 255 being always on.
-                _flash_state = !_state; // sets opposite starting state so always flashes right.
+                _flash_state = !state; // sets opposite starting state so always flashes right.
             }
             void update (void) {
-                ++_count; // Increments the flash counter. Being uint8_t should wrap at 256.
-                
                 if (!_repeats) return;
+
+                ++_count; // Increments the flash counter. Being uint8_t should wrap at 256.
 
                 if (_count > _duration) {
                     
@@ -90,7 +93,7 @@ namespace LEDS {
                     --_repeats;
                     if (_repeats == 0) {
                         _duration = 0;
-                        put(_state); // reset original state.
+                        put(state); // reset original state.
                     }
                 }
                 // if (_count == 255) printf("Flash!\n");
@@ -107,13 +110,11 @@ namespace LEDS {
             255,    59,     0,          // Orange
             15,     255,    0,          // Green
             255,    100,    90,         // Tutti Fruity
-            // 0,      0,      0,          // Black/off
         };
 
         private:
-            uint8_t _pins[3];
             uint16_t _colour[3];
-            bool    _state;
+            bool    state;
 
             uint16_t    _count;
             uint8_t     _repeats;
@@ -127,49 +128,41 @@ namespace LEDS {
             void init (void) {
                 RGB_LED::init();
                 colour(colours[0], colours[1], colours[2]);
-                on();
+                // off();
             }
             void on (void) {
-                _state = true;
+                state = true;
                 RGB_LED::on();
                 RGB_LED::update();
             }
             void colour (uint16_t red, uint16_t green, uint16_t blue) {
+                if (red || green || blue) state = true; // as long as somehtings on a bit, state is on.
+                else state = false;
                 RGB_LED::set(red, green, blue);
                 RGB_LED::update();
-                
             }
             void off (void) {
-                _state = false;
+                state = false;
                 RGB_LED::off();
                 RGB_LED::update();
             }
             void toggle (void) {
-                _state = !_state;
-                if (_state) on();
-                if (!_state) off();
+                state = !state;
+                if (state) on();
+                if (!state) off();
             }
-            void set (bool state) {
-                _state = state;
-                if (_state) on();
-                if (!_state) off();
+            void set (bool input) {
+                state = input;
+                if (state) on();
+                if (!state) off();
             }
             void reset (void) {
-                if (_state) on();
-                if (!_state) off();
+                if (state) on();
+                if (!state) off();
             }
-            // void flash (int repeats, int delay) {
-            //     for (int r = 0; r < repeats; r++) {
-            //         toggle();
-            //         sleep_ms(delay);
-            //         toggle();
-            //         sleep_ms(delay);
-            //     }  
-            // }
-            void flash (uint8_t repeats, uint8_t duration) {
-                _repeats = repeats << 1; // number of times it repeats
-                _duration = (duration << 3); // 0 being no duration, 255 being always on.
-                _flash_state = !_state; // sets opposite starting state so always flashes right. 
+            void preset (uint8_t preset) {
+                uint8_t temp = (preset*3);
+                colour(colours[temp], colours[temp+1], colours[temp+2]);
             }
             void cycle (int speed) {  
                 // reset array to red incase we're on a different colour
@@ -191,14 +184,25 @@ namespace LEDS {
                     }
                 }
             }
-            void preset (uint8_t preset) {
-                uint8_t temp = (preset*3);
-                colour(colours[temp], colours[temp+1], colours[temp+2]);
+            void flashDelay (int repeats, int delay){
+                for (int r = 0; r < repeats; r++) {
+                    toggle();
+                    update();
+                    sleep_ms(delay);
+                    toggle();
+                    update();
+                    sleep_ms(delay);
+                }
+            }
+            void flash (uint8_t repeats, uint8_t duration) {
+                _repeats = repeats << 1; // number of times it repeats
+                _duration = (duration << 3); // 0 being no duration, 255 being always on.
+                _flash_state = !state; // sets opposite starting state so always flashes right. 
             }
             void update (void) {
-                ++_count; // Increments the flash counter. Being uint8_t should wrap at 256.
-                
                 if (!_repeats) return;
+
+                ++_count;
 
                 if (_count > _duration) {
                     
@@ -221,7 +225,7 @@ namespace LEDS {
     class SR {
         private:
             Pins     _pin;
-            bool     _state;
+            bool     state;
 
             uint16_t    _count;
             uint8_t     _repeats;
@@ -235,40 +239,40 @@ namespace LEDS {
             ~SR (void) { }
 
         void on (void) {
-            _state = true;
-            ShiftReg::set_bit(_pin, _state);
+            state = true;
+            ShiftReg::set_bit(_pin, state);
         }
         void off (void) {
-            _state = false;
-            ShiftReg::set_bit(_pin, _state);
+            state = false;
+            ShiftReg::set_bit(_pin, state);
         }
         void toggle (void) {
-            _state = !_state;
-            ShiftReg::set_bit(_pin, _state);
+            state = !state;
+            ShiftReg::set_bit(_pin, state);
         }
         void reset (void) {
-            ShiftReg::set_bit(_pin, _state);
+            ShiftReg::set_bit(_pin, state);
         }
-        void flash (int repeats, int delay){
+        void flashDelay (int repeats, int delay){
             for (int r = 0; r < repeats; r++) {
                 toggle();
-                update();
+                ShiftReg::update();
                 sleep_ms(delay);
                 toggle();
-                update();
+                ShiftReg::update();
                 sleep_ms(delay);
             }
         }
-        void flash_set (uint8_t repeats, uint8_t duration) {
+        void flash (uint8_t repeats, uint8_t duration) {
             _repeats = repeats << 1; // number of times it repeats
             _duration = (duration << 3); // 0 being no duration, 255 being always on.
-            _flash_state = !_state; // sets opposite starting state so always flashes right. 
+            _flash_state = !state; // sets opposite starting state so always flashes right. 
         }
 
-        void update (void) {
+        bool update (void) {    
+            if (!_repeats) return false;
+
             ++_count; // Increments the flash counter. Being uint8_t should wrap at 256.
-                
-            if (!_repeats) return;
 
             if (_count > _duration) {
                 
@@ -281,10 +285,11 @@ namespace LEDS {
                 if (_repeats == 0) {
                     _duration = 0;
                     reset(); // reset original state.
+                    return false;
                 }
             }
 
-            
+            return true;
         }
     };
     
@@ -310,7 +315,7 @@ namespace LEDS {
     void on(void);
     void off(void);
     void KNOBS_off(void);
-    void KNOB_select(uint8_t knob, bool state);
+    void KNOB_select(uint8_t knob, bool input);
     void PAGES_off(void);
     void PAGE_select(uint8_t page);
     void flash(int repeats, int delay);

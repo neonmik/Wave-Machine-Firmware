@@ -77,8 +77,9 @@ void setShift (bool input) {
     LEDS::init();
     KEYS::init();
     ADC::init();
-    CONTROLS::init();
+
     PAGINATION::init();
+    CONTROLS::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       _mode = UI_MODE_CALIBRATION;
@@ -124,7 +125,7 @@ void setShift (bool input) {
               // ARP::toggleHold();
             }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-              LEDS::PAGE_1.flash_set(4,50);
+              LEDS::PAGE_1.flash(4,50);
             }
 
             setShift(Buttons::PAGE.get(Buttons::State::SHIFT));

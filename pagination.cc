@@ -3,7 +3,7 @@
 namespace PAGINATION {
   
     void init() {
-      refresh();
+      // refresh();
       update();
     }
     void refresh() {

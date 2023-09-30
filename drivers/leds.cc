@@ -120,36 +120,37 @@ namespace LEDS {
     void test(uint8_t delay){
         // flash(10, 100);
         // Up
-        PICO.flash(1, delay);
-        KNOB_1.flash(1, delay);
-        KNOB_2.flash(1, delay);
-        KNOB_3.flash(1, delay);
-        KNOB_4.flash(1, delay);
-        PAGE_1.flash(1, delay);
-        PAGE_2.flash(1, delay);
-        PAGE_3.flash(1, delay);
-        LFO.flash(1, delay);
-        ARP.flash(1, delay);
+        PICO.flashDelay(1, delay);
+        KNOB_1.flashDelay(1, delay);
+        KNOB_2.flashDelay(1, delay);
+        KNOB_3.flashDelay(1, delay);
+        KNOB_4.flashDelay(1, delay);
+        PAGE_1.flashDelay(1, delay);
+        PAGE_2.flashDelay(1, delay);
+        PAGE_3.flashDelay(1, delay);
+        LFO.flashDelay(1, delay);
+        ARP.flashDelay(1, delay);
 
         PRESET.cycle(delay/64);
 
         // Down
-        ARP.flash(1, delay);
-        LFO.flash(1, delay);
-        PAGE_3.flash(1, delay);
-        PAGE_2.flash(1, delay);
-        PAGE_1.flash(1, delay);
-        KNOB_4.flash(1, delay);
-        KNOB_3.flash(1, delay);
-        KNOB_2.flash(1, delay);
-        KNOB_1.flash(1, delay);
-        PICO.flash(1, delay);
+        ARP.flashDelay(1, delay);
+        LFO.flashDelay(1, delay);
+        PAGE_3.flashDelay(1, delay);
+        PAGE_2.flashDelay(1, delay);
+        PAGE_1.flashDelay(1, delay);
+        KNOB_4.flashDelay(1, delay);
+        KNOB_3.flashDelay(1, delay);
+        KNOB_2.flashDelay(1, delay);
+        KNOB_1.flashDelay(1, delay);
+        PICO.flashDelay(1, delay);
     }
     
     void update() {
         ARP.update();
         PRESET.update();
         // PAGE_1.update();
+        
         ShiftReg::update();
     }
 }
