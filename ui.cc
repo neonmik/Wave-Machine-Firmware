@@ -8,71 +8,20 @@
 #include "usb_descriptors.h"
 
 namespace UI {
-
-  void updatePage(void) {
-    PAGINATION::setPage(currentPage);
-    CONTROLS::setPage(currentPage);
-    LEDS::PAGE_select(currentPage);
-  }
-  void setPage (uint8_t value) {
-    currentPage = value;
-    updatePage();
-  }
-  void changePage (void) {
-    currentPage++;
-    if (currentPage >= MAX_PAGES) currentPage = 0;
-
-    updatePage();
-  }
-  uint8_t getPage(void) {
-    return currentPage;
-  }
- 
-  void toggleLFO(void) {
-    CONTROLS::toggleLFO();
-    LEDS::LFO.set(CONTROLS::getLFO());
-  }
-  bool getLFO(void) {
-    return CONTROLS::getLFO();
-  }
   
-  void toggleArp(void) {
-    CONTROLS::toggleArp();
-    LEDS::ARP.set(CONTROLS::getArp());
-  }
-  bool getArp(void) {
-    return CONTROLS::getArp();
-  }
-
-  void changePreset(void) {
-    ++currentPreset;
-    if (currentPreset >= MAX_PRESETS) currentPreset = 0;
-    CONTROLS::setPreset(currentPreset);
-    LEDS::PRESET.preset(currentPreset);
-
-    LEDS::ARP.off();
-    LEDS::LFO.off();
-    if (CONTROLS::getArp()) LEDS::ARP.on();
-    if (CONTROLS::getLFO()) LEDS::LFO.on();
-  }
-  uint8_t getPreset(void) {
-    return currentPreset;
-  }
-
-void setShift (bool input) {
-  if (shift != input) {
-    
-    shiftCounter++;
-    
-    if (shiftCounter >= SHIFT_TIMEOUT) {
+  void setShift (bool input) {
+    if (shift != input) {
       
-      CONTROLS::toggleShift();
-      shift = input;
+      shiftCounter++;
+      if (shiftCounter >= SHIFT_TIMEOUT) {
+        
+        CONTROLS::toggleShift();
+        shift = input;
 
-      shiftCounter = 0;
+        shiftCounter = 0;
+      }
     }
   }
-}
 
   // ----------------------
   //        HARDWARE
@@ -93,11 +42,6 @@ void setShift (bool input) {
       _mode = UI_MODE_CALIBRATION;
       update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
     }
-
-    setPage(currentPage);
-
-    LEDS::LFO.set(getLFO());
-    LEDS::ARP.set(getArp());
     
     MIDI::init();
 
@@ -128,33 +72,30 @@ void setShift (bool input) {
               CONTROLS::save();
               // printf("Save!\n");
             }
-            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::ARP.get(Buttons::State::SHORT)) {
-              // LEDS::ARP.flash(4,50);
-              // ARP::toggleHold();
-            }
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
               LEDS::PAGE_1.flash(4,50);
             }
 
-            setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
             
             if (Buttons::ARP.get(Buttons::State::LONG)) {
               LEDS::ARP.flash(4,50);
               ARP::toggleHold();
             }
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
-              toggleArp();
+              CONTROLS::toggleArp();
             }
 
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
-              toggleLFO();
+              CONTROLS::toggleLFO();
             }
             if(Buttons::PAGE.get(Buttons::State::SHORT)) {
-              changePage();
+              CONTROLS::changePage();
             }
             if(Buttons::PRESET.get(Buttons::State::SHORT)) {
-              changePreset();
+              CONTROLS::changePreset();
             }
+
+            setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
             break;
           case 4:
             ADC::update();

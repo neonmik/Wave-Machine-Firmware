@@ -5,6 +5,7 @@
 #include "pagination.h"
 
 #include "drivers/eeprom.h"
+#include "drivers/leds.h"
 
 #include "synth/preset.h"
 
@@ -25,6 +26,8 @@ namespace CONTROLS
         bool shift;
 
         bool needsUpdating;
+
+        uint8_t index;
 
         enum Page
         {
@@ -258,8 +261,9 @@ namespace CONTROLS
                 return false;
             }
         }
-        void updatePage(uint8_t page) {
-            switch (page)
+        void update() {
+
+            switch (index)
             {
             case Page::MAIN:
                 MAIN.update();
@@ -286,6 +290,7 @@ namespace CONTROLS
                 sARP.update();
                 break;
             }
+            index++;
         }
         void updateAll(void) {
             MAIN.update();
@@ -305,7 +310,9 @@ namespace CONTROLS
     void init(void);
 
     void setPreset(uint8_t preset);
+    void changePreset (void);
     uint8_t getPreset(void);
+
     void savePreset(uint8_t preset);
     void loadPreset(uint8_t preset);
     void exportPresets(void);

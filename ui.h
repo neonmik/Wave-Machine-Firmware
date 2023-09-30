@@ -14,7 +14,7 @@
 #define KNOBS_PRINT_OUT     0
 #define HARDWARE_TEST       0
 
-#define SHIFT_TIMEOUT       128
+#define SHIFT_TIMEOUT       512
 
 namespace UI {
 
@@ -28,7 +28,7 @@ namespace UI {
         uint8_t currentPreset              =           0;
         uint8_t currentPage                =           0;
         bool    shift;
-        uint8_t shiftCounter;
+        uint16_t shiftCounter;
 
         uint8_t poll;
 

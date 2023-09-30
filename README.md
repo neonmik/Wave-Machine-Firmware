@@ -134,7 +134,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Improve Arp code:
-        - Improvement: Add a control for Chord Arp
+
         - Improvement: Add a control for Mono/Para Filter modes
         - Feature: Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
         - Feature: Add a swing feature.
@@ -230,15 +230,22 @@ Features/Bugfixes:
             + Improved the handling of USB-MIDI notes and there update calls.
             + Finally added and tested
         + EEPROM
-            + Improved Save handling, moved code preset saving code into here to make the UI more friendly:- Rewrite lower storgae code to use PRESET struct instead of breaking it down into bytes (was for an issue due to page size I believe)
+            + Feature: Added storage locations for Presets, Factory Presets, and System settings. Have given provision for 8 banks of 8 presets (64 Presets) at 2 pages each (128 bytes).
+            + Improvement: Refactored EEPROM Preset storage code to dirctly handle PRESET struct for neater handling of preset saving/loading.
+            + Improved Save handling, moved code preset saving code into here to make the UI more friendly.
         + LEDs
+            + Bugfix: RGB toggle wasn't in the correct oreintation on exit - this was due to an issue with how colour settings were handled.
+            + Improvement: Test function and flashDelay/Cycle functions now handle delay parameters properly. 
             + Test script for LEDs
                 + Added function to show led test on startup if Preset button is held down
+        + ADC
+            + Bugfix: ADC figures were not scanned properly on startup - rearranged startup controls and added a delay to stop race conditions that were present after the changes.
         + Buttons
         + Keys
         + DAC
 
     + Arp:
+        + Improvement: Added a control for Chord Arp which can be accessed from 
         + Feature: Added a setting for Chord Arp along with its associated functions.
         + Bugfix: Arp was getting stuck at top or bottom of range. Reworked Octave direction code, aswell as setDirection code.
         + Feature: Added a new Arp mode! Octave Arp:- Plays all notes simultaneously up to POLYPHONY. If the Range setting is set more than 0, it will also Octavate in the same direction as the normal arp is set.
@@ -266,6 +273,7 @@ Features/Bugfixes:
         + Add Arp mode
 
     + Settings/Controls:
+        + Improvement: Added timeout feature for shift function to stop it jumping too quickly to shift pages.
         + Bugfix: Page light wasn't acting correctly on start up.
         + Added starting shift functions:
             - Added in functions for Modulation  
@@ -279,7 +287,7 @@ Features/Bugfixes:
         + Make everything that takes an input take it from a range of 0-1023
         + Refactor to allow saving, and also to improve code functionality
         + Improve Pagination handling
-        _- Make sure it always pulls values from presets (especially on start up) - this will require some tweaking of how the presets handle the input, and then make sure that it can pull that back correctly.
+        + Bugfix: Presets are always loaded on start up. Thjis allows the hardware controls and LEDs to be correct.
 
     + ADSR:
         + Fixed an overflow issue with multiple notes being in an extended Decay phase causing the output sample to be limitied cause audio artifacts:- Bug: Clipping output signal - When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.)

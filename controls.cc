@@ -12,10 +12,20 @@ namespace CONTROLS {
         // factoryRestore();
         
         loadPreset(currentPreset);
+
+        setPage(currentPage);
     }
 
     void setPreset (uint8_t preset) {
         currentPreset = preset;
+
+        loadPreset(currentPreset);
+
+        PAGINATION::refresh();
+    }
+    void changePreset (void) {
+        ++currentPreset;
+        if (currentPreset >= MAX_PRESETS) currentPreset = 0;
 
         loadPreset(currentPreset);
 
@@ -128,7 +138,13 @@ namespace CONTROLS {
             Control.setKnob(Page::sARP, 2, Preset[preset].Arpeggiator.fMode);
             Control.setKnob(Page::sARP, 3, Preset[preset].Arpeggiator.octMode);
 
+
         Control.updateAll();
+
+        LEDS::PRESET.preset(currentPreset);
+
+        LEDS::LFO.set(Control.getButton(Page::LFO));
+        LEDS::ARP.set(Control.getButton(Page::ARP));
         // needsUpdating = true;
     }
     void exportPresets(void) {
@@ -174,67 +190,81 @@ namespace CONTROLS {
     void save () {
         savePreset(currentPreset);
     }
-
+    
     void setPage (uint8_t page) {
-        needsUpdating = true;
         currentPage = page;
 
-        PAGINATION::refresh();
+        PAGINATION::setPage(currentPage);
+        LEDS::PAGE_select(currentPage);
+
+        needsUpdating = true;
+    }
+    void changePage(void) {
+        currentPage++;
+        if (currentPage >= MAX_PAGES) currentPage = 0;
+
+        PAGINATION::setPage(currentPage);
+        LEDS::PAGE_select(currentPage);
+
+        needsUpdating = true;
     }
     uint8_t getPage (void) {
         return currentPage;
     }
 
     void setKnob (uint8_t page, uint8_t control, uint16_t input) {
-        needsUpdating = true;
-
-        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
 
         Control.setKnob(page, control, input);
+
+        needsUpdating = true;
     }
     uint16_t getKnob (uint8_t page, uint8_t control) {
-        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
 
         return Control.getKnob(page, control);
     }
 
     void setButton (uint8_t page, bool state) {
-        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
 
         Control.setButton(page, state);
     }
     void toggleButton (uint8_t page) {
-        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
 
         Control.toggleButton(page);
     }
     bool getButton (uint8_t page) {
-        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
         
         return Control.getButton(page);
     }
        
     void toggleLFO () {
-        needsUpdating = true;
         Control.toggleButton(Page::LFO);
+        LEDS::LFO.set(Control.getButton(Page::LFO));
+        needsUpdating = true;
     }
     bool getLFO () {
         return Control.getButton(Page::LFO);
     }
 
     void toggleArp () {
-        needsUpdating = true;
         Control.toggleButton(Page::ARP);
+        LEDS::ARP.set(Control.getButton(Page::ARP));
+        needsUpdating = true;
     }
     bool getArp () {
         return Control.getButton(Page::ARP);
     }
 
     void toggleShift (void) {
-        needsUpdating = true;
+        PAGINATION::refresh();
+
         shift = !shift;
 
-        PAGINATION::refresh();
+        needsUpdating = true;
     }
     bool getShift (void) {
         return shift;
@@ -242,10 +272,9 @@ namespace CONTROLS {
     
     void update () {
         if (needsUpdating) {
-            uint8_t temp = currentPage;
-            if (shift) temp += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
             
-            Control.updateAll();
+            // Updates one page at a time to stop the synth core from being overloaded
+            Control.update();
             
             needsUpdating = false;
         }

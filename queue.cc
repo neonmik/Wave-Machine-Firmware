@@ -32,7 +32,8 @@ namespace QUEUE {
 
     void releaseSend (uint8_t slot) {
         uint8_t _slot = slot;
-        queue_try_add(&release_queue, &_slot);
+        // queue_try_add(&release_queue, &_slot);
+        queue_add_blocking(&release_queue, &_slot);
     }
     uint8_t releaseReceive (void) {
         uint8_t temp;
