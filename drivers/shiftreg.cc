@@ -13,8 +13,10 @@ namespace ShiftReg {
         gpio_set_slew_rate(SRPins::SR_LATCH, GPIO_SLEW_RATE_SLOW);
 
         sn74595::shiftreg_init();
+
+        // clear();
     }
-    void update() {
+    void update(void) {
         if (!needsSending) return;
         
         for (int i = 0; i < 8; i++) {
@@ -35,13 +37,13 @@ namespace ShiftReg {
         needsSending = true;
     }
 
-    void off () {
+    void off (void) {
         uint8_t temp = static_cast<uint8_t>(Pins::ALL);
         _buffer[0] &= ~temp;
         needsSending = true;
     }
 
-    void clear () {
+    void clear (void) {
         off();
         update();
     }
