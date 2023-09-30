@@ -3,6 +3,11 @@
 namespace ADC {
     void init() {
 
+        adc_init();
+
+        // Before setting up the pots, do a quick read of the startup temp
+        read_onboard_temperature();
+
         // Setup the mux pins
         pin_init(MUX_SEL_A);
         pin_init(MUX_SEL_B);
@@ -11,17 +16,15 @@ namespace ADC {
         
         adc_mux_init();
 
-        adc_init();
-        
         _mux_address = 0;
-        
-        // run the ADC 4 times to make sure the values are primed
-        for (int i = 0; i > MAX_KNOBS; i++) {
-            update();
-        }
 
-        // Before setting up the pots, do a quick read of the startup temp
-        read_onboard_temperature();
+        sleep_ms(100);
+        
+        // run the ADC 4 times to make sure the values are primed - removed from loop as it was optimised out
+        update();
+        update();
+        update();
+        update();
     }
     void update() {
         

@@ -61,8 +61,16 @@ namespace UI {
 
 void setShift (bool input) {
   if (shift != input) {
-    CONTROLS::toggleShift();
-    shift = input;
+    
+    shiftCounter++;
+    
+    if (shiftCounter >= SHIFT_TIMEOUT) {
+      
+      CONTROLS::toggleShift();
+      shift = input;
+
+      shiftCounter = 0;
+    }
   }
 }
 
@@ -208,7 +216,7 @@ void setShift (bool input) {
 
   void calibrate (void) {
 
-    LEDS::test(30);
+    LEDS::test(50);
 
     sleep_ms(1000);
     printf("\n\n");
@@ -261,7 +269,7 @@ void setShift (bool input) {
     }
     printf("All Knobs working correctly!\n\n");
 
-    LEDS::test(30);
+    LEDS::test(50);
 
     _mode = UI_MODE_NORMAL;
   }
