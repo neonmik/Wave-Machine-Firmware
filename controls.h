@@ -104,24 +104,23 @@ namespace CONTROLS
         CONTROL() {}
         ~CONTROL() {}
 
-        PAGE MAIN{&SYNTH::setWaveShape, &SYNTH::setWaveVector, &SYNTH::setOctave, &SYNTH::setPitchBend, nullptr};
-        PAGE ADSR{&SYNTH::setAttack, &SYNTH::setDecay, &SYNTH::setSustain, &SYNTH::setRelease, nullptr};
+        //          PAGE  | KNOB 1                   | KNOB 2                    | KNOB 3                    | KNOB 4                    | BUTTON 1 |
+        PAGE        MAIN{   &SYNTH::setWaveShape,      &SYNTH::setWaveVector,      &SYNTH::setOctave,          &SYNTH::setPitchBend,       nullptr};
+            PAGE    ADSR{   &SYNTH::setAttack,         &SYNTH::setDecay,           &SYNTH::setSustain,         &SYNTH::setRelease,         nullptr};
 
-        PAGE FILT{&FILTER::setCutoff, &FILTER::setResonance, &FILTER::setPunch, &FILTER::setType, nullptr};
-        PAGE fENV{&FILTER::setAttack, &FILTER::setDecay, &FILTER::setSustain, &FILTER::setRelease, nullptr};
+        PAGE        FILT{   &FILTER::setCutoff,        &FILTER::setResonance,      &FILTER::setPunch,          &FILTER::setType,           nullptr};
+            PAGE    fENV{   &FILTER::setAttack,        &FILTER::setDecay,          &FILTER::setSustain,        &FILTER::setRelease,        nullptr};
 
-        PAGE LFO{&MOD::setMatrix, &MOD::setRate, &MOD::setDepth, &MOD::setShape, MOD::setState};
-        PAGE SHFT{nullptr, nullptr, &FX::SOFTCLIP::setGain, nullptr, nullptr};
+        PAGE        LFO{    &MOD::setMatrix,           &MOD::setRate,              &MOD::setDepth,             &MOD::setShape,             MOD::setState};
+            PAGE    SHFT{   nullptr,                   nullptr,                    &FX::SOFTCLIP::setGain,     nullptr,                    nullptr};
 
-        PAGE ARP{&ARP::setGate, &ARP::setDivision, &ARP::setRange, &ARP::setDirection, ARP::setState};
-        PAGE sARP{nullptr, &ARP::setBPM, nullptr, &ARP::setOctMode, nullptr};
+        PAGE        ARP{    &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState};
+            PAGE    sARP{   nullptr,                   &ARP::setBPM,               nullptr,                    &ARP::setOctMode,           nullptr};
 
         void init(void) {}
 
         void setKnob(uint8_t page, uint8_t control, uint16_t value)
         {
-            if (shift)
-                page += 4;
             switch (page)
             {
             case Page::MAIN:
@@ -152,8 +151,6 @@ namespace CONTROLS
         }
         uint16_t getKnob(uint8_t page, uint16_t control)
         {
-            if (shift)
-                page += 4;
             switch (page)
             {
             case Page::MAIN:
@@ -179,8 +176,6 @@ namespace CONTROLS
 
         void setButton(uint8_t page, bool state)
         {
-            if (shift)
-                page += 4;
             switch (page)
             {
             case Page::MAIN:
@@ -211,8 +206,6 @@ namespace CONTROLS
         }
         void toggleButton(uint8_t page)
         {
-            if (shift)
-                page += 4;
             switch (page)
             {
             case Page::MAIN:
@@ -243,8 +236,6 @@ namespace CONTROLS
         }
         bool getButton(uint8_t page)
         {
-            if (shift)
-                page += 4;
             switch (page)
             {
             case Page::MAIN:
@@ -267,7 +258,36 @@ namespace CONTROLS
                 return false;
             }
         }
-        void update(void) {
+        void updatePage(uint8_t page) {
+            switch (page)
+            {
+            case Page::MAIN:
+                MAIN.update();
+                break;
+            case Page::ADSR:
+                ADSR.update();
+                break;
+            case Page::LFO:
+                LFO.update();
+                break;
+            case Page::ARP:
+                ARP.update();
+                break;
+            case Page::SHFT:
+                SHFT.update();
+                break;
+            case Page::fENV:
+                fENV.update();
+                break;
+            case Page::FILT:
+                FILT.update();
+                break;
+            case Page::sARP:
+                sARP.update();
+                break;
+            }
+        }
+        void updateAll(void) {
             MAIN.update();
             ADSR.update();
             LFO.update();

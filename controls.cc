@@ -9,6 +9,8 @@ namespace CONTROLS {
 
         currentPreset = DEFAULT_PRESET;
         
+        // factoryRestore();
+        
         loadPreset(currentPreset);
     }
 
@@ -122,12 +124,12 @@ namespace CONTROLS {
         Control.setKnob(Page::ARP, 3, Preset[preset].Arpeggiator.direction);
 
             Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.rest);
-            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.bpm);
-            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.fMode);
-            Control.setKnob(Page::sARP, 0, Preset[preset].Arpeggiator.octMode);
+            Control.setKnob(Page::sARP, 1, Preset[preset].Arpeggiator.bpm);
+            Control.setKnob(Page::sARP, 2, Preset[preset].Arpeggiator.fMode);
+            Control.setKnob(Page::sARP, 3, Preset[preset].Arpeggiator.octMode);
 
-        needsUpdating = true;
-    
+        Control.updateAll();
+        // needsUpdating = true;
     }
     void exportPresets(void) {
         PRESET export_buffer[MAX_PRESETS];
@@ -185,19 +187,30 @@ namespace CONTROLS {
 
     void setKnob (uint8_t page, uint8_t control, uint16_t input) {
         needsUpdating = true;
+
+        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+
         Control.setKnob(page, control, input);
     }
     uint16_t getKnob (uint8_t page, uint8_t control) {
+        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+
         return Control.getKnob(page, control);
     }
 
     void setButton (uint8_t page, bool state) {
+        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+
         Control.setButton(page, state);
     }
     void toggleButton (uint8_t page) {
+        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+
         Control.toggleButton(page);
     }
     bool getButton (uint8_t page) {
+        if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+        
         return Control.getButton(page);
     }
        
@@ -229,7 +242,10 @@ namespace CONTROLS {
     
     void update () {
         if (needsUpdating) {
-            Control.update();
+            uint8_t temp = currentPage;
+            if (shift) temp += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
+            
+            Control.updateAll();
             
             needsUpdating = false;
         }
