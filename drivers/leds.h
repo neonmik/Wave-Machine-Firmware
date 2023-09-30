@@ -164,11 +164,14 @@ namespace LEDS {
                 uint8_t temp = (preset*3);
                 colour(colours[temp], colours[temp+1], colours[temp+2]);
             }
-            void cycle (int speed) {  
+            void cycle (uint16_t speed) {  
                 // reset array to red incase we're on a different colour
                 _colour[0] = PWM_BIT_DEPTH;
                 _colour[1] = 0;
-                _colour[2] = 0;  
+                _colour[2] = 0;
+
+                if (!speed) speed = 1; 
+                speed <<= 4;
 
                 // Choose the colours to increment and decrement.
                 for (int decColour = 0; decColour < 3; decColour += 1) {
@@ -176,15 +179,15 @@ namespace LEDS {
 
                     // cross-fade the two colours.
                     for(int i = 0; i < PWM_BIT_DEPTH; i += 1) {
-                    _colour[decColour] -= 1;
-                    _colour[incColour] += 1;
-                    
-                    colour(_colour[0],_colour[1],_colour[2]);
-                    sleep_ms(speed/16);
+                        _colour[decColour] -= 1;
+                        _colour[incColour] += 1;
+                        
+                        colour(_colour[0],_colour[1],_colour[2]);
+                        sleep_us(speed);
                     }
                 }
             }
-            void flashDelay (int repeats, int delay){
+            void flashDelay (uint8_t repeats, uint16_t delay){
                 for (int r = 0; r < repeats; r++) {
                     toggle();
                     update();

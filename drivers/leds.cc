@@ -131,7 +131,7 @@ namespace LEDS {
         LFO.flashDelay(1, delay);
         ARP.flashDelay(1, delay);
 
-        PRESET.cycle(delay/64);
+        PRESET.cycle(delay);
 
         // Down
         ARP.flashDelay(1, delay);
