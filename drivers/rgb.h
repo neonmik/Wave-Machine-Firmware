@@ -4,11 +4,14 @@
 
 #include "hardware/pwm.h"
 
-#define    LEDR_PIN        6
-#define    LEDG_PIN        7
-#define    LEDB_PIN        8
+#define     LEDR_PIN        6
+#define     LEDG_PIN        7
+#define     LEDB_PIN        8
 
-#define    PWM_BIT_DEPTH   255 // or 65535
+#define     PWM_BIT_DEPTH   255 // or 65535
+#define     PWM_HZ          41000
+#define     PWM_DIV         ((CORE_SPEED * 1000) / PWM_BIT_DEPTH) / SAMPLE_RATE
+
 
 
 namespace RGB_LED {
@@ -28,7 +31,7 @@ namespace RGB_LED {
                 
                 pwm_set_gpio_level(pin, 0);
                 pwm_set_wrap(slice_num, PWM_BIT_DEPTH);
-                pwm_set_clkdiv(slice_num, 256.0f); // should be about 2.2KHz?...  144MHz (core speed) / 256 (wrap) / 256 (clkdiv) = 2197.27
+                pwm_set_clkdiv(slice_num, PWM_DIV); // should be about 2.2KHz?...  144MHz (core speed) / 256 (wrap) / 256 (clkdiv) = 2197.27
                 pwm_set_enabled(slice_num, true);
             }
             void pwm_output_polarity (void) {
