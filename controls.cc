@@ -145,7 +145,6 @@ namespace CONTROLS {
 
         LEDS::LFO.set(Control.getButton(Page::LFO));
         LEDS::ARP.set(Control.getButton(Page::ARP));
-        // needsUpdating = true;
     }
     void exportPresets(void) {
         PRESET export_buffer[MAX_PRESETS];
@@ -202,6 +201,8 @@ namespace CONTROLS {
     void changePage(void) {
         currentPage++;
         if (currentPage >= MAX_PAGES) currentPage = 0;
+
+        
 
         PAGINATION::setPage(currentPage);
         LEDS::PAGE_select(currentPage);
