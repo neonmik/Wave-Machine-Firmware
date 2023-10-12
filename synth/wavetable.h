@@ -5,6 +5,8 @@ constexpr   uint16_t    WAVETABLE_SIZE  =       256;
 constexpr   uint8_t     MAX_MOD_WAVES =         6;
 constexpr   uint8_t     MAX_WAVES =             16;
 
+constexpr   uint8_t     Q_SCALING_FACTOR =      12;
+
 // new wavetable data to be used soon.
 
 // const int16_t sine_table[] = {
@@ -1917,23 +1919,22 @@ const int16_t wavetable[] = {
     -1559, -7294, 3428, -10777, -16647
 };
 
-inline int16_t getWavetable  (uint32_t index, uint16_t vector) {
-    volatile uint32_t _index = index >> 12;
-    volatile uint32_t frac = index & 0xFFF;
+// Return interpolated wavetable sample
+inline int16_t getWavetableInterpolated  (uint32_t index, uint16_t vector) {
+    uint32_t _index = index >> Q_SCALING_FACTOR;
+    uint32_t frac = index & 0xFFF;
 
     // Get the two neighboring samples from the wavetable
-    volatile int32_t sample1 = wavetable[((_index) & 0xFF) + vector];
-    volatile int32_t sample2 = wavetable[((_index + 1) & 0xFF) + vector];
+    int32_t sample1 = wavetable[((_index) & 0xFF) + vector];
+    int32_t sample2 = wavetable[((_index + 1) & 0xFF) + vector];
 
     // Linear interpolation
-    volatile int32_t interpolatedSample = sample1 + ((sample2 - sample1) * frac >> 12);
+    int32_t interpolatedSample = sample1 + ((sample2 - sample1) * frac >> Q_SCALING_FACTOR);
     
     return interpolatedSample;
-    
-    // un-interpolated output
-    // return wavetable[(index >> 12) + vector];
 }
 
-inline int16_t getWavetableBasic (uint32_t index, uint16_t vector) {
-    return wavetable[((index >> 12)& 0xFF) + vector];
+// Return uninterpolated wavetable sample
+inline int16_t getWavetable (uint32_t index, uint16_t vector) {
+    return wavetable[((index >> Q_SCALING_FACTOR)& 0xFF) + vector];
 }

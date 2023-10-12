@@ -69,7 +69,7 @@ namespace MOD {
                 {&SYNTH::modulateVibrato,  OutputType::SIGNED,     Dither::FULL},
                 {&SYNTH::modulateTremelo,  OutputType::UNSIGNED,   Dither::LOW},
                 {&SYNTH::modulateVector,   OutputType::UNSIGNED,   Dither::LOW},
-                {nullptr,                   OutputType::UNSIGNED,   Dither::OFF} // probably want something ? here, but we'll see...
+                {nullptr,                  OutputType::UNSIGNED,   Dither::OFF} // probably want something ? here, but we'll see...
             };
 
             inline uint16_t uint16_output (int16_t input) {

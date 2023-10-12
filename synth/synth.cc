@@ -122,9 +122,6 @@ namespace SYNTH {
           }
 
           int32_t channelSample = 0;
-
-          // 0xffff0 makes it large enough to not interupt my scaling, anything more than like 0xfffff starts to go mad... Seems to mess with the waveforms
-          channel.phaseAccumulator &= (0xffffff);
           
           channelSample += getWavetable(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
           
@@ -132,10 +129,11 @@ namespace SYNTH {
 
           // Sub Mode
           // channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
-          // channelSample /= 2;
+          // channelSample >>= 1; // easy dived by 2 for Main and Sub
 
           // Noise Mode
-          // channelSample = RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
+          // channelSample += RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
+          // channelSample /= 3; // divide by 3 for Main, Sub and Noise
 
           // apply ADSR
           channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;

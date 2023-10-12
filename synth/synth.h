@@ -14,11 +14,6 @@
 
 namespace SYNTH {
 
-  namespace {
-    //  Q8 midi note freqs
-    constexpr uint8_t Q_SCALING_FACTOR = 12;
-  }
-
   extern uint16_t   volume;
 
   // variables for the wavetable oscillator
