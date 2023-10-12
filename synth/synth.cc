@@ -124,14 +124,14 @@ namespace SYNTH {
           int32_t channelSample = 0;
 
           // 0xffff0 makes it large enough to not interupt my scaling, anything more than like 0xfffff starts to go mad... Seems to mess with the waveforms
-          channel.phaseAccumulator &= (0xffff0);
+          channel.phaseAccumulator &= (0xffffff);
           
           channelSample += getWavetable(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
           
           // Prototype oscillator modes:
 
           // Sub Mode
-          // channelSample += getWavetable((channel.phaseAccumulator >> 2), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
+          // channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
           // channelSample /= 2;
 
           // Noise Mode
