@@ -145,6 +145,8 @@ namespace CONTROLS {
 
         LEDS::LFO.set(Control.getButton(Page::LFO));
         LEDS::ARP.set(Control.getButton(Page::ARP));
+
+        // needsUpdating = false; // this is here to try and stop lag on preset change as its currently being updated twice.
     }
     void exportPresets(void) {
         PRESET export_buffer[MAX_PRESETS];
@@ -181,8 +183,6 @@ namespace CONTROLS {
         }
 
         printf("All Presets backed up!\n\n");
-
-
     }
 
     // Save current Preset
@@ -202,8 +202,6 @@ namespace CONTROLS {
         currentPage++;
         if (currentPage >= MAX_PAGES) currentPage = 0;
 
-        
-
         PAGINATION::setPage(currentPage);
         LEDS::PAGE_select(currentPage);
 
@@ -214,31 +212,21 @@ namespace CONTROLS {
     }
 
     void setKnob (uint8_t page, uint8_t control, uint16_t input) {
-        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
-
         Control.setKnob(page, control, input);
 
         needsUpdating = true;
     }
     uint16_t getKnob (uint8_t page, uint8_t control) {
-        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
-
         return Control.getKnob(page, control);
     }
 
     void setButton (uint8_t page, bool state) {
-        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
-
         Control.setButton(page, state);
     }
     void toggleButton (uint8_t page) {
-        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
-
         Control.toggleButton(page);
     }
     bool getButton (uint8_t page) {
-        // if (shift) page += 4; // This is here to make sure it doesn't interfere with preset loading and saving.
-        
         return Control.getButton(page);
     }
        
@@ -276,6 +264,7 @@ namespace CONTROLS {
 
         needsUpdating = true;
     }
+
     bool getShift (void) {
         return shift;
     }
@@ -283,7 +272,7 @@ namespace CONTROLS {
     void update () {
         if (needsUpdating) {
             
-            // Updates one page at a time to stop the synth core from being overloaded
+            // Updates one page at a time to stop the synth core from being overloaded - to be updated to account for current page. 
             Control.update();
             
             needsUpdating = false;
