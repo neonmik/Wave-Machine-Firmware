@@ -62,7 +62,9 @@ constexpr   uint8_t     DEFAULT_BPM     =       120;            // The default B
 
 constexpr   uint8_t     DEFAULT_KEY     =       60;             // The default first key on the keyboard (C3 == 60, C4 == 72, etc). 
                                                                 // 48 sets C3 as the lowest note one the keyboard, and the middle C on the keyboard as C4
-constexpr   uint8_t     DEFAULT_VEL     =       127;            // The default velocity of the inbuilt keys
+constexpr   uint8_t     DEFAULT_ON_VEL  =       127;            // The default velocity of the inbuilt keys
+constexpr   uint8_t     DEFAULT_OFF_VEL =       0;              // The default velocity of the inbuilt keys
+
 
 
 constexpr   uint8_t     DEFAULT_PRESET  =       0;
