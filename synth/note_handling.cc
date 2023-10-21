@@ -202,9 +202,7 @@ namespace NOTE_HANDLING {
     if (isSustainJustReleased) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++) {
         if (VOICES[voice].sustained) {
-          voiceOff(voice, VOICES[voice].note, 0); // clears the voice
-          MIDI::sendNoteOff(VOICES[voice].note, MIDI_DEFAULT_NOTE_OFF_VEL); // sends midi note off
-          VOICES[voice].sustained = false;
+          release(VOICES[voice].note, DEFAULT_OFF_VEL);
         }
       }
       isSustainJustReleased = false;
