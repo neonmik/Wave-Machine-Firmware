@@ -5,10 +5,9 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Release bugfixes
 
-    - BUG: Filter env resets randomly - usually when playing arp with short release and longer attack (either mono or poly) it randomly resets. Seems to be fine with any release
-    - BUG: When flipping through presets while actively playing (not just holding notes) notes get stuck on. Holding more than 8 notes clears it for now.
+    - BUG: Filter env resets randomly - usually when playing arp with short release and longer attack (either mono or poly) it randomly resets. Seems to be fine with any release.
 
-    - OSCILLATORS: Investigate why notes that have been pitched up and octaved up alias/pitch wrongly. Something to do with the overflow of the accumulator, I'm sure of it.
+    - BUG: When flipping through presets while actively playing (not just holding notes) notes get stuck on. Holding more than 8 notes clears it for now, maybe look to add in an array of current notes (as it was before) to only be used on patch change to reset the notes. 
 
     - NOTE PRIORITY: Investigate moving MIDI::sendNoteOff to outside the note validation loop in release so it always gets called when it actually gets called. Might need to move sustain to keys file...
 
@@ -27,6 +26,8 @@ Current nightly firmware for Wave Machine Hardware.
             - Add a timer function to clock.
 
         - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
+
+        - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements.
 
 
     - Controls:
@@ -58,6 +59,8 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Oscillator:
+        - Improvement: Look into adding an extra 8 bit variable to count the roll over of the Phase Accumulator to stop the frequency overflowing at the top of the octave/pitch bend range (currently octave 3, with pitchbend above 1/3 will wrap round and be the lowest note).
+
         - Improvement: Finesse soft start code - currently takes too long to get going and still isnt perfect.
 
         - Bug: Issues with sample generation. - easy fix is to lower the sample rate.
@@ -192,6 +195,9 @@ Changelog:
 Features/Bugfixes:
 
     + Oscillator:
+        + Feature: Add Sub and Noise oscillators to the synth engine, along with temporary controls for off/on. 
+        + Bugfix: Fixed most of the aliasing that came with having the octave and pitch set to max. 
+        + Improvement: Fixed wavetable tuning. Implemented by reviewing and refactoring the accumulator and interpolation code. Massive win. 
         + Improvement: Added interpolation of wavetable samples for improved tuning.
         + Improvement: Made some improvements and refactored Synth code for clarity. 
         + Bugfix: Frequency/MIDI note alignment - Internal oscillator engine was out of tune with MIDI defined pitches. When Pitch control is central and Octave at 0, the first note on the keyboard is MIDI note 60 (C3/130Hz).
