@@ -1920,13 +1920,13 @@ const int16_t wavetable[] = {
 };
 
 // Return interpolated wavetable sample
-inline int16_t getWavetableInterpolated  (uint32_t index, uint16_t vector) {
-    uint32_t _index = index >> Q_SCALING_FACTOR;
-    uint32_t frac = index & 0xFFF;
+inline int16_t getWavetableInterpolated  (uint32_t accumulator, uint16_t vector) {
+    uint32_t index = accumulator >> Q_SCALING_FACTOR;
+    uint32_t frac = accumulator & 0xFFF;
 
     // Get the two neighboring samples from the wavetable
-    int32_t sample1 = wavetable[((_index) & 0xFF) + vector];
-    int32_t sample2 = wavetable[((_index + 1) & 0xFF) + vector];
+    int32_t sample1 = wavetable[((index) & 0xFF) + vector];
+    int32_t sample2 = wavetable[((index + 1) & 0xFF) + vector];
 
     // Linear interpolation
     int32_t interpolatedSample = sample1 + ((sample2 - sample1) * frac >> Q_SCALING_FACTOR);
