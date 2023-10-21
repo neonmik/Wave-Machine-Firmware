@@ -332,6 +332,8 @@ namespace CONTROLS
     void toggleButton(uint8_t page);
     bool getButton(uint8_t page);
 
+    void toggleOSC (void);
+
     void toggleLFO(void);
     bool getLFO(void);
 

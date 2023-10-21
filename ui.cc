@@ -72,9 +72,9 @@ namespace UI {
               CONTROLS::save();
               // printf("Save!\n");
             }
-            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-              LEDS::PAGE_1.flash(4,50);
-            }
+            // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
+              // LEDS::LFO.flash(3,60);
+            // }
 
             
             if (Buttons::ARP.get(Buttons::State::LONG)) {
@@ -85,12 +85,17 @@ namespace UI {
               CONTROLS::toggleArp();
             }
 
+            if (Buttons::LFO.get(Buttons::State::LONG)) {
+              CONTROLS::toggleOSC();
+            }
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
               CONTROLS::toggleLFO();
             }
+
             if(Buttons::PAGE.get(Buttons::State::SHORT)) {
               CONTROLS::changePage();
             }
+
             if(Buttons::PRESET.get(Buttons::State::SHORT)) {
               CONTROLS::changePreset();
             }

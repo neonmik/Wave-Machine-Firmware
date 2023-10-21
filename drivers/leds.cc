@@ -148,6 +148,7 @@ namespace LEDS {
     
     void update() {
         ARP.update();
+        LFO.update();
         PRESET.update();
         // PAGE_1.update();
         

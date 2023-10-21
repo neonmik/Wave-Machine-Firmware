@@ -260,6 +260,15 @@ namespace CONTROLS {
         return Control.getButton(Page::ARP);
     }
 
+    void toggleOSC () {
+        if (shift) {
+            SYNTH::toggleNoise();
+        } else {
+            SYNTH::toggleSub();
+        }
+        LEDS::LFO.flash(4, 50);
+    }
+
     void toggleShift (void) {
         PAGINATION::refresh();
 

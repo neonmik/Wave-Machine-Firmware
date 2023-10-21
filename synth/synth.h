@@ -33,6 +33,9 @@ namespace SYNTH {
   extern uint16_t   modTremelo;
   extern uint16_t   modVector;
 
+  extern bool       subActive;
+  extern bool       noiseActive;
+
   extern uint16_t   currentPitchBend;
 
   extern uint8_t    currentOctave;
@@ -110,19 +113,14 @@ namespace SYNTH {
 
   void voiceOn (uint8_t voice, uint8_t note);
   void voiceOff (uint8_t voice);
-  // bool isVoiceActive (uint8_t voice);
-  // bool isGateActive (uint8_t voice);
-  // bool noteCheck (uint8_t slot, uint8_t note);
   
   void init ();
   uint16_t process();
-  // bool is_audio_playing();
 
   void setWaveShape (uint16_t input);
   void setWaveVector (uint16_t input);
   void setOctave (uint16_t input);
   void setPitchBend (uint16_t input);
-  // uint16_t get_pitch_log (uint16_t index);
 
   void setAttack (uint16_t input);
   void setDecay (uint16_t input);
@@ -135,4 +133,6 @@ namespace SYNTH {
   void modulateTremelo (uint16_t input);
   void modulateVector (uint16_t input);
 
+  void toggleSub (void);
+  void toggleNoise (void);
 }

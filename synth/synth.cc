@@ -35,6 +35,9 @@ namespace SYNTH {
   uint16_t    modTremelo;
   uint16_t    modVector;
 
+  bool       subActive;
+  bool       noiseActive;
+
 
   uint16_t volume = 0xFFFF;
 
@@ -122,18 +125,29 @@ namespace SYNTH {
           }
 
           int32_t channelSample = 0;
+
+          uint8_t oscillatorsActive = 0;
           
           channelSample += getWavetable(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
           
           // Prototype oscillator modes:
+          oscillatorsActive++;
 
           // Sub Mode
-          // channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
-          // channelSample >>= 1; // easy dived by 2 for Main and Sub
+          if (subActive) {
+            channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
+            oscillatorsActive++;
+            // channelSample >>= 1; // easy dived by 2 for Main and Sub
+          }
 
           // Noise Mode
-          // channelSample += RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
-          // channelSample /= 3; // divide by 3 for Main, Sub and Noise
+          if (noiseActive){
+            channelSample += RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
+            oscillatorsActive++;
+            // channelSample /= 3; // divide by 3 for Main, Sub and Noise
+          }
+
+          channelSample /= oscillatorsActive;
 
           // apply ADSR
           channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
@@ -223,6 +237,13 @@ namespace SYNTH {
   }
   void modulateVector (uint16_t input) {
     modVector = input >> 6;
+  }
+
+  void toggleSub () {
+    subActive = !subActive;
+  }
+  void toggleNoise () {
+    noiseActive = !noiseActive;
   }
 
 }
