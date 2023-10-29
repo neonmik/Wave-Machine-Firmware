@@ -14,16 +14,11 @@ enum class Phase : uint8_t {
 
 class ADSREnvelope {
     private:
-        // uint32_t   sampleRate;
 
         uint32_t&    attack;
         uint32_t&    decay;
         uint32_t&    sustain;
         uint32_t&    release;
-        // uint32_t    lastAttack;
-        // uint32_t    lastDecay;
-        // uint32_t    lastSustain;
-        // uint32_t    lastRelease;
         
         uint32_t    currentFrame        = 0;
         uint32_t    endFrame            = 0;
@@ -39,13 +34,8 @@ class ADSREnvelope {
 
         ADSREnvelope(uint32_t& attack, uint32_t& decay, uint32_t& sustain, uint32_t& release) 
         : attack(attack), decay(decay), sustain(sustain), release(release) { }
-        // ADSREnvelope(uint32_t samplerate) 
-        ~ADSREnvelope ( ) { }
 
-        // void setAttack (uint16_t input);
-        // void setDecay (uint16_t input);
-        // void setSustain (uint16_t input);
-        // void setRelease (uint16_t input);
+        ~ADSREnvelope ( ) { }
 
         void triggerAttack(void);
         void triggerDecay(void);
