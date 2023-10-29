@@ -195,7 +195,7 @@ namespace CONTROLS {
     void setPage (uint8_t page) {
         currentPage = page;
 
-        PAGINATION::setPage(currentPage);
+        // PAGINATION::setPage(currentPage);
         LEDS::PAGE_select(currentPage);
 
         needsUpdating = true;
@@ -204,13 +204,18 @@ namespace CONTROLS {
         currentPage++;
         if (currentPage >= MAX_PAGES) currentPage = 0;
 
-        PAGINATION::setPage(currentPage);
+        // PAGINATION::setPage(currentPage);
+        PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
 
         needsUpdating = true;
     }
     uint8_t getPage (void) {
-        return currentPage;
+        if (!shift) {
+            return currentPage;
+        } else {
+            return currentPage + MAX_KNOBS;
+        }
     }
 
     void setKnob (uint8_t page, uint8_t control, uint16_t input) {
@@ -291,7 +296,12 @@ namespace CONTROLS {
         if (needsUpdating) {
             
             // Updates one page at a time to stop the synth core from being overloaded - to be updated to account for current page. 
-            Control.update();
+            // - works but is steppy
+            // Control.update();
+
+            // Updtaes current page, as well as shift page.
+            // Needs testing
+            Control.updatePage(currentPage + (shift * MAX_PAGES));
             
             needsUpdating = false;
         }

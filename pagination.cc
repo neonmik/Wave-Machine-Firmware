@@ -3,7 +3,6 @@
 namespace PAGINATION {
   
     void init() {
-      // refresh();
       update();
     }
     void refresh() {
@@ -13,16 +12,20 @@ namespace PAGINATION {
             clear(i);
         }
     }
-    void setPage (uint8_t page) {
-      currentPage = page;
-      refresh();
-    }
+
+    // void setPage (uint8_t page) {
+    //   currentPage = page;
+    //   refresh();
+    // }
+
     void update(){
-      uint8_t activePage = currentPage;
-      if (CONTROLS::getShift()) {
-        activePage += MAX_PAGES;
-        refresh();
-      } 
+      uint8_t activePage = CONTROLS::getPage();
+
+      // if (CONTROLS::getShift()) {
+      //   activePage += MAX_PAGES;
+      //   refresh();
+      // } 
+      
       // read knobs values, show sync with the LED, enable knob when it matches the stored value
       for (int i = 0; i < MAX_KNOBS; i++){
         currentValue = ADC::value(i);
