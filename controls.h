@@ -14,7 +14,7 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 
-#define SHIFT_TIMEOUT       512
+#define SHIFT_TIMEOUT       1024
 
 namespace CONTROLS
 {

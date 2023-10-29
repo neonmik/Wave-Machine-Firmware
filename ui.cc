@@ -18,7 +18,7 @@ namespace UI {
     CONTROLS::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
-      _mode = UI_MODE_CALIBRATION;
+      mode = UI_MODE_CALIBRATION;
       update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
     }
     
@@ -30,7 +30,7 @@ namespace UI {
   }
 
   void update (void) { 
-    switch (_mode) {
+    switch (mode) {
       case UI_MODE_NORMAL:
         switch(poll) {
           case 0:
@@ -47,7 +47,7 @@ namespace UI {
 
             // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
-              LEDS::PRESET.flash(4,50);
+              // LEDS::PRESET.flash(4,50);
               CONTROLS::save();
             }
             // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
@@ -195,7 +195,7 @@ namespace UI {
 
     LEDS::test(50);
 
-    _mode = UI_MODE_NORMAL;
+    mode = UI_MODE_NORMAL;
   }
 }
 

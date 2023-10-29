@@ -190,12 +190,13 @@ namespace CONTROLS {
     // Save current Preset
     void save () {
         savePreset(currentPreset);
+
+        LEDS::PRESET.flash(4,50);
     }
     
     void setPage (uint8_t page) {
         currentPage = page;
 
-        // PAGINATION::setPage(currentPage);
         LEDS::PAGE_select(currentPage);
 
         needsUpdating = true;
@@ -204,7 +205,6 @@ namespace CONTROLS {
         currentPage++;
         if (currentPage >= MAX_PAGES) currentPage = 0;
 
-        // PAGINATION::setPage(currentPage);
         PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
 
@@ -264,14 +264,6 @@ namespace CONTROLS {
         LEDS::LFO.flash(4, 50);
     }
 
-    // void toggleShift (void) {
-    //     PAGINATION::refresh();
-
-    //     shift = !shift;
-
-    //     needsUpdating = true;
-    // }
-
     void setShift (bool input) {
         if (shift != input) {
         
@@ -294,14 +286,9 @@ namespace CONTROLS {
     
     void update () {
         if (needsUpdating) {
-            
-            // Updates one page at a time to stop the synth core from being overloaded - to be updated to account for current page. 
-            // - works but is steppy
-            // Control.update();
 
-            // Updtaes current page, as well as shift page.
-            // Needs testing
-            Control.updatePage(currentPage + (shift * MAX_PAGES));
+            // Updates only active page, including whether we're in a shift page.
+            Control.updatePage(getPage());
             
             needsUpdating = false;
         }
