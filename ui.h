@@ -14,8 +14,6 @@
 #define KNOBS_PRINT_OUT     0
 #define HARDWARE_TEST       0
 
-#define SHIFT_TIMEOUT       512
-
 namespace UI {
 
     enum UiMode {
@@ -36,12 +34,6 @@ namespace UI {
     }
     
     void setPage (uint8_t page);
-
-    void toggleLFO(void);
-    bool getLFO(void);
-
-    void toggleArp(void);
-    bool getArp(void);
 
     void changePreset(void);
     uint8_t getPreset(void);

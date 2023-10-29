@@ -14,6 +14,8 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 
+#define SHIFT_TIMEOUT       512
+
 namespace CONTROLS
 {
     namespace
@@ -24,6 +26,7 @@ namespace CONTROLS
         uint8_t lastPage;
 
         bool shift;
+        uint16_t shiftCounter;
 
         bool needsUpdating;
 
@@ -262,7 +265,6 @@ namespace CONTROLS
             }
         }
         void update() {
-
             switch (index)
             {
             case Page::MAIN:
@@ -291,6 +293,35 @@ namespace CONTROLS
                 break;
             }
             index++;
+        }
+        void updatePage(uint8_t index) {
+            switch (index)
+            {
+            case Page::MAIN:
+                MAIN.update();
+                break;
+            case Page::ADSR:
+                ADSR.update();
+                break;
+            case Page::LFO:
+                LFO.update();
+                break;
+            case Page::ARP:
+                ARP.update();
+                break;
+            case Page::SHFT:
+                SHFT.update();
+                break;
+            case Page::fENV:
+                fENV.update();
+                break;
+            case Page::FILT:
+                FILT.update();
+                break;
+            case Page::sARP:
+                sARP.update();
+                break;
+            }
         }
         void updateAll(void) {
             MAIN.update();
@@ -340,8 +371,10 @@ namespace CONTROLS
     void toggleArp(void);
     bool getArp(void);
 
-    void toggleShift(void);
+    // void toggleShift(void);
     bool getShift(void);
+
+    void setShift(bool input);
 
     void update(void);
 };

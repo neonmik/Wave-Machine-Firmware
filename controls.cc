@@ -5,6 +5,8 @@ namespace CONTROLS {
     PRESET Preset[MAX_PRESETS];
 
     void init () {
+        PAGINATION::init();
+
         EEPROM::init();
 
         currentPreset = DEFAULT_PRESET;
@@ -257,12 +259,28 @@ namespace CONTROLS {
         LEDS::LFO.flash(4, 50);
     }
 
-    void toggleShift (void) {
-        PAGINATION::refresh();
+    // void toggleShift (void) {
+    //     PAGINATION::refresh();
 
-        shift = !shift;
+    //     shift = !shift;
 
-        needsUpdating = true;
+    //     needsUpdating = true;
+    // }
+
+    void setShift (bool input) {
+        if (shift != input) {
+        
+            shiftCounter++;
+            if (shiftCounter >= SHIFT_TIMEOUT) {
+                
+                shift = !shift;
+                needsUpdating = true;
+
+                PAGINATION::refresh();
+
+                shiftCounter = 0;
+            }
+        }
     }
 
     bool getShift (void) {

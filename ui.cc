@@ -8,26 +8,6 @@
 #include "usb_descriptors.h"
 
 namespace UI {
-  
-  void setShift (bool input) {
-    if (shift != input) {
-      
-      shiftCounter++;
-      if (shiftCounter >= SHIFT_TIMEOUT) {
-        
-        CONTROLS::toggleShift();
-        shift = input;
-
-        shiftCounter = 0;
-      }
-    }
-  }
-
-  // ----------------------
-  //        HARDWARE
-  // ----------------------
-
-
 
   void init (void) {
 
@@ -35,7 +15,6 @@ namespace UI {
     KEYS::init();
     ADC::init();
 
-    PAGINATION::init();
     CONTROLS::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
@@ -70,7 +49,6 @@ namespace UI {
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
               LEDS::PRESET.flash(4,50);
               CONTROLS::save();
-              // printf("Save!\n");
             }
             // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
               // LEDS::LFO.flash(3,60);
@@ -100,7 +78,7 @@ namespace UI {
               CONTROLS::changePreset();
             }
 
-            setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
+            CONTROLS::setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
             break;
           case 4:
             ADC::update();
