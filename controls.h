@@ -128,32 +128,15 @@ namespace CONTROLS
 
         void setKnob(uint8_t page, uint8_t control, uint16_t value)
         {
-            switch (page)
-            {
-            case Page::MAIN:
-                MAIN.setKnob(control, value);
-                break;
-            case Page::ADSR:
-                ADSR.setKnob(control, value);
-                break;
-            case Page::LFO:
-                LFO.setKnob(control, value);
-                break;
-            case Page::ARP:
-                ARP.setKnob(control, value);
-                break;
-            case Page::SHFT:
-                SHFT.setKnob(control, value);
-                break;
-            case Page::fENV:
-                fENV.setKnob(control, value);
-                break;
-            case Page::FILT:
-                FILT.setKnob(control, value);
-                break;
-            case Page::sARP:
-                sARP.setKnob(control, value);
-                break;
+            switch (page) {
+                case Page::MAIN:            MAIN.setKnob(control, value);   break;
+                case Page::ADSR:            ADSR.setKnob(control, value);   break;
+                case Page::LFO:             LFO.setKnob(control, value);    break;
+                case Page::ARP:             ARP.setKnob(control, value);    break;
+                case Page::SHFT:            SHFT.setKnob(control, value);   break;
+                case Page::fENV:            fENV.setKnob(control, value);   break;
+                case Page::FILT:            FILT.setKnob(control, value);   break;
+                case Page::sARP:            sARP.setKnob(control, value);   break;
             }
         }
         uint16_t getKnob(uint8_t page, uint16_t control)
