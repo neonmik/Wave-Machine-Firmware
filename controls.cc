@@ -243,18 +243,26 @@ namespace CONTROLS {
     }
        
     void toggleLFO () {
-        Control.toggleButton(Page::LFO);
-        LEDS::LFO.set(Control.getButton(Page::LFO));
-        needsUpdating = true;
+        if (shift) {
+            return;
+        } else {
+            Control.toggleButton(Page::LFO);
+            LEDS::LFO.set(Control.getButton(Page::LFO));
+            needsUpdating = true;
+        }
     }
     bool getLFO () {
         return Control.getButton(Page::LFO);
     }
 
     void toggleArp () {
-        Control.toggleButton(Page::ARP);
-        LEDS::ARP.set(Control.getButton(Page::ARP));
-        needsUpdating = true;
+        if (shift) {
+            return;
+        } else {
+            Control.toggleButton(Page::ARP);
+            LEDS::ARP.set(Control.getButton(Page::ARP));
+            needsUpdating = true;
+        }
     }
     bool getArp () {
         return Control.getButton(Page::ARP);
