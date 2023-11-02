@@ -47,12 +47,8 @@ namespace UI {
 
             // combonations go first so they don't muck up the single presses
             if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
-              // LEDS::PRESET.flash(4,50);
               CONTROLS::save();
             }
-            // if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::LFO.get(Buttons::State::SHORT)) {
-              // LEDS::LFO.flash(3,60);
-            // }
 
             
             if (Buttons::ARP.get(Buttons::State::LONG)) {
