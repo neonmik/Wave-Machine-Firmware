@@ -23,20 +23,15 @@ namespace UI {
     };
 
     namespace {
-        uint8_t currentPreset              =           0;
-        uint8_t currentPage                =           0;
-        bool    shift;
-        uint16_t shiftCounter;
+        // uint8_t     currentPreset              =           0;
+        // uint8_t     currentPage                =           0;
+        // bool        shift;
+        // uint16_t    shiftCounter;
+        
+        uint8_t     poll;
 
-        uint8_t poll;
-
-        UiMode _mode;
+        UiMode      mode;
     }
-    
-    void setPage (uint8_t page);
-
-    void changePreset(void);
-    uint8_t getPreset(void);
 
     void printStartUp (void);
 

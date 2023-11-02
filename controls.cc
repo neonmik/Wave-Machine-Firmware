@@ -194,19 +194,24 @@ namespace CONTROLS {
         LEDS::PRESET.flash(4,50);
     }
     
+    // internal use only...
     void setPage (uint8_t page) {
         currentPage = page;
 
+        PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
 
         needsUpdating = true;
     }
+
     void changePage(void) {
         currentPage++;
         if (currentPage >= MAX_PAGES) currentPage = 0;
 
         PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
+
+        resetShift();
 
         needsUpdating = true;
     }
@@ -278,6 +283,12 @@ namespace CONTROLS {
                 shiftCounter = 0;
             }
         }
+    }
+
+    // For internal use only - Stops page change from accidentally triggering a short shift page selection.
+    void resetShift (void) {
+        shift = false;
+        shiftCounter = 0;
     }
 
     bool getShift (void) {

@@ -15,7 +15,6 @@ namespace PAGINATION {
         PROTECTED,
         ACTIVE
     };
-    
     namespace {
         uint8_t currentPage = 0;
         
@@ -24,7 +23,6 @@ namespace PAGINATION {
         int16_t lastValue[MAX_KNOBS];
         bool in_sync;
 
-        uint16_t knob_protection_threshold = 10; // the amount of protection the knob gets before unlocking.
         
         void protect(int value) {
             currentState[value] = KnobState::PROTECTED;

@@ -14,7 +14,8 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 
-#define SHIFT_TIMEOUT       1024
+#define SHIFT_TIMEOUT           512     // Stops the shift button reacting as soon as it's pressed, which causing flashing LEDs when just pressed shortly.
+#define PROTECTION_THRESHOLD    5       // The threshold when the Pagination unlocks the pot. 
 
 namespace CONTROLS
 {
@@ -157,170 +158,82 @@ namespace CONTROLS
         }
         uint16_t getKnob(uint8_t page, uint16_t control)
         {
-            switch (page)
-            {
-            case Page::MAIN:
-                return MAIN.getKnob(control);
-            case Page::ADSR:
-                return ADSR.getKnob(control);
-            case Page::LFO:
-                return LFO.getKnob(control);
-            case Page::ARP:
-                return ARP.getKnob(control);
-            case Page::SHFT:
-                return SHFT.getKnob(control);
-            case Page::fENV:
-                return fENV.getKnob(control);
-            case Page::FILT:
-                return FILT.getKnob(control);
-            case Page::sARP:
-                return sARP.getKnob(control);
-            default:
-                return 0;
+            switch (page) {
+                case Page::MAIN:            return                          MAIN.getKnob(control);
+                case Page::ADSR:            return                          ADSR.getKnob(control);
+                case Page::LFO:             return                          LFO.getKnob(control);
+                case Page::ARP:             return                          ARP.getKnob(control);
+                case Page::SHFT:            return                          SHFT.getKnob(control);
+                case Page::fENV:            return                          fENV.getKnob(control);
+                case Page::FILT:            return                          FILT.getKnob(control);
+                case Page::sARP:            return                          sARP.getKnob(control);
+                default:                    return                          0;
             }
         }
 
         void setButton(uint8_t page, bool state)
         {
-            switch (page)
-            {
-            case Page::MAIN:
-                MAIN.setButton(state);
-                break;
-            case Page::ADSR:
-                ADSR.setButton(state);
-                break;
-            case Page::LFO:
-                LFO.setButton(state);
-                break;
-            case Page::ARP:
-                ARP.setButton(state);
-                break;
-            case Page::SHFT:
-                SHFT.setButton(state);
-                break;
-            case Page::fENV:
-                fENV.setButton(state);
-                break;
-            case Page::FILT:
-                FILT.setButton(state);
-                break;
-            case Page::sARP:
-                sARP.setButton(state);
-                break;
+            switch (page) {
+                case Page::MAIN:            MAIN.setButton(state);          break;
+                case Page::ADSR:            ADSR.setButton(state);          break;
+                case Page::LFO:             LFO.setButton(state);           break;
+                case Page::ARP:             ARP.setButton(state);           break;
+                case Page::SHFT:            SHFT.setButton(state);          break;
+                case Page::fENV:            fENV.setButton(state);          break;
+                case Page::FILT:            FILT.setButton(state);          break;
+                case Page::sARP:            sARP.setButton(state);          break;
             }
         }
         void toggleButton(uint8_t page)
         {
-            switch (page)
-            {
-            case Page::MAIN:
-                MAIN.toggleButton();
-                break;
-            case Page::ADSR:
-                ADSR.toggleButton();
-                break;
-            case Page::LFO:
-                LFO.toggleButton();
-                break;
-            case Page::ARP:
-                ARP.toggleButton();
-                break;
-            case Page::SHFT:
-                SHFT.toggleButton();
-                break;
-            case Page::fENV:
-                fENV.toggleButton();
-                break;
-            case Page::FILT:
-                FILT.toggleButton();
-                break;
-            case Page::sARP:
-                sARP.toggleButton();
-                break;
+            switch (page)   {
+                case Page::MAIN:            MAIN.toggleButton();            break;
+                case Page::ADSR:            ADSR.toggleButton();            break;
+                case Page::LFO:             LFO.toggleButton();             break;
+                case Page::ARP:             ARP.toggleButton();             break;
+                case Page::SHFT:            SHFT.toggleButton();            break;
+                case Page::fENV:            fENV.toggleButton();            break;
+                case Page::FILT:            FILT.toggleButton();            break;
+                case Page::sARP:            sARP.toggleButton();            break;
             }
         }
         bool getButton(uint8_t page)
         {
-            switch (page)
-            {
-            case Page::MAIN:
-                return MAIN.getButton();
-            case Page::ADSR:
-                return ADSR.getButton();
-            case Page::LFO:
-                return LFO.getButton();
-            case Page::ARP:
-                return ARP.getButton();
-            case Page::SHFT:
-                return SHFT.getButton();
-            case Page::fENV:
-                return fENV.getButton();
-            case Page::FILT:
-                return FILT.getButton();
-            case Page::sARP:
-                return sARP.getButton();
-            default:
-                return false;
+            switch (page) {
+                case Page::MAIN:            return                          MAIN.getButton();
+                case Page::ADSR:            return                          ADSR.getButton();
+                case Page::LFO:             return                          LFO.getButton();
+                case Page::ARP:             return                          ARP.getButton();
+                case Page::SHFT:            return                          SHFT.getButton();
+                case Page::fENV:            return                          fENV.getButton();
+                case Page::FILT:            return                          FILT.getButton();
+                case Page::sARP:            return                          sARP.getButton();
+                default:                    return                          false;
             }
         }
         void update() {
-            switch (index)
-            {
-            case Page::MAIN:
-                MAIN.update();
-                break;
-            case Page::ADSR:
-                ADSR.update();
-                break;
-            case Page::LFO:
-                LFO.update();
-                break;
-            case Page::ARP:
-                ARP.update();
-                break;
-            case Page::SHFT:
-                SHFT.update();
-                break;
-            case Page::fENV:
-                fENV.update();
-                break;
-            case Page::FILT:
-                FILT.update();
-                break;
-            case Page::sARP:
-                sARP.update();
-                break;
+            switch (index) {
+                case Page::MAIN:            MAIN.update();                 break;
+                case Page::ADSR:            ADSR.update();                 break;
+                case Page::LFO:             LFO.update();                  break;
+                case Page::ARP:             ARP.update();                  break;
+                case Page::SHFT:            SHFT.update();                 break;
+                case Page::fENV:            fENV.update();                 break;
+                case Page::FILT:            FILT.update();                 break;
+                case Page::sARP:            sARP.update();                 break;
             }
             index++;
         }
         void updatePage(uint8_t index) {
-            switch (index)
-            {
-            case Page::MAIN:
-                MAIN.update();
-                break;
-            case Page::ADSR:
-                ADSR.update();
-                break;
-            case Page::LFO:
-                LFO.update();
-                break;
-            case Page::ARP:
-                ARP.update();
-                break;
-            case Page::SHFT:
-                SHFT.update();
-                break;
-            case Page::fENV:
-                fENV.update();
-                break;
-            case Page::FILT:
-                FILT.update();
-                break;
-            case Page::sARP:
-                sARP.update();
-                break;
+            switch (index) {
+                case Page::MAIN:            MAIN.update();                  break;
+                case Page::ADSR:            ADSR.update();                  break;
+                case Page::LFO:             LFO.update();                   break;
+                case Page::ARP:             ARP.update();                   break;
+                case Page::SHFT:            SHFT.update();                  break;
+                case Page::fENV:            fENV.update();                  break;
+                case Page::FILT:            FILT.update();                  break;
+                case Page::sARP:            sARP.update();                  break;
             }
         }
         void updateAll(void) {
@@ -371,10 +284,10 @@ namespace CONTROLS
     void toggleArp(void);
     bool getArp(void);
 
-    // void toggleShift(void);
     bool getShift(void);
 
     void setShift(bool input);
+    void resetShift (void);
 
     void update(void);
 };
