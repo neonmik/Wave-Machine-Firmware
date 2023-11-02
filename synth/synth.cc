@@ -80,106 +80,89 @@ namespace SYNTH {
   // }
 
   uint16_t process() {
+    int32_t outputSample = 0;  // used to combine channel output
     
-    if (playSoftStart) {
-      ++softStartIndex;
-      if (softStartIndex >= 2) {
-        softStartIndex = 0;
-        softStartSample += 1;
-        if (softStartSample >= 0) {
-          softStartSample = 0;
-          playSoftStart = false;
+    MOD::update();
+
+    // implemented this here so that it's set for the whole sample run...
+    uint16_t waveOffset = (currentWaveShape + (currentWaveVector + modVector));
+    uint16_t outputVolume = (volume - modTremelo);
+    
+    for(int c = 0; c < POLYPHONY; c++) {
+
+      auto &channel = channels[c];
+      // check if any waveforms are active for this channel
+      if(channel.isActive()) {
+        
+        channel.calcIncrement();
+        // increment the waveform position counter.
+        channel.phaseAccumulator += channel.phaseIncrement;
+
+
+        //this is where modVibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
+        channel.phaseAccumulator += modVibrato;
+
+        channel.ADSR.update();
+        if (channel.isActive() && channel.ADSR.isStopped()) {
+          channel.noteStopped();
+          QUEUE::releaseSend(c);
+          continue; // save processing this channel any futher
         }
-      }
-      return (softStartSample - INT16_MIN)>>4;
-    } 
 
-    else {
-      int32_t outputSample = 0;  // used to combine channel output
-      
-      MOD::update();
+        int32_t channelSample = 0;
 
-      // implemented this here so that it's set for the whole sample run...
-      uint16_t waveOffset = (currentWaveShape + (currentWaveVector + modVector));
-      uint16_t outputVolume = (volume - modTremelo);
-      
-      for(int c = 0; c < POLYPHONY; c++) {
+        uint8_t oscillatorsActive = 0;
+        
+        channelSample += getWavetable(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
+        
+        // Prototype oscillator modes:
+        oscillatorsActive++;
 
-        auto &channel = channels[c];
-        // check if any waveforms are active for this channel
-        if(channel.isActive()) {
-          
-          channel.calcIncrement();
-          // increment the waveform position counter.
-          channel.phaseAccumulator += channel.phaseIncrement;
-
-
-          //this is where modVibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
-          channel.phaseAccumulator += modVibrato;
-
-          channel.ADSR.update();
-          if (channel.isActive() && channel.ADSR.isStopped()) {
-            channel.noteStopped();
-            QUEUE::releaseSend(c);
-            continue; // save processing this channel any futher
-          }
-
-          int32_t channelSample = 0;
-
-          uint8_t oscillatorsActive = 0;
-          
-          channelSample += getWavetable(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
-          
-          // Prototype oscillator modes:
+        // Sub Mode
+        if (subActive) {
+          channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
           oscillatorsActive++;
-
-          // Sub Mode
-          if (subActive) {
-            channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
-            oscillatorsActive++;
-            // channelSample >>= 1; // easy dived by 2 for Main and Sub
-          }
-
-          // Noise Mode
-          if (noiseActive){
-            channelSample += RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
-            oscillatorsActive++;
-            // channelSample /= 3; // divide by 3 for Main, Sub and Noise
-          }
-
-          channelSample /= oscillatorsActive;
-
-          // apply ADSR
-          channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
-
-          // apply channel volume
-          channelSample = (int32_t(channelSample) * int32_t(channel.volume)) >> 16;
-
-          outputSample += channelSample;
+          // channelSample >>= 1; // easy dived by 2 for Main and Sub
         }
+
+        // Noise Mode
+        if (noiseActive){
+          channelSample += RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
+          oscillatorsActive++;
+          // channelSample /= 3; // divide by 3 for Main, Sub and Noise
+        }
+
+        channelSample /= oscillatorsActive;
+
+        // apply ADSR
+        channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
+
+        // apply channel volume
+        channelSample = (int32_t(channelSample) * int32_t(channel.volume)) >> 16;
+
+        outputSample += channelSample;
       }
-
-
-      outputSample = (int32_t(outputSample >> 3) * int32_t(outputVolume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
-
-      // was meant to introduce lower sample rate filter, but makes a bit crushed effect...
-      // m++;
-      // m &= 0x7;
-      // if (m == 0) FILTER::process(outputSample);
-      
-      // Filter
-      FILTER::process(outputSample);
-
-      // Soft clipping
-      FX::SOFTCLIP::process(outputSample);
-
-      // Hard clipping to 16-bit
-      FX::HARDCLIP::process(outputSample);
-      
-      // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
-      return (outputSample - INT16_MIN)>>4;
     }
 
+
+    outputSample = (int32_t(outputSample >> 3) * int32_t(outputVolume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
+
+    // was meant to introduce lower sample rate filter, but makes a bit crushed effect...
+    // m++;
+    // m &= 0x7;
+    // if (m == 0) FILTER::process(outputSample);
+    
+    // Filter
+    FILTER::process(outputSample);
+
+    // Soft clipping
+    FX::SOFTCLIP::process(outputSample);
+
+    // Hard clipping to 16-bit
+    FX::HARDCLIP::process(outputSample);
+    
+    // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
+    return (outputSample - INT16_MIN)>>4;
   }
 
   void setWaveShape (uint16_t input) {
