@@ -175,11 +175,11 @@ namespace ARP {
             }
             if (CLOCK::getClockChanged()) {
                 CLOCK::setClockChanged(false);
+                // transferNotes(); 
 
                 switch (currentNoteState) {
                     case NoteState::ACTIVE:
                         if (arpMode == ArpMode::POLY) {
-                            // Niether of these seem to work? MIDI ISSUES can possibly reduce POLYPHONY to currentNoteCount
                             for (int i = 0; i < POLYPHONY; i++) {
                                 // Should be able to remove this check, as it shouldn't change between playing and releasing
                                 if (currentPlayOct[i]) {
