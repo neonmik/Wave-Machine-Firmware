@@ -20,7 +20,7 @@ Current nightly firmware for Wave Machine Hardware.
         - 6 Waveforms (Sine, Sawtooth Up, Sawtooth Down, Square, Triangle and Noise)
 
     - A characterful SVF Filter with:
-        - Paraphonic Envelope control (ADSR) with either ascedning or decending modes
+        - Paraphonic Envelope control (ADSR) with either ascending or decending modes
         - Cutoff control
         - Resonance control
         - Punch contol
