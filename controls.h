@@ -119,10 +119,10 @@ namespace CONTROLS
             PAGE    fENV{   &FILTER::setAttack,        &FILTER::setDecay,          &FILTER::setSustain,        &FILTER::setRelease,        nullptr};
 
         PAGE        LFO{    &MOD::setMatrix,           &MOD::setRate,              &MOD::setDepth,             &MOD::setShape,             MOD::setState};
-            PAGE    SHFT{   nullptr,                   nullptr,                    &FX::SOFTCLIP::setGain,     nullptr,                    nullptr};
+            PAGE    SHFT{   &SYNTH::setSub,            &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     nullptr,                    nullptr};
 
         PAGE        ARP{    &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState};
-            PAGE    sARP{   nullptr,                   &ARP::setBPM,               nullptr,                    &ARP::setOctMode,           nullptr};
+            PAGE    sARP{   nullptr,                   &ARP::setBPM,               &FILTER::setTriggerMode,    &ARP::setOctMode,           nullptr};
 
         void init(void) {}
 
