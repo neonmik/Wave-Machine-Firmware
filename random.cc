@@ -14,6 +14,10 @@ namespace RANDOM {
         return _seed;
     }
 
+    int16_t getSignal() {
+        return (_seed - INT8_MIN);
+    }
+
 
     // old PRNG functions, may be useful to base a normalised noise calc off of
     // uint32_t prng_xorshift_state = 0x32B71700;

@@ -8,4 +8,5 @@ namespace RANDOM {
     }
     void update(uint16_t seed);
     uint16_t get();
+    int16_t getSignal();
 };
