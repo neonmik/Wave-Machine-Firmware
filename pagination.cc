@@ -26,12 +26,13 @@ namespace PAGINATION {
         if (in_sync && currentValue != lastValue[i]) {
             currentState[i] = KnobState::ACTIVE;
             lastValue[i] = currentValue;
+            
+            LEDS::KNOB_select(i, 1);
+            // this could be where you set the level for KNOB LED's faux PWM output
         }
       
         // if enabled then mirror the real time knob value
         if(currentState[i] == KnobState::ACTIVE){
-          LEDS::KNOB_select(i, 1);
-          // this could be where you set the level for KNOB LED's faux PWM output
           CONTROLS::setKnob(activePage, i, currentValue);
         }
       }
