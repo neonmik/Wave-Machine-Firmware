@@ -114,7 +114,11 @@ namespace MIDI {
         // printf("SysEx Message has nowhere to go...\n");
         // printMidiMessage(message);
     }
-    void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {}
+    void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {
+        uint16_t temp = position_lsb << 7 | position_msb;
+        printf("SONG POSITION POINTER: %d\n", temp);
+        CLOCK::midiClockPosition(temp);
+    }
     void handleSongSelect(uint8_t song) {}
     void handleTuneRequest(void) {}
     void handleClock(void) {
@@ -126,7 +130,9 @@ namespace MIDI {
     void handleStop(void) {
         CLOCK::stopMidiClock();
     }
-    void handleContinue(void) {}
+    void handleContinue(void) {
+        
+    }
     void handleActiveSense(void) {}
     void handleReset(void) {}
     void handleInvalidType (MidiMessage message) {

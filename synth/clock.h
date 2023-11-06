@@ -32,6 +32,8 @@ namespace CLOCK {
         bool midiClockPreset = false;
         uint8_t midiDivision = 24;
 
+        uint8_t currentDivision = 8;
+
         uint8_t _midi_start_flag;        // midi start command
         uint8_t _midi_stop_flag;    		// midi stop command
         uint32_t midiClockLast;   // stores the system time of the last received midi clock
@@ -67,6 +69,7 @@ namespace CLOCK {
     void midiClockTick (void);
     void startMidiClock (void);
     void stopMidiClock (void);
+    void midiClockPosition (uint16_t input);
     void checkMidiClock (void);
 
 }

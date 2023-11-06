@@ -141,6 +141,14 @@ namespace CLOCK {
         setClockChanged(true); 
     }
 
+    void midiClockPosition (uint16_t input) {
+        // 14 bit Song Position Pointer from MIDI
+        // This will be used for beat sync.
+
+        // take 16th note position and make sure that the current divison matches up with it... 
+        // also add feature to make sure that the division setting is only changed on the beat.
+    }
+
     void checkMidiClock (void) {
         if (!midiClockPreset) return;
  
