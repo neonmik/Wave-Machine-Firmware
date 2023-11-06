@@ -120,14 +120,14 @@ namespace SYNTH {
 
         // Sub Mode
         if (subActive) {
-          channelSample += getWavetable((channel.phaseAccumulator >> 1), 0); // Sub Sinewave oscillator test - currently doesn't work, >> 1 creates a half wave, >> 2 creates a quarter wave
+          channelSample += (getWavetable((channel.phaseAccumulator >> 1), 0) * 1024) >> 10; // Sub Sinewave oscillator test
           oscillatorsActive++;
           // channelSample >>= 1; // easy dived by 2 for Main and Sub
         }
 
         // Noise Mode
         if (noiseActive){
-          channelSample += RANDOM::get() >> 4; // returns noise... currently for testing how random the output is.
+          channelSample += ((RANDOM::getSignal() >> 2) * 1024) >> 10;
           oscillatorsActive++;
           // channelSample /= 3; // divide by 3 for Main, Sub and Noise
         }
@@ -145,17 +145,12 @@ namespace SYNTH {
     }
 
 
-    outputSample = (int32_t(outputSample >> 3) * int32_t(outputVolume)) >> 16; // needs to shift by 19 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
-
-    // was meant to introduce lower sample rate filter, but makes a bit crushed effect...
-    // m++;
-    // m &= 0x7;
-    // if (m == 0) FILTER::process(outputSample);
+    outputSample = (int32_t(outputSample >> 2) * int32_t(outputVolume)) >> 16; // needs to shift by 18 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
     
     // Filter
     FILTER::process(outputSample);
 
-    // Soft clipping
+    // Soft clipping to 16-bit
     FX::SOFTCLIP::process(outputSample);
 
     // Hard clipping to 16-bit
