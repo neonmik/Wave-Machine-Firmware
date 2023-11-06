@@ -382,7 +382,7 @@ namespace ARP {
 
             if (refreshPlayIndex) {
                 if (currentPlayIndex > 0) resetPlayIndex();
-                // resetOctave();
+                resetOctave();
                 refreshPlayIndex = false;
             }
             if (currentPlayIndex > 0 && currentPlayIndex >= inputNoteCount) {
