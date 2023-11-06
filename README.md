@@ -51,8 +51,6 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Release bugfixes
 
-    - BUG: Filter env resets randomly - usually when playing arp with short release and longer attack (either mono or poly) it randomly resets. Seems to be fine with any release.
-
     - BUG: When flipping through presets while actively playing (not just holding notes) notes get stuck on. Holding more than 8 notes clears it for now, maybe look to add in an array of current notes (as it was before) to only be used on patch change to reset the notes. 
 
     - NOTE PRIORITY: Investigate moving MIDI::sendNoteOff to outside the note validation loop in release so it always gets called when it actually gets called. Might need to move sustain to keys file...
@@ -164,6 +162,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Improve Filter code: 
+
         - Check ADSR setup in Filter - Seems to not update Sustain, might need to retrigger DECAY if sustain is changed, this should make it recalculate sustain level.
         - Improve modulation inputs - Cutoff mod could be applied with a switch [if (Filter::HighCut) 65535 - mod;]
 
@@ -181,7 +180,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Improve Note Handling:
-        - Bug: Held notes are being written over desipte some that some voices should be in release - Hold low octave on MIDI, and play fast pentatonic up and down
+        - Bug: When sustain is held, note priority overtakes still held sustained note.Need to add some validity check for (if (sustainPedal) if )
 
         - Add actual Mono Mode - selectable at start up.
         
@@ -244,6 +243,7 @@ Features/Bugfixes:
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
     + Note Handling:
+        + Bugfix: Held notes were being written over desipte the fact that some voices should be in release (Could be demo'd by holding low octave on MIDI, and play fast pentatonic up and down). Can no longer be repliacted, musthave been fixed when I refactored Note Handling.
         + Bugfix: Notes that were held down or in sustain were acting strangely across presets. 
         + Bugfix: Filter triggers didn't count active notes right. 
         + Moved filter trigger code to the Audio core to reduce queue messages.
@@ -386,6 +386,7 @@ Features/Bugfixes:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Bugfix: Filter envelope was reseting randomly (when playing arp with short release and longer attack (either mono or poly) but seemed to be fine with any release). Can't replicate now, so marking as fixed. Added watchdog/debug messages just incase.
         + Feature: Added a setting for Mono/Para Filter modes - just needs a control now.
         + Bugfix: Filter triggers didn't count active notes right.
         + Moved filter trigger code to the Audio core to reduce queue messages.
