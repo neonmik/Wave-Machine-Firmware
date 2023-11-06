@@ -69,7 +69,7 @@ namespace NOTE_HANDLING {
     MIDI::sendNoteOn(note, velocity);
 
     for (int i = 0; i < POLYPHONY; i++)  {
-      // voice is being used, but by this note, so fire again
+      // voice is being used, but by the same note, so fire again
       if (VOICES[i].note == note && VOICES[i].gate) { 
         voice = i;
         break;  // breaks for-loop as a free slot has been found
@@ -100,6 +100,7 @@ namespace NOTE_HANDLING {
               voice = i; // shouldn't be called unless theres one or more notes in release, and then should give the oldest
             }
             else if (VOICES[i].activation_time<longest_active_time) { // still active
+
               longest_active_time = VOICES[i].activation_time;
               priority_voice = i; // will give the oldest voice thats still being used
             }
@@ -118,7 +119,7 @@ namespace NOTE_HANDLING {
             }
             else if (VOICES[i].activation_time>shortest_active_time) { // still active
               shortest_active_time = VOICES[i].activation_time;
-              priority_voice = i; // will give the oldest slot thats still being used
+              priority_voice = i; // will give the newest slot thats still being used
             }
           }
           break;
