@@ -35,8 +35,12 @@ namespace SYNTH {
   uint16_t    modTremelo;
   uint16_t    modVector;
 
-  bool       subActive;
-  bool       noiseActive;
+  bool        subActive;
+  bool        noiseActive;
+
+  uint16_t    subLevel;
+  uint16_t    noiseLevel;
+  
 
 
   uint16_t volume = 0xFFFF;
@@ -120,14 +124,14 @@ namespace SYNTH {
 
         // Sub Mode
         if (subActive) {
-          channelSample += (getWavetable((channel.phaseAccumulator >> 1), 0) * 1024) >> 10; // Sub Sinewave oscillator test
+          channelSample += (getWavetable((channel.phaseAccumulator >> 1), 0) * subLevel) >> 10; // Sub Sinewave oscillator test
           oscillatorsActive++;
           // channelSample >>= 1; // easy dived by 2 for Main and Sub
         }
 
         // Noise Mode
         if (noiseActive){
-          channelSample += ((RANDOM::getSignal() >> 2) * 1024) >> 10;
+          channelSample += ((RANDOM::getSignal() >> 2) * noiseLevel) >> 10;
           oscillatorsActive++;
           // channelSample /= 3; // divide by 3 for Main, Sub and Noise
         }
@@ -222,6 +226,14 @@ namespace SYNTH {
   }
   void toggleNoise () {
     noiseActive = !noiseActive;
+  }
+
+  void setSub (uint16_t input) {
+    subLevel = input;
+  }
+
+  void setNoise (uint16_t input) {
+    noiseLevel = input;
   }
 
 }

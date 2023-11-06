@@ -135,4 +135,7 @@ namespace SYNTH {
 
   void toggleSub (void);
   void toggleNoise (void);
+
+  void setSub (uint16_t input);
+  void setNoise (uint16_t input);
 }
