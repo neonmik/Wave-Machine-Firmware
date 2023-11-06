@@ -68,6 +68,17 @@ namespace FILTER {
         }
     }
 
+    void setTriggerMode (uint16_t input) {
+        bool temp = (input >> 9);
+
+        if (temp) {
+            mode = Mode::PARA;
+        } else {
+            mode = Mode::MONO;
+        }
+    }
+
+
     void modulateCutoff(uint16_t input) {
         _mod = (input >> 2);
     }
@@ -134,6 +145,7 @@ namespace FILTER {
         }
     }
 
+    
     void process(int32_t &sample) {
         if (type != Type::Off) {
             ADSR.update();
