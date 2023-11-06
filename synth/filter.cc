@@ -94,12 +94,10 @@ namespace FILTER {
     }
 
     void voicesIncrease (void) {
-        // voicesIncrease();
         ++activeVoice;
         if (activeVoice > POLYPHONY) activeVoice = POLYPHONY;
     }
     void voicesDecrease (void) {
-        // voicesDecrease();
         --activeVoice;
         if (activeVoice < 0) activeVoice = 0;
     }
@@ -133,16 +131,6 @@ namespace FILTER {
     void process(int32_t &sample) {
         if (type != Type::Off) {
             ADSR.update();
-            
-            // dirty is for taking a simple input number and using a lookup table to calculate a smooth frequency input.
-            // if (needsUpdating) {
-            //     frequency = cutoff;
-            //     damp = resonance;
-            //     needsUpdating = false;
-            // }
-
-
-            // volatile int32_t frequency = 0;
             
             if (direction == Direction::Regular) {
                 frequency = (cutoff * ADSR.get()) >> 16;

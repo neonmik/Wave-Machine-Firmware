@@ -34,7 +34,5 @@ namespace PAGINATION {
     void init(void);
     void update(void);
     void refresh(void);
-
-    void setPage (uint8_t page);
 }
   

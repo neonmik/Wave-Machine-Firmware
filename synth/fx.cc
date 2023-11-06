@@ -20,14 +20,6 @@ namespace FX {
                 const int32_t x = sample * sample / _threshold;
                 sample = (3 * sample - (x * sample) / _threshold) / 2;
             }
-
-            // need to figure out a reverse gain, so I can gain to saturation, but the volume wont get louder?
-            // if (_gain > 2) sample /= _gain >> 1;
-            // else sample /= _gain + (_gain >> 2);
-        
-            // sample /= _gain + (_gain >> (32 - _gain));
-        
-            // sample /= _gain;
         }
     }
     namespace HARDCLIP {
