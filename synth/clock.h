@@ -39,6 +39,7 @@ namespace CLOCK {
         uint32_t midiClockLast;   // stores the system time of the last received midi clock
         uint32_t midiClockPeriod;  // time in between midi clock ticks
         uint8_t midiTick;
+        uint16_t midiOutTick;
 
 
         uint32_t samplesSinceLastTick;

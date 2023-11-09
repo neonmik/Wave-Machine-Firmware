@@ -1,5 +1,6 @@
 #include "clock.h"
 
+#include "../midi.h"
 namespace CLOCK {
 
     void init () {
@@ -16,6 +17,7 @@ namespace CLOCK {
     void setBPM (uint16_t bpm) {
         _bpm = bpm;
         calculateDivision();
+        calculatePulse();
     }
     uint8_t getBPM () {
         return _bpm;
@@ -84,9 +86,17 @@ namespace CLOCK {
 
     void sampleClockTick (void) {
         ++clockTick;
+
         if (clockTick >= samplesPerDivision) {
             if (!midiClockPreset) setClockChanged(true);
             clockTick = 0;
+        }
+
+        ++midiOutTick;
+
+        if (midiOutTick >= samplesPerPulse) {
+            MIDI::sendClock();
+            midiOutTick = 0;
         }
     }
 
@@ -115,6 +125,7 @@ namespace CLOCK {
         uint32_t currentTime = sampleClock; // current time in samples
         
         midiClockPeriod = currentTime - midiClockLast;
+        printf("MIDI Clock Period: %d\n", midiClockPeriod);
         // set the current time for use in checking where its still here
         midiClockLast = currentTime;
 
