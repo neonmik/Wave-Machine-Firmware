@@ -24,7 +24,6 @@ namespace LEDS {
         ARP.init();
         PRESET.init();
         ShiftReg::init();
-
     }
     void on(){
         PICO.on();
