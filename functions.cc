@@ -24,3 +24,7 @@ inline int16_t Interpolate824(const uint8_t* table, uint32_t phase) {
     return (a << 8) + \
         ((b - a) * static_cast<int32_t>(phase & 0xffffff) >> 16) - 32768;
 }
+
+uint16_t    samples_to_us (uint32_t samplerate) {
+    return (1000000 / samplerate);
+}

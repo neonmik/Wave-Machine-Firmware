@@ -18,7 +18,7 @@ namespace ADC {
 
         _mux_address = 0;
 
-        sleep_ms(100);
+        // sleep_ms(100);
         
         // run the ADC 4 times to make sure the values are primed - removed from loop as it was optimised out
         update();

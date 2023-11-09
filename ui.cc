@@ -18,6 +18,7 @@ namespace UI {
     CONTROLS::init();
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
+      // this currently brings up the Factory test/calibration mode, but should eventually bring up the MIDI/settings mode
       mode = UI_MODE_CALIBRATION;
       update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
     }
@@ -84,10 +85,10 @@ namespace UI {
             PAGINATION::update();
             break;
           case 6:
-            LEDS::update();
+            CONTROLS::update();
             break;
           case 7:
-            CONTROLS::update();
+            LEDS::update();
             break;
           case 8:
             MIDI::update();

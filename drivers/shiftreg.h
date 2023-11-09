@@ -28,24 +28,22 @@ enum Pins : uint8_t {
         OFF     = 0
 };
 
-
+#define     MAX_RESOLUTION  64
 namespace ShiftReg {
     namespace {
-        uint8_t     _buffer[8];
+        uint8_t     buffer[MAX_RESOLUTION];
         uint8_t     time            = 0;
-        uint16_t    resolution      = 8;
+        uint16_t    resolution      = MAX_RESOLUTION;
+        uint8_t     count           = 1;
+        uint8_t     *data;
+
         bool        needsSending;
 
-        void sampleClockTick (void) {
-            ++time;
-            if (time == resolution) {
-                time = 0;
-                needsSending = true;
-            }
-        }
+        int         shiftRegPWM;
+
     }
 
-    void init();
+    void init(void);
     void update (void);
     void set_bit(Pins pin, bool value);
     void clear (void);

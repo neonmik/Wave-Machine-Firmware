@@ -6,8 +6,9 @@ namespace PAGINATION {
       update();
     }
     void refresh() {
-        LEDS::KNOBS.off();
+        // LEDS::KNOBS.off();
         for(int i = 0; i < MAX_KNOBS; i++) { // loop through the array and set all the values to protected.
+            LEDS::KNOB_select(i, 0);
             protect(i);
             clear(i);
         }

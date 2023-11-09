@@ -75,8 +75,7 @@ namespace LEDS {
                 if (state) KNOB_4.on(); 
                 if (!state) KNOB_4.off();
                 break;
-        }
-            
+        } 
     }
     void PAGE_select(uint8_t page) {
         PAGE_1.off();

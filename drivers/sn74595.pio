@@ -22,7 +22,7 @@
 
 .define loopctr 	((NUM_DEVICES * 8) - 1)
 
-; we shift out rigth to left (MSB first), so we must set unused bits to 0.
+; we shift out right to left (MSB first), so we must set unused bits to 0.
 .define discardsbits (32 - (NUM_DEVICES * 8))
 
 .side_set 1 opt
@@ -46,7 +46,7 @@ set pins, LATCH_LOW 			; Latch low (data and clock remain low)
 
 namespace sn74595 {
 
-const uint32_t SHIFT_CLK  = 100 * 1000;	// 100 kHz
+const uint32_t SHIFT_CLK  = 8000 * 1000;	// 8MHz
 
 enum SN74595_PIN : uint	// GPIO pins to use
 {
