@@ -144,8 +144,9 @@ namespace MIDI {
     // -----------------------------------------------------------------------------------------------
     //                                          Output
     // -----------------------------------------------------------------------------------------------
-    void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2) {
-        uint8_t status = (type | channel);
+    void sendMidiMessage (MidiType type, uint8_t channel, uint8_t data1, uint8_t data2) {
+
+        uint8_t status = (uint8_t(type) | channel);
         uint8_t msg[3] = { status, data1, data2 };
         UART::MIDI::send(msg);
         USB::MIDI::send(msg);
