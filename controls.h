@@ -259,15 +259,23 @@ namespace CONTROLS
     void toggleButton(uint8_t page);
     bool getButton(uint8_t page);
 
-    void toggleOSC (void);
+    // void toggleOSC (void);
 
-    void toggleLFO(void);
-    bool getLFO(void);
+    // void toggleLFO(void);
+    // bool getLFO(void);
 
-    void toggleArp(void);
-    bool getArp(void);
+    // void toggleArp(void);
+    // bool getArp(void);
 
-    bool getShift(void);
+    void toggleButton1 (void);
+    void holdButton1 (void);
+    bool getButton1 (void);
+
+    void toggleButton2 (void);
+    void holdButton2 (void);
+    bool getButton2 (void);
+
+
 
     void setShift(bool input);
     void resetShift (void);

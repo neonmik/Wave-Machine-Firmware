@@ -242,20 +242,64 @@ namespace CONTROLS {
         return Control.getButton(page);
     }
        
-    void toggleLFO () {
+    // void toggleLFO () {
+    //     if (shift) {
+    //         return;
+    //     } else {
+    //         Control.toggleButton(Page::LFO);
+    //         LEDS::LFO.set(Control.getButton(Page::LFO));
+    //         needsUpdating = true;
+    //     }
+    // }
+    // bool getLFO () {
+    //     return Control.getButton(Page::LFO);
+    // }
+
+    // void toggleArp () {
+    //     if (shift) {
+    //         ARP::toggleHold();
+    //         LEDS::ARP.flash(4,50);
+    //     } else {
+    //         Control.toggleButton(Page::ARP);
+    //         LEDS::ARP.set(Control.getButton(Page::ARP));
+    //         needsUpdating = true;
+    //     }
+    // }
+    // bool getArp () {
+    //     return Control.getButton(Page::ARP);
+    // }
+
+    // void toggleOSC () {
+    //     if (shift) {
+    //         SYNTH::toggleNoise();
+    //     } else {
+    //         SYNTH::toggleSub();
+    //     }
+    //     LEDS::LFO.flash(4, 50);
+    // }
+
+    void toggleButton1 (void) {
         if (shift) {
-            return;
+            return; // return because the function is empty so it stops LED from flashing
         } else {
             Control.toggleButton(Page::LFO);
             LEDS::LFO.set(Control.getButton(Page::LFO));
             needsUpdating = true;
         }
     }
-    bool getLFO () {
+    void holdButton1 (void) {
+        if (shift) {
+            SYNTH::toggleNoise();
+        } else {
+            SYNTH::toggleSub();
+        }
+        LEDS::LFO.flash(4, 50);
+    }
+    bool getButton1 () {
         return Control.getButton(Page::LFO);
     }
 
-    void toggleArp () {
+    void toggleButton2 (void) {
         if (shift) {
             return;
         } else {
@@ -264,17 +308,16 @@ namespace CONTROLS {
             needsUpdating = true;
         }
     }
-    bool getArp () {
-        return Control.getButton(Page::ARP);
-    }
-
-    void toggleOSC () {
+    void holdButton2 (void) {
         if (shift) {
-            SYNTH::toggleNoise();
+            return; // return because the function is empty so it stops LED from flashing
         } else {
-            SYNTH::toggleSub();
+            ARP::toggleHold();
         }
-        LEDS::LFO.flash(4, 50);
+        LEDS::ARP.flash(4,50);
+    }
+    bool getButton2 () {
+        return Control.getButton(Page::ARP);
     }
 
     void setShift (bool input) {

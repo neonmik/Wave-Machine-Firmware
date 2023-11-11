@@ -33,6 +33,8 @@ namespace UI {
   void update (void) { 
     switch (mode) {
       case UI_MODE_NORMAL:
+        // Add Midi clock output here to allow it to be super tight to the sample rate.
+
         switch(poll) {
           case 0:
             NOTE_HANDLING::update();
@@ -53,18 +55,22 @@ namespace UI {
 
             
             if (Buttons::ARP.get(Buttons::State::LONG)) {
-              LEDS::ARP.flash(4,50);
-              ARP::toggleHold();
+              // LEDS::ARP.flash(4,50);
+              // ARP::toggleHold();
+              CONTROLS::holdButton2();
             }
             if (Buttons::ARP.get(Buttons::State::SHORT)) {
-              CONTROLS::toggleArp();
+              // CONTROLS::toggleArp();
+              CONTROLS::toggleButton2();
             }
 
             if (Buttons::LFO.get(Buttons::State::LONG)) {
-              CONTROLS::toggleOSC();
+              // CONTROLS::toggleOSC();
+              CONTROLS::holdButton1();
             }
             if (Buttons::LFO.get(Buttons::State::SHORT)) {
-              CONTROLS::toggleLFO();
+              // CONTROLS::toggleLFO();
+              CONTROLS::toggleButton1();
             }
 
             if(Buttons::PAGE.get(Buttons::State::SHORT)) {
