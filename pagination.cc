@@ -29,7 +29,7 @@ namespace PAGINATION {
             lastValue[i] = currentValue;
             
             LEDS::KNOB_select(i, 1);
-            // this could be where you set the level for KNOB LED's faux PWM output
+            // this could be where you set the level for KNOB LED's PWM output eventually
         }
       
         // if enabled then mirror the real time knob value

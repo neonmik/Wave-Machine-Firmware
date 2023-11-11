@@ -59,7 +59,7 @@ void synthCore() {
 
       ++sampleClock;
 
-      CLOCK::sampleClockTick();
+      CLOCK::internalClockTick();
     }
 
     if ((!(sampleClock & 0x3F)) && (sampleClock != sampleClockLast)){

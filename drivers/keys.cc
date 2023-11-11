@@ -76,7 +76,7 @@ namespace KEYS {
       
     }
     // masks 32th key (spare pin in) and function keys - saves pulling floating pins high
-    _history[history_index] |= 0x1; 
+    _history[history_index] |= 0x1; // Currently 0b00000000000000000000000000000001 but will need to be swapped to 0b10000000000000000000000000000000 due to the hardware design fault.
 
     // loops round history index
     history_index++;
@@ -89,7 +89,7 @@ namespace KEYS {
       (_history[0] == _history[5]) &&
       (_history[0] == _history[6]) &&
       (_history[0] == _history[7])) {
-        // reverse bit order  - for messed up hardware
+        // reverse bit order  - for prototype design issues in hardware
         _current = reverse(_history[0]);
     }
 

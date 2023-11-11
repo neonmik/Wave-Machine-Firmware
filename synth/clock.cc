@@ -84,7 +84,7 @@ namespace CLOCK {
         calculateDivision();
     }
 
-    void sampleClockTick (void) {
+    void internalClockTick (void) {
         ++clockTick;
 
         if (clockTick >= samplesPerDivision) {
@@ -95,7 +95,9 @@ namespace CLOCK {
         ++midiOutTick;
 
         if (midiOutTick >= samplesPerPulse) {
-            MIDI::sendClock();
+            // replace with flag that gets checked at the beginning of every UI cycle to make sure it's super tight.
+            // MIDI::sendClock();
+            
             midiOutTick = 0;
         }
     }
@@ -104,7 +106,6 @@ namespace CLOCK {
         
     }
     void update (void) {
-        // check_sample_clock();
         checkMidiClock();
     }
 
@@ -182,6 +183,11 @@ namespace CLOCK {
 // ------------------------------------------------
 //                  MIDI CLOCK TIMING
 // ------------------------------------------------
+// 
+// The MIDI standard uses the 24 PPQN standard, al-
+// though the internal clock of the Wave Machine 
+// will be more accurate than this.
+// 
 // 
 // Clock durations    (24 Pulses Per Quarter note)
 // ------------------------------------------------

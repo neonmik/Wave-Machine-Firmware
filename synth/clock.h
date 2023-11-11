@@ -11,9 +11,6 @@ extern uint32_t sampleClock;
 namespace CLOCK {
 
     namespace {
-
-
-
         uint32_t clockTick = 0;
         uint32_t _tock = 0;
         uint32_t _last_tick = 0;
@@ -60,7 +57,7 @@ namespace CLOCK {
     uint8_t getBPM ();
     void setDivision (uint8_t division);
 
-    void sampleClockTick (void);
+    void internalClockTick (void);
     void update (void);
     
     void setClockChanged(bool changed);
