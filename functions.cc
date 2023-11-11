@@ -30,7 +30,6 @@ uint16_t    samples_to_us (uint32_t samplerate) {
 }
 
 int16_t    attenuverter (uint16_t input) {
-    // write a 
-    DEBUG::warning("Attenuverter not written yet! See function header.");
+    // printf("Attenuverter not written yet! See function header.\n");
     return input;
 }
