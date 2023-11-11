@@ -28,3 +28,9 @@ inline int16_t Interpolate824(const uint8_t* table, uint32_t phase) {
 uint16_t    samples_to_us (uint32_t samplerate) {
     return (1000000 / samplerate);
 }
+
+int16_t    attenuverter (uint16_t input) {
+    // write a 
+    DEBUG::warning("Attenuverter not written yet! See function header.");
+    return input;
+}
