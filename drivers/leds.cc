@@ -3,8 +3,8 @@
 namespace LEDS {
 
     GPIO PICO(Leds::LED_PICO_PIN);
-    GPIO LFO(Leds::LED_LFO_PIN);
-    GPIO ARP(Leds::LED_ARP_PIN);
+    GPIO FUNC1(Leds::LED_LFO_PIN);
+    GPIO FUNC2(Leds::LED_ARP_PIN);
     RGB PRESET;
     SR  KNOBS(Pins::KNOBS);
     SR  KNOB_1(Pins::KNOB_1);
@@ -20,31 +20,31 @@ namespace LEDS {
     void init(void)
     {
         PICO.init();
-        LFO.init();
-        ARP.init();
+        FUNC1.init();
+        FUNC2.init();
         PRESET.init();
         ShiftReg::init();
     }
     void on(){
         PICO.on();
-        LFO.on();
-        ARP.on();
+        FUNC1.on();
+        FUNC2.on();
         PRESET.on();
         _SR_state = true;
         ShiftReg::set_bit(Pins::ALL, _SR_state);
     }
     void off(){
         PICO.off();
-        LFO.off();
-        ARP.off();
+        FUNC1.off();
+        FUNC2.off();
         PRESET.off();
         _SR_state = false;
         ShiftReg::set_bit(Pins::ALL, _SR_state);
     }
     void toggle() {
         PICO.toggle();
-        LFO.toggle();
-        ARP.toggle();
+        FUNC1.toggle();
+        FUNC2.toggle();
         PRESET.toggle();
         _SR_state != _SR_state;
         ShiftReg::set_bit(Pins::ALL, _SR_state);
@@ -126,14 +126,14 @@ namespace LEDS {
         PAGE_1.flashDelay(1, delay);
         PAGE_2.flashDelay(1, delay);
         PAGE_3.flashDelay(1, delay);
-        LFO.flashDelay(1, delay);
-        ARP.flashDelay(1, delay);
+        FUNC1.flashDelay(1, delay);
+        FUNC2.flashDelay(1, delay);
 
         PRESET.cycle(delay);
 
         // Down
-        ARP.flashDelay(1, delay);
-        LFO.flashDelay(1, delay);
+        FUNC2.flashDelay(1, delay);
+        FUNC1.flashDelay(1, delay);
         PAGE_3.flashDelay(1, delay);
         PAGE_2.flashDelay(1, delay);
         PAGE_1.flashDelay(1, delay);
@@ -145,8 +145,8 @@ namespace LEDS {
     }
     
     void update() {
-        ARP.update();
-        LFO.update();
+        FUNC2.update();
+        FUNC1.update();
         PRESET.update();
         // PAGE_1.update();
         

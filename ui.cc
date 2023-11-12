@@ -53,23 +53,17 @@ namespace UI {
               CONTROLS::save();
             }
 
-            
-            if (Buttons::ARP.get(Buttons::State::LONG)) {
-              // LEDS::ARP.flash(4,50);
-              // ARP::toggleHold();
+            if (Buttons::FUNC2.get(Buttons::State::LONG)) {
               CONTROLS::holdButton2();
             }
-            if (Buttons::ARP.get(Buttons::State::SHORT)) {
-              // CONTROLS::toggleArp();
+            if (Buttons::FUNC2.get(Buttons::State::SHORT)) {
               CONTROLS::toggleButton2();
             }
 
-            if (Buttons::LFO.get(Buttons::State::LONG)) {
-              // CONTROLS::toggleOSC();
+            if (Buttons::FUNC1.get(Buttons::State::LONG)) {
               CONTROLS::holdButton1();
             }
-            if (Buttons::LFO.get(Buttons::State::SHORT)) {
-              // CONTROLS::toggleLFO();
+            if (Buttons::FUNC1.get(Buttons::State::SHORT)) {
               CONTROLS::toggleButton1();
             }
 

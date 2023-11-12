@@ -136,18 +136,18 @@ namespace KEYS {
 
     // LFO
     if ( (!((keys>>LFO_KEY) & 1)) &&  (((keys_last>>LFO_KEY) & 1)) ){
-      Buttons::LFO.pressed();
+      Buttons::FUNC1.pressed();
     }
     if ( (((keys>>LFO_KEY) & 1)) &&  (!((keys_last>>LFO_KEY) & 1)) ){
-      Buttons::LFO.released();
+      Buttons::FUNC1.released();
     }
 
     // ARP
     if ( (!((keys>>ARP_KEY) & 1)) &&  (((keys_last>>ARP_KEY) & 1)) ){
-      Buttons::ARP.pressed();
+      Buttons::FUNC2.pressed();
     } 
     if ( (((keys>>ARP_KEY) & 1)) &&  (!((keys_last>>ARP_KEY) & 1)) ){
-      Buttons::ARP.released();
+      Buttons::FUNC2.released();
     }
 
     // Preset

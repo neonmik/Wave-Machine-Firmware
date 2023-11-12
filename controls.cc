@@ -50,7 +50,7 @@ namespace CONTROLS {
             Preset[preset].Envelope.sustain = Control.getKnob(Page::ADSR, 2);
             Preset[preset].Envelope.release = Control.getKnob(Page::ADSR, 3);
 
-        Preset[preset].Filter.state = true;
+        Preset[preset].Filter.state = Control.getButton(Page::FILT, 0);
 
         Preset[preset].Filter.cutoff = Control.getKnob(Page::FILT, 0);
         Preset[preset].Filter.resonance = Control.getKnob(Page::FILT, 1);
@@ -62,7 +62,7 @@ namespace CONTROLS {
             Preset[preset].Filter.sustain = Control.getKnob(Page::fENV, 2);
             Preset[preset].Filter.release = Control.getKnob(Page::fENV, 3);
 
-        Preset[preset].Modulation.state = Control.getButton(Page::LFO);
+        Preset[preset].Modulation.state = Control.getButton(Page::LFO, 0);
 
         Preset[preset].Modulation.matrix = Control.getKnob(Page::LFO, 0);
         Preset[preset].Modulation.rate = Control.getKnob(Page::LFO, 1);
@@ -70,8 +70,11 @@ namespace CONTROLS {
         Preset[preset].Modulation.wave = Control.getKnob(Page::LFO, 3);
 
             Preset[preset].Effects.gain = Control.getKnob(Page::SHFT, 3);
+            //
+            //
+            //
 
-        Preset[preset].Arpeggiator.state = Control.getButton(Page::ARP);
+        Preset[preset].Arpeggiator.state = Control.getButton(Page::ARP, 0);
 
         Preset[preset].Arpeggiator.gate = Control.getKnob(Page::ARP, 0);
         Preset[preset].Arpeggiator.divisions = Control.getKnob(Page::ARP, 1);
@@ -101,6 +104,7 @@ namespace CONTROLS {
             Control.setKnob(Page::ADSR, 3, Preset[preset].Envelope.release);
 
         // Control.set_filter(Preset[preset].Filter.state);
+        Control.setButton(Page::FILT, 0, Preset[preset].Filter.state);
 
         Control.setKnob(Page::FILT, 0, Preset[preset].Filter.cutoff);
         Control.setKnob(Page::FILT, 1, Preset[preset].Filter.resonance);
@@ -112,9 +116,7 @@ namespace CONTROLS {
             Control.setKnob(Page::fENV, 2, Preset[preset].Filter.sustain);
             Control.setKnob(Page::fENV, 3, Preset[preset].Filter.release);
 
-
-        // Control.set_lfo(Preset[preset].Modulation.state);
-        Control.setButton(Page::LFO, Preset[preset].Modulation.state);
+        Control.setButton(Page::LFO, 0, Preset[preset].Modulation.state);
 
         Control.setKnob(Page::LFO, 0, Preset[preset].Modulation.matrix);
         Control.setKnob(Page::LFO, 1, Preset[preset].Modulation.rate);
@@ -127,8 +129,7 @@ namespace CONTROLS {
             Control.setKnob(Page::SHFT, 3, 0);
 
 
-        // Control.set_arp(Preset[preset].Arpeggiator.state);
-        Control.setButton(Page::ARP, Preset[preset].Arpeggiator.state);
+        Control.setButton(Page::ARP, 0, Preset[preset].Arpeggiator.state);
 
         Control.setKnob(Page::ARP, 0, Preset[preset].Arpeggiator.gate);
         Control.setKnob(Page::ARP, 1, Preset[preset].Arpeggiator.divisions);
@@ -145,8 +146,8 @@ namespace CONTROLS {
 
         LEDS::PRESET.preset(currentPreset);
 
-        LEDS::LFO.set(Control.getButton(Page::LFO));
-        LEDS::ARP.set(Control.getButton(Page::ARP));
+        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
+        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
 
         // needsUpdating = false; // this is here to try and stop lag on preset change as its currently being updated twice.
     }
@@ -201,6 +202,11 @@ namespace CONTROLS {
         PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
 
+        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
+        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
+
+        resetShift();
+
         needsUpdating = true;
     }
 
@@ -210,6 +216,9 @@ namespace CONTROLS {
 
         PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
+
+        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
+        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
 
         resetShift();
 
@@ -231,61 +240,32 @@ namespace CONTROLS {
     uint16_t getKnob (uint8_t page, uint8_t control) {
         return Control.getKnob(page, control);
     }
+    
 
-    void setButton (uint8_t page, bool state) {
-        Control.setButton(page, state);
-    }
-    void toggleButton (uint8_t page) {
-        Control.toggleButton(page);
-    }
-    bool getButton (uint8_t page) {
-        return Control.getButton(page);
-    }
-       
-    // void toggleLFO () {
-    //     if (shift) {
-    //         return;
-    //     } else {
-    //         Control.toggleButton(Page::LFO);
-    //         LEDS::LFO.set(Control.getButton(Page::LFO));
-    //         needsUpdating = true;
-    //     }
+    // void setButton (uint8_t page, uint8_t button, bool state) {
+    //     Control.setButton(page, button, state);
     // }
-    // bool getLFO () {
-    //     return Control.getButton(Page::LFO);
+    // void toggleButton (uint8_t page, uint8_t button) {
+    //     Control.toggleButton(page, button);
     // }
-
-    // void toggleArp () {
-    //     if (shift) {
-    //         ARP::toggleHold();
-    //         LEDS::ARP.flash(4,50);
-    //     } else {
-    //         Control.toggleButton(Page::ARP);
-    //         LEDS::ARP.set(Control.getButton(Page::ARP));
-    //         needsUpdating = true;
-    //     }
-    // }
-    // bool getArp () {
-    //     return Control.getButton(Page::ARP);
-    // }
-
-    // void toggleOSC () {
-    //     if (shift) {
-    //         SYNTH::toggleNoise();
-    //     } else {
-    //         SYNTH::toggleSub();
-    //     }
-    //     LEDS::LFO.flash(4, 50);
+    // bool getButton (uint8_t page, uint8_t button) {
+    //     return Control.getButton(page, button);
     // }
 
     void toggleButton1 (void) {
-        if (shift) {
-            return; // return because the function is empty so it stops LED from flashing
-        } else {
-            Control.toggleButton(Page::LFO);
-            LEDS::LFO.set(Control.getButton(Page::LFO));
-            needsUpdating = true;
-        }
+        // new code for page functions
+        Control.toggleButton(getPage(), 0);
+        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
+        needsUpdating = true;
+        
+        // old code for fixed functions
+        // if (shift) {
+        //     return; // return because the function is empty so it stops LED from toggling
+        // } else {
+        //     Control.toggleButton(Page::LFO, 0);
+        //     LEDS::FUNC1.set(Control.getButton(Page::LFO, 0));
+        //     needsUpdating = true;
+        // }
     }
     void holdButton1 (void) {
         if (shift) {
@@ -293,20 +273,32 @@ namespace CONTROLS {
         } else {
             SYNTH::toggleSub();
         }
-        LEDS::LFO.flash(4, 50);
+        LEDS::FUNC1.flash(4, 50);
     }
+
+    // Remove??
     bool getButton1 () {
-        return Control.getButton(Page::LFO);
+        return Control.getButton(Page::LFO, 0);
     }
 
     void toggleButton2 (void) {
         if (shift) {
-            return;
+            return; // return because the function is empty so it stops LED from toggling
         } else {
-            Control.toggleButton(Page::ARP);
-            LEDS::ARP.set(Control.getButton(Page::ARP));
+            Control.toggleButton(Page::ARP, 0);
+            LEDS::FUNC2.set(Control.getButton(Page::ARP, 0));
             needsUpdating = true;
         }
+
+
+
+        // if (shift) {
+        //     return; // return because the function is empty so it stops LED from toggling
+        // } else {
+        //     Control.toggleButton(getPage(), 0);
+        //     LEDS::FUNC2.set(Control.getButton(getPage(), 0));
+        // }
+        // needsUpdating = true;
     }
     void holdButton2 (void) {
         if (shift) {
@@ -314,15 +306,18 @@ namespace CONTROLS {
         } else {
             ARP::toggleHold();
         }
-        LEDS::ARP.flash(4,50);
+        LEDS::FUNC2.flash(4,50);
     }
+
+    // Remove??
     bool getButton2 () {
-        return Control.getButton(Page::ARP);
+        return Control.getButton(Page::ARP, 0);
     }
 
     void setShift (bool input) {
         if (shift != input) {
         
+            // TODO: Finesse this code as curently doesn't perform great, causing UI issues,
             shiftCounter++;
             if (shiftCounter >= SHIFT_TIMEOUT) {
                 
@@ -330,9 +325,13 @@ namespace CONTROLS {
                 needsUpdating = true;
 
                 PAGINATION::refresh();
+                LEDS::FUNC1.set(Control.getButton(getPage(), 0));
+                LEDS::FUNC2.set(Control.getButton(getPage(), 1));
 
                 shiftCounter = 0;
             }
+        } else {
+            shiftCounter = 0;
         }
     }
 

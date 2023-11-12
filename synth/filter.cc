@@ -147,7 +147,9 @@ namespace FILTER {
 
     
     void process(int32_t &sample) {
-        if (type != Type::Off) {
+        if (!state) return;
+        
+        if ((type != Type::Off)) {
             ADSR.update();
             
             if (direction == Direction::Regular) {

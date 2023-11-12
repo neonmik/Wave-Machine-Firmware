@@ -298,8 +298,8 @@ namespace LEDS {
     
     
     extern GPIO PICO;
-    extern GPIO LFO;
-    extern GPIO ARP;
+    extern GPIO FUNC1;
+    extern GPIO FUNC2;
     extern RGB PRESET;
     extern SR  KNOBS; // for clearing only!
     extern SR  KNOB_1;
