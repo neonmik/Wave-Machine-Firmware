@@ -18,16 +18,14 @@ namespace Buttons {
     class Button {
         private:
             
-            bool        _short          = 0;
-            bool        _long           = 0;
-            bool        _double         = 0;
-            bool        _shift          = 0;
+            bool        shortPressed    = false;
+            bool        longPressed     = false;
+            bool        doublePressed   = false;
+            bool        shiftPressed    = false;
 
-            uint32_t    _start          = 0;
-            uint32_t    _end            = 0;
-            uint32_t    _released       = 0;
-            uint8_t     _counter        = 0;
-            uint32_t    _last_press_time = 0;
+            uint32_t    start           = 0;
+            uint32_t    end             = 0;
+            uint32_t    lastTime        = 0;
 
         public:
 
@@ -41,7 +39,7 @@ namespace Buttons {
     };
 
     extern Button PAGE;
-    extern Button LFO;
-    extern Button ARP;
+    extern Button FUNC1;
+    extern Button FUNC2;
     extern Button PRESET;
 }

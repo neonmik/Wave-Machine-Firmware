@@ -104,7 +104,7 @@ namespace EEPROM {
         // Checks
         bool checkLength (uint8_t len) {
             if (len > PRESET_SIZE) {
-                DEBUG::warning("EEPROM length longer than 2 Pages (128 bytes) which is not supported");
+                DEBUG::warning("EEPROM length longer than 2 Pages (128 bytes) which is currently not supported");
                 return false;
             } else if (len == 0) {
                 DEBUG::warning("EEPROM length of 0... No data will be sent");
@@ -188,10 +188,10 @@ namespace EEPROM {
         
         void writePreset (uint16_t address, PRESET &preset) {
             // Create a buffer to hold the data - we use a preset size (2 pages/128 bytes) to ensure data is spaced properly
-            // We init with 0 to make sure theres no data pulled from elsewhere.
+            // We init with 0 to make sure theres no data pulled/left over from elsewhere.
             uint8_t buffer[PRESET_SIZE] = {0};
 
-            // Use memcpy to copy the data from preset to buffer
+            // Use memcpy to copy the data from preset to buffer, this also formats it as bytes for the EEPROM.
             memcpy(buffer, &preset, sizeof(PRESET));
 
             // Write the data in buffer to EEPROM
