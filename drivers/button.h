@@ -18,10 +18,10 @@ namespace Buttons {
     class Button {
         private:
             
-            bool        shortPressed    = false;
-            bool        longPressed     = false;
-            bool        doublePressed   = false;
-            bool        shiftPressed    = false;
+            bool        shortPress      = false;
+            bool        longPress       = false;
+            bool        doublePress     = false;
+            bool        shiftPress      = false;
 
             uint32_t    start           = 0;
             uint32_t    end             = 0;

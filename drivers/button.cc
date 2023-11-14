@@ -6,58 +6,58 @@ namespace Buttons {
         uint32_t currentTime = to_ms_since_boot(get_absolute_time());
         if (currentTime - lastTime <= DOUBLE_PRESS_TIME) {
             // double press detected
-            doublePressed = true;
+            doublePress = true;
         }
         lastTime = currentTime;
-        shiftPressed = true;
+        shiftPress = true;
         start = currentTime;
     }
     void Button::released () {
         // REMOVE THIS IF BOTH SHIFT AND LONG NEED TO HAPPEN
-        if (!shiftPressed) return; // return because shift was turned off by long press
+        if (!shiftPress) return; // return because shift was turned off by long press
         
-        shiftPressed = false;
+        shiftPress = false;
         end = to_ms_since_boot(get_absolute_time());
         // short press
         if (end - start < LONG_PRESS_TIME) {
-            shortPressed = true;
+            shortPress = true;
         }
         // long press
         if (end - start > LONG_PRESS_TIME) { 
-            longPressed = true;
+            longPress = true;
         }
     }
     bool Button::get(State state) {
         switch(state) {
             case State::SHORT:
-                if (shortPressed) {
-                    shortPressed = false;
+                if (shortPress) {
+                    shortPress = false;
                     return true;
                 }
                 break;
             case State::LONG:
-                if (longPressed) {
-                    longPressed = false;
+                if (longPress) {
+                    longPress = false;
                     return true;
                 } 
 
                 // REMOVE THIS IF BOTH SHIFT AND LONG NEED TO HAPPEN
-                if (shiftPressed) {
+                if (shiftPress) {
                     uint32_t currentTime = to_ms_since_boot(get_absolute_time());
-                    if (currentTime - start > LONG_PRESS_TIME && !longPressed) {
-                        shiftPressed = false; // shutdown shift
+                    if (currentTime - start > LONG_PRESS_TIME && !longPress) {
+                        shiftPress = false; // shutdown shift
                         return true;
                     }
                 }
                 break;
             case State::DOUBLE:
-                if (doublePressed) {
-                    doublePressed = false;
+                if (doublePress) {
+                    doublePress = false;
                     return true;
                 }
                 break;
             case State::SHIFT:
-                return shiftPressed;
+                return shiftPress;
             default:
                 break;
         }
