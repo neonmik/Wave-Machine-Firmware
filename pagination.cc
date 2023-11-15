@@ -25,10 +25,14 @@ namespace PAGINATION {
 
         // enable knob when it matches the stored value
         if (in_sync && currentValue != lastValue[i]) {
-            currentState[i] = KnobState::ACTIVE;
+            if (currentState[i] != KnobState::ACTIVE) {
+              // only light up if not already lit
+              currentState[i] = KnobState::ACTIVE;
+              LEDS::KNOB_select(i, 1);
+            }
+
             lastValue[i] = currentValue;
             
-            LEDS::KNOB_select(i, 1);
             // this could be where you set the level for KNOB LED's PWM output eventually
         }
       
