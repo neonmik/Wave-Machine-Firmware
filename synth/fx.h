@@ -14,6 +14,7 @@ namespace FX {
         void process (int32_t &sample);
     }
     namespace HARDCLIP {
+        void process16 (int32_t &sample);
         void process (int32_t &sample);
     }
     

@@ -23,8 +23,11 @@ namespace FX {
         }
     }
     namespace HARDCLIP {
+        void process16 (int32_t &sample) {
+            sample <= INT16_MIN ? INT16_MIN : (sample > INT16_MAX ? INT16_MAX : sample);
+        }
         void process (int32_t &sample) {
-            sample <= -0x8000 ? -0x8000 : (sample > 0x7fff ? 0x7fff : sample);
+            sample <= INT32_MIN ? INT32_MIN : (sample > INT32_MAX ? INT32_MAX : sample);
         }
     }
 }
