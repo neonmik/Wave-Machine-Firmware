@@ -126,17 +126,18 @@ namespace SYNTH {
         if (subActive) {
           channelSample += (getWavetable((channel.phaseAccumulator >> 1), 0) * subLevel) >> 10; // Sub Sinewave oscillator test
           oscillatorsActive++;
-          // channelSample >>= 1; // easy dived by 2 for Main and Sub
         }
 
         // Noise Mode
         if (noiseActive){
           channelSample += ((RANDOM::getSignal() >> 2) * noiseLevel) >> 10;
           oscillatorsActive++;
-          // channelSample /= 3; // divide by 3 for Main, Sub and Noise
         }
 
-        channelSample /= oscillatorsActive;
+        // channelSample /= oscillatorsActive;
+        channelSample /= 2;
+
+
 
         // apply ADSR
         channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
@@ -158,7 +159,7 @@ namespace SYNTH {
     FX::SOFTCLIP::process(outputSample);
 
     // Hard clipping to 16-bit
-    FX::HARDCLIP::process(outputSample);
+    FX::HARDCLIP::process16(outputSample);
     
     // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
     return (outputSample - INT16_MIN)>>4;
