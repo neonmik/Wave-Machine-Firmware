@@ -242,30 +242,11 @@ namespace CONTROLS {
     }
     
 
-    // void setButton (uint8_t page, uint8_t button, bool state) {
-    //     Control.setButton(page, button, state);
-    // }
-    // void toggleButton (uint8_t page, uint8_t button) {
-    //     Control.toggleButton(page, button);
-    // }
-    // bool getButton (uint8_t page, uint8_t button) {
-    //     return Control.getButton(page, button);
-    // }
-
     void toggleButton1 (void) {
         // new code for page functions
         Control.toggleButton(getPage(), 0);
         LEDS::FUNC1.set(Control.getButton(getPage(), 0));
         needsUpdating = true;
-        
-        // old code for fixed functions
-        // if (shift) {
-        //     return; // return because the function is empty so it stops LED from toggling
-        // } else {
-        //     Control.toggleButton(Page::LFO, 0);
-        //     LEDS::FUNC1.set(Control.getButton(Page::LFO, 0));
-        //     needsUpdating = true;
-        // }
     }
     void holdButton1 (void) {
         if (shift) {
@@ -289,16 +270,6 @@ namespace CONTROLS {
             LEDS::FUNC2.set(Control.getButton(Page::ARP, 0));
             needsUpdating = true;
         }
-
-
-
-        // if (shift) {
-        //     return; // return because the function is empty so it stops LED from toggling
-        // } else {
-        //     Control.toggleButton(getPage(), 0);
-        //     LEDS::FUNC2.set(Control.getButton(getPage(), 0));
-        // }
-        // needsUpdating = true;
     }
     void holdButton2 (void) {
         if (shift) {
