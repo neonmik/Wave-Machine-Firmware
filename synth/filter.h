@@ -41,8 +41,14 @@ namespace FILTER
 
         bool        needsUpdating;
 
-        int16_t     cutoff;
-        int16_t     resonance;
+        uint16_t    MAX_FREQ = NYQUIST;
+
+        int32_t     cutoff;
+        int32_t     resonance;
+        
+        uint16_t    envelopeDepth;
+        // uint16_t    keyboardDepth;
+
 
         uint16_t    _mod;
 
@@ -72,27 +78,6 @@ namespace FILTER
 
         volatile int8_t activeVoice;
         bool filterActive = false;
-
-        // TODO: remove this, don't need this function anymore
-        // void voicesIncrease(void) {
-        //     ++activeVoice;
-        //     if (activeVoice > POLYPHONY)
-        //     {
-        //         activeVoice = POLYPHONY;
-        //     }
-        // }
-        // void voicesDecrease(void) {
-        //     --activeVoice;
-        //     if (activeVoice < 0)
-        //     {
-        //         activeVoice = 0;
-        //     }
-        // }
-        // void voicesClear(void) {
-        //     activeVoice = 0;
-        // }
-        
-
     }
 
     extern ADSREnvelope ADSR;
@@ -108,6 +93,8 @@ namespace FILTER
     void setResonance(uint16_t input);
     void setPunch(uint16_t input);
     void setType(uint16_t input);
+
+    void setEnvelopeAmount (uint16_t input) ;
 
     void setTriggerMode (uint16_t input);
 

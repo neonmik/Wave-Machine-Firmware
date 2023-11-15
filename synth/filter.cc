@@ -5,8 +5,8 @@ namespace FILTER {
     ADSREnvelope ADSR{attack, decay, sustain, release};
 
     void init() {
-        lowPass = 0;
-        bandPass = 0;
+        // lowPass = 0;
+        // bandPass = 0;
         needsUpdating = true;
     }
 
@@ -23,13 +23,14 @@ namespace FILTER {
 
     void setResonance(uint16_t input) {
         resonance = filter_damp(input);
-        needsUpdating = true;
+        // needsUpdating = true;
     }
 
 
     void setPunch(uint16_t input) {
         punch = input >> 2;
     }
+
 
     void setType(uint16_t input) {
         uint8_t index = (input>>8);
@@ -52,6 +53,10 @@ namespace FILTER {
         default:
             break;
         }
+    }
+
+    void setEnvelopeDepth (uint16_t input) {
+        envelopeDepth = input;
     }
 
     void setDirection (uint16_t input) {
@@ -80,7 +85,8 @@ namespace FILTER {
 
 
     void modulateCutoff(uint16_t input) {
-        _mod = (input >> 2);
+        _mod = (input >> 2); 
+        // _mod = input;
     }
 
     void setAttack (uint16_t input) {
@@ -156,12 +162,23 @@ namespace FILTER {
                 frequency = (cutoff * ADSR.get()) >> 16;
             } 
             if (direction == Direction::Inverted) {
-                uint16_t MAX_FREQ = (NYQUIST);
                 frequency = MAX_FREQ - (((MAX_FREQ - cutoff) * (ADSR.get())) >> 16);
             }
-            
-            if (frequency < 15) frequency = 15;
-            if (frequency > (NYQUIST)) frequency = NYQUIST;
+
+            frequency = frequency + _mod;
+            // limiter for the modulation
+            if (frequency > MAX_FREQ) frequency = MAX_FREQ;
+            if (frequency < 0) frequency = 0;
+
+            // Standard analogue synth envelope processing 
+            // cutoff is the base line
+            // EG amount is how far above the freq it reaches (upper limit should be NYQUIST)
+            // Envelope amount should run from cutoff baseline, to max freq, then back down to wherever sustain level is set, then when released, drop to cutoff baseline
+            // 
+            // Frequency = Cutoff + (ADSR.get() * envelopDepth) // Need some bit shifts to correct for interger math here
+            //
+
+
 
             int32_t damp = resonance;
             if (punch) {
