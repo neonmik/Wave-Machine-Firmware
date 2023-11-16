@@ -19,7 +19,7 @@ namespace Buttons {
         shiftPress = false;
         end = to_ms_since_boot(get_absolute_time());
         // short press
-        if (end - start < LONG_PRESS_TIME) {
+        if ((end - start > DEBOUNCE_TIME) && (end - start < LONG_PRESS_TIME)) {
             shortPress = true;
         }
         // long press
