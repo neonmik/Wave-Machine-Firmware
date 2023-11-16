@@ -150,7 +150,7 @@ namespace SYNTH {
     }
 
 
-    outputSample = (int32_t(outputSample >> 2) * int32_t(outputVolume)) >> 16; // needs to shift by 18 as to deal with possibly 8 voices... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
+    outputSample = (int32_t(outputSample >> 2) * int32_t(outputVolume)) >> 16; // needs to shift by 18 as to deal with possibly 8 voices of 3 osc... it would only need to be shifted by 16 if the output was 1* 16 bit, not 8*16 bit
     
     // Filter
     FILTER::process(outputSample);

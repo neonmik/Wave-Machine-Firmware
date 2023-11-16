@@ -16,17 +16,22 @@
 
 #define MUX_OUT_ADC     26
 
+#define MAX_NOISE_ADDRESS   8
+
 namespace ADC {
     namespace {
         float _core_temp;
 
         uint16_t _adc_value;
-        uint8_t  _adc_noise;
+        uint16_t _adc_noise[MAX_NOISE_ADDRESS];
+        uint8_t  _noise_address;
+        uint8_t  _read_address = 2; // offset read address;
         uint16_t _values[MAX_KNOBS];
 
         uint8_t _mux_address;
         uint32_t _sample[MAX_KNOBS];
         uint32_t _output;
+
 
         void adc_temp_init(void) {
             adc_set_temp_sensor_enabled(true);
@@ -35,6 +40,19 @@ namespace ADC {
         void adc_mux_init (void) {
             adc_gpio_init(MUX_OUT_ADC);
             adc_select_input(0);
+        }
+        void adc_noise_init (void) {
+            adc_gpio_init(MUX_OUT_ADC + 1); // Initiate unconnected pin
+            adc_select_input(1);
+        }
+        void adc_temp_select (void) {
+            adc_select_input(4);
+        }
+        void adc_mux_select (void) {;
+            adc_select_input(0);
+        }
+        void adc_noise_select (void) {
+            adc_select_input(1);
         }
         void pin_init (uint8_t pin) {
             gpio_init(pin);
@@ -49,7 +67,7 @@ namespace ADC {
 
         void read_onboard_temperature(void) {
 
-            adc_temp_init();
+            adc_temp_select();
             
             /* 12-bit conversion, assume max value == ADC_VREF == 3.3 V */
             const float conversionFactor = 3.3f / (1 << 12);
@@ -59,9 +77,9 @@ namespace ADC {
 
             // printf("Temp:       %.02fºC\n", _core_temp);
 
-            adc_set_temp_sensor_enabled(false);
+            // adc_set_temp_sensor_enabled(false);
 
-            adc_mux_init();
+            adc_mux_select();
         }
 
 
@@ -100,6 +118,14 @@ namespace ADC {
             gpio_put(MUX_SEL_B, 0);
             gpio_put(MUX_SEL_C, 0);
             gpio_put(MUX_SEL_D, 0);
+        }
+        void read_noise (void) {
+            adc_noise_select();
+
+            _adc_noise[_noise_address] = adc_read();
+            _noise_address = (_noise_address + 1) % MAX_NOISE_ADDRESS;
+
+            adc_mux_select();
         }
     }
     
