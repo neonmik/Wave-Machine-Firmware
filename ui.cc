@@ -34,7 +34,7 @@ namespace UI {
     switch (mode) {
       case UI_MODE_NORMAL:
         // Add Midi clock output here to allow it to be super tight to the sample rate.
-
+        RANDOM::update(ADC::noise());
         switch(poll) {
           case 0:
             NOTE_HANDLING::update();
@@ -79,7 +79,7 @@ namespace UI {
             break;
           case 4:
             ADC::update();
-            RANDOM::update(ADC::noise());
+            // RANDOM::update(ADC::noise());
             break;
           case 5:
             PAGINATION::update();
