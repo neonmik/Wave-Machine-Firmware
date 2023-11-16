@@ -209,12 +209,12 @@ namespace CONTROLS
         void update() {
             switch (index) {
                 case Page::MAIN:            MAIN.update();                 break;
-                case Page::ADSR:            ADSR.update();                 break;
+                case Page::FILT:            FILT.update();                 break;
                 case Page::LFO:             LFO.update();                  break;
                 case Page::ARP:             ARP.update();                  break;
-                case Page::SHFT:            SHFT.update();                 break;
+                case Page::ADSR:            ADSR.update();                 break;
                 case Page::fENV:            fENV.update();                 break;
-                case Page::FILT:            FILT.update();                 break;
+                case Page::SHFT:            SHFT.update();                 break;
                 case Page::sARP:            sARP.update();                 break;
             }
             index++;
@@ -222,23 +222,23 @@ namespace CONTROLS
         void updatePage(uint8_t index) {
             switch (index) {
                 case Page::MAIN:            MAIN.update();                  break;
-                case Page::ADSR:            ADSR.update();                  break;
+                case Page::FILT:            FILT.update();                  break;
                 case Page::LFO:             LFO.update();                   break;
                 case Page::ARP:             ARP.update();                   break;
-                case Page::SHFT:            SHFT.update();                  break;
+                case Page::ADSR:            ADSR.update();                  break;
                 case Page::fENV:            fENV.update();                  break;
-                case Page::FILT:            FILT.update();                  break;
+                case Page::SHFT:            SHFT.update();                  break;
                 case Page::sARP:            sARP.update();                  break;
             }
         }
         void updateAll(void) {
             MAIN.update();
-            ADSR.update();
+            FILT.update();
             LFO.update();
             ARP.update();
-            SHFT.update();
+            ADSR.update();
             fENV.update();
-            FILT.update();
+            SHFT.update();
             sARP.update();
         }
     };
