@@ -222,7 +222,7 @@ namespace CONTROLS {
 
         resetShift();
 
-        needsUpdating = true;
+        // needsUpdating = true;
     }
     uint8_t getPage (void) {
         if (!shift) {
@@ -320,7 +320,7 @@ namespace CONTROLS {
         if (needsUpdating) {
 
             // Updates only active page, including whether we're in a shift page.
-            Control.updatePage(getPage());
+            Control.update(getPage());
             
             needsUpdating = false;
         }

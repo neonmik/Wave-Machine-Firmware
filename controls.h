@@ -31,7 +31,7 @@ namespace CONTROLS
 
         bool needsUpdating;
 
-        uint8_t index;
+        // uint8_t _index;
 
         enum Page
         {
@@ -205,21 +205,22 @@ namespace CONTROLS
                 default:                    return                          false;
             }
         }
-        
-        void update() {
-            switch (index) {
-                case Page::MAIN:            MAIN.update();                 break;
-                case Page::FILT:            FILT.update();                 break;
-                case Page::LFO:             LFO.update();                  break;
-                case Page::ARP:             ARP.update();                  break;
-                case Page::ADSR:            ADSR.update();                 break;
-                case Page::fENV:            fENV.update();                 break;
-                case Page::SHFT:            SHFT.update();                 break;
-                case Page::sARP:            sARP.update();                 break;
-            }
-            index++;
-        }
-        void updatePage(uint8_t index) {
+        // No longer needed as we only update the active page
+        // void update() {
+        //     switch (_index) {
+        //         case Page::MAIN:            MAIN.update();                 break;
+        //         case Page::FILT:            FILT.update();                 break;
+        //         case Page::LFO:             LFO.update();                  break;
+        //         case Page::ARP:             ARP.update();                  break;
+        //         case Page::ADSR:            ADSR.update();                 break;
+        //         case Page::fENV:            fENV.update();                 break;
+        //         case Page::SHFT:            SHFT.update();                 break;
+        //         case Page::sARP:            sARP.update();                 break;
+        //     }
+        //     _index++;
+        //     // need a loop for index here
+        // }
+        void update(uint8_t index) {
             switch (index) {
                 case Page::MAIN:            MAIN.update();                  break;
                 case Page::FILT:            FILT.update();                  break;
