@@ -32,8 +32,12 @@ namespace UART {
         uint8_t get (void) {
             return uart_getc(MIDI_UART_ID);
         }
-        void send (uint8_t msg[3]) {
-            uart_write_blocking(MIDI_UART_ID, msg, 3);
+        void send (uint8_t *msg, uint8_t length) {
+            if (!length) {
+                DEBUG::error("UART MIDI Message has 0 length");
+                return;
+            }
+            uart_write_blocking(MIDI_UART_ID, msg, length);
         }
     }
 }

@@ -13,6 +13,6 @@ namespace USB {
     namespace MIDI {
         uint32_t available (void);
         void get (uint8_t *packet);
-        void send (uint8_t msg[3]);
+        void send (uint8_t *msg, uint8_t length);
     }
 }

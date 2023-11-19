@@ -166,6 +166,8 @@ namespace MIDI {
 
         MidiMessage inputMessageUART;
         MidiMessage inputMessageUSB;
+
+        bool        sendClockFlag;
     }
 
 
@@ -173,6 +175,9 @@ namespace MIDI {
 
     void init(void);
     void update(void);
+
+    void checkClockFlag (void);
+    void toggleClockFlag (void);
 
     bool parse (void); // parsing - currently only used for UART
     void resetInput (void);
@@ -204,7 +209,7 @@ namespace MIDI {
     void handleInvalidType(MidiMessage message);
 
     // MIDI Out
-    void sendMidiMessage (uint8_t type, uint8_t channel, uint8_t data1, uint8_t data2);
+    void sendMidiMessage (MidiType type, uint8_t channel, uint8_t *msg);
 
     // None of these functions have a MIDI channel input as that is controlled at the system level
     void sendNoteOff(uint8_t note, uint8_t velocity);

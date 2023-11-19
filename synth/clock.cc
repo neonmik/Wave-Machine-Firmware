@@ -95,8 +95,7 @@ namespace CLOCK {
         ++midiOutTick;
 
         if (midiOutTick >= samplesPerPulse) {
-            // replace with flag that gets checked at the beginning of every UI cycle to make sure it's super tight.
-            // MIDI::sendClock();
+            if (!midiClockPreset) MIDI::toggleClockFlag();
             
             midiOutTick = 0;
         }
@@ -110,10 +109,10 @@ namespace CLOCK {
     }
 
     void setClockChanged(bool changed) {
-        _changed = changed;
+        clockChanged = changed;
     }
     bool getClockChanged (void) {
-        return _changed;
+        return clockChanged;
     }
     inline uint8_t getBeat (void) {
         return _beat;

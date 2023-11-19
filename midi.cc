@@ -111,8 +111,8 @@ namespace MIDI {
         CONTROLS::setKnob(0, 3, temp);
     }
     void handleSysEx(MidiMessage message) {
-        // printf("SysEx Message has nowhere to go...\n");
-        // printMidiMessage(message);
+        printf("SYSEX: \n");
+        printMidiMessage(message);
     }
     void handleSongPosition(uint8_t position_msb, uint8_t position_lsb) {
         uint16_t temp = position_lsb << 7 | position_msb;
@@ -123,6 +123,7 @@ namespace MIDI {
     void handleTuneRequest(void) {}
     void handleClock(void) {
         CLOCK::midiClockTick();
+
     }
     void handleStart(void) {
         CLOCK::startMidiClock();
@@ -144,47 +145,72 @@ namespace MIDI {
     // -----------------------------------------------------------------------------------------------
     //                                          Output
     // -----------------------------------------------------------------------------------------------
-    void sendMidiMessage (MidiType type, uint8_t channel, uint8_t data1, uint8_t data2) {
-
-        uint8_t status = (uint8_t(type) | channel);
-        uint8_t msg[3] = { status, data1, data2 };
-        UART::MIDI::send(msg);
-        USB::MIDI::send(msg);
+    void sendMidiMessage (uint8_t *msg, uint8_t length) {
+        UART::MIDI::send(msg, length);
+        USB::MIDI::send(msg, length);
     }
 
     void sendNoteOff(uint8_t note, uint8_t velocity) {
-        sendMidiMessage(MidiType::NoteOff, MIDI_CHANNEL, note, velocity);
+        uint8_t msg[3] = {(uint8_t(MidiType::NoteOff) | MIDI_CHANNEL), note, velocity};
+
+        sendMidiMessage(msg, 3);
     }
     void sendNoteOn(uint8_t note, uint8_t velocity) {
-        sendMidiMessage(MidiType::NoteOn, MIDI_CHANNEL, note, velocity);
+        uint8_t msg[3] = {(uint8_t(MidiType::NoteOn) | MIDI_CHANNEL), note, velocity};
+
+        sendMidiMessage(msg, 3);
     }
     void sendVelocityChange(uint8_t note, uint8_t velocity) {
-        sendMidiMessage(MidiType::AfterTouchPoly, MIDI_CHANNEL, note, velocity);
+        uint8_t msg[3] = {(uint8_t(MidiType::AfterTouchPoly) | MIDI_CHANNEL), note, velocity};
+        
+        sendMidiMessage(msg, 3);
     }
     void sendControlChange(uint8_t controller, uint8_t value){
-        sendMidiMessage(MidiType::ControlChange, MIDI_CHANNEL, controller, value);
+        uint8_t msg[3] = {(uint8_t(MidiType::ControlChange) | MIDI_CHANNEL), controller, value};
+        
+        sendMidiMessage(msg, 3);
     }
     void sendProgramChange(uint8_t program) {
-        sendMidiMessage(MidiType::ProgramChange, MIDI_CHANNEL, program, 0);
+        uint8_t msg[2] = {(uint8_t(MidiType::ProgramChange) | MIDI_CHANNEL), program};
+        
+        sendMidiMessage(msg, 2);
     }
     void sendAfterTouch(uint8_t velocity) {
-        sendMidiMessage(MidiType::AfterTouchChannel, MIDI_CHANNEL, velocity, 0);
+        uint8_t msg[2] = {(uint8_t(MidiType::AfterTouchChannel) | MIDI_CHANNEL), velocity};
+        
+        sendMidiMessage(msg, 2);
     }
     void sendPitchBend(uint16_t pitch) {
         uint16_t temp = map(pitch, 0, 1023, 0, EXTENDED_CONTROL_CHANGE_MAX);
-        sendMidiMessage(MidiType::PitchBend, MIDI_CHANNEL, (temp >> 7), (temp & 0xFF));
+
+        uint8_t msg[3] = {(uint8_t(MidiType::PitchBend) | MIDI_CHANNEL), uint8_t(temp >> 7), uint8_t(temp & 0xFF)};
+        
+        sendMidiMessage(msg, 3);
     }
     void sendSongPosition(uint8_t position) {}
     void sendSongSelect(uint8_t song) {}
     void sendTuneRequest(void) {}
     void sendClock(void) {
-        sendMidiMessage(MidiType::Clock, 0, 0, 0);
+        uint8_t msg[1] = {uint8_t(MidiType::NoteOff)};
+
+        sendMidiMessage(msg, 1);
     }
     void sendStart(void) {}
     void sendContinue(void) {}
     void sendStop(void) {}
     void sendActiveSense(void) {}
     void sendReset(void) {}
+
+    void toggleClockFlag (void) {
+        if (!sendClockFlag) sendClockFlag = true;
+        else DEBUG::warning("MIDI clock output not updating fast enough");
+    }
+    void checkClockFlag (void) {
+        if (!sendClockFlag) return;
+        
+        MIDI::sendClock();
+        sendClockFlag = false;
+    }
 
     void init (void) {
         UART::init();
@@ -571,6 +597,8 @@ namespace MIDI {
     }
 
     void update () {
+        MIDI::checkClockFlag();
+
         if (MIDI_CHANNEL >= MIDI_CHANNEL_OFF)
             return;
 

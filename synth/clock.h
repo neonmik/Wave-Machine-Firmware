@@ -18,8 +18,8 @@ namespace CLOCK {
         uint8_t _max = 8; // 4/4 - 4 beats in a bar
         uint8_t _beat = 0;
 
-        bool _changed;
-        uint32_t samplesPerDivision;
+        bool        clockChanged;
+        uint32_t    samplesPerDivision;
         uint32_t    samplesPerPulse;
 
         uint32_t _sample_rate;

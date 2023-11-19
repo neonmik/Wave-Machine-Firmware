@@ -13,6 +13,6 @@ namespace UART {
     namespace MIDI {
         bool available (void);
         uint8_t get (void);
-        void send (uint8_t msg[3]);
+        void send (uint8_t *msg, uint8_t length);
     }
 }
