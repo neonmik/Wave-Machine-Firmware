@@ -7,6 +7,7 @@
 
 #include "usb_descriptors.h"
 
+bool startUpComplete;
 namespace UI {
 
   void init (void) {
@@ -16,6 +17,7 @@ namespace UI {
     ADC::init();
 
     CONTROLS::init();
+
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       // this currently brings up the Factory test/calibration mode, but should eventually bring up the MIDI/settings mode
@@ -27,79 +29,27 @@ namespace UI {
 
     printStartUp();
     
-    poll = 0;
+    startUpComplete = true;
   }
 
-  void update (void) { 
+  void update (void) {
     switch (mode) {
       case UI_MODE_NORMAL:
-        // Add Midi clock output here to allow it to be super tight to the sample rate.
+
         RANDOM::update(ADC::noise());
-        switch(poll) {
-          case 0:
-            NOTE_HANDLING::update();
-            break;
-          case 1:
-            KEYS::read();
-            break;
-          case 2:
-            KEYS::update();
-            break;
-          case 3:
-            // this needs refactoring...
 
-            // combonations go first so they don't muck up the single presses
-            if (Buttons::PRESET.get(Buttons::State::SHIFT) && Buttons::PAGE.get(Buttons::State::SHORT)) {
-              CONTROLS::save();
-            }
+        if ((!(sampleClock & 0x1F)) && (sampleClock != sampleClockLast)){
+          sampleClockLast = sampleClock;
 
-            if (Buttons::FUNC2.get(Buttons::State::LONG)) {
-              CONTROLS::holdButton2();
-            }
-            if (Buttons::FUNC2.get(Buttons::State::SHORT)) {
-              CONTROLS::toggleButton2();
-            }
-
-            if (Buttons::FUNC1.get(Buttons::State::LONG)) {
-              CONTROLS::holdButton1();
-            }
-            if (Buttons::FUNC1.get(Buttons::State::SHORT)) {
-              CONTROLS::toggleButton1();
-            }
-
-            if(Buttons::PAGE.get(Buttons::State::SHORT)) {
-              CONTROLS::changePage();
-            }
-
-            if(Buttons::PRESET.get(Buttons::State::SHORT)) {
-              CONTROLS::changePreset();
-            }
-
-            CONTROLS::setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
-            break;
-          case 4:
-            ADC::update();
-            // RANDOM::update(ADC::noise());
-            break;
-          case 5:
-            PAGINATION::update();
-            break;
-          case 6:
-            CONTROLS::update();
-            break;
-          case 7:
-            LEDS::update();
-            break;
-          case 8:
-            MIDI::update();
-            break;
-          default:
-            // do nothing
-            break;
+          NOTE_HANDLING::update();
+          KEYS::update();
+          ADC::update();
+          PAGINATION::update();
+          CONTROLS::update();
+          LEDS::update();
         }
-
-        ++poll;
-        if (poll > 8) poll = 0;
+        
+        MIDI::update();
 
         break;
 

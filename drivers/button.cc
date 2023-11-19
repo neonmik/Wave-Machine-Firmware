@@ -18,13 +18,25 @@ namespace Buttons {
         
         shiftPress = false;
         end = to_ms_since_boot(get_absolute_time());
+        
         // short press
-        if ((end - start > DEBOUNCE_TIME) && (end - start < LONG_PRESS_TIME)) {
+        if ((end - start > DEBOUNCE_TIME) && (end - start < SHORT_PRESS_TIME)) {
             shortPress = true;
         }
+
         // long press
-        if (end - start > LONG_PRESS_TIME) { 
+        if (end - start > LONG_PRESS_TIME) {
             longPress = true;
+        }
+
+        // Call short press action if set
+        if (shortPress && shortPressAction) {
+            shortPressAction();
+        }
+
+        // Call long press action if set
+        if (longPress && longPressAction) {
+            longPressAction();
         }
     }
     bool Button::get(State state) {

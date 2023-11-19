@@ -23,6 +23,8 @@ namespace UI {
     };
 
     namespace {
+        uint32_t    sampleClockLast;
+        
         uint8_t     poll;
 
         UiMode      mode;

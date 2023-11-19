@@ -5,6 +5,7 @@
 #include "pico/time.h"
 
 #define DEBOUNCE_TIME       5
+#define SHORT_PRESS_TIME    250
 #define LONG_PRESS_TIME     350
 #define DOUBLE_PRESS_TIME   150
 
@@ -18,7 +19,7 @@ namespace Buttons {
         
     class Button {
         private:
-            
+
             bool        shortPress      = false;
             bool        longPress       = false;
             bool        doublePress     = false;
@@ -27,6 +28,10 @@ namespace Buttons {
             uint32_t    start           = 0;
             uint32_t    end             = 0;
             uint32_t    lastTime        = 0;
+
+            // Function pointers for short and long press actions
+            void (*shortPressAction)() = nullptr;
+            void (*longPressAction)() = nullptr;
 
         public:
 
@@ -37,6 +42,9 @@ namespace Buttons {
             void released (void);
 
             bool get (State state);
+
+            void setShortPressAction(void (*action)()) { shortPressAction = action; }
+            void setLongPressAction(void (*action)()) { longPressAction = action; }
     };
 
     extern Button PAGE;
