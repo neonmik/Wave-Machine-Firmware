@@ -80,6 +80,8 @@ extern      uint8_t     softwareIndex;
 extern      uint8_t     hardwareIndex;
 extern      uint16_t    playBuffer[];
 
+extern      bool        startUpComplete;
+
 
 // example struct of the settings struct
 
