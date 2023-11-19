@@ -44,7 +44,7 @@ namespace EEPROM {
         
         readPreset(address, preset);
 
-        printPresetData(preset); // this is needed for some reason... think it's something to do with core sync.
+        // printPresetData(preset); 
     }
     void transferPreset (uint16_t from, uint16_t to) {
 
