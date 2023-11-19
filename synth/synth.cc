@@ -117,7 +117,7 @@ namespace SYNTH {
 
         uint8_t oscillatorsActive = 0;
         
-        channelSample += getWavetable(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
+        channelSample += getWavetableInterpolated(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
         
         // Prototype oscillator modes:
         oscillatorsActive++;
@@ -166,10 +166,10 @@ namespace SYNTH {
   }
 
   void setWaveShape (uint16_t input) {
-    uint16_t temp = ((input >> 6) << 8); // the double bit shifts here are to quickly loose precision.
+    uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
     if (temp == lastWaveShape) return;
     lastWaveShape = temp;
-    currentWaveShape = temp;
+    currentWaveShape = (temp << 8);
   }
   void setWaveVector (uint16_t input) {
     currentWaveVector = input;
