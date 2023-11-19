@@ -105,6 +105,8 @@ namespace KEYS {
     }
     // update before leaving initiation (needs to happen for start up settings)
     update();
+
+
   }
 
   void read () {
@@ -112,6 +114,8 @@ namespace KEYS {
   }
   
   void update () {
+    Keys.read();
+
     uint32_t keys, keys_last;
 
     keys = Keys.get();
