@@ -17,34 +17,40 @@ enum Leds : uint8_t {
     LED_ARP_PIN     = 22,
 };
 
+
 namespace LEDS {
 
+    enum Speed : uint8_t {
+        FAST            = 4,
+        NORMAL          = 8, 
+        SLOW            = 32, // probably should be used for constant flashing
+    };
     namespace {
         bool _SR_state;
     }
     
     class GPIO {
         private:
-            uint8_t     _pin;
+            uint8_t     pin;
             bool        state;
-            uint16_t    _count;
-            uint8_t     _repeats;
-            uint16_t     _duration;
-            bool        _flash_state;
+            uint16_t    count;
+            uint8_t     repeats;
+            uint16_t    duration;
+            bool        flashState;
 
             void put (bool input) {
-                gpio_put(_pin, input);
+                gpio_put(pin, input);
             }
 
         public:
             GPIO (uint8_t input) {
-                _pin = input;
+                pin = input;
             }
             ~GPIO () { }
 
             void init(){
-                gpio_init(_pin); // set LED pin
-                gpio_set_dir(_pin, GPIO_OUT); // set LED pin to out
+                gpio_init(pin); // set LED pin
+                gpio_set_dir(pin, GPIO_OUT); // set LED pin to out
                 // off();
             }
             void on () {
@@ -73,26 +79,27 @@ namespace LEDS {
                     sleep_ms(delay);
                 }
             }
-            void flash (uint8_t repeats, uint8_t duration) {
-                _repeats = repeats << 1; // number of times it repeats
-                _duration = (duration << 3); // 0 being no duration, 255 being always on.
-                _flash_state = !state; // sets opposite starting state so always flashes right.
+            void flash (uint8_t number_repeats, Speed speed) {
+                // if (!number_repeats) //add some kind of setting for infinite flashing
+                repeats = number_repeats << 1; // number of times it repeats,  immediatly doubles to get the on and off
+                duration = (speed << 3); // a speed setting of how fast the flash will be.
+                flashState = !state; // sets opposite starting state so always flashes right.
             }
             void update (void) {
-                if (!_repeats) return;
+                if (!repeats) return;
 
-                ++_count; // Increments the flash counter. Being uint8_t should wrap at 256.
+                ++count; // Increments the flash counter. Being uint8_t should wrap at 256.
 
-                if (_count > _duration) {
+                if (count > duration) {
                     
-                    put(_flash_state);
-                    _flash_state = !_flash_state;
+                    put(flashState);
+                    flashState = !flashState;
                     
-                    _count = 0;
+                    count = 0;
                     
-                    --_repeats;
-                    if (_repeats == 0) {
-                        _duration = 0;
+                    --repeats;
+                    if (repeats == 0) {
+                        duration = 0;
                         put(state); // reset original state.
                     }
                 }
