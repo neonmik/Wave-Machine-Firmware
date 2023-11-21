@@ -98,7 +98,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Oscillator:
-        - Improvement: Look into adding an extra 8 bit variable to count the roll over of the Phase Accumulator to stop the frequency overflowing at the top of the octave/pitch bend range (currently octave 3, with pitchbend above 1/3 will wrap round and be the lowest note).
+        - Improvement: Look into adding an extra 8 bit variable to count the roll over of the Phase Accumulator to stop the frequency overflowing at the top of the octave/pitch bend range (currently octave 3, with pitchbend above 1/3 will wrap round and be the lowest note). - it may be better to change octave to -2, -1, 0, +1, +2 instead.
 
         - Improvement: Finesse soft start code - currently removed as it took too long to get going and still didnt realy work.
 
@@ -125,7 +125,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Clock: 
-        - Feature: Add MIDI Clock out - Will be achieved by dividing internal clock to midi message.
+        
 
         - Bug: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
@@ -359,6 +359,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + MIDI:
+        + Feature: Added MIDI Clock out. MIDI clock sync message are sent at 24ppqn from the internal BPM clock.
         + Moved MIDI clock tracking to a sample based time instead of blocking MCU function.
         + Bugfix: Several bugs were caused by the UART MIDI implementation not formating messages correctly. This has been fixed by a major rewrite of the UART MIDI parsing code, along with an update to the MIDI message handling code.
         + Improved MIDI handling logic by moving the MIDI Channel verification earlier.
