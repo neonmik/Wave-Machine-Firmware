@@ -25,6 +25,7 @@ namespace UI {
       update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
     }
     
+    CONTROLS::setButtonAssignment();
     MIDI::init();
 
     printStartUp();
