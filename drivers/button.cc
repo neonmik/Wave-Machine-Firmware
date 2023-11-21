@@ -13,30 +13,31 @@ namespace Buttons {
         start = currentTime;
     }
     void Button::released () {
-        // REMOVE THIS IF BOTH SHIFT AND LONG NEED TO HAPPEN
-        if (!shiftPress) return; // return because shift was turned off by long press
         
         shiftPress = false;
-        end = to_ms_since_boot(get_absolute_time());
+
+        uint32_t length = to_ms_since_boot(get_absolute_time()) - start;
         
         // short press
-        if ((end - start > DEBOUNCE_TIME) && (end - start < SHORT_PRESS_TIME)) {
+        if ((length > DEBOUNCE_TIME) && (length < SHORT_PRESS_TIME)) {
             shortPress = true;
         }
 
         // long press
-        if (end - start > LONG_PRESS_TIME) {
+        if ((length > LONG_PRESS_TIME)) {
             longPress = true;
         }
 
         // Call short press action if set
         if (shortPress && shortPressAction) {
             shortPressAction();
+            shortPress = false;
         }
 
         // Call long press action if set
         if (longPress && longPressAction) {
             longPressAction();
+            longPress = false;
         }
     }
     bool Button::get(State state) {
