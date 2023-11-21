@@ -14,8 +14,8 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 
-#define SHIFT_TIMEOUT           32    // Stops the shift button reacting as soon as it's pressed, which causing flashing LEDs when just pressed shortly.
-#define PROTECTION_THRESHOLD    5       // The threshold when the Pagination unlocks the pot. 
+#define SHIFT_TIMEOUT           100    // Stops the shift button reacting as soon as it's pressed, which causing flashing LEDs when just pressed shortly.
+#define PROTECTION_THRESHOLD    10       // The threshold when the Pagination unlocks the pot. 
 
 namespace CONTROLS
 {
@@ -23,14 +23,11 @@ namespace CONTROLS
     {
         uint8_t currentPreset;
         uint8_t currentPage;
-        // uint8_t lastPage;
 
         bool shift;
         uint16_t shiftCounter;
 
         bool needsUpdating;
-
-        // uint8_t _index;
 
         enum Page
         {
@@ -129,7 +126,7 @@ namespace CONTROLS
             PAGE    fENV{   &FILTER::setAttack,        &FILTER::setDecay,          &FILTER::setSustain,        &FILTER::setRelease,        nullptr,                      nullptr};
 
         PAGE        LFO {   &MOD::setMatrix,           &MOD::setRate,              &MOD::setDepth,             &MOD::setShape,             MOD::setState,                nullptr};
-            PAGE    SHFT{   &SYNTH::setSub,            &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     nullptr,                    nullptr,                      nullptr};
+            PAGE    SHFT{   &SYNTH::setOsc2Wave,            &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     &SYNTH::setDetune,          nullptr,                      nullptr};
 
         PAGE        ARP {   &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState,                nullptr};
             PAGE    sARP{   nullptr,                   &ARP::setBPM,               &FILTER::setTriggerMode,    &ARP::setOctMode,           nullptr,                      nullptr};
@@ -248,6 +245,8 @@ namespace CONTROLS
 
     void init(void);
 
+    void setButtonAssignment (void);
+
     void setPreset(uint8_t preset);
     void changePreset (void);
     uint8_t getPreset(void);
@@ -264,7 +263,7 @@ namespace CONTROLS
     void changePage(void);
     uint8_t getPage(void);
 
-    void setKnob(uint8_t page, uint8_t control, uint16_t value);
+    void setKnob (uint8_t page, uint8_t control, uint16_t input);
     uint16_t getKnob(uint8_t page, uint8_t control);
 
     void setButton (uint8_t page, uint8_t button, bool state);
