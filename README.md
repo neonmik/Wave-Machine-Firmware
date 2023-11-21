@@ -79,7 +79,7 @@ Current nightly firmware for Wave Machine Hardware.
                     - This currently exposes the ADSR for OSC/FLT pages, and extra functions on LFO/ARP pages. It also exposes various functions to buttons.
 
             - Button 1 [Old Mod Button]:
-                - Pressing this toggles LFO on/off
+                - Pressing this toggles whatever is available on page on/off
                 - Pressing this with Shift does nothing.
                 - Holding this toggles Sub oscillator.
                 - Holding this with Shift toggles Noise oscillator
@@ -150,6 +150,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Improve ADSR code:
+        - Feature: Add infinite release mode - Once pot is at full rotation, lock out release allowing note to sustain forever.
         - Try to make the code more portable - currently the calculations for envelope times are done in the controling code to allow for multicore use, but check to see if it can be done in other ways.
 
 

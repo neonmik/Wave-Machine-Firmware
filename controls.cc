@@ -13,12 +13,6 @@ namespace CONTROLS {
         currentPreset = DEFAULT_PRESET;
         
         // factoryRestore();
-        Buttons::PAGE.setShortPressAction(&CONTROLS::changePage);
-        Buttons::FUNC1.setShortPressAction(&CONTROLS::toggleButton1);
-        Buttons::FUNC1.setLongPressAction(&CONTROLS::holdButton1);
-        Buttons::FUNC2.setShortPressAction(&CONTROLS::toggleButton2);
-        Buttons::FUNC2.setShortPressAction(&CONTROLS::holdButton2);
-        Buttons::PRESET.setShortPressAction(&CONTROLS::changePreset);
         
         for (int i = 0; i < MAX_PRESETS; i++) {
             EEPROM::loadPreset(i, Preset[i]);
@@ -27,6 +21,14 @@ namespace CONTROLS {
         loadPreset(currentPreset);
 
         setPage(currentPage);
+    }
+    void setButtonAssignment (void) {
+        Buttons::PAGE.setShortPressAction(&CONTROLS::changePage);
+        Buttons::FUNC1.setShortPressAction(&CONTROLS::toggleButton1);
+        Buttons::FUNC1.setLongPressAction(&CONTROLS::holdButton1);
+        Buttons::FUNC2.setShortPressAction(&CONTROLS::toggleButton2);
+        Buttons::FUNC2.setLongPressAction(&CONTROLS::holdButton2);
+        Buttons::PRESET.setShortPressAction(&CONTROLS::changePreset);
     }
 
     void setPreset (uint8_t preset) {
@@ -232,7 +234,6 @@ namespace CONTROLS {
     }
 
     void changePage(void) {
-
         resetShift();
         
         currentPage++;
@@ -243,9 +244,7 @@ namespace CONTROLS {
 
         LEDS::FUNC1.set(Control.getButton(getPage(), 0));
         LEDS::FUNC2.set(Control.getButton(getPage(), 1));
-
-
-        // needsUpdating = true;
+        
     }
     uint8_t getPage (void) {
         if (!shift) {
