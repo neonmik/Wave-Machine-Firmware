@@ -77,11 +77,11 @@ namespace SYNTH {
     }
     inline void calcIncrement (void) {
       // if (!changed) return; // if the frequency or pitch hasn't changed, return
-
-      // Original octave code - updates whenever its changed
+  
+      // Original octave code - updates octave whenever its changed
       phaseIncrement = ((((frequency * currentPitchBend) >> 10) << currentOctave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
-      // Newer octave code - updates only with note on call
+      // Newer octave code - sets octave only with noteOn call
       // phaseIncrement = (((frequency * currentPitchBend) >> 10) << Q_SCALING_FACTOR) / SAMPLE_RATE; // octave scaling achieved at note level
 
       // changed = false; // for eventual performance improvement of pitch fixing. 
@@ -138,4 +138,7 @@ namespace SYNTH {
 
   void setSub (uint16_t input);
   void setNoise (uint16_t input);
+
+  void setDetune (uint16_t input);
+  void setOsc2Wave (uint16_t input);
 }

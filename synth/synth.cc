@@ -18,8 +18,8 @@ namespace SYNTH {
   uint8_t     currentOctave = 0;
   uint16_t    lastOctave;
 
-  uint16_t    currentDetune;
-  uint16_t    lastDetune;
+  int16_t    currentDetune;
+  int16_t    lastDetune;
 
   uint32_t    currentAttack;
   uint32_t    currentDecay;
@@ -38,9 +38,11 @@ namespace SYNTH {
   bool        subActive;
   bool        noiseActive;
 
-  uint16_t    subLevel;
-  uint16_t    noiseLevel;
-  
+  uint16_t    subLevel = 1023;
+  uint16_t    noiseLevel = 0;
+
+  uint16_t    osc2Wave;
+  uint16_t    lastOsc2Wave;
 
 
   uint16_t volume = 0xFFFF;
@@ -89,7 +91,9 @@ namespace SYNTH {
     MOD::update();
 
     // implemented this here so that it's set for the whole sample run...
-    uint16_t waveOffset = (currentWaveShape + (currentWaveVector + modVector));
+    uint16_t waveMod = (currentWaveVector + modVector);
+    uint16_t waveOffset = (currentWaveShape + waveMod);
+    uint16_t wave2Offset = (osc2Wave + waveMod);
     uint16_t outputVolume = (volume - modTremelo);
     
     for(int c = 0; c < POLYPHONY; c++) {
@@ -103,7 +107,7 @@ namespace SYNTH {
         channel.phaseAccumulator += channel.phaseIncrement;
 
 
-        //this is where modVibrato is added... has to be here and not in the pitch scale as it would be lopsided due to logarithmic nature of freqencies.
+        //this is where modVibrato is added... 
         channel.phaseAccumulator += modVibrato;
 
         channel.ADSR.update();
@@ -122,9 +126,17 @@ namespace SYNTH {
         // Prototype oscillator modes:
         oscillatorsActive++;
 
+        // Second Oscillator
+        // if (secondOscActive) {
+        uint32_t offset;
+        if (currentDetune == 0) offset = 0;
+        else offset =  channel.phaseAccumulator / currentDetune;
+        channelSample += getWavetable(channel.phaseAccumulator + offset, wave2Offset); // Second oscillator test
+        // }
+
         // Sub Mode
         if (subActive) {
-          channelSample += (getWavetable((channel.phaseAccumulator >> 1), 0) * subLevel) >> 10; // Sub Sinewave oscillator test
+          channelSample += (getWavetableInterpolated((channel.phaseAccumulator >> 1), 0) * subLevel) >> 10; // Sub Sinewave oscillator
           oscillatorsActive++;
         }
 
@@ -135,7 +147,7 @@ namespace SYNTH {
         }
 
         // channelSample /= oscillatorsActive;
-        channelSample /= 2;
+        channelSample /= 3;
 
 
 
@@ -232,11 +244,23 @@ namespace SYNTH {
   void setSub (uint16_t input) {
     subLevel = input;
   }
-
   void setNoise (uint16_t input) {
     noiseLevel = input;
   }
 
+  void setDetune (uint16_t input) {
+    uint16_t temp = logPotentiometer(input);
+    if (lastDetune == temp) return;
+    lastDetune = temp;
+    if (temp == 0) currentDetune = 0;
+    else currentDetune = 1024 - temp;
+  }
+  void setOsc2Wave (uint16_t input) {
+    uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
+    if (temp == lastOsc2Wave) return;
+    lastOsc2Wave = temp;
+    osc2Wave = (temp << 8);
+  }
 }
 
 
