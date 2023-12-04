@@ -7,27 +7,26 @@
 
 #include "../synth/note_handling.h"
 
-#define MUX_SEL_A       12
-#define MUX_SEL_B       13
-#define MUX_SEL_C       14
-#define MUX_SEL_D       15
-#define MUX_OUT_0       16
-#define MUX_OUT_1       17
-
-#define MAX_KEYS        27
-#define PAGE_KEY        27
-#define LFO_KEY         28
-#define ARP_KEY         29
-#define PRESET_KEY      30
-
-#define DEBUG_PIN       2
-
-#define LONG_PRESS      400
-
 namespace KEYS {
+    // Pin definitions for Mux
+    constexpr   uint8_t     MUX_SEL_A   =   12;
+    constexpr   uint8_t     MUX_SEL_B   =   13;
+    constexpr   uint8_t     MUX_SEL_C   =   14;
+    constexpr   uint8_t     MUX_SEL_D   =   15;
+    constexpr   uint8_t     MUX_OUT_0   =   16;
+    constexpr   uint8_t     MUX_OUT_1   =   17;
+
+    // Key defines
+    constexpr   uint8_t     MAX_KEYS    =   27;
+    constexpr   uint8_t     PAGE_KEY    =   27;
+    constexpr   uint8_t     LFO_KEY     =   28;
+    constexpr   uint8_t     ARP_KEY     =   29;
+    constexpr   uint8_t     PRESET_KEY  =   30;
 
     class Keyboard {
         private:
+
+
             uint32_t _history[8]    =       
             {
                 0xFFFFFFFF,

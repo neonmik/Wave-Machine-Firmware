@@ -9,20 +9,20 @@
 #include "../random.h"
 
 
-#define MUX_SEL_A       12
-#define MUX_SEL_B       13
-#define MUX_SEL_C       14
-#define MUX_SEL_D       15
-
-#define MUX_OUT_ADC     26
-
-#define MAX_NOISE_ADDRESS   8
-
 namespace ADC {
-    namespace {
-        float _core_temp;
 
-        uint16_t _adc_value;
+    constexpr   uint8_t     MUX_SEL_A   =   12;
+    constexpr   uint8_t     MUX_SEL_B   =   13;
+    constexpr   uint8_t     MUX_SEL_C   =   14;
+    constexpr   uint8_t     MUX_SEL_D   =   15;
+    constexpr   uint8_t     MUX_OUT_ADC =   26;
+
+    constexpr   uint8_t     MAX_NOISE_ADDRESS = 8;
+
+    namespace {
+        float       _core_temp;
+
+        uint16_t    _adc_value;
         uint16_t _adc_noise[MAX_NOISE_ADDRESS];
         uint8_t  _noise_address;
         uint8_t  _read_address = 2; // offset read address;
