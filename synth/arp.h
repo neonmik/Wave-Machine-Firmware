@@ -164,6 +164,7 @@ namespace ARP {
     void setDirection (uint16_t input);
 
     void toggleHold (void);
+    bool getHold(void);
     void toggleSustain (void);
     void updateSustain (void);
 

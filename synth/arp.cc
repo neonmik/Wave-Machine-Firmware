@@ -13,7 +13,7 @@ namespace ARP {
             for (int i = 0; i < MAX_ARP; i++) {
                 printf("  %d:  %02d  |", i, input[i].note);
             }
-            printf("\n");
+            printf("\n\n");
     }
 
     void setState (bool state) {
@@ -253,8 +253,8 @@ namespace ARP {
             // printf("++latchCount: %d\n", latchCount);
 
             if (latchCount >= MAX_ARP) {
-            latchCount = MAX_ARP; // Cap latchCount at MAX_ARP
-        }
+                latchCount = MAX_ARP; // Cap latchCount at MAX_ARP
+            }
         }
 
         // Check if the note already exists in the inputBuffer
@@ -271,7 +271,6 @@ namespace ARP {
                 if (inputBuffer[i].note == 0) {
                     inputBuffer[i].add(note);
                     inputNotesUpdated = true;
-                    // NOTE_HANDLING::voicesIncrease();
                     ++inputNoteCount;
 
                     if (inputNoteCount >= MAX_ARP) {
@@ -394,38 +393,38 @@ namespace ARP {
             inputNotesUpdated = false;
         }
     }
+    
+    
+    void clearNote (uint8_t note) {
+        removeNote(note);
+        MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
+    }
+
+    void removeNotes(const uint8_t* notesToRemove, uint8_t count) {
+        for (int i = 0; i < count; ++i) {
+            clearNote(notesToRemove[i]);
+        }
+    }
+    
     // Clear sustained notes from the input buffer and then update the the arpeggiator buffer
     void clearSustainedNotes (void) {
         uint8_t notesToRemove[MAX_ARP];
-        uint8_t notesForRemoval;
-        uint8_t bufferSize; 
-        
-        if (inputBufferFull) {
-            bufferSize = MAX_ARP;
-        } else {
-            bufferSize = inputNoteCount;
-        }
+        uint8_t notesForRemoval = 0;
+        uint8_t bufferSize = inputBufferFull ? MAX_ARP : inputNoteCount;
     
-        // check every active note
+        // Check notes for sustain and remove if sustained
         for (int i = 0; i < bufferSize; ++i) {
-            // If the note is sustained
             if (inputBuffer[i].isSustained()) {
-                // clear sustain
                 inputBuffer[i].sustained = false;
-                // add to list for removal afterwards - messed the order up if done here
-                notesToRemove[notesForRemoval] = inputBuffer[i].note;
-                // increase amount of notes to be removed
-                ++notesForRemoval;
+                notesToRemove[notesForRemoval++] = inputBuffer[i].note;
             }
         }
-        // actually remove notes marked for removal
-        for (int i = 0; i < notesForRemoval; ++i) {
-            removeNote(notesToRemove[i]);
-            MIDI::sendNoteOff(notesToRemove[i], MIDI_DEFAULT_NOTE_OFF_VEL);
-        }
-        
-        transferNotes();
+
+        // Clear only the previously sustained notes
+        removeNotes(notesToRemove, notesForRemoval);
     }
+
+    
     
     // Clear all notes from the input buffer and then update the arpeggiator buffer
     void clearAllNotes (void) {
@@ -449,8 +448,6 @@ namespace ARP {
             // actually remove notes marked for removal
             for (int i = 0; i < notesForRemoval; ++i) {
                 removeNote(notesToRemove[i]);
-                // probably not needed if arp is playing?
-                // MIDI::sendNoteOff(notesToRemove[i], MIDI_DEFAULT_NOTE_OFF_VEL); 
             }
             isSustainEnabled = true;
         } else {
@@ -469,6 +466,8 @@ namespace ARP {
     }
 
     void passNotes (void) {
+        transferNotes();
+
         if (!isSustainEnabled) {
             // sustain not active - send all actual notes
             for (int i = 0; i < MAX_ARP; i++) {
@@ -497,6 +496,7 @@ namespace ARP {
                 // if (arpVoices[i].isSustained()) NOTE_HANDLING::noteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
             }
         }
+
     }
 
     void grabNotes (void) {
@@ -526,7 +526,8 @@ namespace ARP {
                 latchRefresh = true;
             }
         }
-        // transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
+
+        transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
     }
     void stopAllVoices () {
         // NOTE_HANDLING::voicesClear();
@@ -538,6 +539,9 @@ namespace ARP {
         isSustainEnabled = !isSustainEnabled; // toggle
 
         updateSustain();
+    }
+    bool getHold(void) {
+        return isSustainEnabled;
     }
     void toggleSustain (void) {
         isSustainEnabled = !isSustainEnabled; // toggle
