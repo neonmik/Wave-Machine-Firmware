@@ -5,12 +5,13 @@
 #include "pico/time.h"
 
 #define DEBOUNCE_TIME       5
-#define SHORT_PRESS_TIME    200
+#define SHORT_PRESS_TIME    150
 #define DOUBLE_PRESS_TIME   150
 #define LONG_PRESS_TIME     350
 #define TOTAL_TIMEOUT       650
 
 namespace Buttons {
+    
     enum class State {
         SHORT,
         LONG,
