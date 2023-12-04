@@ -5,22 +5,22 @@ Current nightly firmware for Wave Machine Hardware.
 - Features:
 
     - Powerful 8 Voice Wavetable synth engine with:
-        - Polyphonic envelope generator (ADSR).
-        - Polyphonic Wavetable oscillator with wave type and vector control
-        - Polyphonic Sub oscillator toggle.
-        - Polyphonic Noise Oscilator toggle.
-        - Pitch bend
+        - Polyphonic Amp envelope generator (ADSR).
+        - Polyphonic Wavetable oscillator with waveshape and vector control (OSC1).
+        - Polyphonic Sub or Detuned oscillator with seperate waveshape control, detune setting, and level (OSC2).
+        - Polyphonic Noise Oscillator with level control.
+        - Pitchbend
         - Octave selection.
         - Paraphonic LFO and Filter.
 
     - A highly useable LFO with:
-        - 3 selectable output destinations - Pitch (Vibrato), Volume (Tremelo), and Wavetable vector (Allowing for sweeping morphing sounds).
+        - 6 Waveforms (Sine, Sawtooth Up, Sawtooth Down, Square, Triangle and Noise).
         - A wide range of freqency control from 0.01 - 150Hz (with hardware settings to change to allow for differnt bands in the range of 0.003Hz - 2.4kHz).
         - Depth control.
-        - 6 Waveforms (Sine, Sawtooth Up, Sawtooth Down, Square, Triangle and Noise)
+        - 4 selectable output destinations - Pitch (Vibrato), Volume (Tremelo), Wavetable vector (Allowing for sweeping morphing sounds) and Filter Cutoff modulation.
 
     - A characterful SVF Filter with:
-        - Paraphonic Envelope control (ADSR) with either ascending or decending modes
+        - Paraphonic Cutoff envelope control (ADSR) with either ascending or decending modes.
         - Cutoff control
         - Resonance control
         - Punch contol
@@ -51,8 +51,6 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Release bugfixes
 
-    - BUG: When flipping through presets while actively playing (not just holding notes) notes get stuck on. Holding more than 8 notes clears it for now, maybe look to add in an array of current notes (as it was before) to only be used on patch change to reset the notes. 
-
     - NOTE PRIORITY: Investigate moving MIDI::sendNoteOff to outside the note validation loop in release so it always gets called when it actually gets called. Might need to move sustain to keys file...
 
 
@@ -66,8 +64,6 @@ Current nightly firmware for Wave Machine Hardware.
 
         - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements.
 
-        - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
-
     - Controls:
         
         - Change the layout of controls:
@@ -76,18 +72,18 @@ Current nightly firmware for Wave Machine Hardware.
                 - Pressing this should cycle between pages:
                     - 1: OSC, 2: LFO, 3: FLT, ALL(4): ARP(For Now)
                 - Holding this is SHIFT: 
-                    - This currently exposes the ADSR for OSC/FLT pages, and extra functions on LFO/ARP pages. It also exposes various functions to buttons.
+                    - This currently exposes the envelope pages for OSC/FLT pages, and extra functions on LFO/ARP pages. It also exposes various functions to buttons.
 
             - Button 1 [Old Mod Button]:
-                - Pressing this toggles whatever is available on page on/off
-                - Pressing this with Shift does nothing.
-                - Holding this toggles Sub oscillator.
-                - Holding this with Shift toggles Noise oscillator
+                - Pressing this toggles LFO on/off
+                - Pressing this with Shift toggles FLT on/off.
+                - Holding this does nothing.
+                - Holding this with Shift does nothing.
 
             - Button 2 [Old Arp Button]:
-                - Pressing this turns on/off Arp
-                - Pressing this with Shift does nothing.
-                - Holding this toggles Latch in ARP mode
+                - Pressing this toggles on/off Arp
+                - Pressing this with Shift toggles Latch on/off.
+                - Holding this does nothing.
                 - Holding this with Shift does nothing.
 
             - Preset Button:
@@ -103,7 +99,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Improvement: Finesse soft start code - currently removed as it took too long to get going and still didnt realy work.
 
     - Mod:
-        - Bug: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) but over that becomes noticably uneven.
+        - Improvement: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) but over that becomes noticably uneven.
         
         - Feature: Once LFO is balanced, add a MAX_RANGE config setting for vibrato. 
 
@@ -112,6 +108,8 @@ Current nightly firmware for Wave Machine Hardware.
 
     - USB MIDI/ MIDI:
         - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
+
+        - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
 
         - Feature: Handle Song Position messages in a meaningful way - Use them to make sure the arp always starts at the top of the bar...
 
@@ -125,17 +123,21 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Clock: 
-        
+        - Add start and stop messages
 
         - Bug: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
 
 
     - EEPROM:
+
         - Add factory calibration routine:
             - Fetch Unique ID and store it? (kinda not needed as it's always there, but maybe) - could even be the ID of my memory chip?
+
         - Add Storage routines for system settings:    
+            
             - Organise a way of storing all those settings in config, and being able to adjust them and re save them.
+
             - Need a way of storing all settings/config related stuff persistanly (MIDI settings, Audio Engine settings, calibration?, etc.)
 
 
@@ -151,15 +153,19 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Improve ADSR code:
         - Feature: Add infinite release mode - Once pot is at full rotation, lock out release allowing note to sustain forever.
+
         - Try to make the code more portable - currently the calculations for envelope times are done in the controling code to allow for multicore use, but check to see if it can be done in other ways.
 
 
     - Improve Mod code:
-        - Research: Look up Attenuveter and see if its any use for controlling LFO code.
         - Try making it Poly - I think the sample rate can be reduced by 8 (6kHz) and that should allow every voice to have its own poly Mod. Would probably need a reset for when notes are released, so that you can really hear the difference.
+        
         - Add a tempo sync function.
+        
         - Add ADSR? Maybe share with filter...
         - Add a ramp down feature when switching between destinations - could be difficult. 
+
+        - Research: Look up Attenuveter and see if its any use for controlling LFO code.
 
 
     - Improve Filter code: 
@@ -284,6 +290,7 @@ Features/Bugfixes:
         + DAC
 
     + Arp: 
+        + Bugfix: Fixed a bug where flipping through presets while actively playing (not just holding notes/chords) notes would get stuck sustaining. This was down to notes not being transfer from the Arp input buffer to the play buffer before being copied to the standard note handling code.
         + Improvement: Added a control for Chord Arp which can be accessed from 
         + Feature: Added a setting for Chord Arp along with its associated functions.
         + Bugfix: Arp was getting stuck at top or bottom of range. Reworked Octave direction code, aswell as setDirection code.
