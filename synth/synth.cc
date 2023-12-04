@@ -118,43 +118,34 @@ namespace SYNTH {
         }
 
         int32_t channelSample = 0;
-
-        uint8_t oscillatorsActive = 0;
         
         channelSample += getWavetableInterpolated(channel.phaseAccumulator, waveOffset); // >> Q_SCALING_FACTOR removed for interpolationg wavetable
         
         // Prototype oscillator modes:
-        oscillatorsActive++;
 
-        // Second Oscillator
-        // if (secondOscActive) {
+        // Second Oscillator - Sub or Detuned oscillator
+        // - Set to 0, this oscilaltor will be a -1 oct Sub
+        // - Set to any other value, this will be a detuned 
+
         uint32_t offset;
-        if (currentDetune == 0) offset = 0;
-        else offset =  channel.phaseAccumulator / currentDetune;
-        channelSample += getWavetable(channel.phaseAccumulator + offset, wave2Offset); // Second oscillator test
-        // }
-
-        // Sub Mode
-        if (subActive) {
-          channelSample += (getWavetableInterpolated((channel.phaseAccumulator >> 1), 0) * subLevel) >> 10; // Sub Sinewave oscillator
-          oscillatorsActive++;
+        if (currentDetune == 0) {
+          offset = 0;
+          channelSample += (getWavetableInterpolated((channel.phaseAccumulator >> 1), wave2Offset) * subLevel) >> 10; // Sub Sinewave oscillator
+        }
+        else {
+          offset =  channel.phaseAccumulator / currentDetune;
+          channelSample += (getWavetableInterpolated(channel.phaseAccumulator + offset, wave2Offset) * subLevel) >> 10; // Second oscillator test
         }
 
-        // Noise Mode
-        if (noiseActive){
-          channelSample += ((RANDOM::getSignal() >> 2) * noiseLevel) >> 10;
-          oscillatorsActive++;
-        }
+        channelSample += ((RANDOM::getSignal() >> 2) * noiseLevel) >> 10;
 
-        // channelSample /= oscillatorsActive;
         channelSample /= 3;
 
 
-
-        // apply ADSR
+        // apply Amp envelope
         channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
 
-        // apply channel volume
+        // apply channel volume - should be velocity eventually
         channelSample = (int32_t(channelSample) * int32_t(channel.volume)) >> 16;
 
         outputSample += channelSample;

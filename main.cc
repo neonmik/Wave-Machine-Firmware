@@ -1,5 +1,5 @@
 /**
- *                Wave Machine Firmware v0.31
+ *                Wave Machine Firmware v0.32
  * 
  * Copyright (c) 2022-2023 Nick Allott Musical Services (NAMS)
  *  
@@ -52,15 +52,15 @@ void synthCore() {
   DAC::init();
   CLOCK::init();
 
-  printf("\n\nAudio core waiting for start up");
+  printf("\n\nAudio core waiting for start up\n");
   while (!startUpComplete) {
     sleep_ms(1);
-    printf(".");
   }
-  printf("\n\n");
+
   
   while (true) {
     if (softwareIndex != hardwareIndex) {
+
       playBuffer[softwareIndex] = SYNTH::process();
 
       ++softwareIndex;
@@ -89,6 +89,7 @@ void synthCore() {
         }
       }
     }
+
   }
 }
 

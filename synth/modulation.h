@@ -59,10 +59,10 @@ namespace MOD {
             // control variables
 
             bool        _state = false;
-            uint8_t     _matrix;
-            uint16_t    _rate;
-            uint16_t    _depth;
-            uint16_t    _wave;
+            volatile uint8_t     _matrix;
+            volatile uint16_t    _rate;
+            volatile uint16_t    _depth;
+            volatile uint16_t    _wave;
             
             OutputDestinations _destination[4]{
                 // pointer of what to update, type of output, offset for output table

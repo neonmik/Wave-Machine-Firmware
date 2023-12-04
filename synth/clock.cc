@@ -125,7 +125,8 @@ namespace CLOCK {
         uint32_t currentTime = sampleClock; // current time in samples
         
         midiClockPeriod = currentTime - midiClockLast;
-        printf("MIDI Clock Period: %d\n", midiClockPeriod);
+        // printf("MIDI Clock Period: %d\n", midiClockPeriod);
+
         // set the current time for use in checking where its still here
         midiClockLast = currentTime;
 

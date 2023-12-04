@@ -5,12 +5,14 @@ namespace FILTER {
     ADSREnvelope ADSR{attack, decay, sustain, release};
 
     void init() {
-        // lowPass = 0;
-        // bandPass = 0;
+        lowPass = 0;
+        bandPass = 0;
         needsUpdating = true;
     }
 
     void setState (bool input) {
+        lowPass = 0;
+        bandPass = 0;
         state = input;
     }
     bool getState () {
