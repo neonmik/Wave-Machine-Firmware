@@ -14,7 +14,7 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 
-#define SHIFT_TIMEOUT           100    // Stops the shift button reacting as soon as it's pressed, which causing flashing LEDs when just pressed shortly.
+#define SHIFT_TIMEOUT           92    // Stops the shift button reacting as soon as it's pressed, which causing flashing LEDs when just pressed shortly.
 #define PROTECTION_THRESHOLD    10       // The threshold when the Pagination unlocks the pot. 
 
 namespace CONTROLS
@@ -23,9 +23,13 @@ namespace CONTROLS
     {
         uint8_t currentPreset;
         uint8_t currentPage;
+        uint8_t activePage;
+        uint8_t extraPage;
 
         bool shift;
         uint16_t shiftCounter;
+
+        bool inExtraPages;
 
         bool needsUpdating;
 
@@ -126,7 +130,7 @@ namespace CONTROLS
             PAGE    fENV{   &FILTER::setAttack,        &FILTER::setDecay,          &FILTER::setSustain,        &FILTER::setRelease,        nullptr,                      nullptr};
 
         PAGE        LFO {   &MOD::setMatrix,           &MOD::setRate,              &MOD::setDepth,             &MOD::setShape,             MOD::setState,                nullptr};
-            PAGE    SHFT{   &SYNTH::setOsc2Wave,            &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     &SYNTH::setDetune,          nullptr,                      nullptr};
+            PAGE    SHFT{   &SYNTH::setOsc2Wave,       &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     &SYNTH::setDetune,          nullptr,                      nullptr};
 
         PAGE        ARP {   &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState,                nullptr};
             PAGE    sARP{   nullptr,                   &ARP::setBPM,               &FILTER::setTriggerMode,    &ARP::setOctMode,           nullptr,                      nullptr};
@@ -201,21 +205,7 @@ namespace CONTROLS
                 default:                    return                          false;
             }
         }
-        // No longer needed as we only update the active page
-        // void update() {
-        //     switch (_index) {
-        //         case Page::MAIN:            MAIN.update();                 break;
-        //         case Page::FILT:            FILT.update();                 break;
-        //         case Page::LFO:             LFO.update();                  break;
-        //         case Page::ARP:             ARP.update();                  break;
-        //         case Page::ADSR:            ADSR.update();                 break;
-        //         case Page::fENV:            fENV.update();                 break;
-        //         case Page::SHFT:            SHFT.update();                 break;
-        //         case Page::sARP:            sARP.update();                 break;
-        //     }
-        //     _index++;
-        //     // need a loop for index here
-        // }
+
         void update(uint8_t index) {
             switch (index) {
                 case Page::MAIN:            MAIN.update();                  break;
@@ -251,8 +241,8 @@ namespace CONTROLS
     void changePreset (void);
     uint8_t getPreset(void);
 
-    void savePreset(uint8_t preset);
-    void loadPreset(uint8_t preset);
+    void savePresetToSlot(uint8_t slot);
+    void loadPresetFromSlot(uint8_t slot);
     void exportPresets(void);
     void factoryRestore(void);
     void updateFactoryPresets(void);
@@ -282,4 +272,6 @@ namespace CONTROLS
     void resetShift (void);
 
     void update(void);
+
+    void refreshInterface (void);
 };

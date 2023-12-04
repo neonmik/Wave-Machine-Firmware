@@ -18,7 +18,7 @@ namespace CONTROLS {
             EEPROM::loadPreset(i, Preset[i]);
         }
 
-        loadPreset(currentPreset);
+        loadPresetFromSlot(currentPreset);
 
         setPage(currentPage);
     }
@@ -34,18 +34,18 @@ namespace CONTROLS {
     void setPreset (uint8_t preset) {
         currentPreset = preset;
 
-        loadPreset(currentPreset);
+        loadPresetFromSlot(currentPreset);
 
         PAGINATION::refresh();
     }
+
     void changePreset (void) {
         if (!shift) {
             ++currentPreset;
             if (currentPreset >= MAX_PRESETS) currentPreset = 0;
 
-            loadPreset(currentPreset);
-
-            PAGINATION::refresh();
+            loadPresetFromSlot(currentPreset);
+            setPage(currentPage);
         } else {
             save();
         }
@@ -54,7 +54,7 @@ namespace CONTROLS {
     uint8_t getPreset () {
         return currentPreset;
     }
-    void applyPreset (PRESET &preset) {
+    void applyPresetToControls (PRESET &preset) {
         Control.setKnob(Page::MAIN, 0, preset.Wave.shape);
         Control.setKnob(Page::MAIN, 1, preset.Wave.vector);
         Control.setKnob(Page::MAIN, 2, preset.Wave.octave);
@@ -101,7 +101,7 @@ namespace CONTROLS {
             Control.setKnob(Page::sARP, 2, preset.Arpeggiator.fMode);
             Control.setKnob(Page::sARP, 3, preset.Arpeggiator.octMode);
     }
-    void pullPreset (PRESET &preset) {
+    void extractPresetFromControls (PRESET &preset) {
         preset.Wave.shape = Control.getKnob(Page::MAIN, 0);
         preset.Wave.vector = Control.getKnob(Page::MAIN, 1);
         preset.Wave.octave = Control.getKnob(Page::MAIN, 2);
@@ -148,31 +148,27 @@ namespace CONTROLS {
             preset.Arpeggiator.fMode = Control.getKnob(Page::sARP, 2);
             preset.Arpeggiator.octMode = Control.getKnob(Page::sARP, 3);
     }
-    
-    void savePreset (uint8_t slot) {
+
+   
+    void savePresetToSlot (uint8_t slot) {
         Preset[slot] = activePreset;
 
-        pullPreset(Preset[slot]);
+        extractPresetFromControls(Preset[slot]);
 
         EEPROM::savePreset(slot, Preset[slot]);
         
     }
 
-    void loadPreset (uint8_t slot) {
-        // Moved this to the init code to save on processing time between presets.
-        // EEPROM::loadPreset(slot, Preset[slot]);
-
+    void loadPresetFromSlot (uint8_t slot) {
         activePreset = Preset[slot];
 
-        applyPreset(activePreset);
+        applyPresetToControls(activePreset);
 
         Control.updateAll();
 
         LEDS::PRESET.preset(currentPreset);
 
-        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
-        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
-
+        refreshInterface();
     }
     void exportPresets(void) {
         PRESET export_buffer[MAX_PRESETS];
@@ -213,22 +209,19 @@ namespace CONTROLS {
 
     // Save current Preset
     void save () {
-        savePreset(currentPreset);
+        savePresetToSlot(currentPreset);
 
         LEDS::PRESET.flash(4,8);
     }
     
     // internal use only...
     void setPage (uint8_t page) {
+        resetShift();
+        
         currentPage = page;
 
-        PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
-
-        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
-        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
-
-        resetShift();
+        refreshInterface();
 
         needsUpdating = true;
     }
@@ -239,11 +232,9 @@ namespace CONTROLS {
         currentPage++;
         if (currentPage >= MAX_PAGES) currentPage = 0;
 
-        PAGINATION::refresh();
         LEDS::PAGE_select(currentPage);
 
-        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
-        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
+        refreshInterface();
         
     }
     uint8_t getPage (void) {
@@ -265,29 +256,52 @@ namespace CONTROLS {
     
 
     void toggleButton1 (void) {
-        // new code for page functions
-        Control.toggleButton(getPage(), 0);
-        LEDS::FUNC1.set(Control.getButton(getPage(), 0));
+        if (!shift) {
+            // Normal Function
+            Control.toggleButton(Page::LFO, 0);
+            LEDS::FUNC1.set(Control.getButton(Page::LFO, 0));
+            return; // no function, so skip the LED update
+        } else {
+            // Shift Function
+            Control.toggleButton(Page::FILT, 0);
+            LEDS::FUNC1.set(Control.getButton(Page::FILT, 0));
+            return; // no function, so skip the LED update
+        }
+        // Control.toggleButton(getPage(), 0);
+        // LEDS::FUNC1.set(Control.getButton(getPage(), 0));
         needsUpdating = true;
     }
-
     void holdButton1 (void) {
-        if (shift) {
-            SYNTH::toggleNoise();
+        if (!shift) {
+            // Normal Function
+            return; // no function, so skip the LED flash
         } else {
-            SYNTH::toggleSub();
+            // Shift Function
+            return; // no function, so skip the LED flash
         }
         LEDS::FUNC1.flash(4, LEDS::Speed::NORMAL);
     }
 
-    // Remove??
-    bool getButton1 () {
-        return Control.getButton(Page::LFO, 0);
-    }
+    // Currently unused in API
+    // bool getButton1 () {
+    //     return Control.getButton(getPage(), 0);
+    // }
 
     void toggleButton2 (void) {
-        Control.toggleButton(getPage(), 1);
-        LEDS::FUNC2.set(Control.getButton(getPage(), 1));
+        if (!shift) {
+            // Normal Function
+            Control.toggleButton(Page::ARP, 0);
+            LEDS::FUNC2.set(Control.getButton(Page::ARP, 0));
+            // return; // no function, so skip the LED update
+        } else {
+            // Shift Function
+            ARP::toggleHold();
+            LEDS::FUNC2.set(ARP::getHold());
+            LEDS::FUNC2.flash(4, LEDS::Speed::NORMAL); // currently blocks indefinite flash.
+            // return; // no function, so skip the LED update
+        }
+        // Control.toggleButton(getPage(), 1);
+        // LEDS::FUNC2.set(Control.getButton(getPage(), 1));
         needsUpdating = true;
     }
     void holdButton2 (void) {
@@ -296,13 +310,13 @@ namespace CONTROLS {
         } else {
             ARP::toggleHold();
         }
-        LEDS::FUNC2.flash(4, LEDS::Speed::NORMAL);
+        LEDS::FUNC2.flash(4, LEDS::Speed::NORMAL); // currently blocks indefinite flash.
     }
 
-    // Remove??
-    bool getButton2 () {
-        return Control.getButton(Page::ARP, 0);
-    }
+    // Currently unused in API
+    // bool getButton2 () {
+    //     return Control.getButton(getPage(), 1);
+    // }
 
     void setShift (bool input) {
         if (shift != input) {
@@ -313,12 +327,9 @@ namespace CONTROLS {
                 
                 shift = !shift;
                 needsUpdating = true;
-
-                PAGINATION::refresh();
-                LEDS::FUNC1.set(Control.getButton(getPage(), 0));
-                LEDS::FUNC2.set(Control.getButton(getPage(), 1));
-
                 shiftCounter = 0;
+
+                refreshInterface();
             }
         } else {
             shiftCounter = 0;
@@ -338,12 +349,25 @@ namespace CONTROLS {
     void update () {
         CONTROLS::setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
         
-        if (needsUpdating) {
+        if (!needsUpdating) 
+            return;
 
-            // Updates only active page, including whether we're in a shift page.
-            Control.update(getPage());
+        // Updates only active page, including whether we're in a shift page.
+        Control.update(getPage());
+
+        needsUpdating = false;
             
-            needsUpdating = false;
+    }
+
+    void refreshInterface (void) {
+        PAGINATION::refresh();
+        if (!shift) {
+            // Normal functions:
+            LEDS::FUNC1.set(Control.getButton(Page::LFO, 0));
+            LEDS::FUNC2.set(Control.getButton(Page::ARP, 0));
+        } else {
+            LEDS::FUNC1.set(Control.getButton(Page::FILT, 0));
+            LEDS::FUNC2.set(ARP::getHold());
         }
     }
     
