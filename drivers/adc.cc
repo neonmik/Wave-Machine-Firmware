@@ -5,10 +5,14 @@ namespace ADC {
 
         adc_init();
 
+        adc_temp_init();
+        adc_mux_init();
+        adc_noise_init();
+
         // Before setting up the pots, do a quick read of the startup temp
         read_onboard_temperature();
 
-        adc_noise_init();
+        // adc_noise_init();
 
         read_noise();
         read_noise();
@@ -26,7 +30,6 @@ namespace ADC {
         pin_init(MUX_SEL_C);
         pin_init(MUX_SEL_D);
         
-        adc_mux_init();
 
         _mux_address = 0;
         

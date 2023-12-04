@@ -35,16 +35,14 @@ namespace ADC {
 
         void adc_temp_init(void) {
             adc_set_temp_sensor_enabled(true);
-            adc_select_input(4);
         }
         void adc_mux_init (void) {
             adc_gpio_init(MUX_OUT_ADC);
-            adc_select_input(0);
         }
         void adc_noise_init (void) {
             adc_gpio_init(MUX_OUT_ADC + 1); // Initiate unconnected pin
-            adc_select_input(1);
         }
+
         void adc_temp_select (void) {
             adc_select_input(4);
         }
