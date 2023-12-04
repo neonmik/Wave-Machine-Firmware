@@ -23,7 +23,7 @@ namespace LEDS {
     enum Speed : uint8_t {
         FAST            = 4,
         NORMAL          = 8, 
-        SLOW            = 32, // probably should be used for constant flashing
+        SLOW            = 48, // probably should be used for constant flashing
     };
     namespace {
         bool _SR_state;
@@ -80,13 +80,16 @@ namespace LEDS {
                 }
             }
             void flash (uint8_t number_repeats, Speed speed) {
-                // if (!number_repeats) //add some kind of setting for infinite flashing
-                repeats = number_repeats << 1; // number of times it repeats,  immediatly doubles to get the on and off
+                if (number_repeats == 0xFF) repeats = 0xFF;
+                else repeats = number_repeats << 1; // number of times it repeats,  immediatly doubles to get the on and off
+
                 duration = (speed << 3); // a speed setting of how fast the flash will be.
+
                 flashState = !state; // sets opposite starting state so always flashes right.
             }
             void update (void) {
-                if (!repeats) return;
+                if (!repeats) 
+                    return;
 
                 ++count; // Increments the flash counter. Being uint8_t should wrap at 256.
 
@@ -97,13 +100,14 @@ namespace LEDS {
                     
                     count = 0;
                     
-                    --repeats;
-                    if (repeats == 0) {
-                        duration = 0;
-                        put(state); // reset original state.
+                    if (repeats != 0xFF) {
+                        --repeats;
+                        if (repeats == 0) {
+                            duration = 0;
+                            put(state);
+                        }
                     }
                 }
-                // if (_count == 255) printf("Flash!\n");
             }
         
     };
@@ -125,8 +129,8 @@ namespace LEDS {
 
             uint16_t    _count;
             uint8_t     _repeats;
-            uint16_t     _duration;
-            bool        _flash_state;
+            uint16_t    _duration;
+            bool        flashState;
 
         public:
             RGB () { }
@@ -205,9 +209,12 @@ namespace LEDS {
                 }
             }
             void flash (uint8_t repeats, uint8_t duration) {
-                _repeats = repeats << 1; // number of times it repeats
-                _duration = (duration << 3); // 0 being no duration, 255 being always on.
-                _flash_state = !state; // sets opposite starting state so always flashes right. 
+                if (repeats == 0xFF) repeats = 0xFF;
+                else _repeats = repeats << 1; // number of times it repeats,  immediatly doubles to get the on and off
+
+                _duration = (duration << 3); // a speed setting of how fast the flash will be.
+
+                flashState = !state; // sets opposite starting state so always flashes right.
             }
             void update (void) {
                 if (!_repeats) return;
@@ -216,17 +223,19 @@ namespace LEDS {
 
                 if (_count > _duration) {
                     
-                    if (_flash_state) RGB_LED::on();
+                    if (flashState) RGB_LED::on();
                     else RGB_LED::off();
                     RGB_LED::update();
-                    _flash_state = !_flash_state;
+                    flashState = !flashState;
                     
                     _count = 0;
                     
-                    --_repeats;
-                    if (_repeats == 0) {
-                        _duration = 0;
-                        reset(); // reset original state.
+                    if (_repeats != 0xFF) {
+                        --_repeats;
+                        if (_repeats == 0) {
+                            _duration = 0;
+                            reset(); // reset original state.
+                        }
                     }
                 }
             }
@@ -274,8 +283,11 @@ namespace LEDS {
             }
         }
         void flash (uint8_t repeats, uint8_t duration) {
-            _repeats = repeats << 1; // number of times it repeats
+            if(repeats == 0xFF) _repeats = 0xFF;
+            else _repeats = repeats << 1; // number of times it repeats
+
             _duration = (duration << 3); // 0 being no duration, 255 being always on.
+
             _flash_state = !state; // sets opposite starting state so always flashes right. 
         }
 
@@ -291,11 +303,13 @@ namespace LEDS {
                 
                 _count = 0;
                 
-                --_repeats;
-                if (_repeats == 0) {
-                    _duration = 0;
-                    reset(); // reset original state.
-                    return false;
+                if (_repeats != 0xFF) {
+                    --_repeats;
+                    if (_repeats == 0) {
+                        _duration = 0;
+                        reset(); // reset original state.
+                        return false;
+                    }
                 }
             }
 
