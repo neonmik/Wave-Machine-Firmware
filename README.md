@@ -123,7 +123,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Clock: 
-        - Add start and stop messages
+        - Improvement: Add start and stop messages
 
         - Bug: Add dynamic setting of MIDI CLOCK timeout - Currently set to longest possible time out (670000µs for minimum pulse at 20BPM)... just need some kind of calculation so that you get a rough average of say like 8 or 10 pusles + 1000µs?
 
@@ -250,7 +250,7 @@ Features/Bugfixes:
         + Sample peaking before output - down to the poor implementation of the default C signed/unsigned recasting. 
 
     + Note Handling:
-        + Bugfix: Held notes were being written over desipte the fact that some voices should be in release (Could be demo'd by holding low octave on MIDI, and play fast pentatonic up and down). Can no longer be repliacted, musthave been fixed when I refactored Note Handling.
+        + Bugfix: Held notes were being written over desipte the fact that some voices should be in release (Could be demo'd by holding low octave on MIDI, and play fast pentatonic up and down). Can no longer be replicated, must have been fixed when I refactored Note Handling.
         + Bugfix: Notes that were held down or in sustain were acting strangely across presets. 
         + Bugfix: Filter triggers didn't count active notes right. 
         + Moved filter trigger code to the Audio core to reduce queue messages.
