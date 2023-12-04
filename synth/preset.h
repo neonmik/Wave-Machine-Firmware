@@ -70,73 +70,90 @@ struct PRESET {
     Fx  Effects;
 };
 
+
+struct EnvelopeData {
+    bool state = false;
+    
+    uint16_t attack = 2;
+    uint16_t decay = 2;
+    uint16_t sustain = 1023;
+    uint16_t release = 10;
+
+    uint16_t padding[4];
+};
+
+struct OscillatorData {
+    uint16_t waveshape = 0;
+    uint16_t vector = 0;
+    uint16_t octave = 0;
+    uint16_t pitch = 511;
+
+    EnvelopeData Envelope;
+
+    uint16_t padding[4];
+};
+
+struct LfoData {
+    bool state = false;
+    // 1 byte padding
+
+    uint16_t matrix = 0;
+    uint16_t rate = 0;
+    uint16_t depth = 0;
+    uint16_t wave = 0;
+
+    EnvelopeData Envelope;
+
+    uint16_t padding[4];
+    
+};
+
+struct FilterData {
+    bool state = true;
+    // 1 byte padding
+    
+    uint16_t cutoff = 1023;
+    uint16_t resonance = 0;
+    uint16_t punch = 0;
+    uint16_t type = 0;
+
+    EnvelopeData Envelope;
+
+    uint16_t padding[4];
+};
+
+struct ArpeggiatorData {
+    bool state = false;
+    // 1 byte padding
+
+    uint16_t gate = 0;
+    uint16_t divisions = 511;
+    uint16_t range = 0;
+    uint16_t direction = 0;
+
+    uint16_t rest = 0;
+    uint16_t bpm = 289; // 120bpm
+    uint16_t fMode = 0;
+    uint16_t octMode = 0;
+
+    uint16_t padding[4];
+};
+
+struct FxData {
+    uint16_t gain = 0;
+
+    uint16_t padding[7];
+};
+
 struct NEW_PRESET {
-    struct Env {
-        bool state = false;
-        
-        uint16_t attack = 2;
-        uint16_t decay = 2;
-        uint16_t sustain = 1023;
-        uint16_t release = 10;
-    };
-    struct Wav {
-        uint16_t waveshape = 0;
-        uint16_t vector = 0;
-        uint16_t octave = 0;
-        uint16_t pitch = 511;
+    uint8_t             startbit;
+    uint8_t             version; // for checking preset version
 
-        Env Envelope;
-    };
-    struct Lfo {
-        bool state = false;
-        // 1 byte padding
+    OscillatorData      Wave;
+    LfoData             Modulation;
+    FilterData          Filter;
+    ArpeggiatorData     Arpeggiator;
+    FxData              Effects;
 
-        uint16_t matrix = 0;
-        uint16_t rate = 0;
-        uint16_t depth = 0;
-        uint16_t wave = 0;
-
-        // commented until they're worked into the Preset saving layout
-
-        Env Envelope;
-        
-        // uint16_t attack = 2;
-        // uint16_t decay = 2;
-        // uint16_t sustain = 1023;
-        // uint16_t release = 10;
-    };
-    struct Arp {
-        bool state = false;
-        // 1 byte padding
-
-        uint16_t gate = 0;
-        uint16_t divisions = 511;
-        uint16_t range = 0;
-        uint16_t direction = 0;
-
-        uint16_t rest = 0;
-        uint16_t bpm = 289; // 120bpm
-        uint16_t fMode = 0;
-        uint16_t octMode = 0;
-    };
-    struct Flt {
-        bool state = true;
-        // 1 byte padding
-        
-        uint16_t cutoff = 1023;
-        uint16_t resonance = 0;
-        uint16_t punch = 0;
-        uint16_t type = 0;
-
-        Env Envelope;
-    };
-    struct Fx {
-        uint16_t gain = 0;
-    };
-    Wav Wave;
-    Env Envelope;
-    Lfo Modulation;
-    Arp Arpeggiator;
-    Flt Filter;
-    Fx  Effects;
+    uint8_t             endbit;
 };
