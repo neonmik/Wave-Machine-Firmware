@@ -191,7 +191,7 @@ namespace MIDI {
     void sendSongSelect(uint8_t song) {}
     void sendTuneRequest(void) {}
     void sendClock(void) {
-        uint8_t msg[1] = {uint8_t(MidiType::NoteOff)};
+        uint8_t msg[1] = {uint8_t(MidiType::Clock)};
 
         sendMidiMessage(msg, 1);
     }
@@ -202,8 +202,8 @@ namespace MIDI {
     void sendReset(void) {}
 
     void toggleClockFlag (void) {
-        if (!sendClockFlag) sendClockFlag = true;
-        else DEBUG::warning("MIDI clock output not updating fast enough");
+        // if (!sendClockFlag) sendClockFlag = true;
+        // else DEBUG::warning("MIDI clock output not updating fast enough");
     }
     void checkClockFlag (void) {
         if (!sendClockFlag) return;

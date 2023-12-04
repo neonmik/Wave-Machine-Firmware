@@ -167,6 +167,8 @@ namespace MIDI {
         MidiMessage inputMessageUART;
         MidiMessage inputMessageUSB;
 
+        MidiMessage outputBuffer[64];
+
         bool        sendClockFlag;
     }
 
