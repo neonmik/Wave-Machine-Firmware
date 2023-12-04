@@ -99,9 +99,12 @@ namespace MOD {
             }
             
         public:
-            Modulation (uint32_t sample_rate) : _sample_rate(sample_rate) { }
+            Modulation ( ) { }
             ~Modulation( ) { }
 
+            void init (uint32_t sample_rate) {
+                 _sample_rate = sample_rate;
+            }
             // control and update functions
             void setState (bool state) {
                 if (_state != state) {

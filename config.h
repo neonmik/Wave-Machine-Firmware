@@ -29,7 +29,7 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 //      - runs at 10 with Arp going full speed.
                                                                 //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
 
-constexpr   uint8_t     MAX_ARP         =       POLYPHONY;      // For setting the maximum number of notes in the Arp
+constexpr   uint8_t     MAX_ARP         =       32;      // For setting the maximum number of notes in the Arp
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
@@ -41,7 +41,7 @@ constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
 
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
-constexpr   uint16_t    SAMPLE_RATE     =       32000;          // Default is 32000Hz currently... 44100Hz works, but is stressed at crazier settings.
+constexpr   uint16_t    SAMPLE_RATE     =       32000;          // 44100Hz works, but is stressed with high polyphony.
 constexpr   uint16_t    NYQUIST         =       SAMPLE_RATE/2;  // Easiest way of deliniating Nyquist when changing Sample Rate in protoype stages.
 constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
 
@@ -81,16 +81,5 @@ extern      uint8_t     hardwareIndex;
 extern      uint16_t    playBuffer[];
 
 extern      bool        startUpComplete;
+    
 
-
-// example struct of the settings struct
-
-// namespace CONFIG {
-//     struct SETTINGS {
-//         struct HARDWARE {
-//             char ID[16];
-
-//         };
-        
-//     }
-// }

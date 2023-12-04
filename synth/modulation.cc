@@ -5,9 +5,12 @@ namespace MOD {
 
 
     // Modulation LFO(SAMPLE_RATE/8); // reduced speed poly LFO
-    Modulation LFO(SAMPLE_RATE); // full speed mono LFO
+    Modulation LFO; // full speed mono LFO
 
     void init () {
+        LFO.init(SAMPLE_RATE);
+        // LFO.init(CONFIG::getSampleRate()/8); // reduced speed poly LFO
+        
         LFO.setMatrix(0);
     }
     void update () {

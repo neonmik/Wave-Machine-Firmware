@@ -10,6 +10,8 @@ namespace CONTROLS {
 
         EEPROM::init();
 
+        printPresetSizing();
+
         currentPreset = DEFAULT_PRESET;
         
         // factoryRestore();
