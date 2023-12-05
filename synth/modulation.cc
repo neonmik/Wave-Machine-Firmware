@@ -7,28 +7,15 @@ namespace MOD {
 
     }
     // control and update functions
-    void Modulation::setState (bool state) {
-        if (state != state) {
-            state = state;
+    void Modulation::setState (bool input) {
+        if (state != input) {
+            state = input;
             reset(); // aim to use this to ramp down values when switching states
         }
     }
     bool Modulation::getState (void) {
         return state;
     }
-    
-    void Modulation::checkMatrix (void) {
-        if (matrix != lastMatrix) {
-            index = 0;
-            phaseAccumulator = 0;
-            // update the previous destination output to the offset position
-            resetDestination(lastMatrix);
-            resetDestination(matrix);
-
-            lastMatrix = matrix;
-        }
-    }
-    
     void Modulation::update () {
         if (state) {
             checkMatrix();
@@ -77,7 +64,7 @@ namespace MOD {
     void Modulation::clear (void) {
         reset();
     }
-    // Modulation LFO(SAMPLE_RATE/8); // reduced speed poly LFO
+    
     Modulation LFO(shape, rate, depth, outputMatrix); // full speed mono LFO
 
 
@@ -86,10 +73,10 @@ namespace MOD {
 
         outputMatrix = 0;
 
-        setAttack(800);
-        setDecay(800);
-        setSustain(200);
-        setRelease(800);
+        setAttack(0);
+        setDecay(0);
+        setSustain(KNOB_MAX);
+        setRelease(KNOB_MAX);
     }
     void update () {
         LFO.update();
@@ -122,27 +109,15 @@ namespace MOD {
 
     void setAttack (uint16_t input) {
         envelopeControls.setAttack(input);
-        // if (input == lastAttack) return;
-        // lastAttack = input;
-        // attack = calculateEndFrame(input << 2);
     }
     void setDecay (uint16_t input) {
         envelopeControls.setDecay(input);
-        // if (input == lastDecay) return;
-        // lastDecay = input;
-        // decay = calculateEndFrame(input << 2);
     }
     void setSustain (uint16_t input) {
         envelopeControls.setSustain(input);
-        // if (input == lastSustain) return;
-        // lastSustain = input;
-        // sustain = (input << 6);
     }
     void setRelease (uint16_t input) {
         envelopeControls.setRelease(input);
-        // if (input == lastRelease) return;
-        // lastRelease = input;
-        // release = calculateEndFrame(input << 2);
     }
 
      void voicesIncrease (void) {

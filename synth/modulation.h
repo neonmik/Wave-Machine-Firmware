@@ -29,20 +29,6 @@ namespace MOD {
             return (65535 * uint32_t(exponentialFrequency(input))) / SAMPLE_RATE;
         }
 
-        // uint32_t    attack;
-        // uint32_t    decay;
-        // uint32_t    sustain;
-        // uint32_t    release;
-        // uint16_t    lastAttack = 1024;
-        // uint16_t    lastDecay = 1024;
-        // uint16_t    lastSustain = 1024;
-        // uint16_t    lastRelease = 1024;
-
-        // uint32_t calculateEndFrame(uint32_t milliseconds){
-        //     // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
-        //     return ((milliseconds + 1) * SAMPLE_RATE) / 1000;
-        // }
-
         ADSRControls    envelopeControls(SAMPLE_RATE);
 
         Mode            mode = Mode::MONO;
@@ -109,6 +95,18 @@ namespace MOD {
                 {&FILTER::modulateCutoff,  OutputType::UNSIGNED,   Dither::LOW} 
             };
 
+            void checkMatrix (void) {
+                if (matrix != lastMatrix) {
+                    index = 0;
+                    phaseAccumulator = 0;
+                    // update the previous destination output to the offset position
+                    resetDestination(lastMatrix);
+                    resetDestination(matrix);
+
+                    lastMatrix = matrix;
+                }
+            }
+
             inline uint16_t uint16_output (int16_t input) {
                 return input - INT16_MIN; // Using modular arithmatic!
             }
@@ -144,7 +142,6 @@ namespace MOD {
             void init (void);
             void setState (bool state);
             bool getState (void);
-            void checkMatrix (void);
             void update (void);
             void clear (void);
     };
