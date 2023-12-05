@@ -164,6 +164,53 @@ namespace ARP {
         // add variable for direction for new arp modes (more similar in handling to JUNO)
     }
 
+void playNote (void) {
+    if (arpMode == ArpMode::POLY) {
+        for (int i = 0; i < currentNoteCount; i++) {
+            // check this
+            if (!arpVoices[i].isActive()) break; 
+
+            currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
+
+            NOTE_HANDLING::voiceOn(i, currentPlayOct[i], 127);
+            MIDI::sendNoteOn(currentPlayOct[i], 127);
+        }
+    } else {
+        if (!arpVoices[currentPlayIndex].isActive()) return;
+
+        // This only gets called when gap is enabled, and latch is not, between holding a few notes and releasing... this is because it allows transferNotes to be called between releasing and triggering... 
+        if (currentPlayIndex > currentNoteCount) {
+            resetPlayIndex();
+        }
+
+
+        currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
+
+        NOTE_HANDLING::voiceOn(currentVoiceIndex, currentPlayNote, 127);
+        MIDI::sendNoteOn(currentPlayNote, 127);
+
+    }
+    currentNoteState = NoteState::ACTIVE;
+}
+void releaseNote(void) {
+    if (arpMode == ArpMode::POLY) {
+        for (int i = 0; i < POLYPHONY; i++) {
+            // Should be able to remove this check, as it shouldn't change between playing and releasing
+            if (currentPlayOct[i]) {
+                NOTE_HANDLING::voiceOff(i, currentPlayOct[i], 0);
+                MIDI::sendNoteOff(currentPlayOct[i], 0);
+            }   
+        }
+    } else {
+        NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
+        MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
+        
+        currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
+    }
+    arpeggiate(arpDirection);
+    currentNoteState = NoteState::IDLE;
+}
+
     void update (void) {
         // always update clock, will be used for MIDI clock out.
         CLOCK::update();
@@ -176,80 +223,18 @@ namespace ARP {
             uint32_t currentNoteTick = CLOCK::getClockTick();
             if (currentNoteTick >= gate && currentNoteState == NoteState::ACTIVE) {
                 currentNoteState = NoteState::RELEASE;
-            }
-            if (currentNoteState == NoteState::RELEASE) {
-                if (arpMode == ArpMode::POLY) {
-                    for (int i = 0; i < POLYPHONY; i++) {
-                        // Should be able to remove this check, as it shouldn't change between playing and releasing
-                        if (currentPlayOct[i]) {
-                            NOTE_HANDLING::voiceOff(i, currentPlayOct[i], 0);
-                            MIDI::sendNoteOff(currentPlayOct[i], 0);
-                        }   
-                    }
-                } else {
-                    NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
-                    MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
-                    
-                    currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
-                }
-                arpeggiate(arpDirection);
-                currentNoteState = NoteState::IDLE;
-                
-                // if (isRestEnabled) break; // currently handles the note gate, but will be rewritten and moved to NoteState::RELEASE
+                releaseNote();
             }
             if (CLOCK::getClockChanged()) {
-                // CLOCK::setClockChanged(false);
                 // transferNotes(); 
                 switch(currentNoteState) {
                     case NoteState::ACTIVE:
                         currentNoteState = NoteState::RELEASE;
                     case NoteState::RELEASE:
-                        if (arpMode == ArpMode::POLY) {
-                            for (int i = 0; i < POLYPHONY; i++) {
-                                // Should be able to remove this check, as it shouldn't change between playing and releasing
-                                if (currentPlayOct[i]) {
-                                    NOTE_HANDLING::voiceOff(i, currentPlayOct[i], 0);
-                                    MIDI::sendNoteOff(currentPlayOct[i], 0);
-                                }   
-                            }
-                        } else {
-                            NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
-                            MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
-                            
-                            currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
-                        }
-                        arpeggiate(arpDirection);
-                        currentNoteState = NoteState::IDLE;
-                    
-                        // if (isRestEnabled) break; // currently handles the note gate, but will be rewritten and moved to NoteState::RELEASE
+                        releaseNote();
                     case NoteState::IDLE:
                         transferNotes(); // this is here so notes only get updated before the next loop... and should always get updated?
-                        if (arpMode == ArpMode::POLY) {
-                            for (int i = 0; i < currentNoteCount; i++) {
-                                // check this
-                                if (!arpVoices[i].isActive()) break; 
-
-                                currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
-
-                                NOTE_HANDLING::voiceOn(i, currentPlayOct[i], 127);
-                                MIDI::sendNoteOn(currentPlayOct[i], 127);
-                            }
-                        } else {
-                            if (!arpVoices[currentPlayIndex].isActive()) return;
-
-                            // This only gets called when gap is enabled, and latch is not, between holding a few notes and releasing... this is because it allows transferNotes to be called between releasing and triggering... 
-                            if (currentPlayIndex > currentNoteCount) {
-                                resetPlayIndex();
-                            }
-
-
-                            currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
-
-                            NOTE_HANDLING::voiceOn(currentVoiceIndex, currentPlayNote, 127);
-                            MIDI::sendNoteOn(currentPlayNote, 127);
-
-                        }
-                        currentNoteState = NoteState::ACTIVE;
+                        playNote();
                 }
             }
         }
@@ -621,7 +606,6 @@ namespace ARP {
         }
     }
     void setGate (uint16_t input) {
-        // isRestEnabled  = (bool)(input >> 9);
         gate = (CLOCK::getSamplesPerDivision() * input) >> 10;
         if (gate < 120) gate = 120;
     }
