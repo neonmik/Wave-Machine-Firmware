@@ -10,10 +10,6 @@
 
 #include "pagination.h"
 
-#define KEYS_PRINT_OUT      0
-#define KNOBS_PRINT_OUT     0
-#define HARDWARE_TEST       0
-
 namespace UI {
 
     enum UiMode {

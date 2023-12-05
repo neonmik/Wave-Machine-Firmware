@@ -14,17 +14,16 @@
 #include "synth/modulation.h"
 #include "synth/arp.h"
 
-#define SHIFT_TIMEOUT           92    // Stops the shift button reacting as soon as it's pressed, which causing flashing LEDs when just pressed shortly.
-#define PROTECTION_THRESHOLD    10       // The threshold when the Pagination unlocks the pot. 
-
 namespace CONTROLS
 {
     namespace
     {
-        uint8_t currentPreset;
-        uint8_t currentPage;
-        uint8_t activePage;
-        uint8_t extraPage;
+        uint16_t    SHIFT_TIMEOUT           = 75;
+
+        uint8_t     currentPreset;
+        uint8_t     currentPage;
+        uint8_t     activePage;
+        uint8_t     extraPage;
 
         bool shift;
         uint16_t shiftCounter;

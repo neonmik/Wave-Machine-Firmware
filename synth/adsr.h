@@ -30,47 +30,25 @@ class ADSRControls {
         uint32_t        sampleRate;
 
         ADSRData        currentADSR;
-        // ADSRData        lastADSR;
 
         uint32_t calculateEndFrame(uint32_t milliseconds){
             return ((milliseconds + 1) * sampleRate) / 1000;
         }
 
-        // void initializeLastADSR(uint32_t initialValue = 1024) {
-        //     lastADSR.attack     = initialValue;
-        //     lastADSR.decay      = initialValue;
-        //     lastADSR.sustain    = initialValue;
-        //     lastADSR.release    = initialValue;
-        // }
-
     public: 
-        ADSRControls (uint32_t sampleRate) : sampleRate(sampleRate) {
-            // initializeLastADSR();
-        }
+        ADSRControls (uint32_t sampleRate) : sampleRate(sampleRate) { }
         ~ADSRControls ( ) { }
 
         void setAttack (const uint16_t& input) {
-            // if (input == lastADSR.attack) return;
-
-            // lastADSR.attack = input;
             currentADSR.attack = calculateEndFrame(input << 2);
         }
         void setDecay (const uint16_t& input) {
-            // if (input == lastADSR.decay) return;
-
-            // lastADSR.decay = input;
             currentADSR.decay = calculateEndFrame(input << 2);
         }
         void setSustain (const uint16_t& input) {
-            // if (input == lastADSR.sustain) return;
-
-            // lastADSR.sustain = input;
             currentADSR.sustain = (input << 6);
         }
         void setRelease (const uint16_t& input) {
-            // if (input == lastADSR.release) return;
-
-            // lastADSR.release = input;
             currentADSR.release = calculateEndFrame(input << 2);
         }
 
