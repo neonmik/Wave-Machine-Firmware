@@ -33,6 +33,7 @@ Current nightly firmware for Wave Machine Hardware.
         - A Latch function that allow the dynamic playing of chords.
         - Selectable division from 1/1 to 1/64t.
         - Internal BPM selection (30 - 350 BPM) or MIDI sync'd.
+        - Gate setting for the duration of each individual note in the arp sequence.
 
     - 8 selectable Presets with a colour LED showing current Preset, along with a persisting EEPROM memory storage allowing to save your own presets.
 
@@ -59,10 +60,6 @@ Current nightly firmware for Wave Machine Hardware.
 - Updates and Bugfixes:
 
     - Arp:
-        - Improvements: Improve the gap (gate?) setting so it's not just on or off. 
-            - Bring back the old intermediate NoteState
-            - Add a timer function to clock.
-
         - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements.
 
     - Controls:
@@ -288,6 +285,7 @@ Features/Bugfixes:
         + DAC
 
     + Arp: 
+        + Feature: Added and fully implemented the Gate function. This allows you to use a pot to change the length of the Arp notes. setting fully Anti-Clockwise will result in a very short blip, while setting fully Clockwise will result in a note that ends when the next note begins. Make sure the Filter envelope is set correctly or you wont hear anything! 
         + Bugfix: Fixed a bug where flipping through presets while actively playing (not just holding notes/chords) notes would get stuck sustaining. This was down to notes not being transfer from the Arp input buffer to the play buffer before being copied to the standard note handling code.
         + Improvement: Added a control for Chord Arp which can be accessed from 
         + Feature: Added a setting for Chord Arp along with its associated functions.
