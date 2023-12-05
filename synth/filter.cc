@@ -49,7 +49,7 @@ namespace FILTER {
         }
     }
 
-    void setEnvelopeDepth (uint16_t input) {
+    void setEnvelopeAmount (uint16_t input) {
         envelopeDepth = input;
     }
 

@@ -81,8 +81,7 @@ namespace FILTER
     void setPunch(uint16_t input);
     void setType(uint16_t input);
 
-    void setEnvelopeAmount (uint16_t input) ;
-
+    void setEnvelopeAmount (uint16_t input);
     void setTriggerMode (uint16_t input);
 
     void setAttack(uint16_t input);
