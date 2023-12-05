@@ -117,7 +117,7 @@ struct ArpeggiatorData {
     uint16_t direction = 0;
 
     uint16_t rest = 0;
-    uint16_t bpm = 289; // 120bpm
+    uint16_t bpm = 287; // 120bpm
     uint16_t fMode = 0;
     uint16_t octMode = 0;
 
