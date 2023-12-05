@@ -310,7 +310,8 @@ namespace CONTROLS {
         if (shift) {
             return; // return because the function is empty so it stops LED from flashing
         } else {
-            ARP::toggleHold();
+            // ARP::toggleHold();
+            return;
         }
         LEDS::FUNC2.flash(4, LEDS::Speed::NORMAL); // currently blocks indefinite flash.
     }

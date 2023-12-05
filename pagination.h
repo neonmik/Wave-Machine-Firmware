@@ -16,6 +16,9 @@ namespace PAGINATION {
         ACTIVE
     };
     namespace {
+        
+        uint16_t    PROTECTION_THRESHOLD    = 10;
+
         uint8_t currentPage = 0;
         
         KnobState currentState[MAX_KNOBS];
