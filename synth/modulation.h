@@ -9,10 +9,47 @@
 #include "synth.h"
 #include "arp.h"
 #include "filter.h"
+#include "adsr.h"
 
 #include "wavetable.h"
 
 namespace MOD {
+    enum Mode
+    {
+        MONO,
+        PARA,
+    };
+    namespace {
+        uint16_t    shape;
+        uint32_t    rate;
+        uint16_t    depth;
+        uint8_t     outputMatrix;
+
+        uint32_t incrementCalc (uint16_t input) {
+            return (65535 * uint32_t(exponentialFrequency(input))) / SAMPLE_RATE;
+        }
+
+        // uint32_t    attack;
+        // uint32_t    decay;
+        // uint32_t    sustain;
+        // uint32_t    release;
+        // uint16_t    lastAttack = 1024;
+        // uint16_t    lastDecay = 1024;
+        // uint16_t    lastSustain = 1024;
+        // uint16_t    lastRelease = 1024;
+
+        // uint32_t calculateEndFrame(uint32_t milliseconds){
+        //     // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
+        //     return ((milliseconds + 1) * SAMPLE_RATE) / 1000;
+        // }
+
+        ADSRControls    envelopeControls(SAMPLE_RATE);
+
+        Mode            mode = Mode::MONO;
+        volatile int8_t activeVoice;
+        bool            filterActive = false;
+
+    }
 
     enum Speed {                        // Hz = 1 (cycles) / seconds per full cycle
                     PAINFUL = 16,           // 0.00286Hz -   38.46Hz (5:49:497  - 0:00:0260)
@@ -43,33 +80,33 @@ namespace MOD {
         uint16_t        output = 0;
     };
 
+    
     class Modulation {
         private:
             // oscillator variables
+            bool            state = true;
 
-            uint32_t    _sample_rate;
+            uint16_t&       wave;
+            uint32_t&       increment;
+            uint16_t&       depth;
+            uint8_t&        matrix;
+            uint8_t         lastMatrix;
 
-            uint32_t    _increment;
-            uint32_t    _phase_accumulator;
-            uint8_t     _index;
 
-            int16_t     _sample;
+            uint32_t        phaseAccumulator;
+            uint8_t         index;
+
+            int16_t         sample;
 
             
-            // control variables
 
-            bool        _state = false;
-            volatile uint8_t     _matrix;
-            volatile uint16_t    _rate;
-            volatile uint16_t    _depth;
-            volatile uint16_t    _wave;
             
-            OutputDestinations _destination[4]{
+            OutputDestinations destination[4]{
                 // pointer of what to update, type of output, offset for output table
                 {&SYNTH::modulateVibrato,  OutputType::SIGNED,     Dither::FULL},
                 {&SYNTH::modulateTremelo,  OutputType::UNSIGNED,   Dither::LOW},
                 {&SYNTH::modulateVector,   OutputType::UNSIGNED,   Dither::LOW},
-                {&FILTER::modulateCutoff,  OutputType::UNSIGNED,   Dither::LOW} // probably want something ? here, but we'll see...
+                {&FILTER::modulateCutoff,  OutputType::UNSIGNED,   Dither::LOW} 
             };
 
             inline uint16_t uint16_output (int16_t input) {
@@ -77,21 +114,21 @@ namespace MOD {
             }
 
             void resetDestination (uint8_t index) {
-                if (_destination[index].variable != NULL) {
-                    switch (_destination[index].type) {
+                if (destination[index].variable != NULL) {
+                    switch (destination[index].type) {
                         case OutputType::UNSIGNED:
-                            _destination[index].variable(0);
+                            destination[index].variable(0);
                             break;
                         case OutputType::SIGNED:
-                            _destination[index].variable(uint16_output(0));
+                            destination[index].variable(uint16_output(0));
                     }
                 }
             }
 
             void reset (void) {
-                _index = 0;
-                _phase_accumulator = 0;
-                _sample = 0;
+                index = 0;
+                phaseAccumulator = 0;
+                sample = 0;
 
                 for (int i = 0; i < 3; i++) {
                     resetDestination(i);
@@ -99,106 +136,17 @@ namespace MOD {
             }
             
         public:
-            Modulation ( ) { }
+            Modulation (uint16_t& shape, uint32_t& rate, uint16_t& depth, uint8_t& matrix) : wave(shape), increment(rate), depth(depth), matrix(matrix) { }
             ~Modulation( ) { }
-
-            void init (uint32_t sample_rate) {
-                 _sample_rate = sample_rate;
-            }
-            // control and update functions
-            void setState (bool state) {
-                if (_state != state) {
-                    _state = state;
-                    reset(); // aim to use this to ramp down values when switching states
-                }
-            }
-            bool getState (void) {
-                return _state;
-            }
             
-            void setMatrix (uint16_t matrix) {
-                volatile uint8_t temp = (matrix>>8);
-                if (_matrix != temp) {
-                    // Store the current matrix value
-                    uint8_t prevMatrix = _matrix;
-                    _matrix = temp;
+            ADSREnvelope outputEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
 
-                    _index = 0;
-                    _phase_accumulator = 0;
-                    
-                    // update the previous destination output to the offset position
-                    resetDestination(prevMatrix);
-                    resetDestination(_matrix);
-                }
-            }
-            void setRate (uint16_t rate) {
-                // This uses a LUT for expoentially mapping 0-1023 to 1-10000 saving a load of processing power from the earlier function.
-                _rate = exponentialFrequency(rate);
-                
-                // Calculate the increment based on the scaled rate
-                _increment = (65535 * (uint32_t)_rate) / _sample_rate;
-
-                // don't want the increment dropping below 1, as it will stop the oscillation/cause weird behaviour
-                if (_increment < 1) _increment = 1;
-            }
-            void setDepth (uint16_t depth) {
-                if (_depth != depth) {
-                    // 10 bit depth setting
-                    _depth = depth;
-                }
-            }
-            void setShape (uint16_t wave) {
-                // map the 10 bit knob value to 0-5 (the amount of waveforms) and then map it to the wavetable size.
-                volatile uint16_t mapped_wave = (map(wave, KNOB_MIN, KNOB_MAX, 0, (MAX_MOD_WAVES - 1)) * WAVETABLE_SIZE);
-                if (_wave != mapped_wave) {
-                    _wave = mapped_wave;
-                }
-            }
-            
-            void update () {
-                if (_state) {
-                    _phase_accumulator += _increment; // Adds the increment to the accumulator
-                    _index = (_phase_accumulator >> Speed::SLOW);    // Calculates the 8 bit index value for the wavetable. the bit shift creates diffeing results... see LFO_SPEED table
-                    _sample = get_mod_wavetable(_index + _wave); // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (chunks of 256) values
-                    
-                    // Applies a certain dither to the output - really just for smoothing out 8 bit numbers over 0.01Hz, but interesting for effects.
-                    switch (_destination[_matrix].dither) {
-                        case Dither::FULL:
-                            if (_sample > 0) _sample -= (RANDOM::get()>>4);
-                            else _sample += (RANDOM::get()>>4);
-                            break;
-                        case Dither::HALF:
-                            if (_sample > 0) _sample -= (RANDOM::get()>>6);
-                            else _sample += (RANDOM::get()>>6);
-                            break;
-                        case Dither::LOW:
-                            if (_sample > 0) _sample -= (RANDOM::get()>>7);
-                            else _sample += (RANDOM::get()>>7);
-                            break;
-                        case Dither::OFF:
-                            break;
-                    }
-                    
-
-                    // two different algorithms for applying depth to the outputs, ensures always the number is centred round the appropriate 0 mark for the destination. 
-                    switch (_destination[_matrix].type) {
-                        case OutputType::UNSIGNED: {
-                            _destination[_matrix].output = (uint16_output(_sample) * _depth) >> 10;
-                            break;
-                        }
-                        case OutputType::SIGNED: {
-                            _destination[_matrix].output = uint16_output((_sample * _depth) >> 10);
-                            break;
-                        }
-                    }
-
-                    if (_destination[_matrix].variable != NULL)
-                            if (_depth) _destination[_matrix].variable(_destination[_matrix].output);
-                }
-            }
-            void clear (void) {
-                reset();
-            }
+            void init (void);
+            void setState (bool state);
+            bool getState (void);
+            void checkMatrix (void);
+            void update (void);
+            void clear (void);
     };
 
     extern Modulation LFO;
@@ -211,6 +159,17 @@ namespace MOD {
     void setDepth (uint16_t input);
     void setRate (uint16_t input);
     void setShape (uint16_t input);
+
+    void setAttack(uint16_t input);
+    void setDecay(uint16_t input);
+    void setSustain(uint16_t input);
+    void setRelease(uint16_t input);
+
+    void triggerAttack(void);
+    void triggerRelease(void);
+
+    void voicesIncrease(void);
+    void voicesDecrease(void);
 
     void update (void);
     void clear (void);

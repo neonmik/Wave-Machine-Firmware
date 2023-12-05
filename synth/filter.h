@@ -59,28 +59,17 @@ namespace FILTER
         int32_t     lowPass;
         int32_t     bandPass;
 
-        uint32_t    attack;
-        uint32_t    decay;
-        uint32_t    sustain;
-        uint32_t    release;
-        uint16_t    lastAttack = 1024;
-        uint16_t    lastDecay = 1024;
-        uint16_t    lastSustain = 1024;
-        uint16_t    lastRelease = 1024;
-
         Type        type;
         Direction   direction;
 
-        uint32_t calculateEndFrame(uint32_t milliseconds){
-            // return (milliseconds * (SAMPLE_RATE/8)) / 1000;
-            return ((milliseconds + 1) * SAMPLE_RATE) / 1000;
-        }
-
         volatile int8_t activeVoice;
         bool filterActive = false;
+
+
+        ADSRControls    envelopeControls(SAMPLE_RATE);
     }
 
-    extern ADSREnvelope ADSR;
+    extern ADSREnvelope cutoffEnvelope;
 
     void init();
 

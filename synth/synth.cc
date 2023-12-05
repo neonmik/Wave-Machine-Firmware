@@ -21,22 +21,22 @@ namespace SYNTH {
   int16_t    currentDetune;
   int16_t    lastDetune;
 
-  uint32_t    currentAttack;
-  uint32_t    currentDecay;
-  uint32_t    currentSustain;
-  uint32_t    currentRelease;
-  // these are defaulted to outside the 10bit range so that when the EEPROM loads, it's always saved. (otherwise the currentAttack/currentDecay can be 0, which causes an overflow)
-  uint16_t    lastAttack = 1024;
-  uint16_t    lastDecay = 1024;
-  uint16_t    lastSustain = 1024;
-  uint16_t    lastRelease = 1024;
+  // uint32_t    currentAttack;
+  // uint32_t    currentDecay;
+  // uint32_t    currentSustain;
+  // uint32_t    currentRelease;
+  // // these are defaulted to outside the 10bit range so that when the EEPROM loads, it's always saved. (otherwise the currentAttack/currentDecay can be 0, which causes an overflow)
+  // uint16_t    lastAttack = 1024;
+  // uint16_t    lastDecay = 1024;
+  // uint16_t    lastSustain = 1024;
+  // uint16_t    lastRelease = 1024;
 
   int16_t     modVibrato;
   uint16_t    modTremelo;
   uint16_t    modVector;
 
-  bool        subActive;
-  bool        noiseActive;
+  // bool        subActive;
+  // bool        noiseActive;
 
   uint16_t    subLevel = 1023;
   uint16_t    noiseLevel = 0;
@@ -53,16 +53,20 @@ namespace SYNTH {
   void voiceOn (uint8_t voice, uint8_t note) {
     if ((!channels[voice].isActive()) ||
         (!channels[voice].isGate())) {
-      FILTER::voicesIncrease(); 
+      FILTER::voicesIncrease();
+      MOD::voicesIncrease();
     }
     FILTER::triggerAttack();
+    MOD::triggerAttack();
     channels[voice].noteOn(note);
   }
   void voiceOff (uint8_t voice) {
     if (channels[voice].isGate()) {
       FILTER::voicesDecrease(); 
+      MOD::voicesDecrease();
     }
     FILTER::triggerRelease();
+    MOD::triggerRelease();
     channels[voice].noteOff();
   }
   
@@ -110,8 +114,8 @@ namespace SYNTH {
         //this is where modVibrato is added... 
         channel.phaseAccumulator += modVibrato;
 
-        channel.ADSR.update();
-        if (channel.isActive() && channel.ADSR.isStopped()) {
+        channel.ampEnvelope.update();
+        if (channel.isActive() && channel.ampEnvelope.isStopped()) {
           channel.noteStopped();
           QUEUE::releaseSend(c);
           continue; // save processing this channel any futher
@@ -143,7 +147,7 @@ namespace SYNTH {
 
 
         // apply Amp envelope
-        channelSample = (int32_t(channelSample) * int32_t(channel.ADSR.get())) >> 16;
+        channelSample = (int32_t(channelSample) * int32_t(channel.ampEnvelope.get())) >> 16;
 
         // apply channel volume - should be velocity eventually
         channelSample = (int32_t(channelSample) * int32_t(channel.volume)) >> 16;
@@ -169,48 +173,37 @@ namespace SYNTH {
   }
 
   void setWaveShape (uint16_t input) {
-    uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
-    if (temp == lastWaveShape) return;
-    lastWaveShape = temp;
-    currentWaveShape = (temp << 8);
+    // uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
+    // if (temp == lastWaveShape) return;
+    // lastWaveShape = temp;
+    currentWaveShape = ((input >> 6) << 8);
   }
   void setWaveVector (uint16_t input) {
     currentWaveVector = input;
   }
   void setOctave (uint16_t input) {
-    uint16_t temp = (input >> 8);
-    if (lastOctave == temp) return;
-    lastOctave = temp;
-    currentOctave = temp;
+    // uint16_t temp = (input >> 8);
+    // if (lastOctave == temp) return;
+    // lastOctave = temp;
+    currentOctave = input >> 8;
   }
   void setPitchBend (uint16_t input) {
-    if (lastPitchBend == input) return;
-    lastPitchBend = input;
+    // if (lastPitchBend == input) return;
+    // lastPitchBend = input;
     currentPitchBend = logarithmicPitch(input);
   }
 
   void setAttack (uint16_t input) {
-    if (lastAttack == input) return;
-    lastAttack = input;
-    currentAttack = calculateEndFrame(input << 2);
+    envelopeControls.setAttack(input);
   }
   void setDecay (uint16_t input) {
-    if (lastDecay == input) return;
-    lastDecay = input;
-    currentDecay = calculateEndFrame(input << 2);
+    envelopeControls.setDecay(input);
   }
   void setSustain (uint16_t input) {
-    if (lastSustain == input) return;
-    lastSustain = input;
-    currentSustain = (input << 6);
+    envelopeControls.setSustain(input);
   }
   void setRelease (uint16_t input) {
-    if (lastRelease == input) return;
-    lastRelease = input;
-    currentRelease = calculateEndFrame(input << 2);
-  }
-  uint32_t calculateEndFrame (uint32_t milliseconds) {
-    return ((milliseconds + 1) * SAMPLE_RATE) / 1000; // + 1 so that it can never be 0, as it just creates noise.
+    envelopeControls.setRelease(input);
   }
 
   void modulateVibrato (uint16_t input) {
@@ -225,12 +218,12 @@ namespace SYNTH {
     modVector = input >> 6;
   }
 
-  void toggleSub () {
-    subActive = !subActive;
-  }
-  void toggleNoise () {
-    noiseActive = !noiseActive;
-  }
+  // void toggleSub () {
+  //   subActive = !subActive;
+  // }
+  // void toggleNoise () {
+  //   noiseActive = !noiseActive;
+  // }
 
   void setSub (uint16_t input) {
     subLevel = input;
@@ -241,16 +234,16 @@ namespace SYNTH {
 
   void setDetune (uint16_t input) {
     uint16_t temp = logPotentiometer(input);
-    if (lastDetune == temp) return;
-    lastDetune = temp;
+    // if (lastDetune == temp) return;
+    // lastDetune = temp;
     if (temp == 0) currentDetune = 0;
     else currentDetune = 1024 - temp;
   }
   void setOsc2Wave (uint16_t input) {
-    uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
-    if (temp == lastOsc2Wave) return;
-    lastOsc2Wave = temp;
-    osc2Wave = (temp << 8);
+    // uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
+    // if (temp == lastOsc2Wave) return;
+    // lastOsc2Wave = temp;
+    osc2Wave = ((input >> 6) << 8);
   }
 }
 

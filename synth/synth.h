@@ -19,22 +19,16 @@ namespace SYNTH {
   // variables for the wavetable oscillator
   extern uint16_t   currentWaveShape;
   extern uint16_t   currentWaveVector;
+  
+  namespace {
 
-  extern uint32_t   currentAttack;      // attack period - moved to global as it's not needed per voice for this implementation.
-  extern uint32_t   currentDecay;      // decay period
-  extern uint32_t   currentSustain;   // sustain volume
-  extern uint32_t   currentRelease;      // release period
-  extern uint16_t   lastAttack;      // attack period - moved to global as it's not needed per voice for this implementation.
-  extern uint16_t   lastDecay;      // decay period
-  extern uint16_t   lastSustain;   // sustain volume
-  extern uint16_t   lastRelease;      // release period
+    ADSRControls  envelopeControls(SAMPLE_RATE);
+
+  }
 
   extern int16_t    modVibrato;
   extern uint16_t   modTremelo;
   extern uint16_t   modVector;
-
-  extern bool       subActive;
-  extern bool       noiseActive;
 
   extern uint16_t   currentPitchBend;
 
@@ -68,12 +62,12 @@ namespace SYNTH {
 
       // Newer octave code - updates only with note on call
       // note = (inputNote + (currentOctave * 12)); // sets the octave at the outset of the note...
+      // changed = true; // for eventual performance improvement of pitch fixing. 
 
       frequency = getFrequency(note);
     
-      ADSR.triggerAttack();
+      ampEnvelope.triggerAttack();
       
-      // changed = true; // for eventual performance improvement of pitch fixing. 
     }
     inline void calcIncrement (void) {
       // if (!changed) return; // if the frequency or pitch hasn't changed, return
@@ -83,12 +77,11 @@ namespace SYNTH {
 
       // Newer octave code - sets octave only with noteOn call
       // phaseIncrement = (((frequency * currentPitchBend) >> 10) << Q_SCALING_FACTOR) / SAMPLE_RATE; // octave scaling achieved at note level
-
       // changed = false; // for eventual performance improvement of pitch fixing. 
     }
     void noteOff (void) {
       gate = false; // wouldn't be needed if core moved
-      ADSR.triggerRelease();
+      ampEnvelope.triggerRelease();
     }
     void noteStopped (void) {
       active = false;
@@ -106,7 +99,7 @@ namespace SYNTH {
       return gate;
     }
     
-    ADSREnvelope ADSR{currentAttack, currentDecay, currentSustain, currentRelease};
+    ADSREnvelope ampEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
   };
 
   extern Oscillators channels[POLYPHONY];
@@ -127,14 +120,10 @@ namespace SYNTH {
   void setSustain (uint16_t input);
   void setRelease (uint16_t input);
   
-  uint32_t calculateEndFrame (uint32_t milliseconds);
 
   void modulateVibrato (uint16_t input);
   void modulateTremelo (uint16_t input);
   void modulateVector (uint16_t input);
-
-  void toggleSub (void);
-  void toggleNoise (void);
 
   void setSub (uint16_t input);
   void setNoise (uint16_t input);

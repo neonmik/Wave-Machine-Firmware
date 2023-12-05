@@ -1,18 +1,5 @@
 #include "adsr.h"
 
-void setAttack (uint16_t input) {
-
-}
-void setDecay (uint16_t input) {
-
-}
-void setSustain (uint16_t input) {
-
-}
-void setRelease (uint16_t input) {
-
-}
-
 void ADSREnvelope::triggerAttack()  {
     currentFrame = 0;
     phase = Phase::ATTACK;

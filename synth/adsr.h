@@ -12,13 +12,89 @@ enum class Phase : uint8_t {
     OFF
 };
 
+struct ADSRData {
+    uint32_t attack;
+    uint32_t decay;
+    uint32_t sustain;
+    uint32_t release;
+};
+enum class Mode
+{
+    MONO,
+    PARA,
+};
+
+
+class ADSRControls {
+    private:
+        uint32_t        sampleRate;
+
+        ADSRData        currentADSR;
+        // ADSRData        lastADSR;
+
+        uint32_t calculateEndFrame(uint32_t milliseconds){
+            return ((milliseconds + 1) * sampleRate) / 1000;
+        }
+
+        // void initializeLastADSR(uint32_t initialValue = 1024) {
+        //     lastADSR.attack     = initialValue;
+        //     lastADSR.decay      = initialValue;
+        //     lastADSR.sustain    = initialValue;
+        //     lastADSR.release    = initialValue;
+        // }
+
+    public: 
+        ADSRControls (uint32_t sampleRate) : sampleRate(sampleRate) {
+            // initializeLastADSR();
+        }
+        ~ADSRControls ( ) { }
+
+        void setAttack (const uint16_t& input) {
+            // if (input == lastADSR.attack) return;
+
+            // lastADSR.attack = input;
+            currentADSR.attack = calculateEndFrame(input << 2);
+        }
+        void setDecay (const uint16_t& input) {
+            // if (input == lastADSR.decay) return;
+
+            // lastADSR.decay = input;
+            currentADSR.decay = calculateEndFrame(input << 2);
+        }
+        void setSustain (const uint16_t& input) {
+            // if (input == lastADSR.sustain) return;
+
+            // lastADSR.sustain = input;
+            currentADSR.sustain = (input << 6);
+        }
+        void setRelease (const uint16_t& input) {
+            // if (input == lastADSR.release) return;
+
+            // lastADSR.release = input;
+            currentADSR.release = calculateEndFrame(input << 2);
+        }
+
+        const uint32_t& getAttack (void) {
+            return currentADSR.attack;
+        }
+        const uint32_t& getDecay (void) {
+            return currentADSR.decay;
+        }
+        const uint32_t& getSustain (void) {
+            return currentADSR.sustain;
+        }
+        const uint32_t& getRelease (void) {
+            return currentADSR.release;
+        }
+};
 class ADSREnvelope {
     private:
 
-        uint32_t&    attack;
-        uint32_t&    decay;
-        uint32_t&    sustain;
-        uint32_t&    release;
+        const uint32_t& attack;
+        const uint32_t& decay;
+        const uint32_t& sustain;
+        const uint32_t& release;
+
         
         uint32_t    currentFrame        = 0;
         uint32_t    endFrame            = 0;
@@ -26,14 +102,10 @@ class ADSREnvelope {
         int32_t     increment           = 0;
         Phase       phase               = Phase::OFF;
 
-        // uint32_t calculateEndFrame(uint32_t milliseconds){
-        //     return ((milliseconds + 1) * SAMPLE_RATE) / 1000;
-        // }
-
     public:
 
-        ADSREnvelope(uint32_t& attack, uint32_t& decay, uint32_t& sustain, uint32_t& release) 
-        : attack(attack), decay(decay), sustain(sustain), release(release) { }
+        ADSREnvelope(const uint32_t& attack, const uint32_t& decay, const uint32_t& sustain, const uint32_t& release)
+                : attack(attack), decay(decay), sustain(sustain), release(release) { }
 
         ~ADSREnvelope ( ) { }
 
@@ -50,46 +122,46 @@ class ADSREnvelope {
 
         uint32_t get(void) { return (adsr >> 8); }
 
+        int32_t apply(uint32_t input) {
+            return ((int32_t(input) * int32_t(adsr >> 8))) >> 16;
+        }
+
 };
 
 
 
 
 // The duration a note is played is determined by the amount of attack,
-  // decay, and release, combined with the length of the note as defined by
-  // the user.
-  //
-  // - Attack:  number of milliseconds it takes for a note to hit full volume
-  // - Decay:   number of milliseconds it takes for a note to settle to sustain volume
-  // - Sustain: percentage of full volume that the note sustains at (duration implied by held note)
-  // - Release: number of milliseconds it takes for a note to reduce to zero volume after it has ended
-  //
-  // Attack (750ms) - Decay (500ms) -------- Sustain ----- Release (250ms)
-  //
-  //                +         +                                  +    +
-  //                |         |                                  |    |
-  //                |         |                                  |    |
-  //                |         |                                  |    |
-  //                v         v                                  v    v
-  // 0ms               1000ms              2000ms              3000ms              4000ms
-  //
-  // |              XXXX |                   |                   |                   |
-  // |             X    X|XX                 |                   |                   |
-  // |            X      |  XXX              |                   |                   |
-  // |           X       |     XXXXXXXXXXXXXX|XXXXXXXXXXXXXXXXXXX|                   |
-  // |          X        |                   |                   |X                  |
-  // |         X         |                   |                   |X                  |
-  // |        X          |                   |                   | X                 |
-  // |       X           |                   |                   | X                 |
-  // |      X            |                   |                   |  X                |
-  // |     X             |                   |                   |  X                |
-  // |    X              |                   |                   |   X               |
-  // |   X               |                   |                   |   X               |
-  // |  X +    +    +    |    +    +    +    |    +    +    +    |    +    +    +    |    +
-  // | X  |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-  // |X   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-  // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+--->
-
-
-
-  
+// decay, and release, combined with the length of the note as defined by
+// the user.
+//
+// - Attack:  number of milliseconds it takes for a note to hit full volume
+// - Decay:   number of milliseconds it takes for a note to settle to sustain volume
+// - Sustain: percentage of full volume that the note sustains at (duration implied by held note)
+// - Release: number of milliseconds it takes for a note to reduce to zero volume after it has ended
+//
+// Attack (750ms) - Decay (500ms) -------- Sustain ----- Release (250ms)
+//
+//                +         +                                  +    +
+//                |         |                                  |    |
+//                |         |                                  |    |
+//                |         |                                  |    |
+//                v         v                                  v    v
+// 0ms               1000ms              2000ms              3000ms              4000ms
+//
+// |              XXXX |                   |                   |                   |
+// |             X    X|XX                 |                   |                   |
+// |            X      |  XXX              |                   |                   |
+// |           X       |     XXXXXXXXXXXXXX|XXXXXXXXXXXXXXXXXXX|                   |
+// |          X        |                   |                   |X                  |
+// |         X         |                   |                   |X                  |
+// |        X          |                   |                   | X                 |
+// |       X           |                   |                   | X                 |
+// |      X            |                   |                   |  X                |
+// |     X             |                   |                   |  X                |
+// |    X              |                   |                   |   X               |
+// |   X               |                   |                   |   X               |
+// |  X +    +    +    |    +    +    +    |    +    +    +    |    +    +    +    |    +
+// | X  |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+// |X   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+// +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+--->

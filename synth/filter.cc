@@ -2,7 +2,7 @@
 
 namespace FILTER {
 
-    ADSREnvelope ADSR{attack, decay, sustain, release};
+    ADSREnvelope cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
 
     void init() {
         lowPass = 0;
@@ -88,28 +88,19 @@ namespace FILTER {
 
     void modulateCutoff(uint16_t input) {
         _mod = (input >> 2); 
-        // _mod = input;
     }
 
     void setAttack (uint16_t input) {
-        if (input == lastAttack) return;
-        lastAttack = input;
-        attack = calculateEndFrame(input << 2);
+        envelopeControls.setAttack(input);
     }
     void setDecay (uint16_t input) {
-        if (input == lastDecay) return;
-        lastDecay = input;
-        decay = calculateEndFrame(input << 2);
+        envelopeControls.setDecay(input);
     }
     void setSustain (uint16_t input) {
-        if (input == lastSustain) return;
-        lastSustain = input;
-        sustain = (input << 6);
+        envelopeControls.setSustain(input);
     }
     void setRelease (uint16_t input) {
-        if (input == lastRelease) return;
-        lastRelease = input;
-        release = calculateEndFrame(input << 2);
+        envelopeControls.setRelease(input);
     }
 
     void voicesIncrease (void) {
@@ -135,12 +126,12 @@ namespace FILTER {
         switch (mode) {
             case Mode::MONO:
                 if (!filterActive) { 
-                    ADSR.triggerAttack();
+                    cutoffEnvelope.triggerAttack();
                     filterActive = true;
                 }
                 break;
             case Mode::PARA:
-                ADSR.triggerAttack();
+                cutoffEnvelope.triggerAttack();
                 filterActive = true;
                 break;
         } 
@@ -148,7 +139,7 @@ namespace FILTER {
     }
     void triggerRelease (void) {
         if (filterActive && !voicesActive()) {
-            ADSR.triggerRelease();
+            cutoffEnvelope.triggerRelease();
             filterActive = false;
         }
     }
@@ -158,13 +149,13 @@ namespace FILTER {
         if (!state) return;
         
         if ((type != Type::Off)) {
-            ADSR.update();
+            cutoffEnvelope.update();
             
             if (direction == Direction::Regular) {
-                frequency = (cutoff * ADSR.get()) >> 16;
+                frequency = (cutoff * cutoffEnvelope.get()) >> 16;
             } 
             if (direction == Direction::Inverted) {
-                frequency = MAX_FREQ - (((MAX_FREQ - cutoff) * (ADSR.get())) >> 16);
+                frequency = MAX_FREQ - (((MAX_FREQ - cutoff) * (cutoffEnvelope.get())) >> 16);
             }
 
             frequency = frequency + _mod;
@@ -177,7 +168,7 @@ namespace FILTER {
             // EG amount is how far above the freq it reaches (upper limit should be NYQUIST)
             // Envelope amount should run from cutoff baseline, to max freq, then back down to wherever sustain level is set, then when released, drop to cutoff baseline
             // 
-            // Frequency = Cutoff + (ADSR.get() * envelopDepth) // Need some bit shifts to correct for interger math here
+            // Frequency = Cutoff + (cutoffEnvelope.get() * envelopDepth) // Need some bit shifts to correct for integer math here
             //
 
 
