@@ -6,46 +6,7 @@
 
 namespace SYNTH {
 
-  uint16_t    currentWaveShape;
-  uint16_t    lastWaveShape;
 
-  uint16_t    currentWaveVector;
-  uint16_t    lastWaveVector;
-
-  uint16_t    currentPitchBend = 511;
-  uint16_t    lastPitchBend;
-
-  uint8_t     currentOctave = 0;
-  uint16_t    lastOctave;
-
-  int16_t    currentDetune;
-  int16_t    lastDetune;
-
-  // uint32_t    currentAttack;
-  // uint32_t    currentDecay;
-  // uint32_t    currentSustain;
-  // uint32_t    currentRelease;
-  // // these are defaulted to outside the 10bit range so that when the EEPROM loads, it's always saved. (otherwise the currentAttack/currentDecay can be 0, which causes an overflow)
-  // uint16_t    lastAttack = 1024;
-  // uint16_t    lastDecay = 1024;
-  // uint16_t    lastSustain = 1024;
-  // uint16_t    lastRelease = 1024;
-
-  int16_t     modVibrato;
-  uint16_t    modTremelo;
-  uint16_t    modVector;
-
-  // bool        subActive;
-  // bool        noiseActive;
-
-  uint16_t    subLevel = 1023;
-  uint16_t    noiseLevel = 0;
-
-  uint16_t    osc2Wave;
-  uint16_t    lastOsc2Wave;
-
-
-  uint16_t volume = 0xFFFF;
 
   Oscillators channels[POLYPHONY];
 
@@ -173,23 +134,16 @@ namespace SYNTH {
   }
 
   void setWaveShape (uint16_t input) {
-    // uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
-    // if (temp == lastWaveShape) return;
-    // lastWaveShape = temp;
+
     currentWaveShape = ((input >> 6) << 8);
   }
   void setWaveVector (uint16_t input) {
     currentWaveVector = input;
   }
   void setOctave (uint16_t input) {
-    // uint16_t temp = (input >> 8);
-    // if (lastOctave == temp) return;
-    // lastOctave = temp;
     currentOctave = input >> 8;
   }
   void setPitchBend (uint16_t input) {
-    // if (lastPitchBend == input) return;
-    // lastPitchBend = input;
     currentPitchBend = logarithmicPitch(input);
   }
 
@@ -218,13 +172,6 @@ namespace SYNTH {
     modVector = input >> 6;
   }
 
-  // void toggleSub () {
-  //   subActive = !subActive;
-  // }
-  // void toggleNoise () {
-  //   noiseActive = !noiseActive;
-  // }
-
   void setSub (uint16_t input) {
     subLevel = input;
   }
@@ -234,15 +181,12 @@ namespace SYNTH {
 
   void setDetune (uint16_t input) {
     uint16_t temp = logPotentiometer(input);
-    // if (lastDetune == temp) return;
-    // lastDetune = temp;
+
     if (temp == 0) currentDetune = 0;
     else currentDetune = 1024 - temp;
   }
   void setOsc2Wave (uint16_t input) {
-    // uint16_t temp = (input >> 6); // the double bit shifts here are to quickly loose precision.
-    // if (temp == lastOsc2Wave) return;
-    // lastOsc2Wave = temp;
+
     osc2Wave = ((input >> 6) << 8);
   }
 }

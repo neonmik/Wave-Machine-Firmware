@@ -13,26 +13,40 @@
 
 
 namespace SYNTH {
-
-  extern uint16_t   volume;
-
-  // variables for the wavetable oscillator
-  extern uint16_t   currentWaveShape;
-  extern uint16_t   currentWaveVector;
   
   namespace {
+    uint16_t    currentWaveShape;
+    uint16_t    lastWaveShape;
+
+    uint16_t    currentWaveVector;
+    uint16_t    lastWaveVector;
+
+    uint16_t    currentPitchBend = 511;
+    uint16_t    lastPitchBend;
+
+    uint8_t     currentOctave = 0;
+    uint16_t    lastOctave;
+
+    int16_t     currentDetune;
+    int16_t     lastDetune;
+
+    int16_t     modVibrato;
+    uint16_t    modTremelo;
+    uint16_t    modVector;
+
+    uint16_t    subLevel = 1023;
+    uint16_t    noiseLevel = 0;
+
+    uint16_t    osc2Wave;
+    uint16_t    lastOsc2Wave;
+
+
+    uint16_t volume = 0xFFFF;
 
     ADSRControls  envelopeControls(SAMPLE_RATE);
 
   }
 
-  extern int16_t    modVibrato;
-  extern uint16_t   modTremelo;
-  extern uint16_t   modVector;
-
-  extern uint16_t   currentPitchBend;
-
-  extern uint8_t    currentOctave;
 
   static bool playSoftStart = true;
   static uint8_t softStartIndex = 0;
