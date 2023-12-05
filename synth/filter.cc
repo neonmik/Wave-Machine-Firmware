@@ -1,23 +1,16 @@
 #include "filter.h"
 
 namespace FILTER {
-
-    ADSREnvelope cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
-
     void init() {
-        lowPass = 0;
-        bandPass = 0;
-        needsUpdating = true;
+        reset();
     }
 
-    void setState (bool input) {
-        lowPass = 0;
-        bandPass = 0;
+    void setState(bool input) { 
+        reset();
         state = input;
     }
-    bool getState () {
-        return state;
-    }
+
+    bool getState (void) { return state; }
 
     void setCutoff(uint16_t input) {
         cutoff = exponentialFrequency(input);
@@ -25,7 +18,6 @@ namespace FILTER {
 
     void setResonance(uint16_t input) {
         resonance = filter_damp(input);
-        // needsUpdating = true;
     }
 
 
@@ -87,7 +79,7 @@ namespace FILTER {
 
 
     void modulateCutoff(uint16_t input) {
-        _mod = (input >> 2); 
+        modulation = (input >> 2); 
     }
 
     void setAttack (uint16_t input) {
@@ -155,12 +147,12 @@ namespace FILTER {
                 frequency = (cutoff * cutoffEnvelope.get()) >> 16;
             } 
             if (direction == Direction::Inverted) {
-                frequency = MAX_FREQ - (((MAX_FREQ - cutoff) * (cutoffEnvelope.get())) >> 16);
+                frequency = NYQUIST - (((NYQUIST - cutoff) * (cutoffEnvelope.get())) >> 16);
             }
 
-            frequency = frequency + _mod;
+            frequency = frequency + modulation;
             // limiter for the modulation
-            if (frequency > MAX_FREQ) frequency = MAX_FREQ;
+            if (frequency > NYQUIST) frequency = NYQUIST;
             if (frequency < 0) frequency = 0;
 
             // Standard analogue synth envelope processing 

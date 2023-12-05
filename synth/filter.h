@@ -11,6 +11,7 @@
 #include "adsr.h"
 #include "fx.h"
 
+
 namespace FILTER
 {
 
@@ -34,42 +35,39 @@ namespace FILTER
         PARA,
     };
 
-    namespace
-    {
-        bool        state;
+    namespace {
+        ADSRControls    envelopeControls(SAMPLE_RATE);
+
         Mode        mode = Mode::PARA;
+        volatile int8_t activeVoice;
+        bool filterActive = false;
 
-        bool        needsUpdating;
-
-        uint16_t    MAX_FREQ = NYQUIST;
+        bool        state;
 
         int32_t     cutoff;
         int32_t     resonance;
-        
-        uint16_t    envelopeDepth;
-        // uint16_t    keyboardDepth;
-
-
-        uint16_t    _mod;
-
         int32_t     punch;
+        Type        type;
+
+        Direction   direction;
+        uint16_t    envelopeDepth;
+        // uint16_t    keyboardTracking;
+
+        uint16_t    modulation;
+
         int32_t     frequency;
         int32_t     damp;
 
         int32_t     lowPass;
         int32_t     bandPass;
 
-        Type        type;
-        Direction   direction;
+        ADSREnvelope    cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
 
-        volatile int8_t activeVoice;
-        bool filterActive = false;
-
-
-        ADSRControls    envelopeControls(SAMPLE_RATE);
+        void reset (void) {
+            lowPass = 0;
+            bandPass = 0;
+        }
     }
-
-    extern ADSREnvelope cutoffEnvelope;
 
     void init();
 
