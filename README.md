@@ -14,6 +14,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Paraphonic LFO and Filter.
 
     - A highly useable LFO with:
+        - Paraphonic Depth envelope control (ADSR)
         - 6 Waveforms (Sine, Sawtooth Up, Sawtooth Down, Square, Triangle and Noise).
         - A wide range of freqency control from 0.01 - 150Hz (with hardware settings to change to allow for differnt bands in the range of 0.003Hz - 2.4kHz).
         - Depth control.
@@ -154,15 +155,12 @@ Current nightly firmware for Wave Machine Hardware.
     - Improve ADSR code:
         - Feature: Add infinite release mode - Once pot is at full rotation, lock out release allowing note to sustain forever.
 
-        - Try to make the code more portable - currently the calculations for envelope times are done in the controling code to allow for multicore use, but check to see if it can be done in other ways.
-
 
     - Improve Mod code:
         - Try making it Poly - I think the sample rate can be reduced by 8 (6kHz) and that should allow every voice to have its own poly Mod. Would probably need a reset for when notes are released, so that you can really hear the difference.
         
         - Add a tempo sync function.
         
-        - Add ADSR? Maybe share with filter...
         - Add a ramp down feature when switching between destinations - could be difficult. 
 
         - Research: Look up Attenuveter and see if its any use for controlling LFO code.
@@ -337,12 +335,15 @@ Features/Bugfixes:
         + Bugfix: Presets are always loaded on start up. Thjis allows the hardware controls and LEDs to be correct.
 
     + ADSR:
-        + Fixed an overflow issue with multiple notes being in an extended Decay phase causing the output sample to be limitied cause audio artifacts:- Bug: Clipping output signal - When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.)
+        + Improvement: Refactored code to be more modular. Now controls can be perfromaed easier and are potable.
+        + Fixed an overflow issue with multiple notes being in an extended Decay phase causing the output sample to be limitied cause audio artifacts:- Bug: Clipping output signal - When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.
         + Removed any useless calls to synth voice stuff so can be used more universally (currently planning on adding to Mod) - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
         + ADSR not working for first oscillator/voice - added a minimum (10ms) limit on the AD settings... seemed to help. 
         + Improved ADSR - some confusion if you release key in attack stage, skips DS and jumps to release - this is standard behaviour for most synths by testing some.
 
     + Mod:
+        + Improvement: Tidied code to make it more modular.
+        + Feature: Added envelope to Mod. Currently not controlable on hardware, but functionality is there.
         + Added a linear to exponential curve for the Rate function. Can now rate between 0.1Hz and 5000Hz with the lower end of the range being finest, and the higher end coarsest.
         + Bugfix: Mod overflowing vector/wavetable index - reworked fault in wavetable.
         + Tidied up code to remove unnecessary stuff.
