@@ -4,13 +4,13 @@
 namespace CLOCK {
 
     void init () {
-        _sample_rate = SAMPLE_RATE;
+        sampleRate = SAMPLE_RATE;
         _bpm = DEFAULT_BPM;
         calculateDivision();
     }
 
     void setSampleRate (uint16_t sample_rate) {
-        _sample_rate = sample_rate;
+        sampleRate = sample_rate;
         calculateDivision();
     } 
 
@@ -101,18 +101,28 @@ namespace CLOCK {
         }
     }
 
-    void check_sample_clock (void) {
-        
+    uint32_t getClockTick (void) {
+        return clockTick;
     }
+    uint32_t getSamplesPerDivision(void) {
+        return samplesPerDivision;
+    }
+
     void update (void) {
         checkMidiClock();
+        // printf("MIDI Clock checking: %d\n", clockTick);
     }
 
     void setClockChanged(bool changed) {
         clockChanged = changed;
     }
     bool getClockChanged (void) {
-        return clockChanged;
+        if (clockChanged) {
+            clockChanged = false;
+            return true;
+        } else {
+            return false;
+        }
     }
     inline uint8_t getBeat (void) {
         return _beat;

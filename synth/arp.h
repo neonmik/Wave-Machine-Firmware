@@ -96,6 +96,8 @@ namespace ARP {
         uint16_t        range;
         uint16_t        direction;
 
+        uint32_t        gate;
+
 
         bool            polyMode = false;
 
