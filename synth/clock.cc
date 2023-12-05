@@ -5,22 +5,21 @@ namespace CLOCK {
 
     void init () {
         sampleRate = SAMPLE_RATE;
-        _bpm = DEFAULT_BPM;
-        calculateDivision();
+        setBPM(DEFAULT_BPM);
     }
 
     void setSampleRate (uint16_t sample_rate) {
         sampleRate = sample_rate;
         calculateDivision();
-    } 
-
+        calculatePulse();
+    }
     void setBPM (uint16_t bpm) {
         _bpm = bpm;
         calculateDivision();
         calculatePulse();
     }
-    uint8_t getBPM () {
-        return _bpm;
+    uint16_t getBPM (void) {
+        return map(_bpm, 30, 350, KNOB_MIN, KNOB_MAX);;
     }
     void setDivision (uint8_t division) {
         // set the division of the bpm/midi clock

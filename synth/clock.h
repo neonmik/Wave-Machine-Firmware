@@ -54,7 +54,7 @@ namespace CLOCK {
     void        init (void);
     void        setSampleRate (uint16_t sample_rate = SAMPLE_RATE); // provides a default sample_rate linked to the global sample rate... this could be useful for sample rate updatings in the future.
     void        setBPM (uint16_t bpm);
-    uint8_t     getBPM ();
+    uint16_t    getBPM (void);
     void        setDivision (uint8_t division);
 
     void        internalClockTick (void);
