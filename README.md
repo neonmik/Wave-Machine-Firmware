@@ -61,6 +61,9 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Arp:
         - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements.
+        - Bug: Fix New style Arp Mode (call it "Classic" after the JUNO method). Currently doesn't work in UP/DOWN or DOWN/UP modes due to the octave not moving octav when at the top correctly.
+        - Bug: When using DOWN/UP or UP/DOWN with a range greater than 1, the first note after the octave change doesnt start on the first note, but the second.  
+
 
     - Controls:
         
@@ -285,6 +288,8 @@ Features/Bugfixes:
         + DAC
 
     + Arp: 
+        + Bugifx: Fixed a bug that caused notes to hang (MIDI and internal) when flipping between MONO and POLY arp mode. Made sure that the mode was only updated when inside the update loop.
+        + Feature: Added a setting for "Played Order". Currently can only be turned on in firmware update, as no controls left to change it.
         + Feature: Added and fully implemented the Gate function. This allows you to use a pot to change the length of the Arp notes. setting fully Anti-Clockwise will result in a very short blip, while setting fully Clockwise will result in a note that ends when the next note begins. Make sure the Filter envelope is set correctly or you wont hear anything! 
         + Bugfix: Fixed a bug where flipping through presets while actively playing (not just holding notes/chords) notes would get stuck sustaining. This was down to notes not being transfer from the Arp input buffer to the play buffer before being copied to the standard note handling code.
         + Improvement: Added a control for Chord Arp which can be accessed from 
