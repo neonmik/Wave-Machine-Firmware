@@ -34,9 +34,8 @@ void ADSREnvelope::stopped() {
 }
 
 void ADSREnvelope::update() {
-    if(phase == Phase::OFF) {
-        return;
-    } 
+    if(phase == Phase::OFF) return;
+
     if ((currentFrame >= endFrame) && (phase != Phase::SUSTAIN)) {
         switch (phase) {
             case Phase::ATTACK:

@@ -8,40 +8,41 @@ namespace ARP {
     ArpData inputBuffer[MAX_ARP];
 
 
-    void printNoteBuffer (ArpData *input) {
+    // Prints the note buffer
+    void printNoteBuffer(ArpData *input) {
         printf("Arp Note Buffer :");
-            for (int i = 0; i < MAX_ARP; i++) {
-                printf("  %d:  %02d  |", i, input[i].note);
-            }
-            printf("\n\n");
+        for (int i = 0; i < MAX_ARP; i++) {
+            printf("  %d:  %02d  |", i, input[i].note);
+        }
+        printf("\n\n");
     }
 
-    void setState (bool state) {
-        if (isArpActive == state) return; // already set
-        
+    // Sets the state of the arp
+    void setState(bool state) {
+        if (isArpActive == state) return; // If state is already set, do nothing
         isArpActive = state;
         reset();  
     }
-    bool getState (void) {
+
+    // Returns the state of the arp
+    bool getState(void) {
         return isArpActive;
     }
 
 
 
-    void reset () {
-        NOTE_HANDLING::voicesStop(); // clears the actual synth voices
+    // Resets the arp
+    void reset() {
+        NOTE_HANDLING::voicesStop(); // Clears the actual synth voices
         if (!isArpActive) {
-            // passes notes following deactivation the arp, only if you're holding them down so they don't hold forever.
-            passNotes(); // passes any notes in the arp buffer that arent held on by sustain - may need reworking for sustain
-            clearAllNotes(); // clears the input buffer.
+            passNotes(); // Passes any notes in the arp buffer that aren't held on by sustain
+            clearAllNotes(); // Clears the input buffer
         }
         if (isArpActive) {
-            grabNotes(); // grabs any active notes from the voices, this includes sustained, which I think would be best?
-            // setSustain(NOTE_HANDLING::getSustainPedal()); // to make sure sustain gets passed on?
+            grabNotes(); // Grabs any active notes from the voices, including sustained notes
         }
-
-
     }
+
 
     void arpeggiate(ArpDirection direction) {
         if (arpMode == ArpMode::POLY) {
@@ -164,52 +165,52 @@ namespace ARP {
         // add variable for direction for new arp modes (more similar in handling to JUNO)
     }
 
-void playNote (void) {
-    if (arpMode == ArpMode::POLY) {
-        for (int i = 0; i < currentNoteCount; i++) {
-            // check this
-            if (!arpVoices[i].isActive()) break; 
+    void playNote (void) {
+        if (arpMode == ArpMode::POLY) {
+            for (int i = 0; i < currentNoteCount; i++) {
+                // check this
+                if (!arpVoices[i].isActive()) break; 
 
-            currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
+                currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
 
-            NOTE_HANDLING::voiceOn(i, currentPlayOct[i], 127);
-            MIDI::sendNoteOn(currentPlayOct[i], 127);
+                NOTE_HANDLING::voiceOn(i, currentPlayOct[i], 127);
+                MIDI::sendNoteOn(currentPlayOct[i], 127);
+            }
+        } else {
+            if (!arpVoices[currentPlayIndex].isActive()) return;
+
+            // This only gets called when gap is enabled, and latch is not, between holding a few notes and releasing... this is because it allows transferNotes to be called between releasing and triggering... 
+            if (currentPlayIndex > currentNoteCount) {
+                resetPlayIndex();
+            }
+
+
+            currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
+
+            NOTE_HANDLING::voiceOn(currentVoiceIndex, currentPlayNote, 127);
+            MIDI::sendNoteOn(currentPlayNote, 127);
+
         }
-    } else {
-        if (!arpVoices[currentPlayIndex].isActive()) return;
-
-        // This only gets called when gap is enabled, and latch is not, between holding a few notes and releasing... this is because it allows transferNotes to be called between releasing and triggering... 
-        if (currentPlayIndex > currentNoteCount) {
-            resetPlayIndex();
-        }
-
-
-        currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
-
-        NOTE_HANDLING::voiceOn(currentVoiceIndex, currentPlayNote, 127);
-        MIDI::sendNoteOn(currentPlayNote, 127);
-
+        currentNoteState = NoteState::ACTIVE;
     }
-    currentNoteState = NoteState::ACTIVE;
-}
-void releaseNote(void) {
-    if (arpMode == ArpMode::POLY) {
-        for (int i = 0; i < POLYPHONY; i++) {
-            // Should be able to remove this check, as it shouldn't change between playing and releasing
-            if (currentPlayOct[i]) {
-                NOTE_HANDLING::voiceOff(i, currentPlayOct[i], 0);
-                MIDI::sendNoteOff(currentPlayOct[i], 0);
-            }   
+    void releaseNote(void) {
+        if (arpMode == ArpMode::POLY) {
+            for (int i = 0; i < POLYPHONY; i++) {
+                // Should be able to remove this check, as it shouldn't change between playing and releasing
+                if (currentPlayOct[i]) {
+                    NOTE_HANDLING::voiceOff(i, currentPlayOct[i], 0);
+                    MIDI::sendNoteOff(currentPlayOct[i], 0);
+                }   
+            }
+        } else {
+            NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
+            MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
+            
+            currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
         }
-    } else {
-        NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
-        MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
-        
-        currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
+        arpeggiate(arpDirection);
+        currentNoteState = NoteState::IDLE;
     }
-    arpeggiate(arpDirection);
-    currentNoteState = NoteState::IDLE;
-}
 
     void update (void) {
         // always update clock, will be used for MIDI clock out.
@@ -237,6 +238,8 @@ void releaseNote(void) {
                         playNote();
                 }
             }
+
+            
         }
     }
 
