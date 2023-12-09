@@ -5,46 +5,39 @@
 #include "../random.h"
 #include "../queue.h"
 
+
 #include "adsr.h"
 
 #include "wavetable.h"
 #include "resources.h"
 
 
-
 namespace SYNTH {
   
-  namespace {
-    static uint16_t    currentWaveShape = 0;
-    static uint16_t    currentWaveVector = 0;
-    static uint16_t    currentPitchBend = 511;
-    static uint8_t     currentOctave = 0;
+  static uint16_t    waveShape = 0;
+  static uint16_t    waveVector = 0;
+  static uint16_t    pitchBend = 511;
+  static uint8_t     octave = 0;
 
-    static int16_t     currentDetune = 0;  
+  static int16_t     detune = 0;  
 
-    static int16_t     modVibrato;
-    static uint16_t    modTremelo;
-    static uint16_t    modVector;
+  static int16_t     modVibrato;
+  static uint16_t    modTremelo;
+  static uint16_t    modVector;
 
-    static uint16_t    subLevel = 1023;
-    static uint16_t    noiseLevel = 0;
+  static uint16_t    subLevel = 1023;
+  static uint16_t    noiseLevel = 0;
 
-    static uint16_t    osc2Wave = 0;
+  static uint16_t    osc2Wave = 0;
 
-    static uint16_t volume = 0xFFFF;
+  static ADSR::Controls  envelopeControls(SAMPLE_RATE);
 
-    static ADSR::Controls  envelopeControls(SAMPLE_RATE);
-
-  }
 
 
 
 
   struct Oscillators {
-
-    bool      changed           = false;  
-
-    uint16_t  volume            = 0x7fff;         // channel volume (default 50%) - also could be called velocity
+    uint16_t  volume            = 0xFFFF;         // channel volume (default 50%) - also could be called velocity
 
     bool      gate              = false;          // used for tracking a note that's released, but not finished.
     bool      active            = false;          // used for whole duration of note, from the very start of attack right up until the voise is finished
@@ -76,7 +69,7 @@ namespace SYNTH {
       // if (!changed) return; // if the frequency or pitch hasn't changed, return
   
       // Original octave code - updates octave whenever its changed
-      phaseIncrement = ((((frequency * currentPitchBend) >> 10) << currentOctave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+      phaseIncrement = ((((frequency * pitchBend) >> 10) << octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
       // Newer octave code - sets octave only with noteOn call
       // phaseIncrement = (((frequency * currentPitchBend) >> 10) << Q_SCALING_FACTOR) / SAMPLE_RATE; // octave scaling achieved at note level
