@@ -27,6 +27,10 @@
 #include "tusb.h"
 #include "usb_descriptors.h"
 
+// #include "test_mode.h"
+
+// extern bool testMode;
+
 
 /* A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
  * Same VID/PID with different interface e.g MSC (first), then CDC (later) will possibly cause system error on PC.
@@ -44,6 +48,8 @@
 // 0 : enumerated as CDC/MIDI. Board button is not pressed when enumerating
 // 1 : enumerated as MSC. Board button is pressed when enumerating
 bool USB_MODE = 0;
+
+static uint32_t mode = 0;
 
 //--------------------------------------------------------------------+
 // Device Descriptors
@@ -100,7 +106,9 @@ tusb_desc_device_t const desc_device_1 =
 // Application return pointer to descriptor
 uint8_t const * tud_descriptor_device_cb(void)
 {
-  return (uint8_t const*) (USB_MODE ? &desc_device_1 : &desc_device_0);
+  mode = getUSBMode();
+  
+  return (uint8_t const*) (mode ? &desc_device_1 : &desc_device_0);
 }
 
 
@@ -159,7 +167,7 @@ uint8_t const desc_configuration_1[] =
 uint8_t const * tud_descriptor_configuration_cb(uint8_t index)
 {
   (void) index; // for multiple configurations
-  return USB_MODE ? desc_configuration_1 : desc_configuration_0;
+  return mode ? desc_configuration_1 : desc_configuration_0;
 }
 
 // Old setup for both MIDI and MSC

@@ -107,6 +107,7 @@ extern "C" {
 
 // MSC Buffer size of Device Mass storage
 #define CFG_TUD_MSC_EP_BUFSIZE    512
+#define CFG_TUB_MSC_
 
 #ifdef __cplusplus
 }
