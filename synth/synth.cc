@@ -6,8 +6,6 @@
 
 namespace SYNTH {
 
-
-
   Oscillators channels[POLYPHONY];
 
 
@@ -35,20 +33,6 @@ namespace SYNTH {
     MOD::init();
     FILTER::init();
   }
-
-  // uint16_t softStart () {
-  //   ++softStartIndex;
-
-  //   if (softStartIndex >= 2) {
-  //     softStartIndex = 0;
-  //     softStartSample += 1;
-  //     if (softStartSample > 0) {
-  //       softStartSample = 0;
-  //     }
-  //   }
-
-  //   return (softStartSample - INT16_MIN)>>4;
-  // }
 
   uint16_t process() {
     int32_t outputSample = 0;  // used to combine channel output
@@ -134,7 +118,6 @@ namespace SYNTH {
   }
 
   void setWaveShape (uint16_t input) {
-
     currentWaveShape = ((input >> 6) << 8);
   }
   void setWaveVector (uint16_t input) {
@@ -186,7 +169,6 @@ namespace SYNTH {
     else currentDetune = 1024 - temp;
   }
   void setOsc2Wave (uint16_t input) {
-
     osc2Wave = ((input >> 6) << 8);
   }
 }

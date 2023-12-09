@@ -15,42 +15,30 @@
 namespace SYNTH {
   
   namespace {
-    uint16_t    currentWaveShape;
-    uint16_t    lastWaveShape;
+    static uint16_t    currentWaveShape = 0;
+    static uint16_t    currentWaveVector = 0;
+    static uint16_t    currentPitchBend = 511;
+    static uint8_t     currentOctave = 0;
 
-    uint16_t    currentWaveVector;
-    uint16_t    lastWaveVector;
+    static int16_t     currentDetune = 0;  
 
-    uint16_t    currentPitchBend = 511;
-    uint16_t    lastPitchBend;
+    static int16_t     modVibrato;
+    static uint16_t    modTremelo;
+    static uint16_t    modVector;
 
-    uint8_t     currentOctave = 0;
-    uint16_t    lastOctave;
+    static uint16_t    subLevel = 1023;
+    static uint16_t    noiseLevel = 0;
 
-    int16_t     currentDetune;
-    int16_t     lastDetune;
+    static uint16_t    osc2Wave = 0;
 
-    int16_t     modVibrato;
-    uint16_t    modTremelo;
-    uint16_t    modVector;
+    static uint16_t volume = 0xFFFF;
 
-    uint16_t    subLevel = 1023;
-    uint16_t    noiseLevel = 0;
-
-    uint16_t    osc2Wave;
-    uint16_t    lastOsc2Wave;
-
-
-    uint16_t volume = 0xFFFF;
-
-    ADSRControls  envelopeControls(SAMPLE_RATE);
+    static ADSR::Controls  envelopeControls(SAMPLE_RATE);
 
   }
 
 
-  static bool playSoftStart = true;
-  static uint8_t softStartIndex = 0;
-  static int16_t softStartSample = -32768;
+
 
   struct Oscillators {
 
@@ -68,7 +56,8 @@ namespace SYNTH {
     uint32_t  phaseAccumulator  = 0; 
 
     void noteOn (uint8_t inputNote) {
-      gate = true; // wouldn't be needed if core moved
+      gate = true; // Won't be needed if the Mod/Filter trigger is reworked
+
       active = true;
 
       // Original octave code - updates whenever its changed
@@ -94,7 +83,8 @@ namespace SYNTH {
       // changed = false; // for eventual performance improvement of pitch fixing. 
     }
     void noteOff (void) {
-      gate = false; // wouldn't be needed if core moved
+      gate = false; // Won't be needed if the Mod/Filter trigger is reworked
+
       ampEnvelope.triggerRelease();
     }
     void noteStopped (void) {
@@ -113,7 +103,7 @@ namespace SYNTH {
       return gate;
     }
     
-    ADSREnvelope ampEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
+    ADSR::Envelope ampEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
   };
 
   extern Oscillators channels[POLYPHONY];
