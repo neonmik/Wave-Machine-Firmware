@@ -39,8 +39,8 @@ namespace FILTER
         static ADSR::Controls    envelopeControls(SAMPLE_RATE);
 
         Mode        mode = Mode::PARA;
-        volatile int8_t activeVoice;
-        bool filterActive = false;
+        int8_t      activeVoice;
+        bool        filterActive = false;
 
         bool        state;
 

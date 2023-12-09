@@ -68,9 +68,7 @@ namespace FILTER {
     }
 
     void setTriggerMode (uint16_t input) {
-        bool temp = (input >> 9);
-
-        if (temp) {
+        if (input >> 9) {
             mode = Mode::PARA;
         } else {
             mode = Mode::MONO;
