@@ -338,6 +338,7 @@ Features/Bugfixes:
         + Bugfix: Presets are always loaded on start up. Thjis allows the hardware controls and LEDs to be correct.
 
     + ADSR:
+        + Bugfix: By calling the Envelope controls as Static, I can now compile at Release level (-O3 Optimizations were breaking both the old and new ADSR/who synth in general)
         + Improvement: Refactored code to be more modular. Now controls can be perfromaed easier and are potable.
         + Fixed an overflow issue with multiple notes being in an extended Decay phase causing the output sample to be limitied cause audio artifacts:- Bug: Clipping output signal - When running ARP full speed/range/DOWN-UP with 8 notes, ADSR attack min, release max, and then start turning decay up, it hard clips... think this is down to attack getting to full value (0xffff) instead of (0x6fff/0x7fff), so when all voices push that mid 16bit in value, the whole output sample volume breaks 16 bit, and therefore clips before getting downsampled.
         + Removed any useless calls to synth voice stuff so can be used more universally (currently planning on adding to Mod) - currently get passed values for notes and stuff, kinda unnecessary for actual ADSR, but used in this implementaion to clear the voice, could just be donw by checking but I thought it was stopping code. could just use "if (ADSR::isStopped()) Voice::note_clear" in the saudio process code.
