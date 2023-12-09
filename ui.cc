@@ -11,6 +11,8 @@ bool startUpComplete;
 namespace UI {
 
   void init (void) {
+    
+    MIDI::init();
 
     LEDS::init();
     KEYS::init();
@@ -21,12 +23,17 @@ namespace UI {
 
     if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
       // this currently brings up the Factory test/calibration mode, but should eventually bring up the MIDI/settings mode
-      mode = UI_MODE_CALIBRATION;
-      update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
+
+      if (Buttons::PAGE.get(Buttons::State::SHIFT)) {
+        setUSBMode(true);
+      } else {
+        mode = UI_MODE_CALIBRATION;
+        update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
+      }
+      
     }
     
     CONTROLS::setButtonAssignment();
-    MIDI::init();
 
     printStartUp();
     
