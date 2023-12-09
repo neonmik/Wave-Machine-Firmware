@@ -89,3 +89,5 @@ target_link_libraries(${PROJECT_NAME}
                         )
 
 # add_compile_options(-CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/drivers/tusb_config.h)
+
+add_compile_options(- cmake -DPICO_NO_FLASH=1)
