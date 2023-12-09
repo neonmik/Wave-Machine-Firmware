@@ -23,8 +23,6 @@
 
 #include "queue.h"
 
-// bool      isBufferFull;
-
 extern uint32_t    sampleClock;
 uint32_t           sampleClockLast;
 extern uint8_t     softwareIndex;
@@ -60,7 +58,7 @@ void synthCore() {
   
   while (true) {
     if (softwareIndex != hardwareIndex) {
-
+      
       playBuffer[softwareIndex] = SYNTH::process();
 
       ++softwareIndex;
@@ -72,8 +70,8 @@ void synthCore() {
     }
 
     if ((!(sampleClock & 0x3F)) && (sampleClock != sampleClockLast)){
-			// make sure this only happens once every 64 sample periods
-			sampleClockLast = sampleClock;
+      // make sure this only happens once every 64 sample periods
+      sampleClockLast = sampleClock;
 
       if (QUEUE::triggerCheckQueue()) {
         uint8_t slot, note;
@@ -89,7 +87,6 @@ void synthCore() {
         }
       }
     }
-
   }
 }
 
