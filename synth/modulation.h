@@ -29,7 +29,7 @@ namespace MOD {
             return (65535 * uint32_t(exponentialFrequency(input))) / SAMPLE_RATE;
         }
 
-        ADSRControls    envelopeControls(SAMPLE_RATE);
+        static ADSR::Controls    envelopeControls(SAMPLE_RATE);
 
         Mode            mode = Mode::MONO;
         volatile int8_t activeVoice;
@@ -137,7 +137,7 @@ namespace MOD {
             Modulation (uint16_t& shape, uint32_t& rate, uint16_t& depth, uint8_t& matrix) : wave(shape), increment(rate), depth(depth), matrix(matrix) { }
             ~Modulation( ) { }
             
-            ADSREnvelope outputEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
+            ADSR::Envelope outputEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
 
             void init (void);
             void setState (bool state);

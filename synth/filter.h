@@ -36,7 +36,7 @@ namespace FILTER
     };
 
     namespace {
-        ADSRControls    envelopeControls(SAMPLE_RATE);
+        static ADSR::Controls    envelopeControls(SAMPLE_RATE);
 
         Mode        mode = Mode::PARA;
         volatile int8_t activeVoice;
@@ -61,7 +61,7 @@ namespace FILTER
         int32_t     lowPass;
         int32_t     bandPass;
 
-        ADSREnvelope    cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
+        ADSR::Envelope    cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
 
         void reset (void) {
             lowPass = 0;
