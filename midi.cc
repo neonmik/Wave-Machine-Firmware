@@ -181,11 +181,30 @@ namespace MIDI {
         sendMidiMessage(msg, 2);
     }
     void sendPitchBend(uint16_t pitch) {
-        uint16_t temp = map(pitch, 0, 1023, 0, EXTENDED_CONTROL_CHANGE_MAX);
+        // uint16_t temp = map(pitch, 0, 1023, 0, EXTENDED_CONTROL_CHANGE_MAX);
+        uint16_t temp = pitch << 4;
 
         uint8_t msg[3] = {(uint8_t(MidiType::PitchBend) | MIDI_CHANNEL), uint8_t(temp >> 7), uint8_t(temp & 0xFF)};
         
         sendMidiMessage(msg, 3);
+    }
+    void sendSysEx(size_t length, const uint8_t* data) {
+        // Create a MIDI message for the SysEx data
+        uint8_t midiMessage[length];
+
+        // Add SysEx start byte
+        midiMessage[0] = 0xF0; // SysEx start
+
+        // Add data bytes
+        for (size_t i = 0; i < length - 2; ++i) { // -2 to account for SysEx start and end bytes
+            midiMessage[i + 1] = data[i]; // +1 to skip the SysEx start byte
+        }
+
+        // Add SysEx end byte
+        midiMessage[length - 1] = 0xF7; // SysEx end
+
+        // Send the MIDI message
+        // sendMidiMessage(midiMessage, length);
     }
     void sendSongPosition(uint8_t position) {}
     void sendSongSelect(uint8_t song) {}

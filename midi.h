@@ -26,6 +26,9 @@ namespace MIDI {
 
     constexpr   uint16_t    SYSEX_MAX_SIZE =                255;
 
+    constexpr   uint8_t     MIDI_MANUFACTURER_ID =          0x7D; // 0x7D = Educational, will change to 0x00 when/if we get a real ID
+    
+
 
     
     enum MidiType {
@@ -221,6 +224,7 @@ namespace MIDI {
     void sendProgramChange(uint8_t program);
     void sendAfterTouch(uint8_t velocity);
     void sendPitchBend(uint16_t pitch);
+    void sendSysEx(size_t length, const uint8_t* data);
     void sendSongPosition(uint8_t position);
     void sendSongSelect(uint8_t song);
     void sendTuneRequest(void);

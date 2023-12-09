@@ -10,8 +10,6 @@ namespace CONTROLS {
 
         EEPROM::init();
 
-        printPresetSizing();
-
         currentPreset = DEFAULT_PRESET;
         
         // factoryRestore();
@@ -172,6 +170,24 @@ namespace CONTROLS {
 
         refreshInterface();
     }
+    
+    void sendPresetViaSysEx(const PRESET& preset) {
+        // Calculate the size of the SysEx data
+        const size_t sysExSize = sizeof(PRESET); // +2 for SysEx start and end bytes
+
+        // Create a byte array for the SysEx data
+        uint8_t sysExData[sysExSize];
+
+        // Convert the struct to a byte array and add it to the SysEx data
+        const uint8_t* bytePtr = reinterpret_cast<const uint8_t*>(&preset);
+        for (size_t i = 0; i < sysExSize; ++i) {
+            sysExData[i] = bytePtr[i]; // +1 to skip the SysEx start byte
+        }
+
+        // Send the SysEx message
+        MIDI::sendSysEx(sysExSize, sysExData);
+    }
+
     void exportPresets(void) {
         PRESET export_buffer[MAX_PRESETS];
 
