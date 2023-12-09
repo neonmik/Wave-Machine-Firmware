@@ -46,7 +46,7 @@ namespace ARP {
         ArpMode         arpMode = ArpMode::MONO;
 
         ArpDirection    octaveDirection = ArpDirection::UP;
-        OctaveMode      octaveMode = OctaveMode::OLD;
+        OctaveMode      octaveMode = OctaveMode::OLD; // new method currently doesnt work in UP/DOWN or DOWN/UP mode
 
         NoteState       currentNoteState = NoteState::IDLE;
 
@@ -85,6 +85,7 @@ namespace ARP {
         uint8_t         startOctave;
         uint8_t         currentPlayOct[POLYPHONY];
         bool            octavePlaying = false;
+        bool            octaveModeChanged = false;
 
         bool            isSustainJustReleased = false;
 
@@ -102,7 +103,9 @@ namespace ARP {
         bool            polyMode = false;
 
 
-        bool changeDirection = true;
+        bool            changeDirection = true;
+
+        bool            playedOrder = false; // setting for play order in Arp notes
     }
 
     struct ArpData {

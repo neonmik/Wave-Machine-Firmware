@@ -87,14 +87,14 @@ namespace ARP {
                     if (changeDirection) {
                         ++currentPlayIndex;
                         if (currentPlayIndex >= currentNoteCount) {
-                            currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0;
+                            currentPlayIndex = currentNoteCount > 1 ? currentNoteCount - 2 : 0; // if theres more than 1 not currnetly playing, set the index to the second to last note, otherwise set it to 0
                             if (octaveMode == OctaveMode::OLD) changeDirection = false;
                             else updateOctave(ArpDirection::UP);
                         }
                     } else {
                         --currentPlayIndex;
                         if (currentPlayIndex < 0) {
-                            currentPlayIndex = currentNoteCount > 1 ? 1 : 0;
+                            currentPlayIndex = currentNoteCount > 1 ? 1 : 0; // if theres more than one note, set the index to 1, otherwise set it to 0
                             if (octaveMode == OctaveMode::OLD) {
                                 changeDirection = true;
                                 updateOctave(ArpDirection::UP);
@@ -147,14 +147,14 @@ namespace ARP {
                 switch (octaveDirection) {
                     case ArpDirection::UP:
                         ++currentOctave;
-                        if (currentOctave >= octaveRange) {
+                        if (currentOctave > octaveRange) {
                             currentOctave = octaveRange;
                             octaveDirection = ArpDirection::DOWN;
                         }
                         break;
                     case ArpDirection::DOWN:
                         --currentOctave;
-                        if (currentOctave <= 0) {
+                        if (currentOctave < 0) {
                             currentOctave = 0;
                             octaveDirection = ArpDirection::UP;
                         }
@@ -166,6 +166,12 @@ namespace ARP {
     }
 
     void playNote (void) {
+        if (octaveModeChanged) { // only updates once notes have stopped playing
+            if (polyMode) arpMode = ArpMode::POLY;
+            else arpMode = ArpMode::MONO;
+            octaveModeChanged = false;
+        }
+
         if (arpMode == ArpMode::POLY) {
             for (int i = 0; i < currentNoteCount; i++) {
                 // check this
@@ -205,6 +211,8 @@ namespace ARP {
         } else {
             NOTE_HANDLING::voiceOff(currentVoiceIndex, currentPlayNote, 0);
             MIDI::sendNoteOff(currentPlayNote, MIDI_DEFAULT_NOTE_OFF_VEL);
+
+            currentPlayNote = 0; // clear playing note once it's release
             
             currentVoiceIndex = (currentVoiceIndex + 1) % POLYPHONY;
         }
@@ -231,6 +239,7 @@ namespace ARP {
                 switch(currentNoteState) {
                     case NoteState::ACTIVE:
                         currentNoteState = NoteState::RELEASE;
+                        // releaseNote();
                     case NoteState::RELEASE:
                         releaseNote();
                     case NoteState::IDLE:
@@ -238,8 +247,6 @@ namespace ARP {
                         playNote();
                 }
             }
-
-            
         }
     }
 
@@ -373,7 +380,7 @@ namespace ARP {
 
             uint8_t length      = inputNoteCount;   // how many entries in the array
 
-            // if (!playedOrder) { // would allow the notes to not be organised for a mode, this should still mean all the zeros are at the top...
+            if (!playedOrder) { // would allow the notes to not be organised for a mode, this should still mean all the zeros are at the top...
             ArpData swap;
 
             for (int i = 0; i < length; i++) {     
@@ -386,7 +393,7 @@ namespace ARP {
                 }
             }
 
-            // }
+            }
 
             if (refreshPlayIndex) {
                 if (currentPlayIndex > 0) resetPlayIndex();
@@ -539,7 +546,6 @@ namespace ARP {
         transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
     }
     void stopAllVoices () {
-        // NOTE_HANDLING::voicesClear();
         NOTE_HANDLING::voicesStop();
     }
 
@@ -583,7 +589,7 @@ namespace ARP {
         octaveRange = range;
 
         // optional unquantized range changing:
-        // if (currentOctave > octaveRange) currentOctave = octaveRange; // if you change range while playing it will pull it back immediately, instead of waiting till next range check
+        // if (currentOctave > octaveRange) currentOctave = octaveRange; // if you change range while playing it will pull it back to 0 immediately, instead of waiting till next range check
     }   
     void setDirection (uint16_t input) {
         if (direction == (input>>8)) return;
@@ -591,18 +597,22 @@ namespace ARP {
         // bitshift to get 0-3 for the Arp direction
         switch (direction) {
             case 0:
+                // Arp UP
                 arpDirection = ArpDirection::UP;
                 octaveDirection = ArpDirection::UP;
                 break;
             case 1:
+                // Arp DOWN
                 arpDirection =  ArpDirection::DOWN;
                 octaveDirection = ArpDirection::DOWN;
                 break;
             case 2:
+                // Arp UP DOWN
                 arpDirection =  ArpDirection::UP_DOWN;
                 octaveDirection = ArpDirection::UP;
                 break;
             case 3:
+                // Arp DOWN UP
                 arpDirection =  ArpDirection::DOWN_UP;
                 octaveDirection = ArpDirection::DOWN;
                 break;
@@ -610,17 +620,25 @@ namespace ARP {
     }
     void setGate (uint16_t input) {
         gate = (CLOCK::getSamplesPerDivision() * input) >> 10;
-        if (gate < 120) gate = 120;
+
+        if (gate < 120) gate = 120; // minimum gate time of 120 samples, any shorter and the note doesn't fire
     }
     void setBPM (uint16_t input) {
+        // TODO: recode the following section so it doesnt use the map function, as that is computationally expensive
         CLOCK::setBPM(map(input, KNOB_MIN, KNOB_MAX, 30, 350));
     }
     void setOctMode (uint16_t input) {
         bool temp = (bool)(input >> 9);
         if (polyMode != temp) {
             polyMode = temp;
-            if (polyMode) arpMode = ArpMode::POLY;
-            else arpMode = ArpMode::MONO;
+            octaveModeChanged = true;
+
+            // this was moved to the running arp code to make sure notes don't hang on changing the setting
+            // if (polyMode) arpMode = ArpMode::POLY;
+            // else arpMode = ArpMode::MONO;
         }
+    }
+    void playedOrderToggle (void) {
+        playedOrder = !playedOrder;
     }
 }
