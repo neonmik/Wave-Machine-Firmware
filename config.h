@@ -41,7 +41,7 @@ constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
 
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
-constexpr   uint32_t    SAMPLE_RATE     =       32000;          // 44100Hz works, but is stressed with high polyphony (can manage 6 voices).
+constexpr   uint32_t    SAMPLE_RATE     =       44100;          // 44100Hz works in Release mode with 8 voices.
 constexpr   uint32_t    NYQUIST         =       SAMPLE_RATE/2;  // Easiest way of deliniating Nyquist when changing Sample Rate in protoype stages.
 constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
 
