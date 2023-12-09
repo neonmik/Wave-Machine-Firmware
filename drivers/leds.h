@@ -275,10 +275,10 @@ namespace LEDS {
         void flashDelay (int repeats, int delay){
             for (int r = 0; r < repeats; r++) {
                 toggle();
-                // ShiftReg::update();
+                ShiftReg::update();
                 sleep_ms(delay);
                 toggle();
-                // ShiftReg::update();
+                ShiftReg::update();
                 sleep_ms(delay);
             }
         }
