@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
     ui.cc
     pagination.cc
     controls.cc
+    preset.cc
     
     queue.cc
     

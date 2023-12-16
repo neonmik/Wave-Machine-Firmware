@@ -7,7 +7,7 @@
 #include "drivers/eeprom.h"
 #include "drivers/leds.h"
 
-#include "synth/preset.h"
+#include "preset.h"
 
 #include "synth/synth.h"
 #include "synth/filter.h"
@@ -126,7 +126,7 @@ namespace CONTROLS
                 PAGE    SHFT{   &SYNTH::setOsc2Wave,       &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     &SYNTH::setDetune,          nullptr,                      nullptr};
 
             PAGE        ARP {   &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState,                nullptr};
-                PAGE    sARP{   nullptr,                   &ARP::setBPM,               &FILTER::setTriggerMode,    &ARP::setOctMode,           nullptr,                      nullptr};
+                PAGE    sARP{   &ARP::setPlayedOrder,      &ARP::setBPM,               &FILTER::setTriggerMode,    &ARP::setOctMode,           nullptr,                      nullptr};
 
             // Currently new/unused pages
                 PAGE    mENV{   &MOD::setAttack,           &MOD::setDecay,             &MOD::setSustain,           &MOD::setRelease,           nullptr,                      nullptr};
@@ -223,7 +223,7 @@ namespace CONTROLS
     };
 
     extern CONTROL Control;
-    extern PRESET Preset[MAX_PRESETS];
+    extern PRESET::SynthPreset Preset[MAX_PRESETS];
 
     void init(void);
 
