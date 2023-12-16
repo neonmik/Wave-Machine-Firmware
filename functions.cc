@@ -29,7 +29,29 @@ uint16_t    samples_to_us (uint32_t samplerate) {
     return (1000000 / samplerate);
 }
 
-int16_t    attenuverter (uint16_t input) {
-    // printf("Attenuverter not written yet! See function header.\n");
-    return input;
+int16_t    attenuverterU10toS16 (uint16_t input) {
+    // takes a 10 bit value and returns a signed 16 bit value
+    return (static_cast<int16_t>(input) - 512) << 6;
+}
+
+bool getBitState(uint16_t bitField, uint16_t bitPos) {
+    return (bitField & (1 << bitPos)) != 0;
+}
+void setBit(uint16_t& bitField, uint16_t bitPos, bool value) {
+    if (value) {
+        // Set the bit
+        bitField |= (1 << bitPos);
+    } else {
+        // Clear the bit
+        bitField &= ~(1 << bitPos);
+    }
+}
+
+bool toBool(uint16_t value) {
+    // Consider values greater than or equal to 512 as true
+    return value >= 512;
+}
+uint16_t fromBool(bool value) {
+    // Map true to 1023 and false to 0
+    return value ? 1023 : 0;
 }

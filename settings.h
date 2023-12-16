@@ -27,6 +27,7 @@ namespace SETTINGS {
     };
     struct AudioSettingsData {
         uint32_t    sampleRate;
+        uint8_t     padding[20];
     };
     struct SystemSettingsData {
         uint8_t     versionNumber                   =       0;

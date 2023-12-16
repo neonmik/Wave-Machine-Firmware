@@ -621,6 +621,7 @@ namespace ARP {
     void setGate (uint16_t input) {
         gate = (CLOCK::getSamplesPerDivision() * input) >> 10;
 
+        // TODO: add dynamic minimum gate time
         if (gate < 120) gate = 120; // minimum gate time of 120 samples, any shorter and the note doesn't fire
     }
     void setBPM (uint16_t input) {
@@ -640,5 +641,8 @@ namespace ARP {
     }
     void playedOrderToggle (void) {
         playedOrder = !playedOrder;
+    }
+    void setPlayedOrder (uint16_t input) {
+        playedOrder = (bool)(input >> 9);
     }
 }

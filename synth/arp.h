@@ -178,5 +178,6 @@ namespace ARP {
     void setBPM (uint16_t input);
     
     void setOctMode (uint16_t input);
+    void setPlayedOrder (uint16_t input);
 }
 

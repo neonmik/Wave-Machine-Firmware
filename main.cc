@@ -90,7 +90,7 @@ void synthCore() {
   }
 }
 
- int main() {
+int main() {
 
   set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Extra speed is needed to run the code.
 

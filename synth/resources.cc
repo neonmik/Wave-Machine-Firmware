@@ -377,7 +377,7 @@ uint32_t getFrequency(uint8_t note) {
 uint16_t exponentialFrequency(uint16_t index) {
     return lut_exp_freq[index];
 }
-uint16_t filter_damp(uint16_t index) {
+uint16_t filterDamp(uint16_t index) {
     return lut_filter_damp[index];
 }
 uint16_t logarithmicPitch(uint16_t index) {

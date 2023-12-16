@@ -31,7 +31,7 @@ namespace MOD {
 
         static ADSR::Controls    envelopeControls(SAMPLE_RATE);
 
-        Mode            mode = Mode::MONO;
+        Mode            mode = Mode::PARA;
         volatile int8_t activeVoice;
         bool            filterActive = false;
 

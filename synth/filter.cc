@@ -17,7 +17,7 @@ namespace FILTER {
     }
 
     void setResonance(uint16_t input) {
-        resonance = filter_damp(input);
+        resonance = filterDamp(input);
     }
 
 
