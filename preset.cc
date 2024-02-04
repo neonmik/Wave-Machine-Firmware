@@ -3,12 +3,6 @@
 namespace PRESET {
     void init () {
         EEPROM::init();
-
-        // EEPROM::eraseAll();
-
-        // printSizes();
-
-        // EEPROM::testIntegrity();
     }
 
     void save(uint8_t slot, SynthPreset &preset) {
