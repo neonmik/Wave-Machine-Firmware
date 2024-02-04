@@ -60,6 +60,8 @@ Current nightly firmware for Wave Machine Hardware.
 - Updates and Bugfixes:
 
     - Arp:
+        - Notes: The transfer/update of notes should check to see if any of the currently pressed niotes are already active and move the pointer around to match these to stop things getting messed up between chord changes?
+        
         - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements.
         - Bug: Fix New style Arp Mode (call it "Classic" after the JUNO method). Currently doesn't work in UP/DOWN or DOWN/UP modes due to the octave not moving octav when at the top correctly.
         - Bug: When using DOWN/UP or UP/DOWN with a range greater than 1, the first note after the octave change doesnt start on the first note, but the second.  
