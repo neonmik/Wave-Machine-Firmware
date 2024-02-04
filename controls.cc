@@ -154,8 +154,7 @@ namespace CONTROLS {
         Preset[slot] = activePreset;
 
         extractPresetFromControls(Preset[slot]);
-
-        // EEPROM::savePreset(slot, Preset[slot]);
+        
         PRESET::save(slot, Preset[slot]);
         
     }
@@ -358,18 +357,22 @@ namespace CONTROLS {
     bool getShift (void) {
         return shift;
     }
+
     
     void update () {
         CONTROLS::setShift(Buttons::PAGE.get(Buttons::State::SHIFT));
         
-        if (!needsUpdating) 
-            return;
-
-        // Updates only active page, including whether we're in a shift page.
-        Control.update(getPage());
-
-        needsUpdating = false;
+        controlRateCounter++;
+        
+        if (controlRateCounter >= 10) {
+            controlRateCounter = 0;
             
+            if (!needsUpdating) 
+                return;
+
+            Control.update(getPage());
+            needsUpdating = false;
+        }
     }
 
     void refreshInterface (void) {

@@ -28,6 +28,8 @@ namespace CONTROLS
         bool shift;
         uint16_t shiftCounter;
 
+        uint16_t controlRateCounter;
+
         bool inExtraPages;
 
         bool needsUpdating;
