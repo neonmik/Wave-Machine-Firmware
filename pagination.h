@@ -17,7 +17,7 @@ namespace PAGINATION {
     };
     namespace {
         
-        uint16_t    PROTECTION_THRESHOLD    = 10;
+        uint16_t    PROTECTION_THRESHOLD    = 5;
 
         uint8_t currentPage = 0;
         
