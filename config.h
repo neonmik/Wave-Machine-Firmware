@@ -29,7 +29,7 @@ constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "sta
                                                                 //      - runs at 10 with Arp going full speed.
                                                                 //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
 
-constexpr   uint8_t     MAX_ARP         =       32;      // For setting the maximum number of notes in the Arp
+constexpr   uint8_t     MAX_ARP         =       8;      // For setting the maximum number of notes in the Arp
                                                     
 constexpr   uint8_t     MIDI_CHANNEL    =       0;              // 0 - 15 available
 constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
@@ -41,7 +41,7 @@ constexpr   uint8_t     MIDI_DEFAULT_NOTE_OFF_VEL = 0;
 
 constexpr   uint32_t    CORE_SPEED      =       144000;         // Core clock speed in kHz - equates to 144MHz 
 
-constexpr   uint32_t    SAMPLE_RATE     =       32000;          // 44100Hz works in Release mode with 8 voices, but not detuned voice
+constexpr   uint32_t    SAMPLE_RATE     =       44100;          // 48000Hz works in Release mode with 8 voices
 constexpr   uint32_t    NYQUIST         =       SAMPLE_RATE/2;  // Easiest way of deliniating Nyquist when changing Sample Rate in protoype stages.
 constexpr   uint16_t    BUFFER_SIZE     =       16;             // The DMA buffer size can be set at any interval (2/4/8/16/32/64/128/256)
 
@@ -81,5 +81,3 @@ extern      uint8_t     hardwareIndex;
 extern      uint16_t    playBuffer[];
 
 extern      bool        startUpComplete;
-    
-
