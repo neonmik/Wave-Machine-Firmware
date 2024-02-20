@@ -4,7 +4,7 @@
 
 namespace ARP {
 
-    ArpData arpVoices[MAX_ARP];
+    ArpData playBuffer[MAX_ARP];
     ArpData inputBuffer[MAX_ARP];
 
 
@@ -175,15 +175,16 @@ namespace ARP {
         if (arpMode == ArpMode::POLY) {
             for (int i = 0; i < currentNoteCount; i++) {
                 // check this
-                if (!arpVoices[i].isActive()) break; 
+                if (!playBuffer[i].isActive()) break; 
 
-                currentPlayOct[i] = ((arpVoices[i].play())+(currentOctave*12));
+                currentPlayOct[i] = ((playBuffer[i].play())+(currentOctave*12));
 
                 NOTE_HANDLING::voiceOn(i, currentPlayOct[i], 127);
                 MIDI::sendNoteOn(currentPlayOct[i], 127);
             }
         } else {
-            if (!arpVoices[currentPlayIndex].isActive()) return;
+            
+            if (!playBuffer[currentPlayIndex].isActive()) return;
 
             // This only gets called when gap is enabled, and latch is not, between holding a few notes and releasing... this is because it allows transferNotes to be called between releasing and triggering... 
             if (currentPlayIndex > currentNoteCount) {
@@ -191,7 +192,7 @@ namespace ARP {
             }
 
 
-            currentPlayNote = ((arpVoices[currentPlayIndex].play())+(currentOctave*12));
+            currentPlayNote = ((playBuffer[currentPlayIndex].play())+(currentOctave*12));
 
             NOTE_HANDLING::voiceOn(currentVoiceIndex, currentPlayNote, 127);
             MIDI::sendNoteOn(currentPlayNote, 127);
@@ -250,33 +251,35 @@ namespace ARP {
         }
     }
 
+    void checkLatch (void) {
+        if (!latchEnabled) return;
+    
+        // Handle latch behavior
+        if (latchRefresh) { 
+            clearAllNotes();
+            latchRefresh = false;
+            refreshPlayIndex = true;
+        }   
+
+        ++latchCount;
+
+        if (latchCount >= MAX_ARP) {
+            latchCount = MAX_ARP; // Cap latchCount at MAX_ARP
+        }
+    }
     
     // Add a note to the arpeggiator input buffer
-    void addNote (uint8_t note) {
+    void addNote (uint8_t note, uint8_t velocity) {
         // Check if the note is valid
         if (note == 0) return; // Invalid note, nothing to do
 
-        if (latchEnabled) {
-            // Handle latch behavior
-            if (latchRefresh) { 
-                clearAllNotes();
-                latchRefresh = false;
-                refreshPlayIndex = true;
-            }   
-
-            ++latchCount;
-            
-            // printf("++latchCount: %d\n", latchCount);
-
-            if (latchCount >= MAX_ARP) {
-                latchCount = MAX_ARP; // Cap latchCount at MAX_ARP
-            }
-        }
+        checkLatch();
 
         // Check if the note already exists in the inputBuffer
         for (int i = 0; i < MAX_ARP; ++i) {
             if (inputBuffer[i].note == note) {
-                inputBuffer[i].add(note);
+                //retrigger note
+                inputBuffer[i].add(note, velocity);
                 inputNotesUpdated = true;
                 return; // Note found, no need to proceed further
             }
@@ -285,7 +288,7 @@ namespace ARP {
             // Find the first empty slot in the inputBuffer
             for (int i = 0; i < MAX_ARP; ++i) {
                 if (inputBuffer[i].note == 0) {
-                    inputBuffer[i].add(note);
+                    inputBuffer[i].add(note, velocity);
                     inputNotesUpdated = true;
                     ++inputNoteCount;
 
@@ -299,7 +302,7 @@ namespace ARP {
             }
         } else {
             // Write the note to the last available slot and wrap the index
-            inputBuffer[inputWriteIndex].add(note);
+            inputBuffer[inputWriteIndex].add(note, velocity);
             inputWriteIndex = (inputWriteIndex + 1) % MAX_ARP;
             inputNotesUpdated = true;
         }
@@ -370,28 +373,29 @@ namespace ARP {
         }
     }
 
+
     // Transfer notes from the arpeggiator input buffer to the playing arpeggiator
     void transferNotes () {
         if (inputNotesUpdated) {
             
             // printNoteBuffer(inputBuffer);
 
-            memcpy(arpVoices, inputBuffer, sizeof(inputBuffer));
+            memcpy(playBuffer, inputBuffer, sizeof(inputBuffer));
 
             uint8_t length      = inputNoteCount;   // how many entries in the array
 
             if (!playedOrder) { // would allow the notes to not be organised for a mode, this should still mean all the zeros are at the top...
-            ArpData swap;
+                ArpData swap;
 
-            for (int i = 0; i < length; i++) {     
-                for (int j = i+1; j < length; j++) {
-                    if(arpVoices[i].note > arpVoices[j].note) {
-                        swap = arpVoices[i];    
-                        arpVoices[i] = arpVoices[j];
-                        arpVoices[j] = swap;    
-                    }     
+                for (int i = 0; i < length; i++) {     
+                    for (int j = i+1; j < length; j++) {
+                        if(playBuffer[i].note > playBuffer[j].note) {
+                            swap = playBuffer[i];    
+                            playBuffer[i] = playBuffer[j];
+                            playBuffer[j] = swap;    
+                        }     
+                    }
                 }
-            }
 
             }
 
@@ -415,7 +419,6 @@ namespace ARP {
         removeNote(note);
         MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
     }
-
     void removeNotes(const uint8_t* notesToRemove, uint8_t count) {
         for (int i = 0; i < count; ++i) {
             clearNote(notesToRemove[i]);
@@ -471,9 +474,6 @@ namespace ARP {
                 removeNote(notesToRemove[i]);
             }
         }
-        
-        // transferNotes(); // should get called automatically by clock updating
-
 
         currentOctave = 0; // may need to be done on transfer notes...
         // currentPlayIndex = 0; gets done on transfer notes...
@@ -488,7 +488,7 @@ namespace ARP {
             // sustain not active - send all actual notes
             for (int i = 0; i < MAX_ARP; i++) {
                 // copy all the notes form arp to normal voices
-                uint8_t note = arpVoices[i].note;
+                uint8_t note = playBuffer[i].note;
                 if (note != 0) {
                     NOTE_HANDLING::voiceOn(i, note, 127);
                     MIDI::sendNoteOn(note, 127);
@@ -498,9 +498,9 @@ namespace ARP {
             // sustain is active - only pass held notes, we want the sustained notes to ring out
             for (int i = 0; i < MAX_ARP; i++) {
                 // if it's sustained, don't pass it for now.
-                if (arpVoices[i].isSustained()) break;
+                if (playBuffer[i].isSustained()) break;
 
-                uint8_t note = arpVoices[i].note;
+                uint8_t note = playBuffer[i].note;
                 // check there is a note number, if not, skip it
                 if (note == 0)  break;
                 
@@ -509,7 +509,7 @@ namespace ARP {
                 MIDI::sendNoteOn(note, 127);
 
                 // // mark the note as sustained if it is 
-                // if (arpVoices[i].isSustained()) NOTE_HANDLING::noteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
+                // if (playBuffer[i].isSustained()) NOTE_HANDLING::noteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL); 
             }
         }
 
@@ -545,6 +545,7 @@ namespace ARP {
 
         transferNotes(); // dont think this needs to be here, Arp should always update notes inside loop
     }
+    
     void stopAllVoices () {
         NOTE_HANDLING::voicesStop();
     }

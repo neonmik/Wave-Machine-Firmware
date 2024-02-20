@@ -113,9 +113,9 @@ namespace ARP {
         uint8_t     velocity;
         bool        sustained;
 
-        void add (uint8_t input) {
-            note = input;
-            velocity = 127;
+        void add (uint8_t nt, uint8_t vel) {
+            note = nt;
+            velocity = vel;
             sustained = false; // resets the susainted marker every time the note is re-added
         }
 
@@ -142,14 +142,16 @@ namespace ARP {
         }
     };
 
-    extern ArpData arpVoices[MAX_ARP];
+    extern ArpData playBuffer[MAX_ARP];
     extern ArpData inputBuffer[MAX_ARP];
     
     void update(void);
     
-    void addNote (uint8_t note);
+    // Note functions
+    void addNote (uint8_t note, uint8_t velocity = 127);
     void removeNote (uint8_t note);
 
+    // Internal functions - remove somehow
     void transferNotes (void);
 
     void clearSustainedNotes (void);
@@ -159,10 +161,13 @@ namespace ARP {
     void grabNotes(void);
     void stopAllVoices (void);
     
+    // State functions
     void setState (bool state);
     bool getState (void);
     void reset (void);
 
+
+    // Control functions
     void setGate (uint16_t input);
     void setDivision (uint16_t input);
     void setRange (uint16_t input);
