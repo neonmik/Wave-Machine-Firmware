@@ -229,7 +229,9 @@ namespace CONTROLS
 
     void init(void);
 
-    void setButtonAssignment (void);
+    void exportPresetTest (void);
+
+    void setupButtonAssignment (void);
 
     void setPreset(uint8_t preset);
     void changePreset (void);

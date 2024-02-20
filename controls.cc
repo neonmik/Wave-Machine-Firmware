@@ -18,10 +18,16 @@ namespace CONTROLS {
 
         loadPresetFromSlot(currentPreset);
 
+
+
         setPage(currentPage);
     }
+
+    void exportPresetTest (void) {
+        PRESET::exportViaSysEx(Preset[0]);
+    }
     
-    void setButtonAssignment (void) {
+    void setupButtonAssignment (void) {
         Buttons::PAGE.setShortPressAction(&CONTROLS::changePage);
         Buttons::FUNC1.setShortPressAction(&CONTROLS::toggleButton1);
         Buttons::FUNC1.setLongPressAction(&CONTROLS::holdButton1);
@@ -53,6 +59,7 @@ namespace CONTROLS {
     uint8_t getPreset () {
         return currentPreset;
     }
+    
     void applyPresetToControls (PRESET::SynthPreset &preset) {
         Control.setKnob(Page::MAIN, 0, preset.Voice.Oscillator1.shape);
         Control.setKnob(Page::MAIN, 1, preset.Voice.Oscillator1.vector);
@@ -171,23 +178,7 @@ namespace CONTROLS {
         refreshInterface();
     }
     
-    void sendPresetViaSysEx(const PRESET::SynthPreset& preset) {
-        // Calculate the size of the SysEx data
-        const size_t sysExSize = sizeof(PRESET::SynthPreset); // +2 for SysEx start and end bytes
-
-        // Create a byte array for the SysEx data
-        uint8_t sysExData[sysExSize];
-
-        // Convert the struct to a byte array and add it to the SysEx data
-        const uint8_t* bytePtr = reinterpret_cast<const uint8_t*>(&preset);
-        for (size_t i = 0; i < sysExSize; ++i) {
-            sysExData[i] = bytePtr[i]; // +1 to skip the SysEx start byte
-        }
-
-        // Send the SysEx message
-        MIDI::sendSysEx(sysExSize, sysExData);
-    }
-
+    
     void exportPresets(void) {
         PRESET::SynthPreset export_buffer[MAX_PRESETS];
 
