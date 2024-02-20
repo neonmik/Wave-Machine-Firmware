@@ -110,6 +110,8 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - USB MIDI/ MIDI:
+        - Bug: when pressing and releasing notes, many Note Off messages seem to be sent.
+        
         - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
 
         - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
@@ -323,6 +325,7 @@ Features/Bugfixes:
         + Add Arp mode
 
     + Settings/Controls:
+        + Improvement: Added a counter to stop controls up dating too quickly. Was overloading the audio processor, causing glitches and drop outs and was unnecessary.
         + Improvement: Added timeout feature for shift function to stop it jumping too quickly to shift pages.
         + Bugfix: Page light wasn't acting correctly on start up.
         + Added starting shift functions:
