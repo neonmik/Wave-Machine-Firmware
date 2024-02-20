@@ -1,5 +1,5 @@
 #include "preset.h"
-
+#include "midi.h"
 namespace PRESET {
     void init () {
         EEPROM::init();
@@ -68,6 +68,26 @@ namespace PRESET {
         transfer(preset_address, factory_preset_address);
     }
 
+
+    void exportViaSysEx(const PRESET::SynthPreset& preset) {
+        // Calculate the size of the SysEx data
+        const size_t sysExSize = sizeof(PRESET::SynthPreset);
+
+        // Create a byte array for the SysEx data
+        uint8_t sysExData[sysExSize];
+
+
+        // Convert the struct to a byte array and add it to the SysEx data
+        memcpy(sysExData, &preset, sysExSize);
+
+        // const uint8_t* bytePtr = reinterpret_cast<const uint8_t*>(&preset);
+        // for (size_t i = 0; i < sysExSize; ++i) {
+        //     sysExData[i] = bytePtr[i];
+        // }
+
+        // Send the SysEx message
+        MIDI::sendSysEx(sysExSize, sysExData);
+    }
 
     void printData (SynthPreset &preset) {
         printf("====================================================\n");

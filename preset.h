@@ -111,8 +111,11 @@ namespace PRESET {
     void init(void);
     void save (uint8_t slot, SynthPreset &preset);
     void load (uint8_t slot, SynthPreset &preset);
+
     void factoryRestore (uint8_t slot);
     void factoryWrite (uint8_t slot);
+
+    void exportViaSysEx(const SynthPreset &preset);
 
     void printData (SynthPreset &preset);
 

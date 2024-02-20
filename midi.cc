@@ -190,21 +190,21 @@ namespace MIDI {
     }
     void sendSysEx(size_t length, const uint8_t* data) {
         // Create a MIDI message for the SysEx data
-        uint8_t midiMessage[length];
+        uint8_t midiMessage[length+2];
 
         // Add SysEx start byte
         midiMessage[0] = 0xF0; // SysEx start
 
         // Add data bytes
-        for (size_t i = 0; i < length - 2; ++i) { // -2 to account for SysEx start and end bytes
-            midiMessage[i + 1] = data[i]; // +1 to skip the SysEx start byte
+        for (size_t i = 0; i < length; ++i) {
+            midiMessage[i+1] = data[i];
         }
 
         // Add SysEx end byte
-        midiMessage[length - 1] = 0xF7; // SysEx end
+        midiMessage[length+1] = 0xF7; // SysEx end
 
         // Send the MIDI message
-        // sendMidiMessage(midiMessage, length);
+        sendMidiMessage(midiMessage, length);
     }
     void sendSongPosition(uint8_t position) {}
     void sendSongSelect(uint8_t song) {}
@@ -239,26 +239,31 @@ namespace MIDI {
     void usb_midi_task (void) {
         int buffer_size;
         while (buffer_size = USB::MIDI::available()) {
-            uint8_t packet[3];
+            uint8_t packet[buffer_size];
 
-            packet[0] = 0;
-            packet[1] = 0;
-            packet[2] = 0;
+            USB::MIDI::get(buffer_size, packet);
 
-            USB::MIDI::get(packet);
-
+            inputMessageUSB.length =    buffer_size;
             inputMessageUSB.type =      getTypeFromStatusByte(packet[0]);
-            inputMessageUSB.channel =   getChannelFromStatusByte(packet[0]);
-            inputMessageUSB.data1 =     packet[1];
-            inputMessageUSB.data2 =     packet[2];
+
+            if (inputMessageUSB.type != MidiType::SystemExclusive) {
+                inputMessageUSB.channel =   getChannelFromStatusByte(packet[0]);
+                inputMessageUSB.data1 =     packet[1];
+                inputMessageUSB.data2 =     packet[2];
+            } else {
+                for (int i = 0; i < buffer_size; i++) {
+                    
+                    inputMessageUSB.dataSysex[i] = packet[i+1];
+                }
+            }
             
-            // `printf("USB:        ");
-            // printMidiIn();
-            // printMidiMessage(inputMessageUSB);
+            printf("USB:        ");
+            printMidiIn();
+            printMidiMessage(inputMessageUSB);
             
             handleNullVelocity(inputMessageUSB);
 
-            const bool channelMatch = inputFilter(inputMessageUART);
+            const bool channelMatch = inputFilter(inputMessageUSB);
             if (channelMatch)
                 handleMidiMessage(inputMessageUSB);
             
