@@ -12,6 +12,9 @@
 
 namespace SYNTH
 {
+  namespace {
+    volatile uint8_t voice_index;
+  }
 
   struct OscillatorParameters
   {
@@ -73,23 +76,25 @@ namespace SYNTH
       index = input;
     }
 
-    void calcIncrement(void) {
+    void updateIncrement(void) {
       phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 10) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
     }
 
-    void noteOn(uint8_t inputNote) {
+    void noteOn(uint8_t input_note) {
       gate = true; // Won't be needed if the Mod/Filter trigger is reworked
       active = true;
-      note = inputNote;
+      note = input_note;
       frequency = getFrequency(note);
 
       ampEnvelope.triggerAttack();
     }
+    
     void noteOff(void) {
       gate = false; // Won't be needed if the Mod/Filter trigger is reworked
 
       ampEnvelope.triggerRelease();
     }
+    
     void noteStopped(void) {
       active = false;
 
@@ -105,17 +110,21 @@ namespace SYNTH
     bool isActive(void) {
       return active;
     }
+    
     bool isGate(void) {
       return gate;
     }
-
-    int32_t process()
+  
+    // look at implenting an index variable and a counter above this to reduce calls to calculate increment. this could reduced the 
+    int32_t process(uint8_t voiceIndex)
     {
       if (!active) return 0;
 
-      calcIncrement();
+      if (index == voiceIndex) {
+        updateIncrement();
+      }
 
-      phaseAccumulator += phaseIncrement;          // update the phaseAccumulator
+      phaseAccumulator += phaseIncrement;             // update the phaseAccumulator
       phaseAccumulator += synthParameters.modVibrato; // add the vibrato
 
       ampEnvelope.update();

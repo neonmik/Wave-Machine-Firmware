@@ -32,13 +32,16 @@ namespace SYNTH {
   }
 
   uint16_t process() {
+    voice_index++;
+    voice_index &= 0x7;
+    
     synth.sample = 0; 
     
     MOD::update();
     synth.updateWaveshape();
     
     for(int c = 0; c < POLYPHONY; c++) {
-      synth.sample += synth.voices[c].process();
+      synth.sample += synth.voices[c].process(voice_index);
     }
 
     synth.sample = synth.sample >> 2;
