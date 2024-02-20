@@ -33,7 +33,7 @@ namespace UI {
       
     }
     
-    CONTROLS::setButtonAssignment();
+    CONTROLS::setupButtonAssignment();
 
     printStartUp();
     

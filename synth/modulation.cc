@@ -130,14 +130,14 @@ namespace MOD {
         ++activeVoice;
         if (activeVoice > POLYPHONY) {
             activeVoice = POLYPHONY;
-            DEBUG::print("Filter voices overflow!");
+            DEBUG::print("Mod voices overflow!");
         }
     }
     void voicesDecrease (void) {
         --activeVoice;
         if (activeVoice < 0) {
             activeVoice = 0;
-            DEBUG::print("Filter voices underflow!");
+            DEBUG::print("Mod voices underflow!");
         }
     }
     bool voicesActive(void) {

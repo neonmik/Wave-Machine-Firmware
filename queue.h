@@ -12,6 +12,7 @@ namespace QUEUE {
     struct trigger_msg_t {
         uint8_t     slot;       // voice slot where note is now trigged
         uint8_t     note;       // MIDI note number
+        uint8_t     velocity;   // MIDI velocity
         bool        gate;
 
     };
