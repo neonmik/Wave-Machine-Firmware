@@ -19,13 +19,13 @@ namespace MOD {
     void Modulation::update () {
         if (state) {
             checkMatrix();
-            outputEnvelope.update();
+            // outputEnvelope.update();
             
             // rough rate envelope
             // increment = outputEnvelope.apply(increment);
 
             phaseAccumulator += increment; // Adds the increment to the accumulator
-            index = (phaseAccumulator >> Speed::SLOW);    // Calculates the 8 bit index value for the wavetable. the bit shift creates differing results... see LFO_SPEED table
+            index = (phaseAccumulator >> Speed::PAINFUL);    // Calculates the 8 bit index value for the wavetable. the bit shift creates differing results... see LFO_SPEED table
             sample = get_mod_wavetable(index + wave); // Sets the wavetable value to the sample by using a combination of the index (0-255) and wave (chunks of 256) values
             
             // Applies a certain dither to the output - really just for smoothing out 8 bit numbers over 0.01Hz, but interesting for effects.
@@ -47,7 +47,7 @@ namespace MOD {
             }
             
             // Depth Envelope:
-            sample = outputEnvelope.apply(sample);
+            // sample = outputEnvelope.apply(sample);
 
             // two different algorithms for applying depth to the outputs, ensures always the number is centred round the appropriate 0 mark for the destination. 
             switch (destination[matrix].type) {
