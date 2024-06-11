@@ -64,6 +64,7 @@ namespace CLOCK {
     
     void        setClockChanged(bool changed);
     bool        getClockChanged (void);
+    void        resetClockChanged (void);
     uint8_t     getBeat (void);
 
     void        midiClockTick (void);

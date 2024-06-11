@@ -64,6 +64,7 @@ namespace ARP {
         } else {
             switch (direction) {
                 case ArpDirection::UP:
+                case ArpDirection::PLAYED_ORDER:
                     ++currentPlayIndex;
                     if (currentPlayIndex >= currentNoteCount) {
                         resetPlayIndex();
@@ -231,16 +232,15 @@ namespace ARP {
                 isSustainJustReleased = false;
             }
             uint32_t currentNoteTick = CLOCK::getClockTick();
-            if (currentNoteTick >= gate && currentNoteState == NoteState::ACTIVE) {
+             if ((currentNoteTick >= gate && currentNoteState == NoteState::ACTIVE)) { // && !CLOCK::getClockChanged()) {
                 currentNoteState = NoteState::RELEASE;
                 releaseNote();
             }
-            if (CLOCK::getClockChanged()) {
-                // transferNotes(); 
+             if (CLOCK::getClockChanged()) {
+                CLOCK::resetClockChanged();
                 switch(currentNoteState) {
                     case NoteState::ACTIVE:
                         currentNoteState = NoteState::RELEASE;
-                        // releaseNote();
                     case NoteState::RELEASE:
                         releaseNote();
                     case NoteState::IDLE:
@@ -275,15 +275,16 @@ namespace ARP {
 
         checkLatch();
 
-        // Check if the note already exists in the inputBuffer
-        for (int i = 0; i < MAX_ARP; ++i) {
-            if (inputBuffer[i].note == note) {
-                //retrigger note
-                inputBuffer[i].add(note, velocity);
-                inputNotesUpdated = true;
-                return; // Note found, no need to proceed further
-            }
-        }
+        // Check if the note already exists in the inputBuffer - this may just want removing to allow for multiple notes being played into a sequence
+        
+        // for (int i = 0; i < MAX_ARP; ++i) {
+        //     if (inputBuffer[i].note == note) {
+        //         //retrigger note
+        //         inputBuffer[i].add(note, velocity);
+        //         inputNotesUpdated = true;
+        //         return; // Note found, no need to proceed further
+        //     }
+        // }
         if (!inputBufferFull) {
             // Find the first empty slot in the inputBuffer
             for (int i = 0; i < MAX_ARP; ++i) {
@@ -367,7 +368,7 @@ namespace ARP {
 
                     inputNotesUpdated = true;
 
-                    // Continue the loop in case there are multiple entries for the same note
+                    // Continue the loop in case there are multiple entries for the same note - this will definetly be the case if I allow it.
                 }
             } 
         }
@@ -623,7 +624,7 @@ namespace ARP {
         gate = (CLOCK::getSamplesPerDivision() * input) >> 10;
 
         // TODO: add dynamic minimum gate time
-        if (gate < 120) gate = 120; // minimum gate time of 120 samples, any shorter and the note doesn't fire
+        if (gate < 240) gate = 240; // minimum gate time of 120 samples, any shorter and the note doesn't fire
     }
     void setBPM (uint16_t input) {
         // TODO: recode the following section so it doesnt use the map function, as that is computationally expensive
@@ -642,8 +643,17 @@ namespace ARP {
     }
     void playedOrderToggle (void) {
         playedOrder = !playedOrder;
+
+        if (playedOrder) 
+
+        inputNotesUpdated = true; // this is here to make sure that notes are switched to played order as soon as changing the setting.
+
     }
     void setPlayedOrder (uint16_t input) {
+        if (playedOrder == (bool)(input >> 9)) return;
+
         playedOrder = (bool)(input >> 9);
+
+        inputNotesUpdated = true; // this is here to make sure that notes are switched to played order as soon as changing the setting.
     }
 }

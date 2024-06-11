@@ -116,12 +116,16 @@ namespace CLOCK {
         clockChanged = changed;
     }
     bool getClockChanged (void) {
-        if (clockChanged) {
-            clockChanged = false;
-            return true;
-        } else {
-            return false;
-        }
+        // if (clockChanged) {
+        //     clockChanged = false;
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        return clockChanged;
+    }
+    void resetClockChanged (void) {
+        clockChanged = false;
     }
     inline uint8_t getBeat (void) {
         return _beat;
@@ -150,6 +154,7 @@ namespace CLOCK {
     }
     
     void startMidiClock (void) {
+        clockTick = 0; // reset sample ticktick
         midiClockPreset = true;
         setClockChanged(true);
     }

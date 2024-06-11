@@ -28,8 +28,8 @@ namespace ARP {
             DOWN,
             UP_DOWN,
             DOWN_UP,
-            // RAND,
-            // PLAY_ORDER
+            PLAYED_ORDER,
+            // RAND
         };
         
         enum class OctaveDirection {
