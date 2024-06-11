@@ -229,8 +229,6 @@ namespace CONTROLS
 
     void init(void);
 
-    void exportPresetTest (void);
-
     void setupButtonAssignment (void);
 
     void setPreset(uint8_t preset);
@@ -239,7 +237,8 @@ namespace CONTROLS
 
     void savePresetToSlot(uint8_t slot);
     void loadPresetFromSlot(uint8_t slot);
-    void exportPresets(void);
+    void exportAllPresets(void);
+    void exportCurrentPreset(void);
     void factoryRestore(void);
     void updateFactoryPresets(void);
 
@@ -249,7 +248,7 @@ namespace CONTROLS
     void changePage(void);
     uint8_t getPage(void);
 
-    void setKnob (uint8_t page, uint8_t control, uint16_t input);
+    void setKnob (uint8_t page, uint8_t control, uint16_t input, bool forceUpdate = false);
     uint16_t getKnob(uint8_t page, uint8_t control);
 
     void setButton (uint8_t page, uint8_t button, bool state);

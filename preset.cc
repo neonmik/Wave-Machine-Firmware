@@ -68,7 +68,6 @@ namespace PRESET {
         transfer(preset_address, factory_preset_address);
     }
 
-
     void exportViaSysEx(const PRESET::SynthPreset& preset) {
         // Calculate the size of the SysEx data
         const size_t sysExSize = sizeof(PRESET::SynthPreset);
@@ -76,20 +75,19 @@ namespace PRESET {
         // Create a byte array for the SysEx data
         uint8_t sysExData[sysExSize];
 
-
-        // Convert the struct to a byte array and add it to the SysEx data
+        // Convert the struct to a byte array
         memcpy(sysExData, &preset, sysExSize);
 
-        // const uint8_t* bytePtr = reinterpret_cast<const uint8_t*>(&preset);
-        // for (size_t i = 0; i < sysExSize; ++i) {
-        //     sysExData[i] = bytePtr[i];
-        // }
+        // Convert the 8-bit SysEx data to 7-bit data
+        size_t convertedSize = 0;
+        uint8_t convertedData[sysExSize * 2]; // Assuming worst-case scenario where every byte needs 2 bytes for 7-bit representation
+        convertTo7Bit(sysExData, sysExSize, convertedData, convertedSize);
 
         // Send the SysEx message
-        MIDI::sendSysEx(sysExSize, sysExData);
+        MIDI::sendSysEx(convertedSize, convertedData);
     }
 
-    void printData (SynthPreset &preset) {
+    void printData (const SynthPreset &preset) {
         printf("====================================================\n");
         printf("                    PRESET DATA                     \n");
         printf("====================================================\n\n");

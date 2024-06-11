@@ -78,23 +78,32 @@ namespace MIDI {
             case 7: // Volume
                 // printf("MIDI IN: Volume - %d\n", temp);
                 break;
-            case 70: // Wavetable
-                CONTROLS::setKnob(CONTROLS::Page::MAIN, 0, temp);
-                break;
-            case 71: // Vector
-                CONTROLS::setKnob(CONTROLS::Page::MAIN, 1, temp);
-                break;
-            case 72: // Release
-                CONTROLS::setKnob(CONTROLS::Page::ADSR, 3, temp);
-                break;
-            case 73: // Attack
-                CONTROLS::setKnob(CONTROLS::Page::ADSR, 0, temp);
-                break;
-            case 75: // Decay
-                CONTROLS::setKnob(CONTROLS::Page::ADSR, 1, temp);
-                break;
             case 64: // Sustain pedal
                 NOTE_HANDLING::setSustainPedal(temp);
+                break;
+            case 70: // Wavetable
+                CONTROLS::setKnob(CONTROLS::Page::MAIN, 0, temp, true);
+                break;
+            case 71: // Filter Resonance
+                CONTROLS::setKnob(CONTROLS::Page::FILT, 1, temp, true);
+                break;
+            case 72: // Release
+                CONTROLS::setKnob(CONTROLS::Page::ADSR, 3, temp, true);
+                break;
+            case 73: // Attack
+                CONTROLS::setKnob(CONTROLS::Page::ADSR, 0, temp, true);
+                break;
+            case 74: // Cutoff Frequency
+                CONTROLS::setKnob(CONTROLS::Page::FILT, 0, temp, true);
+                break;
+            case 75: // Vector
+                CONTROLS::setKnob(CONTROLS::Page::MAIN, 1, temp, true);
+                break;
+            case 80: // Decay
+                CONTROLS::setKnob(CONTROLS::Page::ADSR, 1, temp, true);
+                break;
+            case 76: // Arp Gate
+                CONTROLS::setKnob(CONTROLS::Page::ARP, 0, temp, true);
                 break;
             default:
                 break;
@@ -145,8 +154,8 @@ namespace MIDI {
     // -----------------------------------------------------------------------------------------------
     //                                          Output
     // -----------------------------------------------------------------------------------------------
-    void sendMidiMessage (uint8_t *msg, uint8_t length) {
-        UART::MIDI::send(msg, length);
+    void sendMidiMessage (uint8_t *msg, uint16_t length) {
+        // UART::MIDI::send(msg, length);
         USB::MIDI::send(msg, length);
     }
 
@@ -189,22 +198,28 @@ namespace MIDI {
         sendMidiMessage(msg, 3);
     }
     void sendSysEx(size_t length, const uint8_t* data) {
+        size_t outputLength = length + 5;
+
         // Create a MIDI message for the SysEx data
-        uint8_t midiMessage[length+2];
+        uint8_t midiMessage[outputLength];
 
         // Add SysEx start byte
         midiMessage[0] = 0xF0; // SysEx start
+        midiMessage[1] = 0x00;
+        midiMessage[2] = 0x22;
+        midiMessage[3] = 0x05;
 
         // Add data bytes
         for (size_t i = 0; i < length; ++i) {
-            midiMessage[i+1] = data[i];
+            midiMessage[i + 4] = data[i];
         }
 
         // Add SysEx end byte
-        midiMessage[length+1] = 0xF7; // SysEx end
+        midiMessage[outputLength - 1] = 0xF7; // SysEx end
+
 
         // Send the MIDI message
-        sendMidiMessage(midiMessage, length);
+        sendMidiMessage(midiMessage, outputLength);
     }
     void sendSongPosition(uint8_t position) {}
     void sendSongSelect(uint8_t song) {}
@@ -239,33 +254,71 @@ namespace MIDI {
     void usb_midi_task (void) {
         int buffer_size;
         while (buffer_size = USB::MIDI::available()) {
-            uint8_t packet[buffer_size];
+            uint8_t packet[buffer_size] = {0};
 
             USB::MIDI::get(buffer_size, packet);
 
-            inputMessageUSB.length =    buffer_size;
-            inputMessageUSB.type =      getTypeFromStatusByte(packet[0]);
+            uint8_t tempMessageSize;
 
-            if (inputMessageUSB.type != MidiType::SystemExclusive) {
-                inputMessageUSB.channel =   getChannelFromStatusByte(packet[0]);
-                inputMessageUSB.data1 =     packet[1];
-                inputMessageUSB.data2 =     packet[2];
-            } else {
-                for (int i = 0; i < buffer_size; i++) {
-                    
-                    inputMessageUSB.dataSysex[i] = packet[i+1];
+            if (!sysexPartMessage) {
+                inputMessageUSB.type =      getTypeFromStatusByte(packet[0]);
+
+                if (inputMessageUSB.type != MidiType::SystemExclusive) {
+                    inputMessageUSB.channel =   getChannelFromStatusByte(packet[0]);
+                    inputMessageUSB.data1 =     packet[1];
+                    inputMessageUSB.data2 =     packet[2];
+                    inputMessageUSB.length =    buffer_size;
+                } else {
+                    for (int i = 1; i < buffer_size; i++) {
+                        inputMessageUSB.dataSysex[i] = packet[i];
+                        tempMessageSize++;
+                        if (inputMessageUSB.dataSysex[i] == 0xf7) {
+                            inputMessageUSB.length = tempMessageSize;
+                            break;
+                        } else {
+                            if (i == buffer_size -1) {
+                                inputMessageUSB.length = tempMessageSize;
+                                sysexPartMessage = true;
+                                printf("\nSYSEX BREAK!\n");
+                            }
+                        }
+                    }
                 }
-            }
-            
-            printf("USB:        ");
-            printMidiIn();
-            printMidiMessage(inputMessageUSB);
-            
-            handleNullVelocity(inputMessageUSB);
+            } else {
+                uint8_t currentMessageSize = inputMessageUSB.length;
 
-            const bool channelMatch = inputFilter(inputMessageUSB);
-            if (channelMatch)
-                handleMidiMessage(inputMessageUSB);
+                // sysexPartMessage = false;
+
+                for (int i = 0; i < buffer_size; i++) {
+                        inputMessageUSB.dataSysex[i + currentMessageSize - 1] = packet[i];
+                        tempMessageSize++;
+                        if (inputMessageUSB.dataSysex[i] == 0xf7) {
+                            currentMessageSize += tempMessageSize;
+                            inputMessageUSB.length = currentMessageSize;
+                            // sysexPartMessage = false;
+                            break;
+                        } else {
+                            if (i == buffer_size - 1) {
+                                inputMessageUSB.length += tempMessageSize;
+                                // sysexPartMessage = true;
+                            }
+                        }
+                    }
+            }
+
+
+            
+            if (!sysexPartMessage) {
+
+                handleNullVelocity(inputMessageUSB);
+
+                const bool channelMatch = inputFilter(inputMessageUSB);
+                if (channelMatch)
+                    handleMidiMessage(inputMessageUSB);
+            } else {
+                printf("\nSYSEX BREAK!\n");
+            }
+
             
         }
     }
@@ -273,10 +326,6 @@ namespace MIDI {
     void midi_task () {
         if (!parse())
             return;
-
-        // printf("UART:       ");
-        // printMidiIn();
-        // printMidiMessage(inputMessageUART);
 
         handleNullVelocity(inputMessageUART);
 
@@ -632,12 +681,6 @@ namespace MIDI {
         usb_midi_task();
     }
 
-    void print (uint8_t *packet) {
-        printf("MIDI IN: %02X", packet[0]);
-        printf(" %02X", packet[1]);
-        printf(" %02X", packet[2]);
-        printf(" %02X\n", packet[3]);
-    }
     void printMidiIn (void) {
         printf("MIDI IN:    ");
     }
@@ -689,9 +732,10 @@ namespace MIDI {
     void printMidiMessage (MidiMessage message) {
         if (message.type == MidiType::SystemExclusive) {
             printMidiType(message.type);
-            printf(":");
+            printf(":\n");
             for (int i = 0; i < message.length; i++) {
-                printf(" %d", message.dataSysex[i]);
+                printf(" 0x%02X", message.dataSysex[i]);
+                // printf(" %d", message.dataSysex[i]);
                 if ((i + 1) % 8 == 0) {
                     printf("\n");
                 }

@@ -21,19 +21,21 @@ namespace CONTROLS {
 
 
         setPage(currentPage);
-    }
 
-    void exportPresetTest (void) {
-        PRESET::exportViaSysEx(Preset[0]);
     }
     
     void setupButtonAssignment (void) {
         Buttons::PAGE.setShortPressAction(&CONTROLS::changePage);
+        // No long press as this is the shift key.
+        
         Buttons::FUNC1.setShortPressAction(&CONTROLS::toggleButton1);
         Buttons::FUNC1.setLongPressAction(&CONTROLS::holdButton1);
+
         Buttons::FUNC2.setShortPressAction(&CONTROLS::toggleButton2);
         Buttons::FUNC2.setLongPressAction(&CONTROLS::holdButton2);
+        
         Buttons::PRESET.setShortPressAction(&CONTROLS::changePreset);
+        Buttons::PRESET.setLongPressAction(&CONTROLS::exportCurrentPreset);
     }
 
     void setPreset (uint8_t preset) {
@@ -160,12 +162,12 @@ namespace CONTROLS {
     void savePresetToSlot (uint8_t slot) {
         Preset[slot] = activePreset;
 
+        Preset[slot].version = PRESET_VERSION;
+
         extractPresetFromControls(Preset[slot]);
         
-        PRESET::save(slot, Preset[slot]);
-        
+        PRESET::save(slot, Preset[slot]);    
     }
-
     void loadPresetFromSlot (uint8_t slot) {
         activePreset = Preset[slot];
 
@@ -179,16 +181,13 @@ namespace CONTROLS {
     }
     
     
-    void exportPresets(void) {
-        PRESET::SynthPreset export_buffer[MAX_PRESETS];
-
+    void exportAllPresets(void) {
         for (int i = 0; i < MAX_PRESETS; i++) {
-            // EEPROM::loadPreset(i, export_buffer[i]);
-            PRESET::load(i, export_buffer[i]);
+            PRESET::exportViaSysEx(Preset[i]);
         }
-
-        // send export_buffer somewhere?    - maybe save as a file that can be accessed in USB?
-        //                                  - send over MIDI
+    }
+    void exportCurrentPreset(void) {
+        PRESET::exportViaSysEx(Preset[currentPreset]);
     }
 
     // Function for restoring the Factory Presets from the EEPROM to the main preset storage area.
@@ -197,7 +196,6 @@ namespace CONTROLS {
         printf("\nFactory Restore in progress!\n");
 
         for (int i = 0; i < MAX_PRESETS; i++) {
-            // EEPROM::restoreFactoryPreset(i);
             PRESET::factoryRestore(i);
         }
         
@@ -212,7 +210,6 @@ namespace CONTROLS {
         printf("Storing currrent presets to Factory Preset slots!\n");
 
         for (int i = 0; i < MAX_PRESETS; i++) {
-            // EEPROM::writeFactoryPreset(i);
             PRESET::factoryWrite(i);
         }
 
@@ -257,10 +254,14 @@ namespace CONTROLS {
         }
     }
 
-    void setKnob (uint8_t page, uint8_t control, uint16_t input) {
+    void setKnob (uint8_t page, uint8_t control, uint16_t input, bool forceUpdate) {
         Control.setKnob(page, control, input);
 
         needsUpdating = true;
+
+        if (forceUpdate) {
+            Control.update(page);
+        }
     }
     uint16_t getKnob (uint8_t page, uint8_t control) {
         return Control.getKnob(page, control);
@@ -324,7 +325,7 @@ namespace CONTROLS {
     void setShift (bool input) {
         if (shift != input) {
         
-            // TODO: Finesse this code as curently doesn't perform great, causing UI issues
+            // TODO: Finesse this code, can be wierd if sample rate changes
             shiftCounter++;
             if (shiftCounter >= SHIFT_TIMEOUT) {
                 
@@ -355,7 +356,8 @@ namespace CONTROLS {
         
         controlRateCounter++;
         
-        if (controlRateCounter >= 10) {
+        // TODO: Finesse this code, can be wierd if sample rate changes
+        if (controlRateCounter >= 4) {
             controlRateCounter = 0;
             
             if (!needsUpdating) 

@@ -33,7 +33,7 @@ namespace PRESET {
         struct VoiceData {
             OscillatorData  Oscillator1; // 16 bytes
             OscillatorData  Oscillator2; // 16 bytes
-            EnvelopeData    Envelope;    // 8 bytes
+            EnvelopeData    Envelope;    // 16 bytes
 
             uint16_t        octave = 0; 
             uint16_t        pitchBend = 511;
@@ -117,7 +117,7 @@ namespace PRESET {
 
     void exportViaSysEx(const SynthPreset &preset);
 
-    void printData (SynthPreset &preset);
+    void printData (const SynthPreset &preset);
 
 
 
@@ -134,6 +134,30 @@ namespace PRESET {
 
             printf("Preset transfer complete!\n\n");
         }
+
+        void convertTo7Bit(const uint8_t* input, size_t inputSize, uint8_t* output, size_t& outputSize) {
+            size_t outputIndex = 0;
+            size_t bitCount = 0;
+            uint16_t buffer;
+
+            for (size_t i = 0; i < inputSize; ++i) {
+                buffer = (buffer << 8) | input[i];
+                bitCount += 8;
+
+                while (bitCount >= 7) {
+                    bitCount -= 7;
+                    output[outputIndex++] = (buffer >> bitCount) & 0x7F;
+                }
+            }
+
+            // Handle the remaining bits if there are any
+            if (bitCount > 0) {
+                output[outputIndex++] = (buffer << (7 - bitCount)) & 0x7F;
+            }
+
+            outputSize = outputIndex;
+        }
+
 
     }
 }

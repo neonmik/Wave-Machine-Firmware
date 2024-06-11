@@ -170,6 +170,8 @@ namespace MIDI {
         MidiMessage inputMessageUART;
         MidiMessage inputMessageUSB;
 
+        bool        sysexPartMessage = false;
+
         MidiMessage outputBuffer[64];
 
         bool        sendClockFlag;

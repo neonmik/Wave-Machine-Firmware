@@ -15,7 +15,7 @@ namespace USB {
         void get (uint8_t size, uint8_t *packet) {   
             tud_midi_n_stream_read(0, USB_MIDI_CABLE_NUMBER, packet, size);
         }
-        void send (uint8_t *msg, uint8_t length) {
+        void send (uint8_t *msg, size_t length) {
             if (!length) {
                 DEBUG::error("USB MIDI Message has 0 length");
                 return;
