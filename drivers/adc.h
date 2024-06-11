@@ -3,133 +3,119 @@
 #include "../config.h"
 #include "../functions.h"
 
+#include "mux.h"
+
 #include "hardware/adc.h"
-#include "hardware/dma.h"
+// #include "hardware/dma.h"
 
 #include "../random.h"
 
 
 namespace ADC {
 
-    constexpr   uint8_t     MUX_SEL_A   =   12;
-    constexpr   uint8_t     MUX_SEL_B   =   13;
-    constexpr   uint8_t     MUX_SEL_C   =   14;
-    constexpr   uint8_t     MUX_SEL_D   =   15;
-    constexpr   uint8_t     MUX_OUT_ADC =   26;
+    enum ADC_GPIO : uint8_t {
+        ADC_MUX_PIN         = 26,
+        ADC_NOISE_PIN       = 27,
+        ADC_VOLTAGE_PIN     = 29,
+    };
 
-    constexpr   uint8_t     MAX_NOISE_ADDRESS = 8;
+    enum ADC_CHANNEL : uint8_t {
+        ADC_MUX_CHANNEL         = 0,
+        ADC_NOISE_CHANNEL       = 1,
+        ADC_VOLTAGE_CHANNEL     = 3,
+        ADC_TEMPERATURE_CHANNEL = 4
+    };
+
+    constexpr   uint8_t     MAX_NOISE_READINGS = 32;
+
+    constexpr   uint8_t     HYSTERESIS_WEIGHTING = 1;
+    constexpr   uint8_t     IIR_FILTER_WEIGHTING = 6;
+
+    // these are set inside the range of the ADC to compensate for the noise floor (on the minimum) and battery power (on the maximum)
+    constexpr   uint16_t    INPUT_RANGE_MIN = 10;
+    constexpr   uint16_t    INPUT_RANGE_MAX = 4090;
+
+    constexpr   float       MINIMUM_BATTERY_VOLTAGE = 3.58;
 
     namespace {
-        float       _core_temp;
+        float       coreTemperature;
+        float       batteryVoltage;
 
-        uint16_t    _adc_value;
-        uint16_t _adc_noise[MAX_NOISE_ADDRESS];
-        uint8_t  _noise_address;
-        uint8_t  _read_address = 2; // offset read address;
-        uint16_t _values[MAX_KNOBS];
+        const float conversionFactor = 3.27f / (1 << 12);
 
-        uint8_t _mux_address;
-        uint32_t _sample[MAX_KNOBS];
-        uint32_t _output;
+        uint16_t adcNoise[MAX_NOISE_READINGS];
+        uint8_t  noiseWriteAddress;
+        uint8_t  noiseReadAddress = 2; // offset read address;
 
+        int rawSamples[MAX_KNOBS];
+        int filteredSamples[MAX_KNOBS];
+        int outputSamples[MAX_KNOBS];
 
-        void adc_temp_init(void) {
+        bool batteryLow = false;
+
+        
+
+        void channelSelect (uint8_t channel) {
+            adc_select_input(channel);
+        }
+
+        void readTemperature(void) {
+            
             adc_set_temp_sensor_enabled(true);
-        }
-        void adc_mux_init (void) {
-            adc_gpio_init(MUX_OUT_ADC);
-        }
-        void adc_noise_init (void) {
-            adc_gpio_init(MUX_OUT_ADC + 1); // Initiate unconnected pin
-        }
 
-        void adc_temp_select (void) {
-            adc_select_input(4);
-        }
-        void adc_mux_select (void) {;
-            adc_select_input(0);
-        }
-        void adc_noise_select (void) {
-            adc_select_input(1);
-        }
-        void pin_init (uint8_t pin) {
-            gpio_init(pin);
-            // set the pins direction
-            gpio_set_dir(pin, GPIO_OUT);
-
-            // set the slew rate slow (for reducing amount of cross talk on address changes...)
-            gpio_set_slew_rate(pin, GPIO_SLEW_RATE_SLOW);
-
-            gpio_set_drive_strength(pin, GPIO_DRIVE_STRENGTH_2MA);
-        }
-
-        void read_onboard_temperature(void) {
-
-            adc_temp_select();
+            channelSelect(ADC_CHANNEL::ADC_TEMPERATURE_CHANNEL);
             
-            /* 12-bit conversion, assume max value == ADC_VREF == 3.3 V */
-            const float conversionFactor = 3.3f / (1 << 12);
+            uint16_t reading = adc_read();
 
-            float adc = (float)adc_read() * conversionFactor;
-            _core_temp = 27.0f - (adc - 0.706f) / 0.001721f;
+            float adc = (float)reading * conversionFactor;
 
-            // printf("Temp:       %.02fºC\n", _core_temp);
+            coreTemperature = 27.0f - (adc - 0.706f) / 0.001721f;
 
-            // adc_set_temp_sensor_enabled(false);
+            adc_set_temp_sensor_enabled(false);
 
-            adc_mux_select();
+            channelSelect(ADC_CHANNEL::ADC_MUX_CHANNEL);
         }
 
+        void readBattery(void) {
+            channelSelect(ADC_CHANNEL::ADC_VOLTAGE_CHANNEL);
 
-        // change these to just handle the sample filter with a reference, and then add new function for saving to the table.
-        inline void NO_filter (uint16_t reading, uint8_t index) {
-            _sample[index] = (reading >> 2);
-        }
-        inline void IIR_filter (uint16_t reading, uint8_t index) {
-            _sample[index] = _sample[index] - (_sample[index]>>2) + reading;
-        }
-        inline void FIR_filter (uint16_t reading, uint8_t index) {
-            // nothing to report yet...
-            // just do no filter for now and fire an error
-            NO_filter(reading, index);
-            printf("There is no FIR filter implemented yet! Saving as RAW data. Go check the ADC...");
-        }
-        inline void increment_mux_address (void) {
-            // sets the index to loop
-            _mux_address = (_mux_address + 1) % MAX_KNOBS;
-        }
-        void read_mux (void) {
-            // sets mux pins
-            gpio_put(MUX_SEL_A, _mux_address & 1); 
-            gpio_put(MUX_SEL_B, (_mux_address >> 1) & 1);
-            gpio_put(MUX_SEL_C, (_mux_address >> 2) & 1);
-            gpio_put(MUX_SEL_D, (_mux_address >> 3) & 1);
+            uint16_t reading = adc_read();
+            sleep_ms(2); // wait for the ADC to settle
+            reading = adc_read(); // repeat to ensure correct
 
-            // wait to read - allows settling time
-            asm volatile("nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop \n nop");
-            
-            _adc_value = adc_read(); 
-            
+            float adc = (float)reading * conversionFactor;
 
-            // zeros mux for keys
-            gpio_put(MUX_SEL_A, 0);
-            gpio_put(MUX_SEL_B, 0);
-            gpio_put(MUX_SEL_C, 0);
-            gpio_put(MUX_SEL_D, 0);
+            batteryVoltage = (adc * 3.0f);
+
+            channelSelect(ADC_CHANNEL::ADC_MUX_CHANNEL);
         }
-        void read_noise (void) {
-            adc_noise_select();
 
-            _adc_noise[_noise_address] = adc_read();
-            _noise_address = (_noise_address + 1) % MAX_NOISE_ADDRESS;
+        inline void iirFilter (uint16_t reading, uint8_t index) {
+            filteredSamples[index] = filteredSamples[index] - (filteredSamples[index] >> IIR_FILTER_WEIGHTING) + reading;
+        }
+        
+        uint16_t readMux (void) {
+            return adc_read(); 
+        }
+        void readNoise (void) {
+            channelSelect(ADC_CHANNEL::ADC_NOISE_CHANNEL);
 
-            adc_mux_select();
+            adcNoise[noiseWriteAddress] = adc_read();
+            noiseWriteAddress = (noiseWriteAddress + 1) % MAX_NOISE_READINGS;
+
+            channelSelect(ADC_CHANNEL::ADC_MUX_CHANNEL);
         }
     }
     
     void init();
     void update();
     uint16_t value(int knob);
-    float temp (void);
+    
+    float temperature (void);
+    
     uint8_t noise();
+
+    float battery(void);
+    void updateBattery(void);
+    bool isBatteryLow (void);
 }

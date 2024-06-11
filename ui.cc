@@ -1,5 +1,6 @@
 #include "ui.h"
 
+#include "drivers/mux.h"
 #include "drivers/adc.h"
 #include "drivers/keys.h"
 #include "drivers/button.h"
@@ -15,23 +16,25 @@ namespace UI {
     MIDI::init();
 
     LEDS::init();
+    MUX::init();
     KEYS::init();
     ADC::init();
 
-    CONTROLS::init();
+    hardwareStartUp();
+    hardwareStartUp();
 
 
-    if (Buttons::PRESET.get(Buttons::State::SHIFT)) {
-      // this currently brings up the Factory test/calibration mode, but should eventually bring up the MIDI/settings mode
 
-      if (Buttons::PAGE.get(Buttons::State::SHIFT)) {
-        setUSBMode(true);
-      } else {
-        mode = UI_MODE_CALIBRATION;
-        update(); // Call update() here so you can go through the routine and jump back into the startup process afterwards.
-      }
-      
+
+    if      (Buttons::PAGE.get(Buttons::State::SHIFT)) {
+        if      (Buttons::FUNC1.get(Buttons::State::SHIFT))   { mode = UI_MODE_FACTORY_TEST;      update();} 
+        else if (Buttons::FUNC2.get(Buttons::State::SHIFT))   { mode = UI_MODE_USB;               update(); }
+        else if (Buttons::PRESET.get(Buttons::State::SHIFT))  { mode = UI_MODE_EXPORT_PRESETS;    update(); } 
+        // Call update() here so you can go through the routine and jump back into the startup process afterwards.
+        else                                                  { mode = UI_MODE_CALIBRATION;       update(); } 
     }
+    
+    CONTROLS::init();
     
     CONTROLS::setupButtonAssignment();
 
@@ -46,15 +49,21 @@ namespace UI {
 
         RANDOM::update(ADC::noise());
 
+        
+
         if ((!(sampleClock & 0x1F)) && (sampleClock != sampleClockLast)){
           sampleClockLast = sampleClock;
 
           NOTE_HANDLING::update();
           KEYS::update();
-          ADC::update();
           PAGINATION::update();
           CONTROLS::update();
           LEDS::update();
+
+        } else {
+          KEYS::read();
+          ADC::update();
+          MUX::incrementAddress();
         }
         
         MIDI::update();
@@ -62,11 +71,35 @@ namespace UI {
         break;
 
       case UI_MODE_FACTORY_TEST:
+        while(mode == UI_MODE_FACTORY_TEST) {
+          LEDS::test(50);
+          LEDS::test(40);
+          LEDS::test(30);
+          LEDS::test(20);
+          LEDS::test(10);
+          
+          mode = UI_MODE_NORMAL;
+        }
         break;
 
       case UI_MODE_CALIBRATION:
         calibrate();
         break;
+
+      case UI_MODE_USB:
+        setUSBMode(true);
+        while (getUSBMode()) {
+          USB::update();
+          // add a conditional here that if USB is ejected, it jumps back to normal operations
+        }
+        mode = UI_MODE_NORMAL;
+        break;
+      
+      case UI_MODE_EXPORT_PRESETS:
+        CONTROLS::exportAllPresets();
+        mode = UI_MODE_NORMAL;
+        break;
+
 
       default:
         // do nothing
@@ -85,10 +118,11 @@ namespace UI {
     printf("~							~\n");
     printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", board_id.id[0], board_id.id[1], board_id.id[2], board_id.id[3], board_id.id[4], board_id.id[5], board_id.id[6], board_id.id[7]);
     printf("~	Firmware -	v%01.02f	      			~\n", VERSION);
-    printf("~	Temp -		%02.01fºC				~\n", ADC::temp());
+    printf("~	Temp -		%02.01fºC				~\n", ADC::temperature());
+    printf("~	Battery -	%.02fV				~\n", ADC::battery());
     printf("~							~\n");
     printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
-    printf("~    		  © 2020-2023 NAMS Labs			~\n");
+    printf("~    		  © 2020-2024 NAMS Labs			~\n");
     printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
     printf("\n\n");
   }
@@ -151,6 +185,18 @@ namespace UI {
     LEDS::test(50);
 
     mode = UI_MODE_NORMAL;
+  }
+
+void hardwareStartUp (void) {
+    // Have to do this to prime all the hardware
+    for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 16; i++) {
+        KEYS::read();
+        ADC::update();
+        MUX::incrementAddress();
+      }
+    }
+    KEYS::update();
   }
 }
 

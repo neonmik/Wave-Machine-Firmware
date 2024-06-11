@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME}
     drivers/eeprom.cc
     drivers/keys.cc
     drivers/leds.cc
+    drivers/mux.cc
     drivers/rgb.cc
     drivers/shiftreg.cc
     drivers/uart.cc

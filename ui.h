@@ -14,6 +14,8 @@ namespace UI {
 
     enum UiMode {
         UI_MODE_NORMAL,
+        UI_MODE_USB,
+        UI_MODE_EXPORT_PRESETS,
         UI_MODE_CALIBRATION,
         UI_MODE_FACTORY_TEST
     };
@@ -25,6 +27,8 @@ namespace UI {
 
         UiMode      mode;
     }
+
+    void hardwareStartUp (void);
 
     void printStartUp (void);
 

@@ -3,82 +3,74 @@
 
 #include "../config.h"
 
+#include "mux.h"
+
 #include "button.h"
 
 #include "../synth/note_handling.h"
 
+
+
 namespace KEYS {
     // Pin definitions for Mux
-    constexpr   uint8_t     MUX_SEL_A   =   12;
-    constexpr   uint8_t     MUX_SEL_B   =   13;
-    constexpr   uint8_t     MUX_SEL_C   =   14;
-    constexpr   uint8_t     MUX_SEL_D   =   15;
     constexpr   uint8_t     MUX_OUT_0   =   16;
     constexpr   uint8_t     MUX_OUT_1   =   17;
 
-    // Key defines
+    // Key defines buttons
     constexpr   uint8_t     MAX_KEYS    =   27;
     constexpr   uint8_t     PAGE_KEY    =   27;
     constexpr   uint8_t     LFO_KEY     =   28;
     constexpr   uint8_t     ARP_KEY     =   29;
     constexpr   uint8_t     PRESET_KEY  =   30;
 
-    class Keyboard {
-        private:
+    namespace {
+        uint32_t readBuffer = 0;
 
+        uint32_t history[8]    =       {
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+        };
 
-            uint32_t _history[8]    =       
-            {
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-            };
+        uint32_t    current         =       0xFFFFFFFF;
+        uint32_t    last            =       0xFFFFFFFF;
+        
+        uint8_t     historyIndex;
 
-            uint32_t    _current         =       0xFFFFFFFF;
-            uint32_t    _last            =       0xFFFFFFFF;
-            
-            uint8_t     history_index;
+        uint8_t     lastAddress    =       0;
 
-            uint8_t _mux_address;
+        // uint8_t note_state[128] = {0};
 
-            
-            inline void increment_mux_address (void) {
-                // sets the index to loop
-                _mux_address = (_mux_address + 1) % 16;
+        
+        uint32_t reverse(uint32_t input) {
+            uint32_t output = 0;
+            for (int i = 0; i < 32; i++) {
+                if ((input & (1 << i))) output |= 1 << ((32 - 1) - i);
             }
+            return output;
+        }
 
-            uint32_t reverse(uint32_t input) {
-                uint32_t output = 0;
-                for (int i = 0; i < 32; i++) {
-                    if ((input & (1 << i))) output |= 1 << ((32 - 1) - i);
-                }
-                return output;
-            }
-        public:
-            
-            Keyboard() { }
-            ~Keyboard() { }
+        inline int32_t get() {
+            return current;
+        }
+        inline int32_t getLast() {
+            return last;
+        }
+        inline void setLast(uint32_t input) {
+            last = input;
+        }
 
-            void init();
-            void read();
-            inline int32_t get() const {
-                return _current;
-            }
-            inline int32_t get_last() const {
-                return _last;
-            }
-            inline void set_last(uint32_t last) {
-                _last = last;
-            }
-
-    };
-    
-    extern Keyboard Keys;
+        void pinInit (uint8_t pin) {
+            gpio_init(pin);
+            gpio_set_dir(pin, GPIO_IN);
+            gpio_pull_up(pin); // already doing in hardware, but just in case...
+        }
+    }
 
     void init (void);
     void read (void);

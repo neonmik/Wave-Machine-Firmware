@@ -5,76 +5,79 @@ namespace ADC {
 
         adc_init();
 
-        adc_temp_init();
-        adc_mux_init();
-        adc_noise_init();
+        adc_gpio_init(ADC_MUX_PIN);
+        adc_gpio_init(ADC_NOISE_PIN);
+        adc_gpio_init(ADC_VOLTAGE_PIN);
 
         // Before setting up the pots, do a quick read of the startup temp
-        read_onboard_temperature();
+        readTemperature();
 
-        // adc_noise_init();
+        // Read multiple times to fill the buffers
+        readNoise();
+        readNoise();
+        readNoise();
+        readNoise();
+        readNoise();
+        readNoise();
+        readNoise();
+        readNoise();
+        readNoise();
 
-        read_noise();
-        read_noise();
-        read_noise();
-        read_noise();
-        read_noise();
-        read_noise();
-        read_noise();
-        read_noise();
-        read_noise();
+        // read the battery voltage multiple times, if read once at this point it will be incorrect
+        readBattery();
+        readBattery();
+        readBattery();
+        readBattery();
 
-        // Setup the mux pins
-        pin_init(MUX_SEL_A);
-        pin_init(MUX_SEL_B);
-        pin_init(MUX_SEL_C);
-        pin_init(MUX_SEL_D);
-        
-
-        _mux_address = 0;
-        
-        // run the ADC 4 times to make sure the values are primed - removed from loop as it was optimised out
-        update();
-        update();
-        update();
-        update();
+        updateBattery();
     }
+
     void update() {
-        
-        read_mux();
-        
-        // No filter
-        // passes last actual sample to a buffer
-        // NO_filter(_adc_value, _mux_address);
-        
-        // IIR filter
-        // filters new sample with old sample
-        IIR_filter(_adc_value, _mux_address);
+        // Get the address from MUX and mask it to keep only the lowest two bits
+        uint8_t address = (MUX::getAddress() & 3);
 
-        // FIR filter - to Be Imlpemented
-        // FIR_filter(_adc_value, _mux_address);
+        uint16_t adcValue = readMux();
         
+        applyHysteresis(rawSamples[address], adcValue, HYSTERESIS_WEIGHTING);
+
+        iirFilter(rawSamples[address], address);
+
         // moves filtered sample to the adc array
-        _values[_mux_address] = map_constrained(_sample[_mux_address]>>2, 10, 4095, KNOB_MIN, KNOB_MAX);
+        outputSamples[address] = map_constrained(filteredSamples[address] >> IIR_FILTER_WEIGHTING, INPUT_RANGE_MIN, INPUT_RANGE_MAX, KNOB_MIN, KNOB_MAX);
 
-        // Improve this to have more random numbers, make the RNG better.
-        // _adc_noise[0] = _adc_value & 0x03; // bit mask the lower 2 bits to use as a natural noise source
-        _adc_noise[_noise_address] = _adc_value & 0x3;
-        _noise_address = (_noise_address + 1) % MAX_NOISE_ADDRESS;
-        
-        increment_mux_address();
+        adcNoise[noiseWriteAddress] = adcValue & 0x3;
+        noiseWriteAddress = (noiseWriteAddress + 1) % MAX_NOISE_READINGS;
 
-        read_noise();
+        readNoise();
     }
     
     uint16_t value(int knob) {
-        return _values[knob]; // downshifting for better system wide performance
+        return outputSamples[knob]; // downshifting for better system wide performance
     }
     uint8_t noise() {
-        _read_address = (_read_address + 1) % MAX_NOISE_ADDRESS;
-        return _adc_noise[_read_address];
+        noiseReadAddress = (noiseReadAddress + 1) % MAX_NOISE_READINGS;
+        return adcNoise[noiseReadAddress];
     }
-    float temp (void) {
-        return _core_temp;
+    float temperature() {
+        return coreTemperature;
+    }
+    float battery() {
+        return batteryVoltage;
+    }
+    void updateBattery() {
+        
+        readBattery();
+
+        if (ADC::battery() < MINIMUM_BATTERY_VOLTAGE) {
+            // battery is low, do something
+            printf("Battery is low: %f\n", ADC::battery());
+            printf("Please change or connect to USB.\n");
+            batteryLow = true;
+        } else { 
+            batteryLow = false;
+        }
+    }
+    bool isBatteryLow() {
+        return batteryLow;
     }
 }
