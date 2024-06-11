@@ -110,11 +110,18 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - USB MIDI/ MIDI:
-        - Bug: when pressing and releasing notes, many Note Off messages seem to be sent.
-        
-        - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
 
-        - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
+        Sending:
+            - Bug: when pressing and releasing notes, many Note Off messages seem to be sent.
+        
+        Recieving:
+            - Bug: SysEx messages don't complete make it through. they're truncated.
+            
+            - Bug: When a Stop message via USB-MIDI, the message isn't handled properly in the TinyUSB implementaion cauing the message to be appended with half of the next message (FC and BC 7B 00 become FC BC 7B and 00 00 00)
+
+            - Bug: MIDI clock freaks out when theres both MIDI and USB-MIDI - more of a MIDI specification problem in general, but will write MIDI message checker to check messages from UART against USB to stop duplicates. 
+
+            - MIDI clock controlling Arp is currently broken.
 
         - Feature: Handle Song Position messages in a meaningful way - Use them to make sure the arp always starts at the top of the bar...
 
@@ -140,10 +147,13 @@ Current nightly firmware for Wave Machine Hardware.
             - Fetch Unique ID and store it? (kinda not needed as it's always there, but maybe) - could even be the ID of my memory chip?
 
         - Add Storage routines for system settings:    
-            
             - Organise a way of storing all those settings in config, and being able to adjust them and re save them.
 
             - Need a way of storing all settings/config related stuff persistanly (MIDI settings, Audio Engine settings, calibration?, etc.)
+
+    - USB:
+
+        - Feature: Add some kinda of dynamic RAM drive, to allow reading and writing of file form MSC. 
 
 
 
@@ -210,7 +220,7 @@ Current nightly firmware for Wave Machine Hardware.
     - Start-up settings (MIDI channel, other funtions?)
 
 
-    - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware) - Need to have a different name come up
+    - Firmware upgrade procedure (hold reset button and connect to PC/Mac, drag and drop firmware)
 
 
     - Test hardware function ideas:
@@ -325,6 +335,7 @@ Features/Bugfixes:
         + Add Arp mode
 
     + Settings/Controls:
+        + Added version number to keep track of save files.
         + Improvement: Added a counter to stop controls up dating too quickly. Was overloading the audio processor, causing glitches and drop outs and was unnecessary.
         + Improvement: Added timeout feature for shift function to stop it jumping too quickly to shift pages.
         + Bugfix: Page light wasn't acting correctly on start up.
@@ -376,6 +387,8 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + MIDI:
+        + Feature: Added MIDI SysEx Patch dumps. Currently works and gets out data, but formating needs to be reviewed (mainly with Manufacturer ID and message type).
+        + Bugfix: USB-MIDI wouldn't export SysEx files, as they were too big. Fixed it by enlarging MIDI buffer in tusb_config.h.
         + Feature: Added MIDI Clock out. MIDI clock sync message are sent at 24ppqn from the internal BPM clock.
         + Moved MIDI clock tracking to a sample based time instead of blocking MCU function.
         + Bugfix: Several bugs were caused by the UART MIDI implementation not formating messages correctly. This has been fixed by a major rewrite of the UART MIDI parsing code, along with an update to the MIDI message handling code.
@@ -423,3 +436,6 @@ Features/Bugfixes:
         + Filter is now functional!
         + Added a rough working filter! Didn't think it was possible, so very excited. Thanks to pichenettes. 
 
+    + USB:
+        + Improvement: Changed the name of the MSC drive and Readme text.
+        + Feature: Added MSC feature.
