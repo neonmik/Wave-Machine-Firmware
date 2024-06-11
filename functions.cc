@@ -11,6 +11,11 @@ long map_constrained(long x, long in_min, long in_max, long out_min, long out_ma
         if (temp < out_min) temp = out_min;
         return temp;
 }
+long constrain (long x, long min, long max) {
+    if (x < min) return min;
+    if (x > max) return max;
+    return x;
+}
 
 inline uint16_t Interpolate824(const uint16_t* table, uint32_t phase) {
     uint32_t a = table[phase >> 24];
@@ -55,3 +60,18 @@ uint16_t fromBool(bool value) {
     // Map true to 1023 and false to 0
     return value ? 1023 : 0;
 }
+void printHexBuffer(const uint8_t* buffer, size_t length, size_t lineBreak) {
+    for (size_t i = 0; i < length; i++) {
+        printf("0x%02X ", buffer[i]);
+        if ((i + 1) % lineBreak == 0) {
+            printf("\n");
+        }
+    }
+}
+
+void applyHysteresis(int& value, int new_value, int hysteresis) {
+    if (abs(new_value - value) > hysteresis) {
+        value = new_value;
+    }
+}
+
