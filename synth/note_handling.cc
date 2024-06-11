@@ -211,16 +211,33 @@ namespace NOTE_HANDLING {
 
     // update Arp notes if active.
     ARP::update();
-
-
   }
+  
   void noteOn (uint8_t note, uint8_t velocity) {
+    // send midi notes out here - unless arp is active, in which case let it do it
+    // also need to provide a way to stop MIDI notes being sent straight out...
+
+    // MIDI::sendNoteOn(note, velocity);
+    
+    // set note as active in the grat big array
+    noteState[note].note = 1;
+
+    // do as before, but without MIDI things
     if (!ARP::getState()) priority(note, velocity); // synth voice allocation
     else {
       ARP::addNote(note);
     }
   }
   void noteOff(uint8_t note, uint8_t velocity) {
+    // send midi notes out here - unless arp is active, in which case let it do it
+    // also need to provide a way to stop MIDI notes being sent straight out...
+
+    // MIDI::sendNoteOff(note, velocity);
+
+    // set note as inactive in the great big array
+    if (!sustainPedal) noteState[note].note = 0;
+
+    // do as before, but without MIDI things
     if (!ARP::getState()) release(note, velocity); // synth voice allocation
     else {
       ARP::removeNote(note);

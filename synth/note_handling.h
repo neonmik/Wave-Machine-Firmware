@@ -22,8 +22,17 @@ namespace NOTE_HANDLING {
         LOWEST    ,  // Lowest notes stay the longest
     };
 
+    struct Note {
+        uint8_t     note;
+        uint8_t     velocity;
+        bool        sustained;
+    };
+
+
     namespace {
         Priority    _priority = Priority::LAST;
+
+        Note noteState[128];
 
         uint8_t     _notes_on;
         
