@@ -151,5 +151,9 @@ namespace LEDS {
         // PAGE_1.update();
         
         ShiftReg::update();
+
+        if (ADC::isBatteryLow()) {
+            
+        }
     }
 }

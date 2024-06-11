@@ -4,6 +4,7 @@
 
 #include "rgb.h"
 #include "shiftreg.h"
+#include "adc.h"
 
 
 enum Direction : uint8_t {
