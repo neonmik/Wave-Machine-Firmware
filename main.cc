@@ -69,8 +69,11 @@ void synthCore() {
       CLOCK::internalClockTick();
     }
 
+    if (!softwareIndex) {
+      SYNTH::calculateIncrements();
+    }
+
     if ((!(sampleClock & 0x3F)) && (sampleClock != sampleClockLast)){
-      // make sure this only happens once every 64 sample periods
       sampleClockLast = sampleClock;
 
       if (QUEUE::triggerCheckQueue()) {
@@ -105,4 +108,5 @@ int main() {
   hardwareCore(); // launch the hardware core
 
 } 
+
 

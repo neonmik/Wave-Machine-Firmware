@@ -59,13 +59,14 @@ namespace SYNTH
 
     ADSR::Envelope ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
 
-    uint8_t   index = 0;              // index of the voice in the synth
+    uint8_t   index = 0;                // index of the voice in the synth
 
-    uint8_t   note;                   // Midi Note number - used for filter voice
-    bool      gate = false;           // used for tracking a note that's released, but not finished.
-    bool      active = false;         // used for whole duration of note, from the very start of attack right up until the voise is finished
+    uint8_t   note;                     // Midi Note number - used for filter voice
+    bool      gate = false;             // used for tracking a note that's released, but not finished.
+    bool      active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
+    bool      refreshIncrement = false;
 
-    uint32_t  frequency = 0;          // Frequency in Hz << 8 (Q8)
+    uint32_t  frequency = 0;            // Frequency in Hz << 8 (Q8)
 
     uint32_t  phaseIncrement = 0;
     uint32_t  phaseAccumulator = 0;
@@ -76,8 +77,20 @@ namespace SYNTH
       index = input;
     }
 
+    void resetIncrement(void) {
+      phaseIncrement = 0;
+    }
+
     void updateIncrement(void) {
+      
+      if (!active) return;
+      if (!refreshIncrement) return;
+      
+
       phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 10) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+
+      refreshIncrement = false;
+
     }
 
     void noteOn(uint8_t input_note) {
@@ -85,6 +98,7 @@ namespace SYNTH
       active = true;
       note = input_note;
       frequency = getFrequency(note);
+      refreshIncrement = true;
 
       ampEnvelope.triggerAttack();
     }
@@ -101,7 +115,7 @@ namespace SYNTH
       note = 0;
       frequency = 0;
 
-      phaseIncrement = 0;
+      resetIncrement();
       phaseAccumulator = 0;
 
       QUEUE::releaseSend(index);
@@ -119,10 +133,6 @@ namespace SYNTH
     int32_t process(uint8_t voiceIndex)
     {
       if (!active) return 0;
-
-      if (index == voiceIndex) {
-        updateIncrement();
-      }
 
       phaseAccumulator += phaseIncrement;             // update the phaseAccumulator
       phaseAccumulator += synthParameters.modVibrato; // add the vibrato
@@ -194,8 +204,9 @@ namespace SYNTH
   void voiceOn(uint8_t voice, uint8_t note);
   void voiceOff(uint8_t voice);
 
-  void init();
-  uint16_t process();
+  void init(void);
+  uint16_t process(void);
+  void calculateIncrements(void);
 
   void setWaveShape(uint16_t input);
   void setWaveVector(uint16_t input);

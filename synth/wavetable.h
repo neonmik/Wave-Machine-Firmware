@@ -829,7 +829,7 @@ inline int16_t get_mod_wavetable  (uint16_t index) {
     return lfo_wavetable[tableIndex][elementIndex];
 }
 
-const int16_t wavetable[] = {
+const int16_t wavetable[8192] = {
     // Sine:
     0,  684, 1427, 2107, 2824, 3519, 4223, 4919, 
     5612, 6303, 6992, 7673, 8352, 9025, 9691, 10354, 
@@ -1916,17 +1916,17 @@ const int16_t wavetable[] = {
     2627, -5317, 4950, -2373, -942, 10917, 10135, 14639, 
     2269, -16745, -6478, 19631, 17898, -16922, -26194, -20642, 
     2749, 18120, -17277, -20411, 1495, 1802, -20058, -17123, 
-    -1559, -7294, 3428, -10777, -16647
+    -1559, -7294, 3428, -10777, -16647, 7382, 2893, -13789,
 };
 
 // Return interpolated wavetable sample
 inline int16_t getWavetableInterpolated  (uint32_t accumulator, uint16_t vector) {
-    uint32_t index = accumulator >> Q_SCALING_FACTOR;
+    uint8_t index = accumulator >> Q_SCALING_FACTOR;
     uint32_t frac = accumulator & 0xFFF;
 
     // Get the two neighboring samples from the wavetable
-    int32_t sample1 = wavetable[((index) & 0xFF) + vector];
-    int32_t sample2 = wavetable[((index + 1) & 0xFF) + vector];
+    int32_t sample1 = wavetable[(index + vector) & 0x1FFF];
+    int32_t sample2 = wavetable[((index + 1) + vector) & 0x1FFF];
 
     // Linear interpolation
     int32_t interpolatedSample = sample1 + ((sample2 - sample1) * frac >> Q_SCALING_FACTOR);

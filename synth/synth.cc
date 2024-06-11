@@ -32,8 +32,6 @@ namespace SYNTH {
   }
 
   uint16_t process() {
-    voice_index++;
-    voice_index &= 0x7;
     
     synth.sample = 0; 
     
@@ -54,6 +52,12 @@ namespace SYNTH {
     
     // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
     return (synth.sample - INT16_MIN)>>4;
+  }
+
+  void calculateIncrements(void) {
+    for(int i = 0; i < POLYPHONY; i++) {
+      synth.voices[i].updateIncrement();
+    }
   }
 
   void setWaveShape (uint16_t input) {
@@ -85,7 +89,7 @@ namespace SYNTH {
   void modulateVibrato (uint16_t input) {
     volatile int32_t signedInput = input;
     signedInput -= 0x7fff;  
-    synth.synthParameters.modVibrato = static_cast<int8_t>(signedInput >> 8);
+    synth.synthParameters.modVibrato = static_cast<int16_t>(signedInput >> 5);
   }
   void modulateTremelo (uint16_t input) {
     synth.synthParameters.modTremelo =  input;
