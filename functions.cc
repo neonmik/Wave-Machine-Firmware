@@ -35,8 +35,12 @@ uint16_t    samples_to_us (uint32_t samplerate) {
 }
 
 int16_t    attenuverterU10toS16 (uint16_t input) {
-    // takes a 10 bit value and returns a signed 16 bit value
+    // takes an unsigned 10 bit value and returns a signed 16 bit value
     return (static_cast<int16_t>(input) - 512) << 6;
+}
+int16_t    attenuverterU10 (uint16_t input) {
+    // takes an unsigned 10bit int and returns a signed 10bit int
+    return (static_cast<int16_t>(input) - 512);
 }
 
 bool getBitState(uint16_t bitField, uint16_t bitPos) {
