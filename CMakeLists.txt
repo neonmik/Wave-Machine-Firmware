@@ -1,8 +1,24 @@
+# == DO NEVER EDIT THE NEXT LINES for Raspberry Pi Pico VS Code Extension to work ==
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 2.0.0)
+set(toolchainVersion 13_2_Rel1)
+set(picotoolVersion 2.0.0)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+# ====================================================================================
+
+
 cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
 
-project(wavemachine LANGUAGES C CXX ASM VERSION 0.32)
+project(wavemachine LANGUAGES C CXX ASM VERSION 0.33)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -93,3 +109,9 @@ target_link_libraries(${PROJECT_NAME}
 # add_compile_options(-CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/drivers/tusb_config.h)
 
 add_compile_options(- cmake -DPICO_NO_FLASH=1)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+  PICO_DEFAULT_UART=0
+  PICO_DEFAULT_UART_TX_PIN=4
+  PICO_DEFAULT_UART_RX_PIN=5
+)

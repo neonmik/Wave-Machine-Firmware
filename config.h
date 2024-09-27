@@ -16,18 +16,9 @@
 //        Software Defines
 // -------------------------------
 
-constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "standard" value...
-                                                                // tracking performance (Core: 144MHz/SR: 48000) :- 
-                                                                // with the DAC core handling notes:
-                                                                //      - runs at 10 voices with just modulation
-                                                                //      - runs at 10 voices with just filter
-                                                                //      - runs at 6 voices with filter and modulation mostly
-                                                                // with Note Priority on HW core (Core: 144MHz/SR: 48000) :-
-                                                                //      - runs at 8 voices with both
-                                                                // with Synth code being handled outside of the DMA (Core: 144MHz/SR: 48000) :-
-                                                                //      - runs at 12 with both - maybe try adding a second oscillator?
-                                                                //      - runs at 10 with Arp going full speed.
-                                                                //      - runs at 8 with the rough second oscillator !!!ROUGH!!!
+constexpr   uint8_t     POLYPHONY       =       8;             // 8 is the "standard" value - fine @ 44.1kHz
+                                                                // 12 is the "max" value - fine @ 32kHz
+
 
 constexpr   uint8_t     MAX_ARP         =       32;             // For setting the maximum number of notes in the Arp
                                                     

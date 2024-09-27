@@ -155,7 +155,7 @@ namespace MIDI {
     //                                          Output
     // -----------------------------------------------------------------------------------------------
     void sendMidiMessage (uint8_t *msg, uint16_t length) {
-        // UART::MIDI::send(msg, length);
+        UART::MIDI::send(msg, length);
         USB::MIDI::send(msg, length);
     }
 
