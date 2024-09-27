@@ -80,4 +80,11 @@ namespace ADC {
     bool isBatteryLow() {
         return batteryLow;
     }
+    void printADCValues() {
+        printf("ADC Values:");
+        for (int i = 0; i < MAX_KNOBS; i++) {
+            printf("  %d  |", outputSamples[i]);
+        }
+        printf("\n");
+    }
 }

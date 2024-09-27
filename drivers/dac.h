@@ -37,8 +37,7 @@ namespace DAC {
             for (int i = 0; i < _buffer_size; i++) {
                 buf[i] = (playBuffer[hardwareIndex]) | (DAC_CONFIG);
                 ++hardwareIndex;
-                // hardwareIndex &= 0x1F;
-                hardwareIndex &= ((BUFFER_SIZE*2) - 1);
+                hardwareIndex %= (BUFFER_SIZE * 2);
             }
         }
         void dma_channel (int dma_chan, int dma_chan_chain, volatile uint16_t* buf) {

@@ -93,4 +93,6 @@ namespace ADC {
     float battery(void);
     void updateBattery(void);
     bool isBatteryLow (void);
+
+    void printADCValues(void);
 }

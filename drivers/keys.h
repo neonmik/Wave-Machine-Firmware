@@ -65,5 +65,7 @@ namespace KEYS {
     void read (void);
     void update (void);
 
+    void printBuffer(void);
+
     void setOctave (uint16_t input);
 }

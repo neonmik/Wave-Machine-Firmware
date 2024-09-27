@@ -95,4 +95,11 @@ namespace KEYS {
     setLast(current);
     
   }
+
+  void printBuffer(void) {
+    for (int i = 0; i < 32; i++) {
+      printf("%d", (current>>i) & 1);
+    }
+    printf("\n");
+  }
 }

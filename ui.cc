@@ -21,17 +21,13 @@ namespace UI {
     ADC::init();
 
     hardwareStartUp();
-    hardwareStartUp();
-
-
-
+    // hardwareStartUp();
 
     if      (Buttons::PAGE.get(Buttons::State::SHIFT)) {
-        if      (Buttons::FUNC1.get(Buttons::State::SHIFT))   { mode = UI_MODE_FACTORY_TEST;      update();} 
+        if      (Buttons::FUNC1.get(Buttons::State::SHIFT))   { mode = UI_MODE_FACTORY_TEST;      update(); } // Call update() here so you can go through the routine and jump back into the startup process afterwards.
         else if (Buttons::FUNC2.get(Buttons::State::SHIFT))   { mode = UI_MODE_USB;               update(); }
-        else if (Buttons::PRESET.get(Buttons::State::SHIFT))  { mode = UI_MODE_EXPORT_PRESETS;    update(); } 
-        // Call update() here so you can go through the routine and jump back into the startup process afterwards.
-        else                                                  { mode = UI_MODE_CALIBRATION;       update(); } 
+        else if (Buttons::PRESET.get(Buttons::State::SHIFT))  { mode = UI_MODE_EXPORT_PRESETS;    update(); }
+        else                                                  { mode = UI_MODE_CALIBRATION;       update(); }
     }
     
     CONTROLS::init();
@@ -71,11 +67,13 @@ namespace UI {
 
       case UI_MODE_FACTORY_TEST:
         while(mode == UI_MODE_FACTORY_TEST) {
-          LEDS::test(50);
           LEDS::test(40);
           LEDS::test(30);
           LEDS::test(20);
           LEDS::test(10);
+          LEDS::test(20);
+          LEDS::test(30);
+          LEDS::test(40);
           
           mode = UI_MODE_NORMAL;
         }
@@ -196,6 +194,7 @@ void hardwareStartUp (void) {
         KEYS::read();
         ADC::update();
         MUX::incrementAddress();
+        sleep_ms(10);
       }
     }
     KEYS::update();
