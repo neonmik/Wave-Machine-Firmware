@@ -7,6 +7,9 @@ namespace USB {
 
     void update () {
         tud_task(); // tinyusb device task
+
+        // use a custom stack here to allow for more than 64 bytes messages to be handled
+        // this would be a workaround for the current tinyusb implementation
     }
     namespace MIDI {
         uint32_t available () {
@@ -20,7 +23,12 @@ namespace USB {
                 DEBUG::error("USB MIDI Message has 0 length");
                 return;
             }
-            tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, length);
+            if (length<64) {
+                tud_midi_stream_write(USB_MIDI_CABLE_NUMBER, msg, length);
+            } else {
+                DEBUG::error("USB MIDI Message too long");
+                return;
+            }
         }
     }
 }
