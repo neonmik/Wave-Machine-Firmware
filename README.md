@@ -68,6 +68,9 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Controls:
+
+        - Clear the LEDs immediatly on start up so that the previous settings arent retained.
+        - Try and add swirling colours for loading.
         
         - Change the layout of controls:
 
