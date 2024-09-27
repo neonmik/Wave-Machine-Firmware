@@ -72,6 +72,7 @@ namespace FILTER {
         }
     }
 
+    // TODO: #7 Implement an attenuverter for the envelope depth.
     void setEnvelopeDepth(uint16_t input)   {   envelopeDepth = input;  }
     void setDirection(uint16_t input)       {
         uint8_t index = (input >> 9);

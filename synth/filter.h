@@ -82,6 +82,7 @@ namespace FILTER{
                     frequency = NYQUIST - (((NYQUIST - cutoff) * (cutoffEnvelope.get())) >> 16);
                 }
 
+                // TODO: #8 Implement correct use of envelope depth to control ADSR in relation to cutoff
                 // int32_t envDep = (((int32_t)cutoffEnvelope.get() * (int32_t)envelopeDepth) >> 9);
                 // frequency = (int32_t)cutoff + envDep;
 
