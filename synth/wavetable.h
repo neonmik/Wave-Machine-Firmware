@@ -822,9 +822,9 @@ const int16_t* const lfo_wavetable[] = {
 
 
 inline int16_t get_mod_wavetable  (uint16_t index) {
-    if (index >= 1536) index -= 1536; // false wrap around to stop the table overflowing
-    uint16_t tableIndex = index / 256;  // Determine the index of the table in wavetable
-    uint16_t elementIndex = index % 256; // Determine the index within the table
+    index %= 1536; // Ensure index stays within the bounds of 1536 (the length of lfo_wavetable)
+    volatile uint16_t tableIndex = index / 256;  // Determine the index of the table in wavetable
+    volatile uint16_t elementIndex = index % 256; // Determine the index within the table
 
     return lfo_wavetable[tableIndex][elementIndex];
 }
