@@ -155,6 +155,7 @@ namespace SYNTH
 
       uint32_t phase;
       
+      // TODO: #9 Implement better handling of Detune setting
       if (synthParameters.detune == 0) {
         phase = (phaseAccumulator >> 1);
       } else {
