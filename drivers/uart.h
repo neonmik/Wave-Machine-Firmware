@@ -2,10 +2,10 @@
 
 #include "../config.h"
 
-#define MIDI_UART_ID uart1
+#define MIDI_UART_ID uart0
 #define MIDI_BAUD_RATE 31250
-#define MIDI_UART_TX_PIN 4
-#define MIDI_UART_RX_PIN 5
+#define MIDI_UART_TX_PIN 0
+#define MIDI_UART_RX_PIN 1
 
 namespace UART {
     void init (void);

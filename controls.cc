@@ -11,7 +11,13 @@ namespace CONTROLS {
         PRESET::init();
 
         currentPreset = DEFAULT_PRESET;
-        
+
+
+        // just for writing contents to the EEPROM 1st time.
+        // for (int i = 0; i < MAX_PRESETS; i++) {
+        //     PRESET::save(i, Preset[i]);
+        // }
+
         for (int i = 0; i < MAX_PRESETS; i++) {
             PRESET::load(i, Preset[i]);
         }
@@ -292,7 +298,7 @@ namespace CONTROLS {
             // Shift Function
             return; // no function, so skip the LED flash
         }
-        LEDS::FUNC1.flash(4, LEDS::Speed::NORMAL);
+        LEDS::FUNC1.flash(4, LED_SPEED::NORMAL);
     }
 
     void toggleButton2 (void) {
@@ -305,7 +311,7 @@ namespace CONTROLS {
             // Shift Function
             ARP::toggleHold();
             LEDS::FUNC2.set(ARP::getHold());
-            LEDS::FUNC2.flash(4, LEDS::Speed::NORMAL); // currently blocks indefinite flash.
+            LEDS::FUNC2.flash(4, LED_SPEED::NORMAL); // currently blocks indefinite flash.
             // return; // no function, so skip the LED update
         }
         // Control.toggleButton(getPage(), 1);
@@ -319,7 +325,7 @@ namespace CONTROLS {
             // ARP::toggleHold();
             return;
         }
-        LEDS::FUNC2.flash(4, LEDS::Speed::NORMAL); // currently blocks indefinite flash.
+        LEDS::FUNC2.flash(4, LED_SPEED::NORMAL); // currently blocks indefinite flash.
     }
 
     void setShift (bool input) {
