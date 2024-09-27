@@ -98,7 +98,7 @@ namespace MOD {
     void setShape (uint16_t input) {
         shape = (map(input, KNOB_MIN, KNOB_MAX, 0, (MAX_MOD_WAVES - 1)) << 8);
 
-        // TODO: Implement a way of using EG, any selected wave, or Noise as the mod source here.
+        // TODO: #10 Implement a way of using any selected wave/ADSR/Noise/Sample and Hold as the mod source here.
     }
     void setDepth (uint16_t input) {
         if (depth != input) {
