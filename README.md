@@ -115,7 +115,7 @@ Current nightly firmware for Wave Machine Hardware.
     - USB MIDI/ MIDI:
 
         Sending:
-            - Bug: when pressing and releasing notes, many Note Off messages seem to be sent.
+            
         
         Recieving:
             - Bug: SysEx messages don't complete make it through. they're truncated.
@@ -390,6 +390,7 @@ Features/Bugfixes:
         + Finally added Multicore support (hadware functions on one side, synth/dac on another)
 
     + MIDI:
+        + Bugfix: When pressing and releasing the same note note, many Note Off messages were sent - Issue was down to Note Handling code not checking if note was already in release.
         + Feature: Added MIDI SysEx Patch dumps. Currently works and gets out data, but formating needs to be reviewed (mainly with Manufacturer ID and message type).
         + Bugfix: USB-MIDI wouldn't export SysEx files, as they were too big. Fixed it by enlarging MIDI buffer in tusb_config.h.
         + Feature: Added MIDI Clock out. MIDI clock sync message are sent at 24ppqn from the internal BPM clock.

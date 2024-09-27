@@ -170,9 +170,9 @@ namespace NOTE_HANDLING {
   void release(uint8_t note, uint8_t velocity) {
     if (!sustainPedal) {
       for (int8_t voice = 0; voice < POLYPHONY; voice++)  {
-        if (VOICES[voice].note == note)  {
-          MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
+        if (VOICES[voice].note == note && VOICES[voice].gate) {
           voiceOff(voice, note, velocity);
+          MIDI::sendNoteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
         }
       }
     } else {
