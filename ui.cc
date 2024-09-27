@@ -46,10 +46,10 @@ namespace UI {
       case UI_MODE_NORMAL:
 
         RANDOM::update(ADC::noise());
+        NOTE_HANDLING::update();
 
         if (INTERVAL::UI.checkInterval()) {
 
-          NOTE_HANDLING::update();
           KEYS::update();
           PAGINATION::update();
           CONTROLS::update();
