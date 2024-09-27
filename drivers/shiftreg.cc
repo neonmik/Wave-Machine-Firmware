@@ -54,12 +54,9 @@ namespace ShiftReg {
         if (!needsSending) return;
         
         for (int i = 0; i < 8; i++) {
-            sn74595::setOutput(0, i, (buffer[0] & (1 << i)));
+            sn74595::setOutput(0, i, (buffer & (1 << i)));
         }
         sn74595::sendOutput();
-
-        // time++;
-        // if (time > resolution) time = 0;
 
         needsSending = false;
     }
@@ -67,29 +64,16 @@ namespace ShiftReg {
     void set_bit(Pins pin, bool value) {
         uint8_t temp = static_cast<uint8_t>(pin);
         if (value) {
-            buffer[0] |= temp;
+            buffer |= temp;
         } else {
-            buffer[0] &= ~temp;
+            buffer &= ~temp;
         }
         needsSending = true;
     }
-    
-    // void set_bit_level(Pins pin, bool value, uint8_t level) {
-    //     uint8_t temp = static_cast<uint8_t>(pin);
-    //     for (int i = 0; i < MAX_RESOLUTION; i++) {
-    //         buffer[i] &= ~temp; // clear pin
-    //         if ((i <= level) && value) {
-    //             buffer[i] |= temp;
-    // 
-    //         } else {
-    //             buffer[i] &= ~temp;
-    //         }
-    //     }
-    // }
 
     void off (void) {
         uint8_t temp = static_cast<uint8_t>(Pins::ALL);
-        buffer[0] &= ~temp;
+        buffer &= ~temp;
         needsSending = true;
     }
 

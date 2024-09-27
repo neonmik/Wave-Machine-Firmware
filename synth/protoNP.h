@@ -1,3 +1,7 @@
+#pragma once
+
+#include "../config.h"
+
 enum class NotePriority {
     FIRST,      // First/oldest notes stay the longest
     LAST,       // Last/newest notes stay the longest

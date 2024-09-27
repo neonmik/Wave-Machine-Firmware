@@ -31,9 +31,8 @@ enum Pins : uint8_t {
 #define     MAX_RESOLUTION  64
 namespace ShiftReg {
     namespace {
-        uint8_t     buffer[MAX_RESOLUTION];
+        uint8_t     buffer;
         uint8_t     time            = 0;
-        uint16_t    resolution      = MAX_RESOLUTION;
         uint8_t     count           = 1;
         uint8_t     *data;
 
