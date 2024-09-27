@@ -3,6 +3,13 @@
 namespace USB {
     void init () {
         tusb_init();
+
+        tud_task(); // tinyusb device task
+
+        uint8_t temp[4];
+
+        if (tud_midi_n_available(0,0)) tud_midi_packet_read(temp);
+
     }
 
     void update () {

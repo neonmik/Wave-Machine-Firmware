@@ -32,6 +32,7 @@ extern uint8_t     hardwareIndex;
 extern uint16_t    playBuffer[];
 
 extern bool        startUpComplete;
+extern bool        calibrationCheck;
 
 
 void hardwareCore() {
@@ -47,18 +48,20 @@ void hardwareCore() {
 
 void synthCore() {
 
-  SYNTH::init();
-  DAC::init();
-  CLOCK::init();
 
   printf("\n\nWaiting for UI to start up");
   while (!startUpComplete) {
-    sleep_ms(500);
-    printf(".");
+    sleep_ms(250);
+    if (!calibrationCheck) printf(".");
   }
-  printf("\n\nAudio core starting\n");
+  printf("\n\nAudio core starting");
 
+  SYNTH::init();
+  DAC::init();
+  CLOCK::init();
   
+  printf("!\n");
+
   while (true) {
     if (softwareIndex != hardwareIndex) {
       

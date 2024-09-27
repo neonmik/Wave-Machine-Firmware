@@ -14,8 +14,6 @@ bool startUpComplete;
 namespace UI {
 
   void init (void) {
-    
-    MIDI::init();
 
     LEDS::init();
     MUX::init();
@@ -23,7 +21,6 @@ namespace UI {
     ADC::init();
 
     hardwareStartUp();
-    // hardwareStartUp();
 
     if      (Buttons::PAGE.get(Buttons::State::SHIFT)) {
         if      (Buttons::FUNC1.get(Buttons::State::SHIFT))   { mode = UI_MODE_FACTORY_TEST;      update(); } // Call update() here so you can go through the routine and jump back into the startup process afterwards.
@@ -31,13 +28,15 @@ namespace UI {
         else if (Buttons::PRESET.get(Buttons::State::SHIFT))  { mode = UI_MODE_EXPORT_PRESETS;    update(); }
         else                                                  { mode = UI_MODE_CALIBRATION;       update(); }
     }
+
+    startUpComplete = true;
+
+    MIDI::init();
     
     CONTROLS::init();
     CONTROLS::setupButtonAssignment();
 
     printStartUp();
-    
-    startUpComplete = true;
   }
 
   void update (void) {
@@ -203,7 +202,7 @@ void hardwareStartUp (void) {
         KEYS::read();
         ADC::update();
         MUX::incrementAddress();
-        sleep_ms(10);
+        sleep_ms(5);
       }
     }
     KEYS::update();
