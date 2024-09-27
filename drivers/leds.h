@@ -12,20 +12,8 @@ enum Direction : uint8_t {
     DOWN            = 0
 };
 
-enum Leds : uint8_t {
-    LED_PICO_PIN    = PICO_DEFAULT_LED_PIN, // 25
-    LED_LFO_PIN     = 21,
-    LED_ARP_PIN     = 22,
-};
-
-
 namespace LEDS {
 
-    enum Speed : uint8_t {
-        FAST            = 4,
-        NORMAL          = 8, 
-        SLOW            = 48, // probably should be used for constant flashing
-    };
     namespace {
         bool _SR_state;
     }
@@ -80,7 +68,7 @@ namespace LEDS {
                     sleep_ms(delay);
                 }
             }
-            void flash (uint8_t number_repeats, Speed speed) {
+            void flash (uint8_t number_repeats, LED_SPEED speed) {
                 if (number_repeats == 0xFF) repeats = 0xFF;
                 else repeats = number_repeats << 1; // number of times it repeats,  immediatly doubles to get the on and off
 

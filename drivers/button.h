@@ -7,11 +7,7 @@
 namespace Buttons {
 
     namespace {
-        uint16_t    DEBOUNCE_TIME       = 5;
-        uint16_t    SHORT_PRESS_TIME    = 192;
-        uint16_t    DOUBLE_PRESS_TIME   = 150;
-        uint16_t    LONG_PRESS_TIME     = 350;
-        uint16_t    TOTAL_TIMEOUT       = 650;
+
     }
     
     enum class State {

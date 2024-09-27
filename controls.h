@@ -18,8 +18,6 @@ namespace CONTROLS
 {
     namespace
     {
-        uint16_t    SHIFT_TIMEOUT           = 75;
-
         uint8_t     currentPreset;
         uint8_t     currentPage;
         uint8_t     activePage;

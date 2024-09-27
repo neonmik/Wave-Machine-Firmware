@@ -2,9 +2,9 @@
 
 namespace LEDS {
 
-    GPIO PICO(Leds::LED_PICO_PIN);
-    GPIO FUNC1(Leds::LED_LFO_PIN);
-    GPIO FUNC2(Leds::LED_ARP_PIN);
+    GPIO PICO(LED_PINS::PICO);
+    GPIO FUNC1(LED_PINS::FUNC1);
+    GPIO FUNC2(LED_PINS::FUNC2);
     RGB PRESET;
     SR  KNOBS(Pins::KNOBS);
     SR  KNOB_1(Pins::KNOB_1);

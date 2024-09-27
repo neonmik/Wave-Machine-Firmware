@@ -70,7 +70,7 @@ namespace Buttons {
                 }
                 break;
             case State::SHIFT:
-                return shiftPress;
+               return shiftPress;
             default:
                 break;
         }

@@ -12,17 +12,6 @@
 
 
 namespace KEYS {
-    // Pin definitions for Mux
-    constexpr   uint8_t     MUX_OUT_0   =   16;
-    constexpr   uint8_t     MUX_OUT_1   =   17;
-
-    // Key defines buttons
-    constexpr   uint8_t     MAX_KEYS    =   27;
-    constexpr   uint8_t     PAGE_KEY    =   27;
-    constexpr   uint8_t     LFO_KEY     =   28;
-    constexpr   uint8_t     ARP_KEY     =   29;
-    constexpr   uint8_t     PRESET_KEY  =   30;
-
     namespace {
         uint32_t readBuffer = 0;
 

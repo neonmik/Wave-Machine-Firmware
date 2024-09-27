@@ -6,36 +6,11 @@
 #include "mux.h"
 
 #include "hardware/adc.h"
-// #include "hardware/dma.h"
 
 #include "../random.h"
 
 
 namespace ADC {
-
-    enum ADC_GPIO : uint8_t {
-        ADC_MUX_PIN         = 26,
-        ADC_NOISE_PIN       = 27,
-        ADC_VOLTAGE_PIN     = 29,
-    };
-
-    enum ADC_CHANNEL : uint8_t {
-        ADC_MUX_CHANNEL         = 0,
-        ADC_NOISE_CHANNEL       = 1,
-        ADC_VOLTAGE_CHANNEL     = 3,
-        ADC_TEMPERATURE_CHANNEL = 4
-    };
-
-    constexpr   uint8_t     MAX_NOISE_READINGS = 32;
-
-    constexpr   uint8_t     HYSTERESIS_WEIGHTING = 1;
-    constexpr   uint8_t     IIR_FILTER_WEIGHTING = 6;
-
-    // these are set inside the range of the ADC to compensate for the noise floor (on the minimum) and battery power (on the maximum)
-    constexpr   uint16_t    INPUT_RANGE_MIN = 10;
-    constexpr   uint16_t    INPUT_RANGE_MAX = 4090;
-
-    constexpr   float       MINIMUM_BATTERY_VOLTAGE = 3.58;
 
     namespace {
         float       coreTemperature;

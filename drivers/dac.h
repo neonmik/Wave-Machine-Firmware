@@ -17,19 +17,10 @@ extern uint8_t     softwareIndex;
 extern uint8_t     hardwareIndex;
 extern uint16_t    playBuffer[];
 
-typedef uint16_t (*synth_function)();
+
 namespace DAC {
     namespace {
-        uint8_t     DAC_DATA    =   11;
-        uint8_t     DAC_CLK     =   10;
-        uint8_t     DAC_CS      =   9;
-
-        uint16_t    DAC_CONFIG  =   0b0111000000000000;
-
-        spi_inst_t* DAC_SPI     =   spi1;
-
-
-
+        
         uint32_t    _clock_speed;
         uint16_t    _sample_rate;
         uint16_t    _buffer_size    = BUFFER_SIZE;

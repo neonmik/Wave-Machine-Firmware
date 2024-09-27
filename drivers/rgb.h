@@ -4,16 +4,6 @@
 
 #include "hardware/pwm.h"
 
-#define     LEDR_PIN        6
-#define     LEDG_PIN        7
-#define     LEDB_PIN        8
-
-#define     PWM_BIT_DEPTH   255 // or 65535
-#define     PWM_HZ          41000
-#define     PWM_DIV         ((CORE_SPEED * 1000) / PWM_BIT_DEPTH) / SAMPLE_RATE
-
-
-
 namespace RGB_LED {
     
     class rgb {
