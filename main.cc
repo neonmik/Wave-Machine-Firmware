@@ -8,6 +8,7 @@
 
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
+#include "pico/stdio_uart.h"
 
 #include "config.h"
 #include "debug.h"
@@ -50,10 +51,12 @@ void synthCore() {
   DAC::init();
   CLOCK::init();
 
-  printf("\n\nAudio core waiting for start up\n");
+  printf("\n\nWaiting for UI to start up");
   while (!startUpComplete) {
-    sleep_ms(1);
+    sleep_ms(500);
+    printf(".");
   }
+  printf("\n\nAudio core starting\n");
 
   
   while (true) {
