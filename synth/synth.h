@@ -10,12 +10,9 @@
 #include "wavetable.h"
 #include "resources.h"
 
+
 namespace SYNTH
 {
-  namespace {
-    volatile uint8_t voice_index;
-  }
-
   struct OscillatorParameters
   {
     uint16_t waveOffset;
@@ -29,13 +26,13 @@ namespace SYNTH
     uint16_t level = 0xFFFF;
   };
 
-  struct EnvelopeParameters
-  {
-    uint16_t attack   = 0;
-    uint16_t decay    = 0;
-    uint16_t sustain  = 0;
-    uint16_t release  = 0;
-  };
+  // struct EnvelopeParameters
+  // {
+  //   uint16_t attack   = 0;
+  //   uint16_t decay    = 0;
+  //   uint16_t sustain  = 0;
+  //   uint16_t release  = 0;
+  // };
 
   struct SharedParams
   {
@@ -51,27 +48,40 @@ namespace SYNTH
     uint16_t modVector;
 
     uint16_t level  = 0xFFFF;
+
+    void updateWaveshape (void) {
+      oscillator1.waveOffset = oscillator1.waveShape + (oscillator1.waveVector + modVector);
+      oscillator2.waveOffset = oscillator2.waveShape + (oscillator1.waveVector + modVector);
+    }
   };
+
+  namespace {
+    volatile uint8_t voice_index;
+
+    volatile bool recalculateIncrement = false;
+
+    static SharedParams synthParameters;
+  }
+
 
   struct Voice
   {
-    SharedParams &synthParameters;
 
-    ADSR::Envelope ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
+    ADSR::Envelope      ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
 
-    uint8_t   index = 0;                // index of the voice in the synth
+    uint8_t             index = 0;                // index of the voice in the synth
 
-    uint8_t   note;                     // Midi Note number - used for filter voice
-    bool      gate = false;             // used for tracking a note that's released, but not finished.
-    bool      active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
-    bool      refreshIncrement = false;
+    uint8_t             note;                     // Midi Note number - used for filter voice
+    bool                gate = false;             // used for tracking a note that's released, but not finished.
+    bool                active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
+    bool                refreshIncrement = false;
 
-    uint32_t  frequency = 0;            // Frequency in Hz << 8 (Q8)
+    uint32_t            frequency = 0;            // Frequency in Hz << 8 (Q8)
 
-    uint32_t  phaseIncrement = 0;
-    uint32_t  phaseAccumulator = 0;
+    uint32_t            phaseIncrement = 0;
+    uint32_t            phaseAccumulator = 0;
 
-    int32_t   sample = 0;
+    int32_t             sample = 0;
 
     void setIndex(uint8_t input) {
       index = input;
@@ -84,13 +94,12 @@ namespace SYNTH
     void updateIncrement(void) {
       
       if (!active) return;
-      if (!refreshIncrement) return;
       
+      if (!refreshIncrement) return;
 
       phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 10) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
       refreshIncrement = false;
-
     }
 
     void noteOn(uint8_t input_note) {
@@ -166,15 +175,15 @@ namespace SYNTH
       return sample;
     }
 
-    Voice(SharedParams &synthParameters) : synthParameters(synthParameters) {}
+    // Voice(SharedParams &synthParameters) : synthParameters(synthParameters) {}
+    Voice() {}
   };
 
   class Synthesizer
   {
   public:
-    SharedParams synthParameters;
+    Voice voices[POLYPHONY];
 
-    Voice voices[POLYPHONY] = {Voice(synthParameters), Voice(synthParameters), Voice(synthParameters), Voice(synthParameters), Voice(synthParameters), Voice(synthParameters), Voice(synthParameters), Voice(synthParameters)};
 
     int32_t sample = 0;
 
@@ -187,16 +196,6 @@ namespace SYNTH
       }
     }
     ~Synthesizer() {}
-
-    void updateWaveshape (void) {
-      synthParameters.oscillator1.waveOffset = synthParameters.oscillator1.waveShape + (synthParameters.oscillator1.waveVector + synthParameters.modVector);
-      synthParameters.oscillator2.waveOffset = synthParameters.oscillator2.waveShape + (synthParameters.oscillator1.waveVector + synthParameters.modVector);
-    }
-
-  private:
-
-    Synthesizer(const Synthesizer &) = delete;
-    Synthesizer &operator=(const Synthesizer &) = delete;
   };
 
   static Synthesizer synth;
