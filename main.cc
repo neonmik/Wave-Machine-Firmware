@@ -39,7 +39,6 @@ void hardwareCore() {
   while (true) {
 
     UI::update();
-
   }
 }
 
@@ -100,13 +99,9 @@ int main() {
   stdio_init_all(); // has to be here to allow both cores to use the debug serial UART. 
 
   QUEUE::init(); // has to be here to allow both cores access to QUEUE
-  
-  // multicore_launch_core1(hardwareCore); // launches the 2nd core
-  // synthCore(); // launches the synth/audio core
 
   multicore_launch_core1(synthCore); // launches the 2nd core
   hardwareCore(); // launch the hardware core
-
 } 
 
 

@@ -55,13 +55,16 @@ namespace MIDI {
     void handleNoteOff(uint8_t note, uint8_t velocity) {
         NOTE_HANDLING::noteOff(note, velocity);
     }
+
     void handleNoteOn(uint8_t note, uint8_t velocity) {
         if (velocity == 0) NOTE_HANDLING::noteOff(note, MIDI_DEFAULT_NOTE_OFF_VEL);
         else NOTE_HANDLING::noteOn(note, velocity);
     }
+
     void handleVelocityChange(uint8_t note, uint8_t velocity) {
         return;
     }
+    
     void handleControlChange(uint8_t controller, uint8_t value) {
 
         // add 14-bit midi handling code here too...

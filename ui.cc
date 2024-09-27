@@ -35,7 +35,6 @@ namespace UI {
     }
     
     CONTROLS::init();
-    
     CONTROLS::setupButtonAssignment();
 
     printStartUp();
@@ -88,6 +87,8 @@ namespace UI {
 
       case UI_MODE_USB:
         setUSBMode(true);
+
+        printf("USB MSC Activated\n");
         while (getUSBMode()) {
           USB::update();
           // add a conditional here that if USB is ejected, it jumps back to normal operations
@@ -105,61 +106,62 @@ namespace UI {
         // do nothing
         break;
     }
+  
   }
 
-  void printStartUp (void) {
-    pico_unique_board_id_t board_id;
-    pico_get_unique_board_id(&board_id);
+void printStartUp (void) {
+  pico_unique_board_id_t board_id;
+  pico_get_unique_board_id(&board_id);
 
-    printf("\n\n");
-    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
-    printf("~ ~ ~ ~ ~ ~ ~ ~ ~ Welcome to the Wave.... ~ ~ ~ ~ ~ ~ ~ ~\n");
-    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
-    printf("~							~\n");
-    printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", board_id.id[0], board_id.id[1], board_id.id[2], board_id.id[3], board_id.id[4], board_id.id[5], board_id.id[6], board_id.id[7]);
-    printf("~	Firmware -	v%01.02f	      			~\n", VERSION);
-    printf("~	Temp -		%02.01fºC				~\n", ADC::temperature());
-    printf("~	Battery -	%.02fV				~\n", ADC::battery());
-    printf("~							~\n");
-    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
-    printf("~    		  © 2020-2024 NAMS Labs			~\n");
-    printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
-    printf("\n\n");
-  }
+  printf("\n\n");
+  printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+  printf("~ ~ ~ ~ ~ ~ ~ ~ ~ Welcome to the Wave.... ~ ~ ~ ~ ~ ~ ~ ~\n");
+  printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+  printf("~							~\n");
+  printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", board_id.id[0], board_id.id[1], board_id.id[2], board_id.id[3], board_id.id[4], board_id.id[5], board_id.id[6], board_id.id[7]);
+  printf("~	Firmware -	v%01.02f	      			~\n", VERSION);
+  printf("~	Temp -		%02.01fºC				~\n", ADC::temperature());
+  printf("~	Battery -	%.02fV				~\n", ADC::battery());
+  printf("~							~\n");
+  printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+  printf("~    		  © 2020-2024 NAMS Labs			~\n");
+  printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
+  printf("\n\n");
+}
 
-  void calibrate (void) {
+void calibrate (void) {
 
-    LEDS::test(50);
+  LEDS::test(50);
 
-    sleep_ms(1000);
-    printf("\n\n");
-    printf(" _______________________________________________________________________________\n");
-    printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
-    printf("|-------------------------------------------------------------------------------|\n");
-    printf("|										|\n");
-    printf("|				Wave Machine Prototype				|\n");
-    printf("|				      2020-2023					|\n");
-    printf("|										|\n");
-    printf("|		    Made by Nick Allott Musical Services (NAMS) Labs		|\n");
-    printf("|										|\n");
-    printf("|-------------------------------------------------------------------------------|\n");
-    printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
-    printf("|_______________________________________________________________________________|\n\n");
-    printf("Welcome to Factory Debug!\n\n");
-    sleep_ms(300);
-    printf("We will now test the hardware");
-    ADC::update();
-    sleep_ms(300);
+  sleep_ms(1000);
+  printf("\n\n");
+  printf(" _______________________________________________________________________________\n");
+  printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
+  printf("|-------------------------------------------------------------------------------|\n");
+  printf("|										|\n");
+  printf("|				Wave Machine Prototype				|\n");
+  printf("|				      2020-2023					|\n");
+  printf("|										|\n");
+  printf("|		    Made by Nick Allott Musical Services (NAMS) Labs		|\n");
+  printf("|										|\n");
+  printf("|-------------------------------------------------------------------------------|\n");
+  printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
+  printf("|_______________________________________________________________________________|\n\n");
+  printf("Welcome to Factory Debug!\n\n");
+  sleep_ms(300);
+  printf("We will now test the hardware");
+  ADC::update();
+  sleep_ms(300);
 
-    printf(".");
-    sleep_ms(300);
-    printf(".");
-    sleep_ms(300);
-    printf(".");
-    sleep_ms(300);
-    printf("\n\n");
+  printf(".");
+  sleep_ms(300);
+  printf(".");
+  sleep_ms(300);
+  printf(".");
+  sleep_ms(300);
+  printf("\n\n");
 
-    LEDS::KNOBS_off();
+  LEDS::KNOBS_off();
 
     for (int i = 0; i < 4; i++) {
       printf("Please turn Knob %d to 0%\n", i);

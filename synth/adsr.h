@@ -2,24 +2,24 @@
 
 #include "config.h"
 
-#define MAX_ATTACK  0xFFFFFF
-
-enum class Phase : uint8_t {
-    ATTACK,
-    DECAY,
-    SUSTAIN,
-    RELEASE,
-    OFF
-};
-
-enum class Mode
-{
-    MONO,
-    PARA,
-};
-
+#define MAX_ATTACK  0xFFFFFF        // 24 bit
 
 namespace ADSR {
+
+    enum class Phase : uint8_t {
+        ATTACK,
+        DECAY,
+        SUSTAIN,
+        RELEASE,
+        OFF
+    };
+
+    enum class Mode
+    {
+        MONO,
+        PARA,
+    };
+
     struct Parameters {
         uint32_t attack;
         uint32_t decay;
@@ -66,6 +66,7 @@ namespace ADSR {
                 return envelopeParameters.release;
             }
     };
+
     class Envelope {
         private:
 
@@ -80,7 +81,7 @@ namespace ADSR {
             uint32_t    adsr                = 0;
             int32_t     increment           = 0;
             Phase       phase               = Phase::OFF;
-
+            
         public:
 
             Envelope(const uint32_t& attack, const uint32_t& decay, const uint32_t& sustain, const uint32_t& release)
