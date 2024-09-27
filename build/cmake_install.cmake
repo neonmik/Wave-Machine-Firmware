@@ -1,4 +1,4 @@
-# Install script for directory: /Users/nickallott/pico/Wave-Machine-Firmware_NEW
+# Install script for directory: /Users/nickallott/pico/Wave-Machine-Firmware
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/nickallott/pico/Wave-Machine-Firmware_NEW/build/pico-sdk/cmake_install.cmake")
+  include("/Users/nickallott/pico/Wave-Machine-Firmware/build/pico-sdk/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/nickallott/pico/Wave-Machine-Firmware_NEW/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/nickallott/pico/Wave-Machine-Firmware/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
