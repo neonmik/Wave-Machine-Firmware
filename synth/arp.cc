@@ -59,6 +59,12 @@ namespace ARP {
                 case ArpDirection::DOWN_UP:
                     updateOctave(ArpDirection::DOWN_UP);
                     break;
+                case ArpDirection::PLAYED_ORDER:
+                    updateOctave(ArpDirection::UP);
+                    break;
+                case ArpDirection::CHORD:
+                    updateOctave(ArpDirection::UP);
+                    break;
             }
             return;
         } else {
@@ -385,7 +391,7 @@ namespace ARP {
 
             uint8_t length      = inputNoteCount;   // how many entries in the array
 
-            if (!playedOrder) { // would allow the notes to not be organised for a mode, this should still mean all the zeros are at the top...
+            if (arpDirection != ArpDirection::PLAYED_ORDER) { // would allow the notes to not be organised for a mode, this should still mean all the zeros are at the top...
                 ArpData swap;
 
                 for (int i = 0; i < length; i++) {     
@@ -594,9 +600,8 @@ namespace ARP {
         // if (currentOctave > octaveRange) currentOctave = octaveRange; // if you change range while playing it will pull it back to 0 immediately, instead of waiting till next range check
     }   
     void setDirection (uint16_t input) {
-        if (direction == (input>>8)) return;
-        direction = (input>>8);
-        // bitshift to get 0-3 for the Arp direction
+        if (direction == (input>>7)) return;
+        direction = (input>>7); // bitshift to get 0-7 for the Arp direction
         switch (direction) {
             case 0:
                 // Arp UP
@@ -618,42 +623,43 @@ namespace ARP {
                 arpDirection =  ArpDirection::DOWN_UP;
                 octaveDirection = ArpDirection::DOWN;
                 break;
+            case 4:
+            case 5:
+                // Arp PLAYED ORDER
+                arpDirection =  ArpDirection::PLAYED_ORDER;
+                octaveDirection = ArpDirection::UP;
+                inputNotesUpdated = true;
+                break;
+            case 6:
+            case 7:
+                // Arp CHORD
+                arpDirection =  ArpDirection::CHORD;
+                octaveDirection = ArpDirection::UP;
+                // TODO: #15 Fix out of range fault here - If theres more than 8 notes playing the sequence, the chord mode will break.
+                break;
+            default:
+                DEBUG::print("Error: Arp direction out of range");
+                break;
+        }
+
+        if (arpDirection == ArpDirection::CHORD) {
+            octaveModeChanged = true;
+            polyMode = true;
+            // arpMode = ArpMode::POLY; // this was moved to the running arp code to make sure notes don't hang on changing the setting
+        } else {
+            octaveModeChanged = true;
+            polyMode = false;
+            // arpMode = ArpMode::MONO; // this was moved to the running arp code to make sure notes don't hang on changing the setting
         }
     }
     void setGate (uint16_t input) {
         gate = (CLOCK::getSamplesPerDivision() * input) >> 10;
 
-        // TODO: add dynamic minimum gate time
+        // TODO: #13 add dynamic minimum gate time
         if (gate < 240) gate = 240; // minimum gate time of 120 samples, any shorter and the note doesn't fire
     }
     void setBPM (uint16_t input) {
-        // TODO: recode the following section so it doesnt use the map function, as that is computationally expensive
+        // TODO: #14 recode the following section so it doesnt use the map function, as that is computationally expensive
         CLOCK::setBPM(map(input, KNOB_MIN, KNOB_MAX, 30, 350));
-    }
-    void setOctMode (uint16_t input) {
-        bool temp = (bool)(input >> 9);
-        if (polyMode != temp) {
-            polyMode = temp;
-            octaveModeChanged = true;
-
-            // this was moved to the running arp code to make sure notes don't hang on changing the setting
-            // if (polyMode) arpMode = ArpMode::POLY;
-            // else arpMode = ArpMode::MONO;
-        }
-    }
-    void playedOrderToggle (void) {
-        playedOrder = !playedOrder;
-
-        if (playedOrder) 
-
-        inputNotesUpdated = true; // this is here to make sure that notes are switched to played order as soon as changing the setting.
-
-    }
-    void setPlayedOrder (uint16_t input) {
-        if (playedOrder == (bool)(input >> 9)) return;
-
-        playedOrder = (bool)(input >> 9);
-
-        inputNotesUpdated = true; // this is here to make sure that notes are switched to played order as soon as changing the setting.
     }
 }

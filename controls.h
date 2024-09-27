@@ -126,7 +126,7 @@ namespace CONTROLS
                 PAGE    SHFT{   &SYNTH::setOsc2Wave,       &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     &SYNTH::setDetune,          nullptr,                      nullptr};
 
             PAGE        ARP {   &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState,                nullptr};
-                PAGE    sARP{   &ARP::setPlayedOrder,      &ARP::setBPM,               nullptr,                    &ARP::setOctMode,           nullptr,                      nullptr};
+                PAGE    sARP{   nullptr,                   &ARP::setBPM,               nullptr,                    nullptr,                    nullptr,                      nullptr};
 
             // Currently new/unused pages
                 PAGE    mENV{   &MOD::setAttack,           &MOD::setDecay,             &MOD::setSustain,           &MOD::setRelease,           nullptr,                      nullptr};

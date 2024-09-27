@@ -61,6 +61,8 @@ Current nightly firmware for Wave Machine Hardware.
 - Updates and Bugfixes:
 
     - Arp:
+        - Improvement: Add a feature where the ARP is aware if it's sync'd or not, this will then facilitate the setting of Tempo as Div or BPM.
+
         - Notes: The transfer/update of notes should check to see if any of the currently pressed niotes are already active and move the pointer around to match these to stop things getting messed up between chord changes?
         
         - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements - There should be a delay between key release and repopulation (1/8 note) - See Mutable Instruments implentation.
@@ -102,7 +104,7 @@ Current nightly firmware for Wave Machine Hardware.
     - Oscillator:
         - Improvement: Look into adding an extra 8 bit variable to count the roll over of the Phase Accumulator to stop the frequency overflowing at the top of the octave/pitch bend range (currently octave 3, with pitchbend above 1/3 will wrap round and be the lowest note). - it may be better to change octave to -2, -1, 0, +1, +2 instead.
 
-        - Improvement: Finesse soft start code - currently removed as it took too long to get going and still didnt realy work.
+        - Improvement: Add soft start code - currently removed as it took too long to get going and still didnt realy work.
 
     - Mod:
         - Improvement: Vibrato isnt even in +/- (due to the logarithmic nature of pitch) - Fine at >> 8 (+/-40c, but slightly uneven) but over that becomes noticably uneven.
@@ -156,7 +158,7 @@ Current nightly firmware for Wave Machine Hardware.
 
     - USB:
 
-        - Feature: Add some kinda of dynamic RAM drive, to allow reading and writing of file form MSC. 
+        - Feature: Add code to use SD drive as patch storage, to allow reading and writing of file form MSC - In development.
 
 
 
@@ -191,14 +193,10 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Improve Arp code:
 
-        - Improvement: Add a control for Mono/Para Filter modes
         - Feature: Add a setting for patterns - so that its not just straight Quarter/Sixteenth notes etc. Think 90's/00's timberland synths
         - Feature: Add a swing feature.
-        - Feature: Add back Chord Arp - will work great with patterns too.
         
         - Feature: Add a function to quantize the Arp. could be that notes don't get updated until the counter resets, or just the next time the beat has changed.
-
-        - Bug: To do with Hold diverting add notes to only refresh - With Hold/Latch engaged (only): If you play a 2 octave C7, followed by a 2 oct Dm7, fine, but if you then play another 2 octave C7, the note organised gets confused. Something to do with the return on double notes I believe... mayeb move the reorganizing to the end of the Note Priority update loop.
 
 
     - Improve Note Handling:
@@ -236,6 +234,7 @@ Current nightly firmware for Wave Machine Hardware.
 
 Changelog: 
 
+    27/09/2024:- Updated Firmware to use new Hardware (Pico PLus 2) - Also Added Polyphonic Filter.
     25/08/2023:- Added a serial window on startup that tells you all the synth details (Unique ID, Firmware Version, and Core Temp).
     24/08/2023:- Added the Sustaion pedal function.
     12/08/2023:- Added Changelog and Updated synth name.
@@ -305,6 +304,7 @@ Features/Bugfixes:
         + DAC
 
     + Arp: 
+        + Feature: The Arp Direction now holds the PLAYED_ORDER and CHORD functions. This has freed up tywo controls and makes logical sense (apart from Octave Direction, which I'll figure out later, probably on one of the controls I've saved)
         + Bugifx: Fixed a bug that caused notes to hang (MIDI and internal) when flipping between MONO and POLY arp mode. Made sure that the mode was only updated when inside the update loop.
         + Feature: Added a setting for "Played Order". Currently can only be turned on in firmware update, as no controls left to change it.
         + Feature: Added and fully implemented the Gate function. This allows you to use a pot to change the length of the Arp notes. setting fully Anti-Clockwise will result in a very short blip, while setting fully Clockwise will result in a note that ends when the next note begins. Make sure the Filter envelope is set correctly or you wont hear anything! 
@@ -422,6 +422,7 @@ Features/Bugfixes:
         + USB-MIDI is now functional! 
 
     + Filter:
+        + Feature: Filter is now Polyphonic. This means each voice has its own filter instance, along with its own ADSR for complicated sounds.
         + Bugfix: Filter envelope was reseting randomly (when playing arp with short release and longer attack (either mono or poly) but seemed to be fine with any release). Can't replicate now, so marking as fixed. Added watchdog/debug messages just incase.
         + Feature: Added a setting for Mono/Para Filter modes - just needs a control now.
         + Bugfix: Filter triggers didn't count active notes right.

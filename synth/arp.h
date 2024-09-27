@@ -29,7 +29,8 @@ namespace ARP {
             UP_DOWN,
             DOWN_UP,
             PLAYED_ORDER,
-            // RAND
+            CHORD,
+            RAND
         };
         
         enum class OctaveDirection {
