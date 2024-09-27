@@ -161,31 +161,41 @@ void calibrate (void) {
 
   LEDS::KNOBS_off();
 
-    for (int i = 0; i < 4; i++) {
-      printf("Please turn Knob %d to 0%\n", i);
-      while (ADC::value(i) != 0) {
-        sleep_ms(1);
-        ADC::update();
-      }
-      LEDS::KNOB_select(i, 1);
-      LEDS::update();
+  for (int i = 0; i < 4; i++) {
+    printf("Please turn Knob %d to 0%\n", i);
 
-      printf("Now turn Knob %d to 100%\n", i);
-      
-      while (ADC::value(i) != 1023) {
-        sleep_ms(1);
-        ADC::update();
-      }
-      LEDS::KNOB_select(i, 0);
-      LEDS::update();
-      printf("Knob %d check is complete!\n", i);
+    volatile uint16_t knobValue = ADC::value(i);
+
+    while (knobValue == 0) {
+      sleep_ms(10);
+      ADC::update();
+      knobValue = ADC::value(i);
     }
-    printf("All Knobs working correctly!\n\n");
 
-    LEDS::test(50);
+    LEDS::KNOB_select(i, 1);
+    LEDS::update();
 
-    mode = UI_MODE_NORMAL;
+    printf("Now turn Knob %d to 100%\n", i);
+    
+    knobValue = ADC::value(i);
+
+    while (knobValue == 1023) {
+      sleep_ms(10);
+      ADC::update();
+      knobValue = ADC::value(i);
+    }
+
+    LEDS::KNOB_select(i, 0);
+    LEDS::update();
+
+    printf("Knob %d check is complete!\n", i);
   }
+  printf("All Knobs working correctly!\n\n");
+
+  LEDS::test(50);
+
+  mode = UI_MODE_NORMAL;
+}
 
 void hardwareStartUp (void) {
     // Have to do this to prime all the hardware
