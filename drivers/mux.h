@@ -34,5 +34,6 @@ namespace MUX {
 
     void    init (void);
     void    incrementAddress(void);
+    void    setAddress (uint8_t newAddress);
     uint8_t getAddress (void);
 }

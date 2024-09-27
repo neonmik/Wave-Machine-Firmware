@@ -17,6 +17,11 @@ namespace MUX {
         transferAddress();
     }
 
+    void setAddress (uint8_t newAddress) {
+        address = newAddress;
+        transferAddress();
+    }
+
     uint8_t getAddress (void) {
         return address;
     }

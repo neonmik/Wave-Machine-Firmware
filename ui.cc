@@ -11,6 +11,8 @@
 #include "interval.h" 
 
 bool startUpComplete;
+bool calibrationCheck = false;
+
 namespace UI {
 
   void init (void) {
@@ -129,7 +131,13 @@ void calibrate (void) {
 
   LEDS::test(50);
 
+  MUX::setAddress(0);
+
   sleep_ms(1000);
+  
+  calibrationCheck = true;
+
+
   printf("\n\n");
   printf(" _______________________________________________________________________________\n");
   printf("| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n");
@@ -183,6 +191,8 @@ void calibrate (void) {
       knobValue = ADC::value(i);
     }
 
+    MUX::incrementAddress();
+    
     LEDS::KNOB_select(i, 0);
     LEDS::update();
 
@@ -192,7 +202,10 @@ void calibrate (void) {
 
   LEDS::test(50);
 
+  calibrationCheck = false; 
+
   mode = UI_MODE_NORMAL;
+  return;
 }
 
 void hardwareStartUp (void) {
