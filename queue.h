@@ -8,6 +8,8 @@
 
 
 
+
+
 namespace QUEUE {
     struct trigger_msg_t {
         uint8_t     slot;       // voice slot where note is now trigged
@@ -21,6 +23,7 @@ namespace QUEUE {
     extern queue_t release_queue;
         
     void init (void);
+    void update (void);
 
     void triggerSend (uint8_t slot, uint8_t note, bool gate);
     bool triggerReceive (uint8_t &slot, uint8_t &note, bool &gate);

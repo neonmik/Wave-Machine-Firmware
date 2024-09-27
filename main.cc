@@ -22,6 +22,7 @@
 #include "ui.h"
 
 #include "queue.h"
+#include "interval.h"
 
 extern uint32_t    sampleClock;
 uint32_t           sampleClockLast;
@@ -61,7 +62,7 @@ void synthCore() {
       playBuffer[softwareIndex] = SYNTH::process();
 
       ++softwareIndex;
-      softwareIndex &= 0x1F; // loops the play buffer every 32 samples
+      softwareIndex %= 32; // loops the play buffer every 32 samples
 
       ++sampleClock;
 
@@ -72,22 +73,8 @@ void synthCore() {
       SYNTH::calculateIncrements();
     }
 
-    if ((!(sampleClock & 0x3F)) && (sampleClock != sampleClockLast)){
-      sampleClockLast = sampleClock;
-
-      if (QUEUE::triggerCheckQueue()) {
-        uint8_t slot, note;
-        bool gate;
-
-        while (QUEUE::triggerReceive(slot, note, gate)) {
-          if (gate) {
-            SYNTH::voiceOn(slot, note);
-          } else {
-            SYNTH::voiceOff(slot);
-          }
-          if (slot > POLYPHONY) DEBUG::error("Out of bounds voice!");
-        }
-      }
+    if (INTERVAL::QUEUE.checkInterval()) {
+      QUEUE::update();
     }
   }
 }

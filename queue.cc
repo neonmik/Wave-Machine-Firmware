@@ -1,5 +1,7 @@
 #include "queue.h"
 
+#include "synth/synth.h"
+
 namespace QUEUE {
     queue_t trigger_queue;
     queue_t release_queue;
@@ -7,6 +9,22 @@ namespace QUEUE {
     void init() {
         queue_init(&trigger_queue, sizeof(trigger_msg_t), (POLYPHONY * 2));
         queue_init(&release_queue, sizeof(uint8_t), (POLYPHONY * 2));
+    }
+
+    void update() {
+        if (QUEUE::triggerCheckQueue()) {
+        uint8_t slot, note;
+        bool gate;
+
+        while (QUEUE::triggerReceive(slot, note, gate)) {
+          if (gate) {
+            SYNTH::voiceOn(slot, note);
+          } else {
+            SYNTH::voiceOff(slot);
+          }
+          if (slot > POLYPHONY) DEBUG::error("Out of bounds voice!");
+        }
+      }
     }
     
     void triggerSend (uint8_t slot, uint8_t note, bool gate) {

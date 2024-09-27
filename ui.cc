@@ -8,6 +8,8 @@
 
 #include "usb_descriptors.h"
 
+#include "interval.h" 
+
 bool startUpComplete;
 namespace UI {
 
@@ -44,10 +46,7 @@ namespace UI {
 
         RANDOM::update(ADC::noise());
 
-        
-
-        if ((!(sampleClock & 0x1F)) && (sampleClock != sampleClockLast)){
-          sampleClockLast = sampleClock;
+        if (INTERVAL::UI.checkInterval()) {
 
           NOTE_HANDLING::update();
           KEYS::update();
