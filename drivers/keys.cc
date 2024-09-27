@@ -29,19 +29,6 @@ namespace KEYS {
       
       current = reverse(readBuffer);
 
-      // history[(historyIndex ++) & 0x7] = readBuffer;
-
-      // if ((history[0] == history[1]) &&
-      //   (history[0] == history[2]) &&
-      //   (history[0] == history[3]) &&
-      //   (history[0] == history[4]) &&
-      //   (history[0] == history[5]) &&
-      //   (history[0] == history[6]) &&
-      //   (history[0] == history[7])) {
-      //     // reverse bit order  - for prototype design issues in hardware
-      //     current = reverse(history[0]);
-      // }
-
       readBuffer = 0;
     }
   }
