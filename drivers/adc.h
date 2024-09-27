@@ -16,7 +16,7 @@ namespace ADC {
         float       coreTemperature;
         float       batteryVoltage;
 
-        const float conversionFactor = 3.27f / (1 << 12);
+        const float conversionFactor = 3.0f / (1 << 12);
 
         uint16_t adcNoise[MAX_NOISE_READINGS];
         uint8_t  noiseWriteAddress;
@@ -34,17 +34,17 @@ namespace ADC {
             adc_select_input(channel);
         }
 
+        float adcToCoreTemperature (uint16_t reading) {
+            return 27.0f - ((((float)reading * conversionFactor) - 0.706f) / 0.001721f);
+        }
+
         void readTemperature(void) {
             
             adc_set_temp_sensor_enabled(true);
 
             channelSelect(ADC_CHANNEL::ADC_TEMPERATURE_CHANNEL);
-            
-            uint16_t reading = adc_read();
 
-            float adc = (float)reading * conversionFactor;
-
-            coreTemperature = 27.0f - (adc - 0.706f) / 0.001721f;
+            coreTemperature = adcToCoreTemperature(adc_read());
 
             adc_set_temp_sensor_enabled(false);
 
