@@ -34,7 +34,7 @@ namespace UI {
 
     startUpComplete = true;
 
-    // TODO: Fix false startup SYSEX Messages.
+    // TODO: #12 Fix false startup SYSEX Messages.
     MIDI::init();
     
     CONTROLS::init();
