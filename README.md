@@ -5,13 +5,14 @@ Current nightly firmware for Wave Machine Hardware.
 - Features:
 
     - Powerful 8 Voice Wavetable synth engine with:
-        - Polyphonic Amp envelope generator (ADSR).
         - Polyphonic Wavetable oscillator with waveshape and vector control (OSC1).
         - Polyphonic Sub or Detuned oscillator with seperate waveshape control, detune setting, and level (OSC2).
         - Polyphonic Noise Oscillator with level control.
+        - Polyphonic Amp envelope generator (ADSR).
+        - Polyphonic Filter with control over Cutoff, Resonance, Envelope Depth and Filter type (LP/BP/HP) along with an independent polyphonic envelope generator (ADSR).
         - Pitchbend
         - Octave selection.
-        - Paraphonic LFO and Filter.
+        - 1x Global LFO with controls for Destination (Oscillator 1+2 Pitch (Vibrato)/Output Volume (Tremelo)/Oscillator 1 Vector/Filter sustain), Speed, Depth, and Waveshape (Sine/SawUp/SawDown/Square/Triangle/Noise)
 
     - A highly useable LFO with:
         - Paraphonic Depth envelope control (ADSR)
@@ -21,10 +22,10 @@ Current nightly firmware for Wave Machine Hardware.
         - 4 selectable output destinations - Pitch (Vibrato), Volume (Tremelo), Wavetable vector (Allowing for sweeping morphing sounds) and Filter Cutoff modulation.
 
     - A characterful SVF Filter with:
-        - Paraphonic Cutoff envelope control (ADSR) with either ascending or decending modes.
+        - Polyphonic Cutoff envelope control (ADSR) with either ascending or decending modes.
         - Cutoff control
         - Resonance control
-        - Punch contol
+        - Envelope Depth contol
         - Low-pass, Bandpass and High-pass modes.
 
     - Fully fledged arppegiator with:
@@ -33,7 +34,7 @@ Current nightly firmware for Wave Machine Hardware.
         - A Latch function that allow the dynamic playing of chords.
         - Selectable division from 1/1 to 1/64t.
         - Internal BPM selection (30 - 350 BPM) or MIDI sync'd.
-        - Gate setting for the duration of each individual note in the arp sequence.
+        - Gate setting for the duration of notes in the arp sequence.
 
     - 8 selectable Presets with a colour LED showing current Preset, along with a persisting EEPROM memory storage allowing to save your own presets.
 
@@ -45,7 +46,7 @@ Current nightly firmware for Wave Machine Hardware.
         - Volume Control
         - Currently USB powered, but eventually will take a battery or DC connection.
         - MIDI DIN and USB MIDI
-        - 12-bit 32khz Mono 1/4" jack output.
+        - 12-bit 44.1khz Mono 1/4" jack output.
 
     - New features are currently being added daily.
 
@@ -62,14 +63,13 @@ Current nightly firmware for Wave Machine Hardware.
     - Arp:
         - Notes: The transfer/update of notes should check to see if any of the currently pressed niotes are already active and move the pointer around to match these to stop things getting messed up between chord changes?
         
-        - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements.
+        - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements - There should be a delay between key release and repopulation (1/8 note) - See Mutable Instruments implentation.
         - Bug: Fix New style Arp Mode (call it "Classic" after the JUNO method). Currently doesn't work in UP/DOWN or DOWN/UP modes due to the octave not moving octav when at the top correctly.
         - Bug: When using DOWN/UP or UP/DOWN with a range greater than 1, the first note after the octave change doesnt start on the first note, but the second.  
 
 
     - Controls:
 
-        - Clear the LEDs immediatly on start up so that the previous settings arent retained.
         - Try and add swirling colours for loading.
         
         - Change the layout of controls:
