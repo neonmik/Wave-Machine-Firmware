@@ -10,6 +10,8 @@
 #include "wavetable.h"
 #include "resources.h"
 
+#include "filter.h"
+
 
 namespace SYNTH
 {
@@ -26,13 +28,7 @@ namespace SYNTH
     uint16_t level = 0xFFFF;
   };
 
-  // struct EnvelopeParameters
-  // {
-  //   uint16_t attack   = 0;
-  //   uint16_t decay    = 0;
-  //   uint16_t sustain  = 0;
-  //   uint16_t release  = 0;
-  // };
+
 
   struct SharedParams
   {
@@ -141,16 +137,18 @@ namespace SYNTH
     // look at implenting an index variable and a counter above this to reduce calls to calculate increment. this could reduced the 
     int32_t process(uint8_t voiceIndex)
     {
-      if (!active) return 0;
+      FILTER::update(index);
+      ampEnvelope.update();
+      
+      // if (!active) return 0;
 
       phaseAccumulator += phaseIncrement;             // update the phaseAccumulator
       phaseAccumulator += synthParameters.modVibrato; // add the vibrato
 
-      ampEnvelope.update();
 
       if (active && ampEnvelope.isStopped()) {
         noteStopped();
-        return 0;
+        // return 0;
       }
 
       sample = getWavetableInterpolated(phaseAccumulator, synthParameters.oscillator1.waveOffset);
@@ -171,6 +169,8 @@ namespace SYNTH
 
       sample = (int32_t(sample) * int32_t(ampEnvelope.get())) >> 16;
       sample = (int32_t(sample) * int32_t((synthParameters.level - synthParameters.modTremelo))) >> 16;
+
+      FILTER::process(index, sample);
 
       return sample;
     }

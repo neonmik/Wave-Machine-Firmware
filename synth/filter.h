@@ -11,91 +11,255 @@
 #include "adsr.h"
 #include "fx.h"
 
-
-namespace FILTER
-{
-
-    enum Type
-    {
+namespace FILTER{
+    
+    enum class Type {
         Off,
         LowPass,
         BandPass,
         HighPass
     };
 
-    enum Direction
-    {
+    enum class Direction {
         Regular,
         Inverted
     };
 
-    enum Mode
-    {
-        MONO,
-        PARA,
-    };
+    static ADSR::Controls    envelopeControls(SAMPLE_RATE);
 
     namespace {
-        static ADSR::Controls    envelopeControls(SAMPLE_RATE);
 
-        Mode        mode = Mode::PARA;
-        int8_t      activeVoice;
-        bool        filterActive = false;
+        bool state;
 
-        bool        state;
+        uint32_t cutoff;
+        uint32_t resonance;
+        uint32_t punch;
+        Type type;
 
-        int32_t     cutoff;
-        int32_t     resonance;
-        int32_t     punch;
-        Type        type;
+        int16_t envelopeDepth;
+        Direction direction;
+        int32_t modulation;
+    }
 
-        Direction   direction;
-        uint16_t    envelopeDepth;
-        // uint16_t    keyboardTracking;
+    class StateVariable {
+    public:
+        
 
-        uint16_t    modulation;
+        StateVariable() { };
 
-        int32_t     frequency;
-        int32_t     damp;
+        void init(uint8_t voice) {
+            voiceIndex = voice;
+            reset();
+            cutoffEnvelope.stopped();
+        }
+        void triggerAttack(void) {
+            active = true;
+            cutoffEnvelope.triggerAttack();
+        }
+        void triggerRelease(void) {
+            cutoffEnvelope.triggerRelease();
+        }
 
-        int32_t     lowPass;
-        int32_t     bandPass;
+        bool isStopped(void) {
+            return !active;
+        }
 
-        ADSR::Envelope    cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
+        void update(void) {
+            cutoffEnvelope.update();
+        }
 
-        void reset (void) {
+        void process(int32_t &sample) {
+            if ((type != Type::Off)) {
+
+                if (cutoffEnvelope.isStopped() && active) {
+                    triggerStopped();
+                }
+                
+                if (direction == Direction::Regular) {
+                    frequency = (cutoff * cutoffEnvelope.get()) >> 16;
+                } 
+                if (direction == Direction::Inverted) {
+                    frequency = NYQUIST - (((NYQUIST - cutoff) * (cutoffEnvelope.get())) >> 16);
+                }
+
+                // int32_t envDep = (((int32_t)cutoffEnvelope.get() * (int32_t)envelopeDepth) >> 9);
+                // frequency = (int32_t)cutoff + envDep;
+
+                frequency = frequency + (cutoffEnvelope.get() * envelopeDepth) >> 9;
+
+                frequency = frequency + modulation;
+                // limiter for the modulation
+                if (frequency > NYQUIST) frequency = NYQUIST;
+                if (frequency < 0) frequency = 0;
+
+                int32_t damp = resonance;
+
+                //Punch was a feature ported from some external code that I couldnt hear, so I've removed it for more useful features.
+                // if (punch) {
+                //     int32_t punch_signal = lowPass > 4096 ? lowPass : 2048;
+                //     frequency += ((punch_signal >> 4) * punch) >> 9;
+                //     damp += ((punch_signal - 2048) >> 3);
+                // }
+
+                int32_t notch = sample - (bandPass * damp >> 15);
+                lowPass += frequency * bandPass >> 15;
+                FX::HARDCLIP::process(lowPass);
+                
+                int32_t highPass = notch - lowPass;
+                bandPass += frequency * highPass >> 15;
+                FX::HARDCLIP::process(bandPass);
+
+                switch (type) {
+                    case Type::LowPass:
+                        sample = lowPass;
+                        break;
+                    case Type::BandPass:
+                        sample = bandPass;
+                        break;
+                    case Type::HighPass:
+                        sample = highPass;
+                        break;
+                    default:
+                        sample = sample;
+                        break;
+                }
+            }
+        }
+
+        void reset(void) {
             lowPass = 0;
             bandPass = 0;
         }
-    }
+
+    private:
+        ADSR::Envelope    cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
+        
+        void triggerStopped(void) {
+            active = false;
+        }
+
+        uint8_t voiceIndex;
+
+        int32_t frequency;
+        int32_t lowPass;
+        int32_t bandPass;
+
+        bool active;
+
+    };
 
     void init();
-
-    void process(int32_t &sample);
-
-    void setState(bool input);
-    bool getState (void);
-
-    void setCutoff(uint16_t input);
-    void setResonance(uint16_t input);
-    void setPunch(uint16_t input);
-    void setType(uint16_t input);
-
-    void setEnvelopeAmount (uint16_t input);
-    void setTriggerMode (uint16_t input);
 
     void setAttack(uint16_t input);
     void setDecay(uint16_t input);
     void setSustain(uint16_t input);
     void setRelease(uint16_t input);
 
-    void voicesIncrease(void);
-    void voicesDecrease(void);
+    void triggerAttack(uint8_t voice);
+    void triggerRelease(uint8_t voice);
 
-    void triggerAttack(void);
-    void triggerRelease(void);
+    void update(uint8_t voice);
+
+    void process(uint8_t voice, int32_t&sample);
+
+    void setState(bool input);
+    bool getState(void);
+
+    void setCutoff(uint16_t input);
+    void setResonance(uint16_t input);
+    void setPunch(uint16_t input);
+    void setType(uint16_t input);
+
+    void setEnvelopeDepth(uint16_t input);
+    void setDirection(uint16_t input);
 
     void modulateCutoff(uint16_t input);
-    void modulateResonance(uint16_t input);
-
 }
+
+// namespace FILTER
+// {
+
+//     enum Type
+//     {
+//         Off,
+//         LowPass,
+//         BandPass,
+//         HighPass
+//     };
+
+//     enum Direction
+//     {
+//         Regular,
+//         Inverted
+//     };
+
+//     enum Mode
+//     {
+//         MONO,
+//         PARA,
+//     };
+
+//     namespace {
+//         static ADSR::Controls    envelopeControls(SAMPLE_RATE);
+
+//         Mode        mode = Mode::PARA;
+//         int8_t      activeVoice;
+//         bool        filterActive = false;
+
+//         bool        state;
+
+//         int32_t     cutoff;
+//         int32_t     resonance;
+//         int32_t     punch;
+//         Type        type;
+
+//         Direction   direction;
+//         uint16_t    envelopeDepth;
+//         // uint16_t    keyboardTracking;
+
+//         uint16_t    modulation;
+
+//         int32_t     frequency;
+//         int32_t     damp;
+
+//         int32_t     lowPass;
+//         int32_t     bandPass;
+
+//         ADSR::Envelope    cutoffEnvelope{envelopeControls.getAttack(), envelopeControls.getDecay(), envelopeControls.getSustain(), envelopeControls.getRelease()};
+
+//         void reset (void) {
+//             lowPass = 0;
+//             bandPass = 0;
+//         }
+//     }
+
+//     void init();
+
+//     void process(int32_t &sample);
+
+//     void setState(bool input);
+//     bool getState (void);
+
+//     void setCutoff(uint16_t input);
+//     void setResonance(uint16_t input);
+//     void setPunch(uint16_t input);
+//     void setType(uint16_t input);
+
+//     void setEnvelopeAmount (uint16_t input);
+//     void setTriggerMode (uint16_t input);
+
+//     void setAttack(uint16_t input);
+//     void setDecay(uint16_t input);
+//     void setSustain(uint16_t input);
+//     void setRelease(uint16_t input);
+
+//     void voicesIncrease(void);
+//     void voicesDecrease(void);
+
+//     void triggerAttack(void);
+//     void triggerRelease(void);
+
+//     void modulateCutoff(uint16_t input);
+//     void modulateResonance(uint16_t input);
+
+// }

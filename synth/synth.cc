@@ -1,7 +1,7 @@
 #include "synth.h"
 
 #include "modulation.h"
-#include "filter.h"
+
 #include "fx.h"
 
 namespace SYNTH {
@@ -9,19 +9,19 @@ namespace SYNTH {
   void voiceOn (uint8_t voice, uint8_t note) {
     if ((!synth.voices[voice].isActive()) ||
         (!synth.voices[voice].isGate())) {
-      FILTER::voicesIncrease();
+      // FILTER::voicesIncrease();
       MOD::voicesIncrease();
     }
-    FILTER::triggerAttack();
+    FILTER::triggerAttack(voice);
     MOD::triggerAttack();
     synth.voices[voice].noteOn(note);
   }
   void voiceOff (uint8_t voice) {
     if (synth.voices[voice].isGate()) {
-      FILTER::voicesDecrease(); 
+      // FILTER::voicesDecrease(); 
       MOD::voicesDecrease();
     }
-    FILTER::triggerRelease();
+    FILTER::triggerRelease(voice);
     MOD::triggerRelease();
     synth.voices[voice].noteOff();
   }
@@ -43,8 +43,7 @@ namespace SYNTH {
     }
 
     synth.sample = synth.sample >> 2;
-    
-    FILTER::process(synth.sample); // Filter
+  
     
     FX::SOFTCLIP::process(synth.sample); // Soft clipping to 16-bit
     
