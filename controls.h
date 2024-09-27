@@ -121,14 +121,14 @@ namespace CONTROLS
             PAGE        MAIN{   &SYNTH::setWaveShape,      &SYNTH::setWaveVector,      &SYNTH::setOctave,          &SYNTH::setPitchBend,       nullptr,                      nullptr};
                 PAGE    ADSR{   &SYNTH::setAttack,         &SYNTH::setDecay,           &SYNTH::setSustain,         &SYNTH::setRelease,         nullptr,                      nullptr};
 
-            PAGE        FILT{   &FILTER::setCutoff,        &FILTER::setResonance,      &FILTER::setPunch,          &FILTER::setType,           FILTER::setState,             nullptr};
+            PAGE        FILT{   &FILTER::setCutoff,        &FILTER::setResonance,      &FILTER::setEnvelopeDepth,  &FILTER::setType,           FILTER::setState,             nullptr};
                 PAGE    fENV{   &FILTER::setAttack,        &FILTER::setDecay,          &FILTER::setSustain,        &FILTER::setRelease,        nullptr,                      nullptr};
 
             PAGE        LFO {   &MOD::setMatrix,           &MOD::setRate,              &MOD::setDepth,             &MOD::setShape,             MOD::setState,                nullptr};
                 PAGE    SHFT{   &SYNTH::setOsc2Wave,       &SYNTH::setNoise,           &FX::SOFTCLIP::setGain,     &SYNTH::setDetune,          nullptr,                      nullptr};
 
             PAGE        ARP {   &ARP::setGate,             &ARP::setDivision,          &ARP::setRange,             &ARP::setDirection,         ARP::setState,                nullptr};
-                PAGE    sARP{   &ARP::setPlayedOrder,      &ARP::setBPM,               &FILTER::setTriggerMode,    &ARP::setOctMode,           nullptr,                      nullptr};
+                PAGE    sARP{   &ARP::setPlayedOrder,      &ARP::setBPM,               nullptr,                    &ARP::setOctMode,           nullptr,                      nullptr};
 
             // Currently new/unused pages
                 PAGE    mENV{   &MOD::setAttack,           &MOD::setDecay,             &MOD::setSustain,           &MOD::setRelease,           nullptr,                      nullptr};
