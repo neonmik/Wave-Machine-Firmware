@@ -1,3 +1,14 @@
+# Generated Cmake Pico project file
+
+cmake_minimum_required(VERSION 3.13)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Initialise pico_sdk from installed location
+# (note this can come from environment, CMake cache etc)
+
 # == DO NEVER EDIT THE NEXT LINES for Raspberry Pi Pico VS Code Extension to work ==
 if(WIN32)
     set(USERHOME $ENV{USERPROFILE})
@@ -12,22 +23,22 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
+set(PICO_BOARD pimoroni_pico_plus2_rp2350 CACHE STRING "Board type")
 
-
-cmake_minimum_required(VERSION 3.13)
-
+# Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
 project(wavemachine LANGUAGES C CXX ASM VERSION 0.33)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
 
+# Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# Add the version header file
+configure_file(version.h.in version.h @ONLY)
 
+# Add executable. Default name is the project name, version 0.1
 
-
-add_executable(${PROJECT_NAME}
+add_executable(${PROJECT_NAME} 
     main.cc
 
     settings.cc
@@ -53,6 +64,7 @@ add_executable(${PROJECT_NAME}
     pagination.cc
     controls.cc
     preset.cc
+    interval.cc
     
     queue.cc
     
@@ -67,51 +79,50 @@ add_executable(${PROJECT_NAME}
     synth/note_handling.cc
     synth/resources.cc
     synth/synth.cc
-
-    msc_disk.cc
-)
     
-target_include_directories(${PROJECT_NAME} PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}  "${PROJECT_BINARY_DIR}"
+    msc_disk.cc
     )
     
-configure_file(version.h.in version.h @ONLY)
-    
+# Generate PIO header
 pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/drivers/sn74595.pio)
     
-pico_enable_stdio_usb(${PROJECT_NAME} 0)
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    PICO_DEFAULT_UART=1
+    PICO_DEFAULT_UART_TX_PIN=4
+    PICO_DEFAULT_UART_RX_PIN=5
+)
+
+# Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
+pico_enable_stdio_usb(${PROJECT_NAME} 0)
+
+# Add the standard include files to the build
+target_include_directories(${PROJECT_NAME} PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
+)
+
+# Add any user requested libraries
+target_link_libraries(${PROJECT_NAME} 
+            pico_stdlib
+            pico_bootrom
+            pico_multicore
+            pico_unique_id
+            pico_stdio_uart
+
+            hardware_pwm
+            hardware_spi
+            hardware_dma
+            hardware_irq
+            hardware_adc
+            hardware_i2c
+            hardware_pio
+            hardware_timer
+
+            tinyusb_device
+            tinyusb_board
+        )
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
-# target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DEBUG)  # add this line to enable debug output
-
-
-target_link_libraries(${PROJECT_NAME} 
-                        pico_stdlib
-                        pico_bootrom
-                        pico_multicore
-                        pico_unique_id
-                        
-                        hardware_pwm
-                        hardware_spi
-                        hardware_dma
-                        hardware_irq
-                        hardware_adc
-                        hardware_i2c
-                        hardware_pio
-                        hardware_timer
-
-                        tinyusb_device
-                        tinyusb_board
-                        )
-
-# add_compile_options(-CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/drivers/tusb_config.h)
-
-add_compile_options(- cmake -DPICO_NO_FLASH=1)
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-  PICO_DEFAULT_UART=0
-  PICO_DEFAULT_UART_TX_PIN=4
-  PICO_DEFAULT_UART_RX_PIN=5
-)
+# add_compile_options(- cmake -DPICO_NO_FLASH=1)

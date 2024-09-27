@@ -39,16 +39,16 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/nickallott/pico/Wave-Machine-Firmware/build/pico-sdk/tools/cmake_install.cmake")
+  include("/Users/nickallott/pico/Wave-Machine-Firmware_NEW/build/pico-sdk/tools/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/nickallott/pico/Wave-Machine-Firmware/build/pico-sdk/src/cmake_install.cmake")
+  include("/Users/nickallott/pico/Wave-Machine-Firmware_NEW/build/pico-sdk/src/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/nickallott/pico/Wave-Machine-Firmware/build/pico-sdk/docs/cmake_install.cmake")
+  include("/Users/nickallott/pico/Wave-Machine-Firmware_NEW/build/pico-sdk/docs/cmake_install.cmake")
 endif()
 

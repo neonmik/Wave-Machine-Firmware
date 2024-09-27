@@ -4,7 +4,7 @@
 
 // based on PICO_CONFIG_HEADER_FILES:
 
-#include "/Users/nickallott/.pico-sdk/sdk/2.0.0/src/boards/include/boards/pico.h"
+#include "/Users/nickallott/.pico-sdk/sdk/2.0.0/src/boards/include/boards/pimoroni_pico_plus2_rp2350.h"
 #include "/Users/nickallott/.pico-sdk/sdk/2.0.0/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h"
 
-// based on PICO_RP2040_CONFIG_HEADER_FILES:
+// based on PICO_RP2350_ARM_S_CONFIG_HEADER_FILES:

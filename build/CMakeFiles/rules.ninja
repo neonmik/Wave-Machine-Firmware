@@ -81,7 +81,7 @@ rule ASM_EXECUTABLE_LINKER__bs2_default_Release
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /Users/nickallott/.pico-sdk/cmake/v3.28.6/CMake.app/Contents/bin/cmake --regenerate-during-build -S/Users/nickallott/pico/Wave-Machine-Firmware -B/Users/nickallott/pico/Wave-Machine-Firmware/build
+  command = /opt/homebrew/Cellar/cmake/3.28.3/bin/cmake --regenerate-during-build -S/Users/nickallott/pico/Wave-Machine-Firmware_NEW -B/Users/nickallott/pico/Wave-Machine-Firmware_NEW/build
   description = Re-running CMake...
   generator = 1
 
@@ -90,7 +90,7 @@ rule RERUN_CMAKE
 # Rule for cleaning all built files.
 
 rule CLEAN
-  command = /Users/nickallott/.pico-sdk/ninja/v1.12.1/ninja $FILE_ARG -t clean $TARGETS
+  command = /opt/homebrew/bin/ninja $FILE_ARG -t clean $TARGETS
   description = Cleaning all built files...
 
 
@@ -98,6 +98,6 @@ rule CLEAN
 # Rule for printing all primary targets available.
 
 rule HELP
-  command = /Users/nickallott/.pico-sdk/ninja/v1.12.1/ninja -t targets
+  command = /opt/homebrew/bin/ninja -t targets
   description = All primary targets available:
 

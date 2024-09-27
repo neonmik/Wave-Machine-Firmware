@@ -14,7 +14,7 @@
 
 #define sn75595_wrap_target 0
 #define sn75595_wrap 7
-#define sn75595_pio_version 0
+#define sn75595_pio_version 1
 
 #define sn75595_NUM_DEVICES 1
 
@@ -36,7 +36,7 @@ static const struct pio_program sn75595_program = {
     .instructions = sn75595_program_instructions,
     .length = 8,
     .origin = -1,
-    .pio_version = 0,
+    .pio_version = 1,
 #if PICO_PIO_VERSION > 0
     .used_gpio_ranges = 0x0
 #endif
