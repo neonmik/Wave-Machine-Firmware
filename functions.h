@@ -11,7 +11,6 @@ long constrain (long x, long min, long max);
 
 uint16_t    samples_to_us (uint32_t samplerate);
 
-int16_t    attenuverterU10toS16 (uint16_t input);
 int16_t    attenuverterU10 (uint16_t input);
 
 bool getBitState(uint16_t bitField, uint16_t bitPos);
