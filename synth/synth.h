@@ -93,7 +93,10 @@ namespace SYNTH
       
       if (!refreshIncrement) return;
 
-      phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 10) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+      // TODO: #20 Implement better handling for higher octaves. Currently tuing falls off the end at the highest octave/pitchbend on the top octave keyboard notes.
+
+      // changed to 11 from 10 to allow accurate octave control with the new octave range
+      phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 11) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
       refreshIncrement = false;
     }

@@ -14,4 +14,6 @@ uint16_t filterDamp(uint16_t index);
 uint16_t logarithmicPitch(uint16_t index);
 uint16_t logPotentiometer(uint16_t index);
 
+uint8_t getOctave(uint16_t index);
+
 extern const uint8_t hexValues[];

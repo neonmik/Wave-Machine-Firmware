@@ -74,7 +74,12 @@ namespace SYNTH {
     synthParameters.oscillator1.waveVector = input;
   }
   void setOctave (uint16_t input) {
-    synthParameters.oscillator1.octave = (input >> 8);
+    // old implementation - also check synth increment code
+    // synthParameters.oscillator1.octave = (input >> 8);
+
+    // this will still need looking at to improve values jumping at boarders
+    synthParameters.oscillator1.octave = getOctave(input);
+    recalculateIncrement = true;
   }
   void setPitchBend (uint16_t input) {
     synthParameters.oscillator1.pitchBend = logarithmicPitch(input);
