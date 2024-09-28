@@ -83,9 +83,9 @@ namespace FILTER{
                 }
 
                 if (envelopeDepth >= 0) {
-                    frequency = (cutoffEnvelope.get() * range) / 65535 + cutoff;
+                    frequency = ((cutoffEnvelope.get() * range) >> 16) + cutoff;
                 } else {
-                    frequency = cutoff - (cutoffEnvelope.get() * range) / 65535;
+                    frequency = cutoff - ((cutoffEnvelope.get() * range) >> 16);
                 }
 
                 if (frequency > NYQUIST) frequency = NYQUIST;

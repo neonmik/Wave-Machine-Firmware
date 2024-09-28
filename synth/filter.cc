@@ -77,17 +77,16 @@ namespace FILTER {
         }
     }
 
-    // TODO: #7 Implement an attenuverter for the envelope depth.
     void setEnvelopeDepth(uint16_t input)   {  
         // envelopeDepth = input;  
         envelopeDepth = attenuverterU10(input);
 
         if (envelopeDepth >= 0) {
             // Positive contour (scaling from cutoff to maxValue)
-            range = (rangeUp * envelopeDepth) / 512;  // Scale contour to the range [cutoff, maxValue]
+            range = ((rangeUp * envelopeDepth) >> 9);  // Scale contour to the range [cutoff, maxValue]
         } else {
             // Negative contour (scaling from cutoff to minValue)
-            range = (rangeDown * (-envelopeDepth)) / 512;  // Scale contour to the range [cutoff, minValue]
+            range = ((rangeDown * (-envelopeDepth)) >> 9);  // Scale contour to the range [cutoff, minValue]
         }
     }
     void setDirection(uint16_t input)       {
