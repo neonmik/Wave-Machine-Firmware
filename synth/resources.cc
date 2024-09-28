@@ -501,7 +501,6 @@ const uint32_t note2freq[128] = {
 	2700308,				2860877,				3030994,				3211226,
 };
     
-<<<<<<< HEAD
 const uint8_t lut_octave[1024] = {
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0,
@@ -632,8 +631,6 @@ const uint8_t lut_octave[1024] = {
 	4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4,
 };
-=======
->>>>>>> origin/develop
 
 uint32_t getFrequency(uint8_t note) {
 	return note2freq[note];
