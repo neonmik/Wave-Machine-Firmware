@@ -659,7 +659,6 @@ namespace ARP {
         if (gate < 240) gate = 240; // minimum gate time of 120 samples, any shorter and the note doesn't fire
     }
     void setBPM (uint16_t input) {
-        // TODO: #14 recode the following section so it doesnt use the map function, as that is computationally expensive
-        CLOCK::setBPM(map(input, KNOB_MIN, KNOB_MAX, 30, 350));
+        CLOCK::setBPM(getTempo(input));
     }
 }
