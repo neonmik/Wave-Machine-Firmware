@@ -13,6 +13,7 @@
 
 #include "debug.h"
 #include "functions.h"
+#include "synth/resources.h"
 
 // this file contains global definitions for systemwide variables and constants
 

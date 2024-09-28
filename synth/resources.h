@@ -7,13 +7,22 @@ extern const uint16_t lut_filter_damp[];
 extern const uint16_t lut_pitch_log[];
 extern const uint32_t note2freq[];
 
+extern const uint16_t lut_tempo[];
+
 
 uint32_t getFrequency(uint8_t note);
+uint16_t getTempo(uint16_t index);
+
 uint16_t exponentialFrequency(uint16_t index);
+
 uint16_t filterDamp(uint16_t index);
 uint16_t logarithmicPitch(uint16_t index);
 uint16_t logPotentiometer(uint16_t index);
-
+<<<<<<< HEAD
 uint8_t getOctave(uint16_t index);
+
+=======
+
+>>>>>>> origin/develop
 
 extern const uint8_t hexValues[];
