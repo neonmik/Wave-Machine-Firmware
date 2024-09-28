@@ -39,6 +39,13 @@ namespace FILTER{
         int16_t envelopeDepth;
         Direction direction;
         int32_t modulation;
+
+
+        int32_t minValue = 0;          // The minimum value (0)
+        int32_t maxValue = NYQUIST;          // The maximum value (22050)
+        int32_t range;             
+        int32_t rangeUp;           // Range between max and cutoff
+        int32_t rangeDown;         // Range between cutoff and min (0)
     }
 
     class StateVariable {
@@ -74,21 +81,18 @@ namespace FILTER{
                 if (cutoffEnvelope.isStopped() && active) {
                     triggerStopped();
                 }
-                
-                if (direction == Direction::Regular) {
-                    frequency = (cutoff * cutoffEnvelope.get()) >> 16;
-                } 
-                if (direction == Direction::Inverted) {
-                    frequency = NYQUIST - (((NYQUIST - cutoff) * (cutoffEnvelope.get())) >> 16);
+
+                if (envelopeDepth >= 0) {
+                    frequency = (cutoffEnvelope.get() * range) / 65535 + cutoff;
+                } else {
+                    frequency = cutoff - (cutoffEnvelope.get() * range) / 65535;
                 }
 
-                // TODO: #8 Implement correct use of envelope depth to control ADSR in relation to cutoff
-                // int32_t envDep = (((int32_t)cutoffEnvelope.get() * (int32_t)envelopeDepth) >> 9);
-                // frequency = (int32_t)cutoff + envDep;
+                if (frequency > NYQUIST) frequency = NYQUIST;
+                if (frequency < 0) frequency = 0;
 
-                frequency = frequency + (cutoffEnvelope.get() * envelopeDepth) >> 9;
-
-                frequency = frequency + modulation;
+                // TODO: #16 Check Filter modulation implementation
+                frequency += modulation;
                 // limiter for the modulation
                 if (frequency > NYQUIST) frequency = NYQUIST;
                 if (frequency < 0) frequency = 0;

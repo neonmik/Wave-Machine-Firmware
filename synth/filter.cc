@@ -45,7 +45,12 @@ namespace FILTER {
         return state; 
     }
 
-    void setCutoff(uint16_t input)      {   cutoff = exponentialFrequency(input);   }
+    void setCutoff(uint16_t input)      {   
+        cutoff = exponentialFrequency(input);
+
+        rangeUp = maxValue - cutoff;
+        rangeDown = cutoff - minValue;    
+    }
     void setResonance(uint16_t input)   {   resonance = filterDamp(input);          }
     void setPunch(uint16_t input)       {   punch = input >> 2;                     }
 
@@ -73,7 +78,18 @@ namespace FILTER {
     }
 
     // TODO: #7 Implement an attenuverter for the envelope depth.
-    void setEnvelopeDepth(uint16_t input)   {   envelopeDepth = input;  }
+    void setEnvelopeDepth(uint16_t input)   {  
+        // envelopeDepth = input;  
+        envelopeDepth = attenuverterU10(input);
+
+        if (envelopeDepth >= 0) {
+            // Positive contour (scaling from cutoff to maxValue)
+            range = (rangeUp * envelopeDepth) / 512;  // Scale contour to the range [cutoff, maxValue]
+        } else {
+            // Negative contour (scaling from cutoff to minValue)
+            range = (rangeDown * (-envelopeDepth)) / 512;  // Scale contour to the range [cutoff, minValue]
+        }
+    }
     void setDirection(uint16_t input)       {
         uint8_t index = (input >> 9);
         switch (index) {
