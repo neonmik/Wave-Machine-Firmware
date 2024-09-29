@@ -78,7 +78,7 @@ namespace SYNTH {
     // synthParameters.oscillator1.octave = (input >> 8);
 
     // this will still need looking at to improve values jumping at boarders
-    synthParameters.oscillator1.octave = getOctave(input);
+    synthParameters.oscillator1.octave = getOctave(input); // shift is here to reduce noise bouncing the values - I've also reduced the table size.
     recalculateIncrement = true;
   }
   void setPitchBend (uint16_t input) {
