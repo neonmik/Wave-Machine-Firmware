@@ -38,7 +38,7 @@ namespace PRESET {
             uint16_t        octave = 0; 
             uint16_t        pitchBend = 511;
             
-            uint16_t        detune = 0;
+            uint16_t        detune = 511;
             uint16_t        noiseLevel = 0;
 
             uint16_t padding[2];
@@ -67,7 +67,7 @@ namespace PRESET {
 
             uint16_t direction = 0;
             uint16_t keyTracking = 0;
-            uint16_t envelopeDepth = 0;
+            uint16_t envelopeDepth = 512;
             uint16_t triggerMode = 0;
 
             EnvelopeData Envelope;
