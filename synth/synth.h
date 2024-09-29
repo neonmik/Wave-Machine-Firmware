@@ -95,8 +95,8 @@ namespace SYNTH
 
       // TODO: #20 Implement better handling for higher octaves. Currently tuing falls off the end at the highest octave/pitchbend on the top octave keyboard notes.
 
-      // changed to 11 from 10 to allow accurate octave control with the new octave range
-      phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 11) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+      // changed from 10 to 12 to allow accurate octave control with the new octave range (hitting the lowest note on the keybaord with octave settings to 0 (middle) and picthbend to 0 (middle) should give a frequency of 130.81Hz)
+      phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 12) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
 
       refreshIncrement = false;
     }
@@ -156,18 +156,18 @@ namespace SYNTH
 
       sample = getWavetableInterpolated(phaseAccumulator, synthParameters.oscillator1.waveOffset);
 
-      uint32_t phase;
+      // uint32_t phase;
       
       // TODO: #9 Implement better handling of Detune setting
-      if (synthParameters.detune == 0) {
-        phase = (phaseAccumulator >> 1);
-      } else {
-        phase = phaseAccumulator + (phaseAccumulator / synthParameters.detune);
-      }
-      sample += (getWavetable(phase, synthParameters.oscillator2.waveOffset) * synthParameters.oscillator2.level) >> 16;
+      // if (synthParameters.detune == 0) {
+      //   phase = (phaseAccumulator >> 1);
+      // } else {
+      //   phase = phaseAccumulator + (phaseAccumulator / synthParameters.detune);
+      // }
+      // sample += (getWavetable(phase, synthParameters.oscillator2.waveOffset) * synthParameters.oscillator2.level) >> 16;
 
 
-      sample += ((RANDOM::getSignal() >> 2) * synthParameters.oscillatorN.level) >> 16;
+      // sample += ((RANDOM::getSignal() >> 2) * synthParameters.oscillatorN.level) >> 16;
 
       sample /= 3;
 
