@@ -94,7 +94,6 @@ namespace SYNTH
       
       if (!refreshIncrement) return;
 
-      // TODO: #20 Implement better handling for higher octaves. Currently tuing falls off the end at the highest octave/pitchbend on the top octave keyboard notes.
       // Changed the calculation to using a 64bit integer to allow for the higher values to be calculated without overflow
       // changed from 10 to 12 to allow accurate octave control with the new octave range
       // (hitting the lowest note on the keyboard with octave settings to 0 (middle) and picthbend to 0 (middle) should give a frequency of 130.81Hz)
