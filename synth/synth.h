@@ -72,7 +72,8 @@ namespace SYNTH
     bool                active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
     bool                refreshIncrement = false;
 
-    uint32_t            frequency = 0;            // Frequency in Hz << 8 (Q8)
+    uint64_t            caluclatedIncrement = 0;
+    uint32_t            frequency = 0;            // Frequency in Hz << 10 (Q10)
 
     uint32_t            phaseIncrement = 0;
     uint32_t            phaseAccumulator = 0;
@@ -94,9 +95,13 @@ namespace SYNTH
       if (!refreshIncrement) return;
 
       // TODO: #20 Implement better handling for higher octaves. Currently tuing falls off the end at the highest octave/pitchbend on the top octave keyboard notes.
-
-      // changed from 10 to 12 to allow accurate octave control with the new octave range (hitting the lowest note on the keybaord with octave settings to 0 (middle) and picthbend to 0 (middle) should give a frequency of 130.81Hz)
-      phaseIncrement = ((((frequency * synthParameters.oscillator1.pitchBend) >> 12) << synthParameters.oscillator1.octave) << Q_SCALING_FACTOR) / SAMPLE_RATE;
+      // Changed the calculation to using a 64bit integer to allow for the higher values to be calculated without overflow
+      // changed from 10 to 12 to allow accurate octave control with the new octave range
+      // (hitting the lowest note on the keyboard with octave settings to 0 (middle) and picthbend to 0 (middle) should give a frequency of 130.81Hz)
+      caluclatedIncrement = (frequency * synthParameters.oscillator1.pitchBend) >> 12;
+      caluclatedIncrement = caluclatedIncrement << synthParameters.oscillator1.octave;
+      caluclatedIncrement = caluclatedIncrement << Q_SCALING_FACTOR;
+      phaseIncrement = caluclatedIncrement / SAMPLE_RATE;
 
       refreshIncrement = false;
     }
