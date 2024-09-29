@@ -119,10 +119,9 @@ namespace SYNTH {
   }
 
   void setDetune (uint16_t input) {
-    uint16_t temp = logPotentiometer(input);
+    synthParameters.detune = logarithmicPitch(input); 
 
-    if (temp == 0) synthParameters.detune = 0;
-    else synthParameters.detune = 1024 - temp;
+    recalculateIncrement = true;
   }
   void setOsc2Wave (uint16_t input) {
     synthParameters.oscillator2.waveShape = ((input >> 6) << 8);
