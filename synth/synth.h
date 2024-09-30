@@ -154,7 +154,7 @@ namespace SYNTH
       return gate;
     }
   
-    // look at implenting an index variable and a counter above this to reduce calls to calculate increment. this could reduced the 
+
     int32_t process(uint8_t voiceIndex)
     {
       FILTER::update(index);
@@ -189,7 +189,6 @@ namespace SYNTH
       return sample;
     }
 
-    // Voice(SharedParams &synthParameters) : synthParameters(synthParameters) {}
     Voice() {}
   };
 
