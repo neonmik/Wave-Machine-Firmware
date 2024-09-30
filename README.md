@@ -6,12 +6,12 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Powerful 8 Voice Wavetable synth engine with:
         - Polyphonic Wavetable oscillator with waveshape and vector control (OSC1).
-        - Polyphonic Sub or Detuned oscillator with seperate waveshape control, detune setting, and level (OSC2).
+        - Polyphonic 2nd oscillator with seperate waveshape control, detune setting (-1 to +1 octave of OSC1), and level.
         - Polyphonic Noise Oscillator with level control.
         - Polyphonic Amp envelope generator (ADSR).
         - Polyphonic Filter with control over Cutoff, Resonance, Envelope Depth and Filter type (LP/BP/HP) along with an independent polyphonic envelope generator (ADSR).
         - Pitchbend
-        - Octave selection.
+        - Octave selection (-2 to +2).
         - 1x Global LFO with controls for Destination (Oscillator 1+2 Pitch (Vibrato)/Output Volume (Tremelo)/Oscillator 1 Vector/Filter sustain), Speed, Depth, and Waveshape (Sine/SawUp/SawDown/Square/Triangle/Noise)
 
     - A highly useable LFO with:
@@ -62,8 +62,6 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Arp:
         - Improvement: Add a feature where the ARP is aware if it's sync'd or not, this will then facilitate the setting of Tempo as Div or BPM.
-
-        - Notes: The transfer/update of notes should check to see if any of the currently pressed niotes are already active and move the pointer around to match these to stop things getting messed up between chord changes?
         
         - Bug: The adding and removing of notes still feels slightly wrong... especially in multiple octave range arps. Investigate possible improvements - There should be a delay between key release and repopulation (1/8 note) - See Mutable Instruments implentation.
         - Bug: Fix New style Arp Mode (call it "Classic" after the JUNO method). Currently doesn't work in UP/DOWN or DOWN/UP modes due to the octave not moving octav when at the top correctly.
@@ -102,7 +100,8 @@ Current nightly firmware for Wave Machine Hardware.
 
 
     - Oscillator:
-        - Improvement: Look into adding an extra 8 bit variable to count the roll over of the Phase Accumulator to stop the frequency overflowing at the top of the octave/pitch bend range (currently octave 3, with pitchbend above 1/3 will wrap round and be the lowest note). - it may be better to change octave to -2, -1, 0, +1, +2 instead.
+
+        - Feature: Add sync option for OSC2 (not sure if this should decide wether the tune of OSC2 is linked to the tune of OSC1, or wether the wave should over flow at the same point despite the pitch...)
 
         - Improvement: Add soft start code - currently removed as it took too long to get going and still didnt realy work.
 
@@ -247,6 +246,9 @@ Changelog:
 Features/Bugfixes:
 
     + Oscillator:
+        + Feature: Added full control over pitch/detune of OSC2. This allows a -1 to +1 octave tuning on the second oscillator.
+        + Feature: Added better control over Octave selection, allowing -2/-1/0/+1/+2 from the octave knob.
+        + Bugfix: fixed tuing issues of oscillators where the highest notes would overflow to low notes.
         + Feature: Add Sub and Noise oscillators to the synth engine, along with temporary controls for off/on. 
         + Bugfix: Fixed most of the aliasing that came with having the octave and pitch set to max. 
         + Improvement: Fixed wavetable tuning. Implemented by reviewing and refactoring the accumulator and interpolation code. Massive win. 
@@ -304,6 +306,7 @@ Features/Bugfixes:
         + DAC
 
     + Arp: 
+        + Bugfix: Moved Arp note updates to audio core. This seems to bee fine at full speed, but keep an eye out.
         + Feature: The Arp Direction now holds the PLAYED_ORDER and CHORD functions. This has freed up tywo controls and makes logical sense (apart from Octave Direction, which I'll figure out later, probably on one of the controls I've saved)
         + Bugifx: Fixed a bug that caused notes to hang (MIDI and internal) when flipping between MONO and POLY arp mode. Made sure that the mode was only updated when inside the update loop.
         + Feature: Added a setting for "Played Order". Currently can only be turned on in firmware update, as no controls left to change it.
