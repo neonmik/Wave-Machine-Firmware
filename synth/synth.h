@@ -102,23 +102,11 @@ namespace SYNTH
       if (!refreshIncrement) return;
 
       // Changed the calculation to using a 64bit integer to allow for the higher values to be calculated without overflow
-      // changed from 10 to 12 to allow accurate octave control with the new octave range
-      // (hitting the lowest note on the keyboard with octave settings to 0 (middle) and picthbend to 0 (middle) should give a frequency of 130.81Hz)
       caluclatedIncrement = (frequency * synthParameters.oscillator1.pitchBend) >> 12;
       caluclatedIncrement = caluclatedIncrement << synthParameters.oscillator1.octave;
       caluclatedIncrement = caluclatedIncrement << Q_SCALING_FACTOR;
       oscillator[0].increment = caluclatedIncrement / SAMPLE_RATE;
 
-      // TODO: #9 Implement better handling of Detune setting
-      // if (synthParameters.detune == 0) {
-      //   oscillator[1].increment = (oscillator[0].increment >> 1);
-      // } else {
-      //   oscillator[1].increment =  oscillator[0].increment + (oscillator[0].increment / synthParameters.detune);
-      // // }
-      // if (synthParameters.detune <= 0) {
-      //   oscillator[1].increment =  oscillator[0].increment - (oscillator[0].increment / synthParameters.detune);
-      // } else {
-      // }
       oscillator[1].increment =  (oscillator[0].increment * synthParameters.detune) >> 9;
 
       refreshIncrement = false;
