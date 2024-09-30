@@ -210,7 +210,9 @@ namespace NOTE_HANDLING {
     }
 
     // update Arp notes if active.
-    ARP::update();
+
+    //Moved to Audio Core loop to improve timing/ stop svaes messing it up.
+    // ARP::update();
   }
   
   void noteOn (uint8_t note, uint8_t velocity) {
