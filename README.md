@@ -101,7 +101,7 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Oscillator:
 
-        - Feature: Add sync option for OSC2 (not sure if this should decide wether the tune of OSC2 is linked to the tune of OSC1, or wether the wave should over flow at the same point despite the pitch...)
+        
 
         - Improvement: Add soft start code - currently removed as it took too long to get going and still didnt realy work.
 
@@ -246,6 +246,7 @@ Changelog:
 Features/Bugfixes:
 
     + Oscillator:
+        + Tested: Tested adding a feature for Hard sync of oscillators. Didn't really work as expected/brought anything new to the table, so ruled out.
         + Feature: Added full control over pitch/detune of OSC2. This allows a -1 to +1 octave tuning on the second oscillator.
         + Feature: Added better control over Octave selection, allowing -2/-1/0/+1/+2 from the octave knob.
         + Bugfix: fixed tuing issues of oscillators where the highest notes would overflow to low notes.

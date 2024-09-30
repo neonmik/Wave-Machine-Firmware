@@ -65,34 +65,34 @@ namespace SYNTH
 
     ADSR::Envelope      ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
 
-    uint8_t             index = 0;                // index of the voice in the synth
+    uint8_t               index = 0;                // index of the voice in the synth
 
-    uint8_t             note;                     // Midi Note number - used for filter voice
-    bool                gate = false;             // used for tracking a note that's released, but not finished.
-    bool                active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
-    bool                refreshIncrement = false;
+    uint8_t               note;                     // Midi Note number - used for filter voice
+    bool                  gate = false;             // used for tracking a note that's released, but not finished.
+    bool                  active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
+    bool                  refreshIncrement = false;
 
-    uint64_t            caluclatedIncrement = 0;
-    uint32_t            frequency = 0;            // Frequency in Hz << 10 (Q10)
+    uint64_t              caluclatedIncrement = 0;
+    uint32_t              frequency = 0;            // Frequency in Hz << 10 (Q10)
 
     struct phase {
-      int32_t            increment = 0;
-      uint32_t           accumulator = 0;
+      int32_t             increment = 0;
+      uint32_t            accumulator = 0;
+
+      void reset(void) {
+        increment = 0;
+        accumulator = 0;
+      }
     };
 
-    phase                oscillator[2];
-    // uint32_t            phaseIncrement = 0;
-    // uint32_t            phaseAccumulator = 0;
+    phase                 oscillator[2];
 
-    int32_t             sample = 0;
+    bool                  hardSync = false;
+
+    int32_t               sample = 0;
 
     void setIndex(uint8_t input) {
       index = input;
-    }
-
-    void resetIncrement(void) {
-      oscillator[0].increment = 0;
-      oscillator[1].increment = 0;
     }
 
     void updateIncrement(void) {
@@ -146,11 +146,16 @@ namespace SYNTH
       note = 0;
       frequency = 0;
 
-      resetIncrement();
-      oscillator[0].accumulator = 0;
-      oscillator[1].accumulator = 0;
+      oscillator[0].reset();
+      oscillator[1].reset();
 
       QUEUE::releaseSend(index);
+    }
+
+    void checkHardSync(void) {
+      if (!hardSync) return;
+
+      if (oscillator[0].accumulator % 256 == 0) oscillator[1].accumulator = 0;
     }
 
     bool isActive(void) {
@@ -178,6 +183,8 @@ namespace SYNTH
       oscillator[0].accumulator += synthParameters.modVibrato; // add the vibrato
 
       sample = getWavetableInterpolated(oscillator[0].accumulator , synthParameters.oscillator1.waveOffset);
+
+      // checkHardSync(); // Not used, has an option to hard sync the oscillators, but has some issues with messing with tuning on main oscillator.
 
       oscillator[1].accumulator += oscillator[1].increment;
       oscillator[1].accumulator += synthParameters.modVibrato;
