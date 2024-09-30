@@ -75,6 +75,9 @@ namespace ADSR {
             const uint32_t& sustain;
             const uint32_t& release;
 
+            // TODO: #24 Add a feature that allows the envelope to be infinite
+            const bool&     infinteRelease;
+
             
             uint32_t    currentFrame        = 0;
             uint32_t    endFrame            = 0;

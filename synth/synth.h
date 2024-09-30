@@ -47,7 +47,7 @@ namespace SYNTH
 
     void updateWaveshape (void) {
       oscillator1.waveOffset = oscillator1.waveShape + (oscillator1.waveVector + modVector);
-      oscillator2.waveOffset = oscillator2.waveShape + (oscillator1.waveVector + modVector);
+      oscillator2.waveOffset = oscillator2.waveShape;
     }
   };
 
