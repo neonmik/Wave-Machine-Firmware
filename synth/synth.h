@@ -37,7 +37,7 @@ namespace SYNTH
     OscillatorParameters oscillator2;
     OscillatorParameters oscillatorN;
 
-    uint16_t detune = 0;
+    int16_t detune = 0;
 
     int16_t modVibrato;
     uint16_t modTremelo;
@@ -75,8 +75,14 @@ namespace SYNTH
     uint64_t            caluclatedIncrement = 0;
     uint32_t            frequency = 0;            // Frequency in Hz << 10 (Q10)
 
-    uint32_t            phaseIncrement = 0;
-    uint32_t            phaseAccumulator = 0;
+    struct phase {
+      int32_t            increment = 0;
+      uint32_t           accumulator = 0;
+    };
+
+    phase                oscillator[2];
+    // uint32_t            phaseIncrement = 0;
+    // uint32_t            phaseAccumulator = 0;
 
     int32_t             sample = 0;
 
@@ -85,7 +91,8 @@ namespace SYNTH
     }
 
     void resetIncrement(void) {
-      phaseIncrement = 0;
+      oscillator[0].increment = 0;
+      oscillator[1].increment = 0;
     }
 
     void updateIncrement(void) {
@@ -100,7 +107,19 @@ namespace SYNTH
       caluclatedIncrement = (frequency * synthParameters.oscillator1.pitchBend) >> 12;
       caluclatedIncrement = caluclatedIncrement << synthParameters.oscillator1.octave;
       caluclatedIncrement = caluclatedIncrement << Q_SCALING_FACTOR;
-      phaseIncrement = caluclatedIncrement / SAMPLE_RATE;
+      oscillator[0].increment = caluclatedIncrement / SAMPLE_RATE;
+
+      // TODO: #9 Implement better handling of Detune setting
+      // if (synthParameters.detune == 0) {
+      //   oscillator[1].increment = (oscillator[0].increment >> 1);
+      // } else {
+      //   oscillator[1].increment =  oscillator[0].increment + (oscillator[0].increment / synthParameters.detune);
+      // // }
+      // if (synthParameters.detune <= 0) {
+      //   oscillator[1].increment =  oscillator[0].increment - (oscillator[0].increment / synthParameters.detune);
+      // } else {
+      // }
+      oscillator[1].increment =  (oscillator[0].increment * synthParameters.detune) >> 9;
 
       refreshIncrement = false;
     }
@@ -128,7 +147,8 @@ namespace SYNTH
       frequency = 0;
 
       resetIncrement();
-      phaseAccumulator = 0;
+      oscillator[0].accumulator = 0;
+      oscillator[1].accumulator = 0;
 
       QUEUE::releaseSend(index);
     }
@@ -149,29 +169,23 @@ namespace SYNTH
       
       // if (!active) return 0;
 
-      phaseAccumulator += phaseIncrement;             // update the phaseAccumulator
-      phaseAccumulator += synthParameters.modVibrato; // add the vibrato
-
-
       if (active && ampEnvelope.isStopped()) {
         noteStopped();
         // return 0;
       }
 
-      sample = getWavetableInterpolated(phaseAccumulator, synthParameters.oscillator1.waveOffset);
+      oscillator[0].accumulator += oscillator[0].increment;             // update the phaseAccumulator
+      oscillator[0].accumulator += synthParameters.modVibrato; // add the vibrato
 
-      // uint32_t phase;
-      
-      // TODO: #9 Implement better handling of Detune setting
-      // if (synthParameters.detune == 0) {
-      //   phase = (phaseAccumulator >> 1);
-      // } else {
-      //   phase = phaseAccumulator + (phaseAccumulator / synthParameters.detune);
-      // }
-      // sample += (getWavetable(phase, synthParameters.oscillator2.waveOffset) * synthParameters.oscillator2.level) >> 16;
+      sample = getWavetableInterpolated(oscillator[0].accumulator , synthParameters.oscillator1.waveOffset);
+
+      oscillator[1].accumulator += oscillator[1].increment;
+      oscillator[1].accumulator += synthParameters.modVibrato;
+
+      sample += (getWavetable(oscillator[1].accumulator, synthParameters.oscillator2.waveOffset) * synthParameters.oscillator2.level) >> 16;
 
 
-      // sample += ((RANDOM::getSignal() >> 2) * synthParameters.oscillatorN.level) >> 16;
+      sample += ((RANDOM::getSignal() >> 2) * synthParameters.oscillatorN.level) >> 16;
 
       sample /= 3;
 
