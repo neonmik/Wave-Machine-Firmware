@@ -159,12 +159,9 @@ namespace SYNTH
     {
       FILTER::update(index);
       ampEnvelope.update();
-      
-      // if (!active) return 0;
 
       if (active && ampEnvelope.isStopped()) {
         noteStopped();
-        // return 0;
       }
 
       oscillator[0].accumulator += oscillator[0].increment;             // update the phaseAccumulator
