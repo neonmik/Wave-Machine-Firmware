@@ -238,7 +238,7 @@ namespace ARP {
                 isSustainJustReleased = false;
             }
             uint32_t currentNoteTick = CLOCK::getClockTick();
-             if ((currentNoteTick >= gate && currentNoteState == NoteState::ACTIVE)) { // && !CLOCK::getClockChanged()) {
+            if ((currentNoteTick >= gate && currentNoteState == NoteState::ACTIVE)) { // && !CLOCK::getClockChanged()) {
                 currentNoteState = NoteState::RELEASE;
                 releaseNote();
             }

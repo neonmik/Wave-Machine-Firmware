@@ -79,7 +79,7 @@ namespace FILTER {
 
     void setEnvelopeDepth(uint16_t input)   {  
         // envelopeDepth = input;  
-        envelopeDepth = attenuverterU10(input);
+        envelopeDepth = attenuverterU10toS9(input);
 
         if (envelopeDepth >= 0) {
             // Positive contour (scaling from cutoff to maxValue)

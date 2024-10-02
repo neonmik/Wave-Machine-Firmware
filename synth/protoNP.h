@@ -671,7 +671,7 @@ namespace NoteHandling {
         } else {
             // release note
             releaseNote(note, velocity);
-            if (!passMidi) MIDI::sendNoteOn (note, velocity);
+            if (!passMidi) MIDI::sendNoteOff (note, velocity);
         }
     }
 

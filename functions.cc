@@ -34,10 +34,7 @@ uint16_t    samples_to_us (uint32_t samplerate) {
     return (1000000 / samplerate);
 }
 
-int16_t    attenuverterU10 (uint16_t input) {
-    // takes an unsigned 10bit int and returns a signed 10bit int
-    return (static_cast<int16_t>(input) - 512);
-}
+
 
 bool getBitState(uint16_t bitField, uint16_t bitPos) {
     return (bitField & (1 << bitPos)) != 0;
@@ -74,4 +71,3 @@ void applyHysteresis(int& value, int new_value, int hysteresis) {
         value = new_value;
     }
 }
-
