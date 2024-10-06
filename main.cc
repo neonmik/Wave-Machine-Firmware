@@ -77,7 +77,6 @@ void synthCore() {
 
     if (!softwareIndex) {
       SYNTH::calculateIncrements();
-      ARP::update();
     }
 
     if (INTERVAL::QUEUE.checkInterval()) {
