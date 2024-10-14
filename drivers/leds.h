@@ -128,7 +128,7 @@ namespace LEDS {
             void init (void) {
                 RGB_LED::init();
                 colour(colours[0], colours[1], colours[2]);
-                // off();
+                off();
             }
             void on (void) {
                 state = true;
