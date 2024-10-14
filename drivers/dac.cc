@@ -7,7 +7,7 @@
 uint32_t    sampleClock;
 uint8_t     softwareIndex = 0;
 uint8_t     hardwareIndex = 2;
-uint16_t    playBuffer[256];
+volatile uint16_t    playBuffer[256];
 
 namespace DAC {
 

@@ -15,6 +15,41 @@
 
 namespace SYNTH
 {
+  struct phase {
+
+    private:
+
+      volatile int32_t             increment = 0;
+      volatile uint32_t            accumulator = 0;
+
+    public: 
+      void init(void) {
+        increment = 0;
+        accumulator = 0;
+      }
+
+      int32_t getIncrement(void) {
+        return increment;
+      }
+
+      void setIncrement(int32_t input) {
+        increment = input;
+      }
+
+      uint32_t getAccumulator(void) {
+        return accumulator;
+      }
+
+      void setAccumulator(uint32_t input) {
+        accumulator = input;
+      }
+
+      void updateAccumulator(int32_t input) {
+        accumulator += input;
+      }
+
+  };
+
   struct OscillatorParameters
   {
     uint16_t waveOffset;
@@ -72,18 +107,8 @@ namespace SYNTH
     bool                  active = false;           // used for whole duration of note, from the very start of attack right up until the voise is finished
     bool                  refreshIncrement = false;
 
-    uint64_t              caluclatedIncrement = 0;
+    // volatile uint64_t              caluclatedIncrement = 0;
     uint32_t              frequency = 0;            // Frequency in Hz << 10 (Q10)
-
-    struct phase {
-      int32_t             increment = 0;
-      uint32_t            accumulator = 0;
-
-      void reset(void) {
-        increment = 0;
-        accumulator = 0;
-      }
-    };
 
     phase                 oscillator[2];
 
@@ -93,6 +118,8 @@ namespace SYNTH
 
     void setIndex(uint8_t input) {
       index = input;
+      oscillator[0].init();
+      oscillator[1].init();
     }
 
     void updateIncrement(void) {
@@ -101,13 +128,16 @@ namespace SYNTH
       
       if (!refreshIncrement) return;
 
+      volatile int64_t caluclatedIncrement = 0;
+
       // Changed the calculation to using a 64bit integer to allow for the higher values to be calculated without overflow
       caluclatedIncrement = (frequency * synthParameters.oscillator1.pitchBend) >> 12;
       caluclatedIncrement = caluclatedIncrement << synthParameters.oscillator1.octave;
       caluclatedIncrement = caluclatedIncrement << Q_SCALING_FACTOR;
-      oscillator[0].increment = caluclatedIncrement / SAMPLE_RATE;
+      caluclatedIncrement = caluclatedIncrement / SAMPLE_RATE;
+      oscillator[0].setIncrement(caluclatedIncrement);
 
-      oscillator[1].increment =  (oscillator[0].increment * synthParameters.detune) >> 9;
+      oscillator[1].setIncrement((oscillator[0].getIncrement() * synthParameters.detune) >> 9);
 
       refreshIncrement = false;
     }
@@ -134,8 +164,8 @@ namespace SYNTH
       note = 0;
       frequency = 0;
 
-      oscillator[0].reset();
-      oscillator[1].reset();
+      oscillator[0].init();
+      oscillator[1].init();
 
       QUEUE::releaseSend(index);
     }
@@ -143,7 +173,7 @@ namespace SYNTH
     void checkHardSync(void) {
       if (!hardSync) return;
 
-      if (oscillator[0].accumulator % 256 == 0) oscillator[1].accumulator = 0;
+      if (oscillator[0].getAccumulator() % 256 == 0) oscillator[1].setAccumulator(0);
     }
 
     bool isActive(void) {
@@ -164,17 +194,17 @@ namespace SYNTH
         noteStopped();
       }
 
-      oscillator[0].accumulator += oscillator[0].increment;             // update the phaseAccumulator
-      oscillator[0].accumulator += synthParameters.modVibrato; // add the vibrato
+      oscillator[0].updateAccumulator(oscillator[0].getIncrement());             // update the phaseAccumulator
+      oscillator[0].updateAccumulator(synthParameters.modVibrato); // add the vibrato
 
-      sample = getWavetableInterpolated(oscillator[0].accumulator , synthParameters.oscillator1.waveOffset);
+      sample = getWavetableInterpolated(oscillator[0].getAccumulator(), synthParameters.oscillator1.waveOffset);
 
       // checkHardSync(); // Not used, has an option to hard sync the oscillators, but has some issues with messing with tuning on main oscillator.
 
-      oscillator[1].accumulator += oscillator[1].increment;
-      oscillator[1].accumulator += synthParameters.modVibrato;
+      oscillator[1].updateAccumulator(oscillator[1].getIncrement());
+      oscillator[1].updateAccumulator(synthParameters.modVibrato);
 
-      sample += (getWavetable(oscillator[1].accumulator, synthParameters.oscillator2.waveOffset) * synthParameters.oscillator2.level) >> 16;
+      sample += (getWavetable(oscillator[1].getAccumulator(), synthParameters.oscillator2.waveOffset) * synthParameters.oscillator2.level) >> 16;
 
 
       sample += ((RANDOM::getSignal() >> 2) * synthParameters.oscillatorN.level) >> 16;
