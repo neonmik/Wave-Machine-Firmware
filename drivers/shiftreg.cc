@@ -48,6 +48,7 @@ namespace ShiftReg {
 
         sn74595::shiftreg_init();
 
+        clear();
         update();
     }
     void update(void) {
