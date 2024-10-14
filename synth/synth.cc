@@ -39,7 +39,7 @@ namespace SYNTH {
     synthParameters.updateWaveshape();
     
     for(int c = 0; c < POLYPHONY; c++) {
-      synth.sample += synth.voices[c].process(voice_index);
+      synth.sample += synth.voices[c].process();
     }
 
     synth.sample = synth.sample >> 2;

@@ -185,8 +185,10 @@ namespace SYNTH
     }
   
 
-    int32_t process(uint8_t voiceIndex)
+    int32_t process(void)
     {
+      sample = 0;
+
       FILTER::update(index);
       ampEnvelope.update();
 
@@ -218,7 +220,6 @@ namespace SYNTH
 
       return sample;
     }
-
     Voice() {}
   };
 
