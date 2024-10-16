@@ -8,8 +8,11 @@ namespace USB {
 
         uint8_t temp[4];
 
-        if (tud_midi_n_available(0,0)) tud_midi_packet_read(temp);
-
+        while (tud_midi_n_available(0,0)) {
+            tud_midi_packet_read(temp);
+            printf("Emptying MIDI buffer\n");
+        }
+        printf("MIDI buffer empty\n");
     }
 
     void update () {
