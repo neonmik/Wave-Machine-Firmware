@@ -185,7 +185,7 @@ namespace CLOCK {
         }
     }
 
-    uint8_t isMidiClockPresent(void) {
+    bool isMidiClockPresent(void) {
         return midiClockPreset;
     }
 

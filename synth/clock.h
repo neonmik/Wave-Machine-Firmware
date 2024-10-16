@@ -12,10 +12,7 @@ namespace CLOCK {
 
     namespace {
         uint32_t    clockTick               = 0;
-        // uint32_t    _tock = 0;
-        // uint32_t    _last_tick = 0;
-
-        uint8_t     _max                    = 8; 
+        
         uint8_t     _beat                   = 0;
 
         bool        clockChanged;
@@ -72,6 +69,7 @@ namespace CLOCK {
     void        stopMidiClock (void);
     void        midiClockPosition (uint16_t input);
     void        checkMidiClock (void);
+    bool        isMidiClockPresent(void);
 
 }
 
