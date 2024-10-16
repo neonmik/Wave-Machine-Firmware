@@ -9,7 +9,6 @@ namespace SYNTH {
   void voiceOn (uint8_t voice, uint8_t note) {
     if ((!synth.voices[voice].isActive()) ||
         (!synth.voices[voice].isGate())) {
-      // FILTER::voicesIncrease();
       MOD::voicesIncrease();
     }
     FILTER::triggerAttack(voice);
@@ -18,7 +17,6 @@ namespace SYNTH {
   }
   void voiceOff (uint8_t voice) {
     if (synth.voices[voice].isGate()) {
-      // FILTER::voicesDecrease(); 
       MOD::voicesDecrease();
     }
     FILTER::triggerRelease(voice);
