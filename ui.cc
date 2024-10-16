@@ -24,7 +24,7 @@ namespace UI {
 
     hardwareStartUp();
 
-    if      (Buttons::PAGE.get(Buttons::State::SHIFT)) {
+    if          (Buttons::PAGE.get(Buttons::State::SHIFT)) {
         if      (Buttons::FUNC1.get(Buttons::State::SHIFT))   { mode = UI_MODE_FACTORY_TEST;      update(); } // Call update() here so you can go through the routine and jump back into the startup process afterwards.
         else if (Buttons::FUNC2.get(Buttons::State::SHIFT))   { mode = UI_MODE_USB;               update(); }
         else if (Buttons::PRESET.get(Buttons::State::SHIFT))  { mode = UI_MODE_EXPORT_PRESETS;    update(); }
