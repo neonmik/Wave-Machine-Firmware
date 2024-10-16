@@ -1,5 +1,8 @@
 #pragma once
 
+#include "pico/stdlib.h"
+#include "drivers/interpolation.h"
+
 constexpr   uint16_t    WAVETABLE_SIZE  =       256;
 
 constexpr   uint8_t     MAX_MOD_WAVES =         6;
@@ -1919,19 +1922,18 @@ const int16_t wavetable[8192] = {
     -1559, -7294, 3428, -10777, -16647, 7382, 2893, -13789,
 };
 
+
+
 // Return interpolated wavetable sample
 inline int16_t getWavetableInterpolated  (uint32_t accumulator, uint16_t vector) {
     volatile uint8_t index = accumulator >> Q_SCALING_FACTOR;
-    volatile uint32_t frac = accumulator & 0xFFF;
+    volatile uint32_t frac = accumulator & 0xFFF;  // Fractional part (12 bits)
 
     // Get the two neighboring samples from the wavetable
-    volatile int32_t sample1 = wavetable[(index + vector) & 0x1FFF];
-    volatile int32_t sample2 = wavetable[((index + 1) + vector) & 0x1FFF];
+    volatile int16_t sample1 = wavetable[(index + vector) & 0x1FFF];
+    volatile int16_t sample2 = wavetable[((index + 1) + vector) & 0x1FFF];
 
-    // Linear interpolation
-    volatile int32_t interpolatedSample = sample1 + ((sample2 - sample1) * frac >> Q_SCALING_FACTOR);
-    
-    return interpolatedSample;
+    return INTERPOLATION::process(frac, sample1, sample2);
 }
 
 // Return uninterpolated wavetable sample
