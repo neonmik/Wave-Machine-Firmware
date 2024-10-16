@@ -4,6 +4,8 @@
 
 #include "drivers/eeprom.h"
 
+#include "pico/unique_id.h"
+
 
 namespace SETTINGS {
 
@@ -31,7 +33,7 @@ namespace SETTINGS {
     };
     struct SystemSettingsData {
         uint8_t     versionNumber                   =       0;
-        uint8_t     ID[16];
+        uint8_t     hardwareID[PICO_UNIQUE_BOARD_ID_SIZE_BYTES];
 
         uint8_t     startupPreset                   =       0;
         LowestNote  startNote                       =       LowestNote::C3;
@@ -49,8 +51,17 @@ namespace SETTINGS {
         }
 
         void assignID (void) {
-            DEBUG::warning("The function 'assignID()' is not yet written");
+            DEBUG::warning("The function 'assignID()' is not implemented written");
+
+            pico_unique_board_id_t board_id;
+            pico_get_unique_board_id(&board_id);
+
+            for (int i = 0; i < PICO_UNIQUE_BOARD_ID_SIZE_BYTES; i++) {
+                hardwareID[i] = board_id.id[i];
+            }
         }
+
+        
 
         void fetchID (void) {
             DEBUG::warning("The function 'fetchID()' is not yet written");

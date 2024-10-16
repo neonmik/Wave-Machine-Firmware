@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pico/stdlib.h"
+#include "pico/unique_id.h"
 
 #include "hardware/spi.h"
 #include "hardware/i2c.h"
@@ -211,3 +212,5 @@ extern      uint8_t     hardwareIndex;
 extern      volatile uint16_t    playBuffer[]; //TODO: #27 look to replace this with a static variable... should just be the one buffer instance, and can be decalred in functions that need it at init.
 
 extern      bool        startUpComplete;
+
+static      uint8_t     hardwareID[PICO_UNIQUE_BOARD_ID_SIZE_BYTES];

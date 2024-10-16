@@ -109,15 +109,20 @@ namespace UI {
   }
 
 void printStartUp (void) {
+
   pico_unique_board_id_t board_id;
   pico_get_unique_board_id(&board_id);
+
+  for (int i = 0; i < PICO_UNIQUE_BOARD_ID_SIZE_BYTES; i++) {
+      hardwareID[i] = board_id.id[i];
+  }
 
   printf("\n\n");
   printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
   printf("~ ~ ~ ~ ~ ~ ~ ~ ~ Welcome to the Wave.... ~ ~ ~ ~ ~ ~ ~ ~\n");
   printf(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n");
   printf("~							~\n");
-  printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", board_id.id[0], board_id.id[1], board_id.id[2], board_id.id[3], board_id.id[4], board_id.id[5], board_id.id[6], board_id.id[7]);
+  printf("~	ID -		%02x %02x %02x %02x %02x %02x %02x %02x         ~\n", hardwareID[0], hardwareID[1], hardwareID[2], hardwareID[3], hardwareID[4], hardwareID[5], hardwareID[6], hardwareID[7]);
   printf("~	Firmware -	v%01.02f	      			~\n", VERSION);
   printf("~	Temp -		%02.01fºC				~\n", ADC::temperature());
   printf("~	Battery -	%.02fV				~\n", ADC::battery());
