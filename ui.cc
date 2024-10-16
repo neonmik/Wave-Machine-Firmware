@@ -139,7 +139,7 @@ void calibrate (void) {
 
   MUX::setAddress(0);
 
-  sleep_ms(1000);
+  sleep_ms(500);
   
   calibrationCheck = true;
 
@@ -172,13 +172,14 @@ void calibrate (void) {
   printf("\n\n");
 
   LEDS::KNOBS_off();
+  sleep_ms(300);
 
   for (int i = 0; i < 4; i++) {
     printf("Please turn Knob %d to 0%\n", i);
 
     volatile uint16_t knobValue = ADC::value(i);
 
-    while (knobValue == 0) {
+    while (knobValue != 0) {
       sleep_ms(10);
       ADC::update();
       knobValue = ADC::value(i);
@@ -191,7 +192,7 @@ void calibrate (void) {
     
     knobValue = ADC::value(i);
 
-    while (knobValue == 1023) {
+    while (knobValue != 1023) {
       sleep_ms(10);
       ADC::update();
       knobValue = ADC::value(i);
