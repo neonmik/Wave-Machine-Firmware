@@ -52,6 +52,7 @@ add_executable(${PROJECT_NAME}
     drivers/button.cc
     drivers/dac.cc
     drivers/eeprom.cc
+    drivers/interpolation.cc
     drivers/keys.cc
     drivers/leds.cc
     drivers/mux.cc
@@ -118,6 +119,7 @@ target_link_libraries(${PROJECT_NAME}
             hardware_i2c
             hardware_pio
             hardware_timer
+            hardware_interp
 
             tinyusb_device
             tinyusb_board
