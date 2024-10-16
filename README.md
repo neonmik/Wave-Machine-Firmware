@@ -101,8 +101,6 @@ Current nightly firmware for Wave Machine Hardware.
 
     - Oscillator:
 
-        
-
         - Improvement: Add soft start code - currently removed as it took too long to get going and still didnt realy work.
 
     - Mod:
