@@ -6,7 +6,7 @@
 
 namespace FILTER {
 
-    StateVariable filter[8];
+    StateVariable filter[POLYPHONY];
 
     void init() {
         for (int i = 0; i < POLYPHONY; i++) {
