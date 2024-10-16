@@ -21,8 +21,8 @@
 //        Software Defines
 // -------------------------------
 
-constexpr   uint8_t     POLYPHONY       =       8;             // 8 is the "standard" value - fine @ 44.1kHz
-                                                                // 16 is the "max" value - fine @ 44.1kHz 
+constexpr   uint8_t     POLYPHONY       =       8;              // 8 is the "standard" value - fine @ 44.1kHz
+                                                                // 10 is the "max" value - fine @ 44.1kHz 
 
 
 constexpr   uint8_t     MAX_ARP         =       32;             // For setting the maximum number of notes in the Arp
@@ -208,6 +208,6 @@ constexpr   uint8_t     DEFAULT_PRESET  =       0;
 extern      uint32_t    sampleClock;
 extern      uint8_t     softwareIndex;
 extern      uint8_t     hardwareIndex;
-extern      volatile uint16_t    playBuffer[];
+extern      volatile uint16_t    playBuffer[]; //TODO: #27 look to replace this with a static variable... should just be the one buffer instance, and can be decalred in functions that need it at init.
 
 extern      bool        startUpComplete;

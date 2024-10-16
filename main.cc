@@ -87,7 +87,7 @@ void synthCore() {
 
 int main() {
 
-  // set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Extra speed is needed to run the code.
+  // set_sys_clock_khz(CORE_SPEED, true); // needs to be called before UART. Extra speed is needed to run the code on an RP2040 - This probably wont run anymore down to updates for RP2350.
 
   stdio_init_all(); // has to be here to allow both cores to use the debug serial UART. 
 

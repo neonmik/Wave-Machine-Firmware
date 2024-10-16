@@ -17,7 +17,6 @@ namespace UI {
 
   void init (void) {
 
-    // TODO: #11 Make sure LED's are cleared as soon as possible on start up.
     LEDS::init();
     MUX::init();
     KEYS::init();

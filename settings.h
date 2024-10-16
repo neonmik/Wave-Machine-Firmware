@@ -17,10 +17,10 @@ namespace SETTINGS {
     // padding in these structs is to keep data alignment in blocks.
 
     struct MidiSettingsData {
-        bool        singleByteParsing               = false;
-        bool        nullVelocityTrigger             = true;
-        uint8_t     midiThruFilter                  = 0;
-        uint8_t     outputNoteOffVelocity           = 0;
+        bool        singleByteParsing               =       false;
+        bool        nullVelocityTrigger             =       true;
+        uint8_t     midiThruFilter                  =       0;
+        uint8_t     outputNoteOffVelocity           =       0;
 
         uint8_t     channel;
         uint8_t     padding[3];

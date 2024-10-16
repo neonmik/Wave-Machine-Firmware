@@ -138,8 +138,8 @@ namespace CONTROLS
                 switch (page) {
                     case Page::MAIN:            MAIN.setKnob(control, value);   break;
                     case Page::FILT:            FILT.setKnob(control, value);   break;
-                    case Page::LFO:             LFO.setKnob(control, value);    break;
-                    case Page::ARP:             ARP.setKnob(control, value);    break;
+                    case Page::LFO:             LFO.setKnob (control, value);    break;
+                    case Page::ARP:             ARP.setKnob (control, value);    break;
                     case Page::ADSR:            ADSR.setKnob(control, value);   break;
                     case Page::fENV:            fENV.setKnob(control, value);   break;
                     case Page::SHFT:            SHFT.setKnob(control, value);   break;
@@ -150,8 +150,8 @@ namespace CONTROLS
                 switch (page) {
                     case Page::MAIN:            return                          MAIN.getKnob(control);
                     case Page::FILT:            return                          FILT.getKnob(control);
-                    case Page::LFO:             return                          LFO.getKnob(control);
-                    case Page::ARP:             return                          ARP.getKnob(control);
+                    case Page::LFO:             return                          LFO.getKnob (control);
+                    case Page::ARP:             return                          ARP.getKnob (control);
                     case Page::ADSR:            return                          ADSR.getKnob(control);
                     case Page::fENV:            return                          fENV.getKnob(control);
                     case Page::SHFT:            return                          SHFT.getKnob(control);
@@ -164,8 +164,8 @@ namespace CONTROLS
                 switch (page) {
                     case Page::MAIN:            MAIN.setButton(button, state);          break;
                     case Page::FILT:            FILT.setButton(button, state);          break;
-                    case Page::LFO:             LFO.setButton(button, state);           break;
-                    case Page::ARP:             ARP.setButton(button, state);           break;
+                    case Page::LFO:             LFO.setButton (button, state);           break;
+                    case Page::ARP:             ARP.setButton (button, state);           break;
                     case Page::ADSR:            ADSR.setButton(button, state);          break;
                     case Page::fENV:            fENV.setButton(button, state);          break;
                     case Page::SHFT:            SHFT.setButton(button, state);          break;
@@ -176,8 +176,8 @@ namespace CONTROLS
                 switch (page)   {
                     case Page::MAIN:            MAIN.toggleButton(button);            break;
                     case Page::ADSR:            ADSR.toggleButton(button);            break;
-                    case Page::LFO:             LFO.toggleButton(button);             break;
-                    case Page::ARP:             ARP.toggleButton(button);             break;
+                    case Page::LFO:             LFO.toggleButton (button);             break;
+                    case Page::ARP:             ARP.toggleButton (button);             break;
                     case Page::SHFT:            SHFT.toggleButton(button);            break;
                     case Page::fENV:            fENV.toggleButton(button);            break;
                     case Page::FILT:            FILT.toggleButton(button);            break;
@@ -188,8 +188,8 @@ namespace CONTROLS
                 switch (page) {
                     case Page::MAIN:            return                          MAIN.getButton(button);
                     case Page::FILT:            return                          FILT.getButton(button);
-                    case Page::LFO:             return                          LFO.getButton(button);
-                    case Page::ARP:             return                          ARP.getButton(button);
+                    case Page::LFO:             return                          LFO.getButton (button);
+                    case Page::ARP:             return                          ARP.getButton (button);
                     case Page::ADSR:            return                          ADSR.getButton(button);
                     case Page::fENV:            return                          fENV.getButton(button);
                     case Page::SHFT:            return                          SHFT.getButton(button);
@@ -202,8 +202,8 @@ namespace CONTROLS
                 switch (index) {
                     case Page::MAIN:            MAIN.update();                  break;
                     case Page::FILT:            FILT.update();                  break;
-                    case Page::LFO:             LFO.update();                   break;
-                    case Page::ARP:             ARP.update();                   break;
+                    case Page::LFO:             LFO.update ();                  break;
+                    case Page::ARP:             ARP.update ();                  break;
                     case Page::ADSR:            ADSR.update();                  break;
                     case Page::fENV:            fENV.update();                  break;
                     case Page::SHFT:            SHFT.update();                  break;
@@ -213,8 +213,8 @@ namespace CONTROLS
             void updateAll(void) {
                 MAIN.update();
                 FILT.update();
-                LFO.update();
-                ARP.update();
+                LFO.update ();
+                ARP.update ();
                 ADSR.update();
                 fENV.update();
                 SHFT.update();
