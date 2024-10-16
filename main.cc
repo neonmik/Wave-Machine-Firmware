@@ -67,8 +67,7 @@ void synthCore() {
       
       playBuffer[softwareIndex] = SYNTH::process();
 
-      ++softwareIndex;
-      softwareIndex %= 32; // loops the play buffer every 32 samples
+      tickLoop(softwareIndex, 32);
 
       ++sampleClock;
 
