@@ -29,7 +29,7 @@ extern uint32_t    sampleClock;
 uint32_t           sampleClockLast;
 extern uint8_t     softwareIndex;
 extern uint8_t     hardwareIndex;
-extern volatile uint16_t    playBuffer[];
+// extern volatile uint16_t    playBuffer[];
 
 extern bool        startUpComplete;
 extern bool        calibrationCheck;

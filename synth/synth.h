@@ -98,7 +98,7 @@ namespace SYNTH
   struct Voice
   {
 
-    ADSR::Envelope      ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
+    ADSR::Envelope        ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
 
     uint8_t               index = 0;                // index of the voice in the synth
 
