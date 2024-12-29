@@ -2,7 +2,6 @@
 
 #include "config.h"
 
-#define MAX_ATTACK  0xFFFFFF        // 24 bit
 
 namespace ADSR {
 
@@ -14,8 +13,7 @@ namespace ADSR {
         OFF
     };
 
-    enum class Mode
-    {
+    enum class Mode {
         MONO,
         PARA,
     };
@@ -26,6 +24,7 @@ namespace ADSR {
         uint32_t sustain;
         uint32_t release;
     };
+
     class Controls {
         private:
             uint32_t        sampleRate;
@@ -37,7 +36,7 @@ namespace ADSR {
             }
 
         public: 
-            Controls (uint32_t sampleRate) : sampleRate(sampleRate) { }
+            Controls (const uint32_t sampleRate) : sampleRate(sampleRate) { }
             ~Controls ( ) { }
 
             void setAttack (const uint16_t& input) {
@@ -81,8 +80,8 @@ namespace ADSR {
             
             uint32_t    currentFrame        = 0;
             uint32_t    endFrame            = 0;
-            uint32_t    adsr                = 0;
-            int32_t     increment           = 0;
+            volatile uint32_t    adsr                = 0;
+            volatile int32_t     increment           = 0;
             Phase       phase               = Phase::OFF;
             
         public:
@@ -92,13 +91,61 @@ namespace ADSR {
 
             ~Envelope ( ) { }
 
-            void triggerAttack(void);
-            void triggerDecay(void);
-            void triggerSustain(void);
-            void triggerRelease(void);
-            void stopped(void);
-            
-            void update(void);
+            void triggerAttack()  {
+                currentFrame = 0;
+                phase = Phase::ATTACK;
+                endFrame = attack;
+                increment = (int32_t(MAX_ATTACK) - int32_t(adsr)) / int32_t(endFrame);
+            }
+            void triggerDecay() {
+                currentFrame = 0;
+                phase = Phase::DECAY;
+                endFrame = decay;
+                increment = (int32_t(sustain << 8) - int32_t(adsr)) / int32_t(endFrame);
+            }
+            void triggerSustain() {
+                currentFrame = 0;
+                phase = Phase::SUSTAIN;
+                endFrame = 0;
+                increment = 0;
+            }
+            void triggerRelease() {
+                currentFrame = 0;
+                phase = Phase::RELEASE;
+                endFrame = release;
+                increment = (int32_t(0) - int32_t(adsr)) / int32_t(endFrame);
+            }
+
+            void stopped() {
+                currentFrame = 0;
+                phase = Phase::OFF;
+                endFrame = 0;
+                increment = 0;
+                adsr = 0;
+            }
+
+            void update() {
+                if(phase == Phase::OFF) return;
+
+                if ((currentFrame >= endFrame) && (phase != Phase::SUSTAIN)) {
+                    switch (phase) {
+                        case Phase::ATTACK:
+                            triggerDecay();
+                            break;
+                        case Phase::DECAY:
+                            triggerSustain();
+                            break;
+                        case Phase::RELEASE:
+                            stopped();
+                            break;
+                        default:
+                            break;
+                        }
+                }
+                
+                adsr += increment;
+                ++currentFrame;
+            }
 
             bool isStopped(void) { return phase == Phase::OFF; }
             bool isReleasing(void) { return phase == Phase::RELEASE; }
