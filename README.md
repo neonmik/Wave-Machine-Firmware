@@ -60,6 +60,9 @@ Current nightly firmware for Wave Machine Hardware.
 
 - Updates and Bugfixes:
 
+    - Oscillator:
+        - Feature: Investigate not reseting the Oscillator acculumlator on voice release/attack. Could yield more interesting sounding results. Might need to also asses interpolatation to allow an interpolation of last to next instead of just between samples. (should then smooth slightly between 0 and the first wavetable sample if not active).
+
     - Arp:
         - Improvement: Add a feature where the ARP is aware if it's sync'd or not, this will then facilitate the setting of Tempo as Div or BPM.
         
