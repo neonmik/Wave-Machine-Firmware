@@ -41,6 +41,7 @@ configure_file(version.h.in version.h @ONLY)
 add_executable(${PROJECT_NAME} 
     main.cc
 
+    config.cc
     settings.cc
     functions.cc
     random.cc

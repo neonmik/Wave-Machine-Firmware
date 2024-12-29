@@ -6,6 +6,8 @@
 
 namespace SYNTH {
 
+  Synthesizer synth;
+
   void voiceOn (uint8_t voice, uint8_t note) {
     if ((!synth.voices[voice].isActive()) ||
         (!synth.voices[voice].isGate())) {
@@ -33,36 +35,23 @@ namespace SYNTH {
 
     int32_t temp = 0;
     
-    synth.sample = 0; 
-    
     MOD::update();
     synthParameters.updateWaveshape();
     
-    for(int c = 0; c < POLYPHONY; c++) {
-      temp += synth.voices[c].process();
-      // synth.sample += synth.voices[c].process();
-    }
-
-    temp = temp >> 2;
-    // synth.sample = synth.sample >> 2;
+    temp = synth.process();
   
     
     FX::SOFTCLIP::process(temp); // Soft clipping to 16-bit
-    // FX::SOFTCLIP::process(synth.sample); // Soft clipping to 16-bit
-    
     FX::HARDCLIP::process16(temp); // Hard clipping to 16-bit
-    // FX::HARDCLIP::process16(synth.sample); // Hard clipping to 16-bit
-    
-    // move sample to unsigned space, and then shift it down 4 to make it 12 bit for the dac
+
     return (temp - INT16_MIN)>>4;
-    // return (synth.sample - INT16_MIN)>>4;
   }
 
   void calculateIncrements(void) {
     if (recalculateIncrement) {
       for(int i = 0; i < POLYPHONY; i++) {
-        synth.voices[i].refreshIncrement = true;
-        synth.voices[i].updateIncrement();
+        synth.voices[i].refreshIncrement();
+        // synth.voices[i].updateIncrement();
       }
       recalculateIncrement = false;
     } else {

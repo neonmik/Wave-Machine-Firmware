@@ -15,7 +15,6 @@
 extern uint32_t    sampleClock;
 extern uint8_t     softwareIndex;
 extern uint8_t     hardwareIndex;
-// extern volatile uint16_t    playBuffer[];
 
 
 namespace DAC {

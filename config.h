@@ -200,6 +200,8 @@ constexpr   uint8_t     DEFAULT_OFF_VEL =       0;              // The default v
 
 constexpr   uint8_t     DEFAULT_PRESET  =       0;
 
+constexpr   uint32_t    MAX_ATTACK      =       0xFFFFFF;        // 24 bit
+
 
 // -------------------------------
 //        Global Variables
@@ -209,7 +211,7 @@ constexpr   uint8_t     DEFAULT_PRESET  =       0;
 extern      uint32_t    sampleClock;
 extern      uint8_t     softwareIndex;
 extern      uint8_t     hardwareIndex;
-static      volatile uint16_t    playBuffer[256]; //TODO: #27 look to replace this with a static variable... should just be the one buffer instance, and can be decalred in functions that need it at init.
+extern      volatile    uint16_t    playBuffer[256]; //TODO: #27 look to replace this with a static variable... should just be the one buffer instance, and can be decalred in functions that need it at init.
 
 extern      bool        startUpComplete;
 
