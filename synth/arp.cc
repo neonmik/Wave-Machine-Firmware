@@ -171,13 +171,18 @@ namespace ARP {
         }
         // add variable for direction for new arp modes (more similar in handling to JUNO)
     }
-
-    void playNote (void) {
-        if (octaveModeChanged) { // only updates once notes have stopped playing
+    
+    void checkOctaveMode (void) {
+        if (octaveModeChanged) {
             if (polyMode) arpMode = ArpMode::POLY;
             else arpMode = ArpMode::MONO;
             octaveModeChanged = false;
         }
+    }
+
+    void playNote (void) {
+
+        checkOctaveMode(); // only updates once notes have stopped playing
 
         if (arpMode == ArpMode::POLY) {
             for (int i = 0; i < currentNoteCount; i++) {

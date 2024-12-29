@@ -180,6 +180,7 @@ namespace ARP {
     void updateSustain (void);
 
     void updateOctave (ArpDirection direction);
+    void checkOctaveMode (void);
 
     void setBPM (uint16_t input);
     
