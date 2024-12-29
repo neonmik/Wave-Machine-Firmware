@@ -5,10 +5,6 @@
 #include "pico/time.h"
 
 namespace Buttons {
-
-    namespace {
-
-    }
     
     enum class State {
         SHORT,
