@@ -2,7 +2,6 @@
 
 #include "config.h"
 
-
 namespace ADSR {
 
     enum class Phase : uint8_t {
@@ -18,18 +17,14 @@ namespace ADSR {
         PARA,
     };
 
-    struct Parameters {
-        uint32_t attack;
-        uint32_t decay;
-        uint32_t sustain;
-        uint32_t release;
-    };
-
     class Controls {
         private:
             uint32_t        sampleRate;
 
-            Parameters      envelopeParameters;
+            uint32_t        attack;
+            uint32_t        decay;
+            uint32_t        sustain;
+            uint32_t        release;
 
             uint32_t calculateEndFrame(uint32_t milliseconds){
                 return ((milliseconds + 1) * sampleRate) / 1000;
@@ -40,30 +35,22 @@ namespace ADSR {
             ~Controls ( ) { }
 
             void setAttack (const uint16_t& input) {
-                envelopeParameters.attack = calculateEndFrame(input << 2);
+                attack = calculateEndFrame(input << 2);
             }
             void setDecay (const uint16_t& input) {
-                envelopeParameters.decay = calculateEndFrame(input << 2);
+                decay = calculateEndFrame(input << 2);
             }
             void setSustain (const uint16_t& input) {
-                envelopeParameters.sustain = (input << 6); // bit shift to make it 16 bit - change if we want to change the resolution
+                sustain = (input << 6); // bit shift to make it 16 bit - change if we want to change the resolution
             }
             void setRelease (const uint16_t& input) {
-                envelopeParameters.release = calculateEndFrame(input << 2);
+                release = calculateEndFrame(input << 2);
             }
 
-            const uint32_t& getAttack (void) {
-                return envelopeParameters.attack;
-            }
-            const uint32_t& getDecay (void) {
-                return envelopeParameters.decay;
-            }
-            const uint32_t& getSustain (void) {
-                return envelopeParameters.sustain;
-            }
-            const uint32_t& getRelease (void) {
-                return envelopeParameters.release;
-            }
+            const uint32_t& getAttack ()    {   return attack;      }
+            const uint32_t& getDecay ()     {   return decay;       }
+            const uint32_t& getSustain ()   {   return sustain;     }
+            const uint32_t& getRelease ()   {   return release;     }
     };
 
     class Envelope {
@@ -76,13 +63,12 @@ namespace ADSR {
 
             // TODO: #24 Add a feature that allows the envelope to be infinite
             // const bool&     infinteRelease;
-
             
-            uint32_t    currentFrame        = 0;
-            uint32_t    endFrame            = 0;
+            uint32_t             currentFrame        = 0;
+            uint32_t             endFrame            = 0;
             volatile uint32_t    adsr                = 0;
             volatile int32_t     increment           = 0;
-            Phase       phase               = Phase::OFF;
+            Phase                phase               = Phase::OFF;
             
         public:
 
@@ -147,12 +133,11 @@ namespace ADSR {
                 ++currentFrame;
             }
 
-            bool isStopped(void) { return phase == Phase::OFF; }
-            bool isReleasing(void) { return phase == Phase::RELEASE; }
+            bool        isStopped()     const       { return phase == Phase::OFF;       }
+            bool        isReleasing()   const       { return phase == Phase::RELEASE;   }
+            uint32_t    get()           const       { return (adsr >> 8); }
 
-            uint32_t get(void) { return (adsr >> 8); }
-
-            int32_t apply(uint32_t input) {;
+            int32_t apply(uint32_t input) {
                 return ((int32_t(input) * int32_t(adsr >> 8))) >> 16;
             }
 
