@@ -33,7 +33,7 @@ namespace SYNTH
 
   struct SharedParams
   {
-    ADSR::Controls envelopeControls{SAMPLE_RATE};
+    ADSR::Controls ampEnvControls{SAMPLE_RATE};
     OscillatorParameters oscillator1;
     OscillatorParameters oscillator2;
     OscillatorParameters oscillatorN;
@@ -65,7 +65,7 @@ namespace SYNTH
   { 
     private:
 
-      ADSR::Envelope        ampEnvelope{synthParameters.envelopeControls.getAttack(), synthParameters.envelopeControls.getDecay(), synthParameters.envelopeControls.getSustain(), synthParameters.envelopeControls.getRelease()};
+      ADSR::Envelope        ampEnvelope{synthParameters.ampEnvControls.getAttack(), synthParameters.ampEnvControls.getDecay(), synthParameters.ampEnvControls.getSustain(), synthParameters.ampEnvControls.getRelease()};
 
       uint8_t               index;                // index of the voice in the synth
 
@@ -137,8 +137,11 @@ namespace SYNTH
         frequency = 0;
 
         // resets both the accumulator and the increment for both oscillators... Look into not reseting the accumulator, could be good to get a more organic sound?
-        oscillator[0].reset();
-        oscillator[1].reset();
+        // oscillator[0].reset();
+        // oscillator[1].reset();
+
+        oscillator[0].resetIncrement();
+        oscillator[1].resetIncrement(); 
 
         QUEUE::releaseSend(index);
       }

@@ -81,16 +81,16 @@ namespace SYNTH {
   }
 
   void setAttack (uint16_t input) {
-    synthParameters.envelopeControls.setAttack(input);
+    synthParameters.ampEnvControls.setAttack(input);
   }
   void setDecay (uint16_t input) {
-    synthParameters.envelopeControls.setDecay(input);
+    synthParameters.ampEnvControls.setDecay(input);
   }
   void setSustain (uint16_t input) {
-    synthParameters.envelopeControls.setSustain(input);
+    synthParameters.ampEnvControls.setSustain(input);
   }
   void setRelease (uint16_t input) {
-    synthParameters.envelopeControls.setRelease(input);
+    synthParameters.ampEnvControls.setRelease(input);
   }
 
   void modulateVibrato (uint16_t input) {
