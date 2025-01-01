@@ -1,5 +1,8 @@
 # Wave-Machine-Firmware
 
+This is a project for firmware on a custom PCB. This wont work on other systems, is likely unstable, and likely to change. Use any code at your own risk. 
+
+
 Current nightly firmware for Wave Machine Hardware.
 
 - Features:
